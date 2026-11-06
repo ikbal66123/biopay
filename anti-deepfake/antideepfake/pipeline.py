@@ -5,6 +5,7 @@ Dipakai oleh script CLI sekarang, dan nanti oleh backend FastAPI (Tahap 4).
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 from typing import Callable, Sequence
 
@@ -12,6 +13,7 @@ import torch
 
 from .device import pick_device
 from .faces import detect_faces, face_mask
+from .identity_attack import available as identity_available
 from .imageio import load_rgb, save_rgb
 from .manifest import write_manifest
 from .metrics import similarity_report
@@ -51,6 +53,8 @@ def protect_photo_file(
     fp16: bool = False,
     config_overrides: dict | None = None,
     progress: Callable[[int, int, float], None] | None = None,
+    identity: str = "auto",
+    identity_weight: float = 1.0,
 ) -> dict:
     """Lindungi satu file foto. Mengembalikan laporan (juga ditulis ke manifest JSON)."""
     input_path = Path(input_path)
@@ -72,7 +76,20 @@ def protect_photo_file(
 
     cfg = make_config(preset, **(config_overrides or {}))
     models = list(vaes) if vaes is not None else get_vaes(vae_ids, dev, fp16)
-    result = EncoderAttack(models, cfg, dev).protect(image, mask=mask, progress=progress)
+
+    # Serangan identitas ArcFace (anti face-swap), lihat identity_attack.py
+    idp, id_note = None, None
+    if identity == "on" or (identity == "auto" and identity_available()):
+        from .identity_attack import ArcFaceTorch
+
+        idp = ArcFaceTorch(dev).prepare([image])
+        if idp is None:
+            id_note = "tidak ada wajah untuk serangan identitas"
+        else:
+            cfg = replace(cfg, identity_weight=identity_weight)
+    elif identity == "auto":
+        id_note = "insightface/onnx2torch tidak terpasang: anti face-swap dimatikan"
+    result = EncoderAttack(models, cfg, dev).protect(image, mask=mask, progress=progress, identity=idp)
     protected = result.image
 
     wm_info = None
@@ -91,6 +108,7 @@ def protect_photo_file(
         "attack": result.summary(),
         "imperceptibility": similarity_report(image, protected),
         "watermark": wm_info,
+        "identity_attack": {"enabled": idp is not None, "note": id_note},
     }
     manifest_path = output_path.with_suffix(".json")
     write_manifest(manifest_path, input_path, output_path, owner, report)

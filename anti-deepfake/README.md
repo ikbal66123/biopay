@@ -1,8 +1,12 @@
-# Anti-Deepfake: Tahap 1, Perlindungan Foto
+# Anti-Deepfake: Perlindungan Foto (Tahap 1) & Video (Tahap 2)
 
-Prototipe untuk melindungi foto pribadi sebelum diupload ke media sosial, supaya
-lebih sulit dipakai AI untuk membuat editan palsu (misalnya wajahmu ditempel ke
-foto "maling ayam").
+Prototipe untuk melindungi foto dan video pribadi sebelum diupload ke media
+sosial, supaya lebih sulit dipakai AI untuk membuat editan palsu (misalnya
+wajahmu ditempel ke video "maling ayam").
+
+- **Foto**: `python scripts/protect_photo.py fotoku.jpg`
+- **Video**: `python scripts/protect_video.py videoku.mp4`, lihat
+  [Tahap 2: Video](#tahap-2-video).
 
 Cara kerjanya: kamu memasukkan satu foto dan mendapat satu foto baru yang
 terlihat sama, tapi isinya sudah:
@@ -13,8 +17,13 @@ terlihat sama, tapi isinya sudah:
    Stable Diffusion salah membaca foto, seolah-olah foto itu cuma bidang abu-abu
    atau pola acak. Editor AI berbasis Stable Diffusion lalu menghasilkan gambar
    yang rusak atau tidak mirip kamu.
-2. **Diberi watermark tak terlihat** berisi tag pemilik (hash dari ID kamu).
-3. **Dicatat dalam manifest JSON**: hash SHA-256 file asli & terlindungi, waktu,
+2. **Diberi "racun" identitas** (anti face-swap, aktif otomatis jika `insightface`
+   terpasang): embedding wajah ArcFace dari foto terlindungi dibuat berbeda dari
+   wajah aslimu. Embedding ini yang dipakai InsightFace inswapper,
+   Roop/FaceFusion, dan banyak aplikasi face swap untuk "mengambil" wajah.
+   Lihat `identity_attack.py`.
+3. **Diberi watermark tak terlihat** berisi tag pemilik (hash dari ID kamu).
+4. **Dicatat dalam manifest JSON**: hash SHA-256 file asli & terlindungi, waktu,
    dan pengaturan, sebagai catatan bukti kepemilikan.
 
 > **Baca bagian [Keterbatasan](#keterbatasan-baca-ini) sebelum mengandalkannya.**
@@ -51,20 +60,28 @@ dengan PSNR sekitar 50 dB.
 ```
 anti-deepfake/
 ├── antideepfake/            # library (dipakai CLI sekarang, FastAPI nanti)
-│   ├── photoguard.py        # inti: serangan encoder PGD + EOT, preset, multi-VAE
-│   ├── augment.py           # transformasi EOT: resize, JPEG (straight-through), blur, noise
+│   ├── photoguard.py        # inti: PGD batch + EOT (dipakai foto & video), preset, multi-VAE
+│   ├── identity_attack.py   # serangan identitas ArcFace (anti face-swap), align diferensiabel
+│   ├── augment.py           # EOT: resize, JPEG & H.264 (straight-through), 4:2:0, blur, noise
 │   ├── pipeline.py          # alur "satu klik": foto → terlindungi + watermark + manifest
+│   ├── protect_video.py     # Tahap 2: deteksi+tracking → keyframe → PGD batch → interpolasi → tulis
+│   ├── videoio.py           # FFmpeg: probe, decode/encode lewat pipe, audio, kompresi ala TikTok
+│   ├── tracking.py          # pelacakan wajah antar-frame (IoU + EMA + tahan saat deteksi gagal)
+│   ├── evaluation.py        # metrik VAE, identitas ArcFace, penyerang img2img & face swap
+│   ├── taesd_adapter.py     # encoder ringan TAESD (SD/SDXL/SD3/Flux) untuk uji & ensemble murah
 │   ├── watermark.py         # watermark tak terlihat (QIM pada DCT 8x8) berisi tag pemilik
 │   ├── manifest.py          # manifest JSON (hash SHA-256, waktu, pengaturan)
-│   ├── faces.py             # deteksi wajah (OpenCV) + mask wajah
+│   ├── faces.py             # deteksi wajah (RetinaFace/InsightFace, YuNet, Haar) + mask
 │   ├── metrics.py           # PSNR, SSIM, LPIPS (opsional)
 │   ├── imageio.py           # baca/tulis gambar, JPEG, resize
 │   └── device.py            # pilih CUDA / MPS / CPU
 ├── scripts/
 │   ├── protect_photo.py     # lindungi foto
 │   ├── evaluate_photo.py    # uji: edit AI pada foto asli vs terlindungi, + kompresi
+│   ├── protect_video.py     # lindungi video
+│   ├── test_video.py        # uji video: kompres ala TikTok, img2img / face swap, side-by-side
 │   └── verify_watermark.py  # cek watermark & cocokkan dengan manifest
-├── tests/                   # unit test (memakai VAE kecil acak, tanpa unduhan)
+├── tests/                   # unit test (VAE kecil acak + video sintetis, tanpa unduhan model)
 ├── examples/                # taruh foto ujimu di sini (tidak ikut di-commit)
 └── requirements.txt
 ```
@@ -83,7 +100,15 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install torch --index-url https://download.pytorch.org/whl/cu124
 # 2) sisanya
 pip install -r requirements.txt
+# 3) insightface kadang ikut memasang opencv-python 5 yang bentrok; pastikan hanya ini yang terpasang:
+pip uninstall -y opencv-python && pip install --force-reinstall --no-deps "opencv-python-headless<5"
 ```
+
+Untuk video juga perlu **FFmpeg** (dengan libx264): `sudo apt install ffmpeg`,
+`brew install ffmpeg`, atau unduh dari ffmpeg.org (Windows).
+
+Model InsightFace `buffalo_l` (~280 MB: detektor RetinaFace + ArcFace) diunduh
+otomatis ke `~/.insightface/models` saat pertama dipakai.
 
 Saat pertama dijalankan, model diunduh otomatis dari Hugging Face:
 `stabilityai/sd-vae-ft-mse` (~330 MB) untuk perlindungan, dan
@@ -183,7 +208,7 @@ efektivitas, pakai `evaluate_photo.py`.
 Bagian ini menjelaskan apa yang sudah dan belum diuji, supaya jelas.
 
 **Sudah diuji** (CPU, tanpa GPU):
-- 10 unit test lulus: batas perubahan piksel, mask wajah (piksel di luar wajah
+- 19 unit test lulus (termasuk video): batas perubahan piksel, mask wajah (piksel di luar wajah
   100% tidak berubah), loss turun, JPEG straight-through, watermark, manifest,
   dan alur lengkap.
 - Semua script CLI dijalankan end-to-end memakai VAE kecil berbobot acak.
@@ -215,6 +240,203 @@ lebih besar, lalu cari keseimbangan antara "tak terlihat" dan "kuat".
 Angka di atas adalah perkiraan kasar dan belum diukur langsung. Waktu naik kira-kira
 linear dengan `--steps` dan jumlah `--vae`.
 
+## Tahap 2: Video
+
+### Cara kerja
+
+```
+video ──► 1. DETEKSI    RetinaFace per frame + tracking (kotak dihaluskan, tahan saat
+                        deteksi gagal sesaat) + deteksi pergantian adegan
+      ──► 2. KEYFRAME   tiap N frame per wajah (default 10), crop wajah persegi
+      ──► 3. OPTIMASI   PGD batch di GPU pada crop keyframe:
+                          • loss VAE (PhotoGuard, Tahap 1) + loss identitas ArcFace
+                          • EOT video: resize 0,4–1×, blur, noise, JPEG, warna 4:2:0,
+                            dan H.264 SUNGGUHAN via FFmpeg (gradien straight-through)
+                          • perturbasi = pola BERSAMA per wajah + residual kecil per keyframe
+      ──► 4. TULIS      tiap frame: perturbasi diinterpolasi antar 2 keyframe terdekat,
+                        ditempel mengikuti posisi wajah, dibatasi eps adaptif,
+                        encode H.264 CRF 14 + audio asli (tanpa re-encode bila bisa)
+```
+
+- **Efisien.** Hanya keyframe yang dioptimasi (≈10% frame), di potongan wajah
+  saja (≤512 px), dalam batch di GPU. Frame lain cukup diinterpolasi.
+- **Tidak berkedip.** Perturbasi menempel pada wajah (ikut bergerak bersama
+  wajah). Sebagian besar polanya sama untuk semua keyframe satu wajah, dan
+  berubah halus antar-frame.
+- **Format sama.** Resolusi, fps, jumlah frame, durasi, dan audio sama dengan
+  aslinya (dicek otomatis dan dicatat di manifest). Frame tanpa wajah tidak
+  diubah, hanya di-encode ulang dengan kualitas sangat tinggi.
+- **Memori kecil.** Frame dibaca lewat pipe FFmpeg dalam beberapa lintasan, tidak
+  disimpan ke disk atau RAM, sehingga video panjang tetap aman.
+
+### Melindungi video
+
+```bash
+python scripts/protect_video.py examples/videoku.mp4
+```
+
+Hasil: `videoku_protected.mp4` + `videoku_protected.json` (manifest: hash, jumlah
+wajah/track, keyframe, waktu tiap tahap, peringatan). Progress bar ditampilkan
+untuk keempat tahap.
+
+| Opsi | Fungsi |
+|---|---|
+| `--preset fast / balanced / strong` | keyframe tiap 15 / 10 / 5 frame; 40 / 80 / 200 iterasi; `strong` eps 10/255 |
+| `--key-interval N` | jarak keyframe manual (kecil = lebih kuat, lebih lambat) |
+| `--batch-size 4` | keyframe per batch GPU; turunkan jika VRAM habis |
+| `--identity auto/on/off` | serangan identitas ArcFace (anti face-swap) |
+| `--no-h264-eot` | tanpa simulasi H.264 saat optimasi (lebih cepat, kurang tahan kompresi) |
+| `--no-temporal` | tiap keyframe independen (hanya untuk perbandingan, bisa berkedip) |
+| `--vae A --vae B` | ensemble VAE, mis. tambah `madebyollin/sdxl-vae-fp16-fix`, atau versi ringan `taesd:/path/taesdxl_encoder.pth` |
+| `--keep-audio` | simpan juga audio asli terpisah (`*_audio.mka`), untuk Tahap 3 nanti |
+| `--watermark` | watermark tak terlihat di tiap frame (lihat catatan di bawah) |
+| `--crf 14` | kualitas output H.264 |
+
+### Menguji video
+
+```bash
+# cepat: kualitas visual + uji VAE + identitas ArcFace, mentah vs setelah kompresi ala TikTok
+python scripts/test_video.py videoku.mp4 videoku_protected.mp4
+
+# + Stable Diffusion img2img per frame (butuh GPU)
+python scripts/test_video.py videoku.mp4 videoku_protected.mp4 --attacks vae,identity,img2img
+
+# + face swap InsightFace inswapper (unduh inswapper_128.onnx sendiri; lisensi non-komersial)
+python scripts/test_video.py videoku.mp4 videoku_protected.mp4 --attacks vae,identity,swap \
+    --swap-model models/inswapper_128.onnx --swap-target examples/orang_lain.jpg
+
+# uji transfer ke model lain: ulangi --vae
+python scripts/test_video.py videoku.mp4 videoku_protected.mp4 \
+    --vae stabilityai/sd-vae-ft-mse --vae madebyollin/sdxl-vae-fp16-fix
+```
+
+`--profile tiktok` (default: H.264 ≤1080p, 2 Mbps), `tiktok_low` (≤720p,
+800 kbps, kasus buruk), atau `whatsapp`. TikTok tidak mempublikasikan pengaturan
+pastinya, jadi ini perkiraan.
+
+Output di `video_eval/`:
+- `side_by_side_raw.mp4` dan `side_by_side_tiktok.mp4`: asli | terlindungi | selisih×10
+- `comparison_<kondisi>.png/.mp4`: per frame sampel, asli | terlindungi | selisih |
+  rekonstruksi VAE | hasil img2img / swap dari asli vs dari terlindungi
+- `report.json`: semua angka
+
+| Metrik di `report.json` | Artinya | Bagus jika |
+|---|---|---|
+| `visual_quality.psnr_mean_db` / `ssim_mean` | asli vs terlindungi, per frame | ≥ 35 dB / ≥ 0,95; bandingkan dengan `visual_quality_baseline_reencode_only` |
+| `flicker_mean_abs_0_255` | rata-rata perubahan antar-frame dari residual (terlindungi − asli) | mendekati baseline encode ulang |
+| `id_direct_protected_mean` | cosine ArcFace wajah terlindungi vs asli = yang "dilihat" inswapper | < ~0,3 (orang lain) |
+| `vae.<model>.target_distance_rel` | jarak latent ke target abu-abu, relatif | < 1 (makin kecil makin tertipu) |
+| `img2img_id_from_*` / `swap_id_from_*` | identitas wajah di hasil fake vs wajahmu | `from_protected` jauh di bawah `from_original` |
+| `protection_remaining_after_compression` | efek setelah kompresi ÷ efek sebelum | 1,0 = utuh, 0 = hilang |
+
+### Kebutuhan GPU & perkiraan waktu
+
+| | Minimum | Disarankan |
+|---|---|---|
+| Perlindungan (VAE SD + ArcFace, batch 4, crop ≤512) | NVIDIA 8 GB VRAM | 12–24 GB |
+| Uji img2img (SD 1.5 fp16) | +4 GB | |
+| CPU / Apple MPS | bisa, tapi sangat lambat (lihat di bawah) | |
+
+Waktu didominasi tahap optimasi: **(jumlah keyframe ÷ batch) × iterasi**. Untuk
+video 30 fps dengan satu wajah, preset `balanced` berarti 180 keyframe/menit,
+yaitu 45 batch × 80 iterasi = 3.600 iterasi batch per menit video.
+
+| Perangkat | Perkiraan per **menit** video (1 wajah, `balanced`) |
+|---|---|
+| RTX 4090 / A100 | ~8–15 menit |
+| RTX 3060 / T4 | ~25–45 menit |
+| CPU 4 core | berjam-jam (tidak disarankan) |
+
+Angka GPU di atas adalah **perkiraan, belum diukur**: lingkungan pengembangan
+prototipe ini tidak punya GPU. Pada CPU 4 core, dengan encoder ringan TAESD,
+yang terukur: video 4 detik (120 frame, 1 wajah, 13 keyframe, 40 iterasi) butuh ±12–13 menit, dan hampir semuanya di tahap optimasi. `fast` kira-kira 3× lebih cepat dari
+`balanced`. Deteksi dan penulisan video menambah ±1–2 menit per menit video.
+Simulasi H.264 di EOT memanggil FFmpeg (CPU), jadi CPU yang lambat ikut
+memperlambat proses walau ada GPU.
+
+### Hasil pengujian (jujur)
+
+**Kondisi uji.** Lingkungan pengembangan hanya punya CPU, tanpa GPU, dan tidak
+bisa mengunduh dari Hugging Face. Karena itu:
+- **Video uji** adalah klip sintetis 4 detik, portrait 540×960, 30 fps, dengan
+  audio: foto wajah (sampel "astronaut" dari scikit-image) yang di-pan dan di-zoom.
+  Belum video HP sungguhan dengan ekspresi, gerak kepala, atau cahaya berubah.
+- **Model yang diserang**: TAESD (encoder ringan untuk ruang latent SD 1.x), bukan
+  VAE SD asli. Transfer diuji ke TAESD-SDXL dan TAESD-Flux.
+- **Identitas**: ArcFace `w600k_r50` asli (InsightFace buffalo_l). Ini model yang
+  dipakai inswapper untuk mengambil wajah sumber. **inswapper sendiri dan SD img2img
+  belum dijalankan** (modelnya tidak bisa diunduh di sini); kodenya ada di
+  `test_video.py` dan perlu dijalankan di mesin ber-GPU.
+- Anggaran: 40 iterasi/batch, keyframe tiap 10 frame, eps 8/255 adaptif.
+
+**1. Kualitas visual & flicker** (asli vs terlindungi, rata-rata 120 frame)
+
+| | PSNR | SSIM | perubahan antar-frame (0–255) |
+|---|---|---|---|
+| hanya encode ulang (baseline) | 42,9 dB | 0,987 | 1,32 |
+| **terlindungi (default)** | **40,6 dB** | **0,981** | **1,53** |
+| setelah kompresi TikTok | 39,4 dB | 0,972 | – |
+
+Penurunan dari baseline kecil. Di video side-by-side tidak terlihat kedip, tetapi
+noise halus di kulit bisa terlihat jika di-zoom dan dibandingkan langsung.
+
+**2. Anti face-swap: kemiripan ArcFace wajah terlindungi vs asli, per frame**
+(< ~0,3–0,4 umumnya dianggap orang lain; tanpa perlindungan ≈ 0,95–1,0)
+
+| Varian | mentah | TikTok 2 Mbps | TikTok-low 800 kbps | frame > 0,4 |
+|---|---|---|---|---|
+| hanya VAE (Tahap 1, tanpa serangan identitas) | ~0,95 | – | – | semua |
+| pola bersama per wajah (`--shared-pattern`) | 0,66 | 0,67 | – | sebagian besar |
+| keyframe independen, tempel per kotak wajah | 0,33 | 0,36 | 0,40 | 43–56 / 120 |
+| **default: + propagasi landmark + jitter alignment** | **0,18** | **0,19** | **0,21** | **0 / 120** (maks 0,39) |
+
+Perjalanan menuju default ini juga temuan penting:
+- Perturbasi identitas sangat peka terhadap pergeseran beberapa piksel. Saat masih
+  ditempel mengikuti kotak wajah (yang dihaluskan dan sedikit tertinggal dari
+  gerakan), keyframe terlindungi (0,06) tetapi frame di antaranya bocor sampai 0,78.
+  Menempel mengikuti 5 landmark wajah di tiap frame memperbaikinya.
+- "Pola bersama" dirancang untuk mencegah flicker, tetapi ternyata tidak
+  mengurangi flicker (interpolasi sudah menghaluskan) dan justru melemahkan
+  perlindungan. Jadi dimatikan secara default.
+- Efek bertahan setelah kompresi: ~97–100% tersisa pada TikTok 2 Mbps, dan
+  tetap di bawah 0,4 pada 800 kbps.
+
+**3. Anti editing Stable Diffusion (VAE): lemah di video.**
+Jarak latent ke target tetap ≈ 0,99–1,00 (1 = tidak berefek), baik di TAESD yang
+diserang langsung maupun di SDXL/Flux. Uji per-crop menunjukkan penyebabnya:
+pada eps 8/255, serangan VAE saja turun ke 0,65 tanpa EOT dan hasil rekonstruksi
+VAE jelas rusak. Namun dengan EOT video (resize 0,4×, H.264, 4:2:0) hanya
+0,90, dan bila digabung dengan serangan identitas ≈ 0,96.
+
+Efek samping yang menarik: identitas wajah di hasil encode→decode VAE ikut turun
+(SD 0,71 → 0,48; SDXL 0,71 → 0,50; Flux 0,97 → 0,31), karena perturbasi identitas
+ikut "lolos" melewati VAE. Apakah ini bertahan pada img2img penuh (yang menambah
+noise lalu membersihkannya) **belum teruji**.
+
+**Kapan perlindungan gagal / belum terlindungi**
+- Frame yang wajahnya tidak terdeteksi (wajah sangat menyamping, tertutup, sangat
+  kecil, blur gerak berat) tidak dilindungi sama sekali.
+- Face swap / pengenal wajah yang tidak memakai ArcFace `w600k_r50` (SimSwap,
+  DeepFaceLab, model komersial): belum diuji, kemungkinan jauh lebih lemah.
+- Penyerang yang "mencuci" video lebih dulu (denoise, upscale AI, resize besar).
+- Editing berbasis Stable Diffusion/Flux: perlindungan VAE praktis tidak efektif
+  setelah kompresi video pada eps 8/255.
+- Watermark per frame (`--watermark`): terbaca setelah TikTok 2 Mbps pada
+  resolusi yang sama, **hilang** pada 800 kbps atau jika video di-resize.
+
+**Yang perlu diperbaiki**
+1. Uji di GPU dengan model asli: VAE SD, img2img, inswapper, dan video HP sungguhan
+   (beberapa orang, gerak kepala, cahaya rendah).
+2. Ensemble pengenal wajah (ArcFace + AdaFace/FaceNet/CurricularFace) agar
+   perlindungan identitas menular ke model lain, bukan hanya white-box.
+3. Serangan VAE yang lebih tahan video: anggaran lebih besar khusus area wajah,
+   target selain abu-abu, atau serangan ke UNet/denoiser (pendekatan Mist / SDS).
+4. Kecepatan: simulasi H.264 memanggil FFmpeg per langkah (CPU), sehingga perlu
+   diganti dengan aproksimasi diferensiabel di GPU.
+5. Watermark video yang tahan resize: voting lintas frame, atau pola yang
+   tidak bergantung pada grid 8×8.
+
+
 ## Keterbatasan (baca ini)
 
 Bagian ini sengaja ditulis lugas. Perlindungan adversarial adalah bidang riset
@@ -227,12 +449,16 @@ seperti DALL·E / Gemini) efeknya **jauh lebih lemah atau hilang**. Ensemble
 (`--vae` berulang) membantu sebagian, tapi tidak ada jaminan untuk model yang
 belum ada. Uji transfer di atas ada untuk mengukur ini.
 
-**2. Tidak dirancang untuk face-swap klasik.**
-Aplikasi face-swap seperti InsightFace/inswapper, SimSwap, DeepFaceLab, atau
-Roop/FaceFusion tidak memakai VAE Stable Diffusion. Mereka memakai detektor wajah
-dan *face embedding* (ArcFace). Untuk itu dibutuhkan serangan lain, terhadap
-detektor wajah atau embedding identitas (pendekatan seperti Fawkes / LowKey).
-Itu langkah berikutnya yang paling penting (lihat Roadmap).
+**2. Perlindungan VAE saja TIDAK menghentikan face-swap; serangan identitas hanya white-box ke satu model.**
+Uji di Tahap 2 menunjukkan perlindungan VAE (PhotoGuard) membuat hasil edit
+Stable Diffusion rusak, tetapi similarity ArcFace wajah terlindungi vs asli tetap
+~0,95. Artinya inswapper/Roop/FaceFusion tetap bisa mengambil wajahmu. Karena itu
+sekarang ada serangan identitas (`identity_attack.py`) yang menurunkannya ke
+~0,0 di foto dan ~0,2 di video setelah kompresi TikTok (lihat hasil uji Tahap 2). Namun serangan itu white-box terhadap ArcFace `w600k_r50`.
+Model ini dipakai inswapper dan banyak turunannya, tetapi tidak dipakai oleh
+SimSwap, DeepFaceLab (yang dilatih dari ratusan foto/video target), atau model
+komersial. Terhadap model-model itu efeknya belum teruji dan kemungkinan jauh
+lebih lemah.
 
 **3. Kompresi, resize, dan "pembersihan" melemahkan perlindungan.**
 EOT membuat perlindungan lebih tahan JPEG dan resize ringan, tapi:
@@ -270,10 +496,11 @@ tertentu salah membaca foto, kapan pun foto itu diproses, termasuk untuk editing
 yang tidak berbahaya. Hasilnya tidak menjamin wajahmu hilang sepenuhnya. Kadang
 hasilnya hanya blur atau berubah warna, sementara wajah masih bisa dikenali.
 
-**7. Deteksi wajah sederhana.**
-`faces.py` memakai Haar cascade bawaan OpenCV, yang sering melewatkan wajah
-miring atau dari samping. Ini hanya berpengaruh pada `--face-only` dan laporan
-jumlah wajah. Mode default melindungi seluruh foto.
+**7. Deteksi wajah.**
+Untuk foto, `--face-only` memakai Haar cascade bawaan OpenCV, yang sering
+melewatkan wajah miring atau dari samping (mode default melindungi seluruh foto).
+Video memakai RetinaFace (InsightFace) jika terpasang. Frame yang wajahnya tidak
+terdeteksi sama sekali **tidak terlindungi**.
 
 **Kesimpulan:** gunakan sebagai satu lapisan perlindungan, bersama kebiasaan lain:
 upload resolusi secukupnya, simpan file asli + manifest sebagai bukti, dan
@@ -281,15 +508,13 @@ laporkan deepfake ke platform / pihak berwajib (di Indonesia: UU ITE & UU PDP).
 
 ## Roadmap
 
-- **Tahap 1b**, masih untuk foto:
-  - Serangan terhadap *face embedding* (ArcFace/FaceNet) dan detektor wajah,
-    supaya juga melawan face-swap klasik (pendekatan Fawkes / LowKey).
-  - Anti-DreamBooth: mengganggu fine-tuning model dari kumpulan foto.
-  - Ensemble default SD1.5 + SDXL VAE.
-  - Detektor wajah yang lebih baik (YuNet/RetinaFace).
-- **Tahap 2**, video: FFmpeg → frame → deteksi & tracking wajah → perlindungan
-  per frame, dengan perturbasi yang konsisten antar frame dan EOT kompresi H.264
-  (bitrate rendah seperti TikTok) → gabung ulang dengan audio.
+- **Selesai**: Tahap 1 (foto), Tahap 2 (video), serangan identitas ArcFace.
+- **Perbaikan berikutnya** (lihat "Yang perlu diperbaiki" di Tahap 2):
+  - Ensemble identitas (ArcFace + AdaFace/FaceNet) agar tidak hanya white-box
+    ke satu model, dan serangan ke detektor wajah.
+  - Ensemble VAE default (SD1.5 + SDXL + Flux), mis. via TAESD agar murah.
+  - Anti-DreamBooth: mengganggu fine-tuning model dari kumpulan foto/video.
+  - Uji dengan model asli di GPU (VAE SD, img2img, inswapper) dan video sungguhan.
 - **Tahap 3**, suara: perturbasi anti voice-cloning (pendekatan AntiFake)
   terhadap speaker encoder.
 - **Tahap 4**, aplikasi: FastAPI + antrean job GPU (`antideepfake.pipeline`

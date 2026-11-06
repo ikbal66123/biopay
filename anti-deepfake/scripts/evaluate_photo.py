@@ -38,9 +38,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from antideepfake.device import pick_device  # noqa: E402
 from antideepfake.faces import detect_faces  # noqa: E402
-from antideepfake.imageio import fit_size, jpeg_roundtrip, load_rgb, resize_rgb, to_tensor, to_uint8  # noqa: E402
+from antideepfake.evaluation import to_work, vae_metrics  # noqa: E402
+from antideepfake.imageio import jpeg_roundtrip, load_rgb, resize_rgb  # noqa: E402
 from antideepfake.metrics import psnr, similarity_report, ssim  # noqa: E402
-from antideepfake.photoguard import DEFAULT_VAE, encode, load_vae  # noqa: E402
+from antideepfake.photoguard import DEFAULT_VAE, load_vae  # noqa: E402
 
 DEFAULT_MODEL = "stable-diffusion-v1-5/stable-diffusion-v1-5"
 DEFAULT_PROMPT = "news photo of a man caught stealing a chicken at a night market, police, realistic"
@@ -61,32 +62,6 @@ def apply_condition(image: np.ndarray, cond: str) -> np.ndarray:
         else:
             raise ValueError(f"Kondisi tidak dikenal: {part}")
     return out
-
-
-def to_work(image: np.ndarray, size: int) -> np.ndarray:
-    h, w = image.shape[:2]
-    return resize_rgb(image, fit_size(w, h, size))
-
-
-@torch.no_grad()
-def vae_metrics(vae, orig: np.ndarray, prot: np.ndarray, device) -> tuple[dict, np.ndarray, np.ndarray]:
-    xo, xp = to_tensor(orig, device), to_tensor(prot, device)
-    zo, zp = encode(vae, xo), encode(vae, xp)
-    dtype = next(vae.parameters()).dtype
-
-    def dec(z):
-        return ((vae.decode(z.to(dtype)).sample.float() + 1) / 2).clamp(0, 1)
-
-    ro, rp = to_uint8(dec(zo)), to_uint8(dec(zp))
-    return (
-        {
-            "latent_shift": round(float((zp - zo).norm() / zo.norm()), 4),
-            "recon_psnr_original_db": round(psnr(ro, orig), 2),
-            "recon_psnr_protected_db": round(psnr(rp, prot), 2),
-        },
-        ro,
-        rp,
-    )
 
 
 def label(img: np.ndarray, text: str, size: int = 256) -> Image.Image:

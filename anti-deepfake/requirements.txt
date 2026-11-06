@@ -2,12 +2,20 @@
 # misalnya: pip install torch --index-url https://download.pytorch.org/whl/cu124
 torch>=2.2
 diffusers>=0.30
-transformers>=4.40      # dibutuhkan pipeline img2img di evaluate_photo.py
+transformers>=4.40      # dibutuhkan pipeline img2img di evaluate_photo.py / test_video.py
 accelerate>=0.30
 numpy>=1.24
 pillow>=10.0
 opencv-python-headless>=4.8,<5   # OpenCV 5 tidak lagi menyertakan Haar cascade
 scikit-image>=0.22
+tqdm>=4.60
 pytest>=8.0
+
+# Tahap 2 (video) & anti face-swap: deteksi wajah RetinaFace + identitas ArcFace.
+# Untuk GPU NVIDIA ganti onnxruntime dengan onnxruntime-gpu.
+insightface>=0.7.3
+onnxruntime>=1.17
+onnx2torch>=1.5
+
 # opsional: metrik perseptual
 # lpips>=0.1.4

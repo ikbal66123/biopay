@@ -34,6 +34,8 @@ def main() -> None:
     ap.add_argument("--eps", type=float, help="batas perubahan per piksel dalam skala 0-255 (default preset: 8)")
     ap.add_argument("--steps", type=int, help="jumlah iterasi PGD")
     ap.add_argument("--no-eot", action="store_true", help="matikan simulasi resize/JPEG saat optimasi")
+    ap.add_argument("--identity", default="auto", choices=["auto", "on", "off"],
+                    help="serangan identitas ArcFace (anti face-swap). auto = aktif jika insightface+onnx2torch terpasang")
     ap.add_argument("--no-adaptive", action="store_true", help="eps sama rata di semua piksel (tanpa masking tekstur)")
     ap.add_argument("--device", default="auto", help="auto / cuda / mps / cpu")
     ap.add_argument("--fp16", action="store_true", help="VAE half precision di GPU (lebih cepat, sedikit kurang presisi)")
@@ -70,12 +72,17 @@ def main() -> None:
             fp16=args.fp16,
             config_overrides=overrides,
             progress=progress,
+            identity=args.identity,
         )
         imp = report["imperceptibility"]
         att = report["attack"]
         print(f"    wajah terdeteksi : {report['faces_detected']}")
         print(f"    PSNR / SSIM      : {imp['psnr_db']} dB / {imp['ssim']}  (perubahan maks {imp['linf_0_255']}/255)")
         print(f"    jarak latent     : {att['initial_loss']:.3f} -> {att['final_loss']:.3f}  (makin kecil = encoder makin tertipu)")
+        if att.get("final_identity_cos") is not None:
+            print(f"    identitas ArcFace: cosine {att['final_identity_cos']:.3f} terhadap wajah asli (makin rendah makin baik)")
+        elif report["identity_attack"]["note"]:
+            print(f"    [!] {report['identity_attack']['note']}")
         if report["watermark"]:
             print(f"    watermark        : terbaca={report['watermark']['owner_match']}")
         print(f"    hasil            : {report['output']}")

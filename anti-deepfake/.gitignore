@@ -7,3 +7,6 @@ examples/*
 !examples/.gitkeep
 *_protected.png
 *_protected.json
+video_eval/
+*_protected.mp4
+*_protected_audio.mka

@@ -41,6 +41,56 @@ def jpeg_ste(x: torch.Tensor, quality: int) -> torch.Tensor:
     return x + (y - x).detach()
 
 
+def chroma_subsample(x: torch.Tensor) -> torch.Tensor:
+    """Simulasi subsampling warna 4:2:0 (dipakai hampir semua video H.264/TikTok).
+
+    Diferensiabel: RGB -> YCbCr, Cb/Cr diperkecil 2x lalu diperbesar, kembali ke RGB.
+    Perturbasi pada kanal warna yang halus akan hilang, jadi optimasi belajar
+    menaruh lebih banyak "racun" di luminans.
+    """
+    r, g, b = x[:, 0:1], x[:, 1:2], x[:, 2:3]
+    y = 0.299 * r + 0.587 * g + 0.114 * b
+    cb = (b - y) * 0.564
+    cr = (r - y) * 0.713
+    h, w = x.shape[-2:]
+    cb = F.interpolate(F.avg_pool2d(cb, 2, ceil_mode=True), size=(h, w), mode="bilinear", align_corners=False)
+    cr = F.interpolate(F.avg_pool2d(cr, 2, ceil_mode=True), size=(h, w), mode="bilinear", align_corners=False)
+    r2 = y + 1.403 * cr
+    b2 = y + 1.773 * cb
+    g2 = (y - 0.299 * r2 - 0.114 * b2) / 0.587
+    return torch.cat([r2, g2, b2], 1)
+
+
+def h264_roundtrip_np(frames: np.ndarray, crf: int, preset: str = "veryfast") -> np.ndarray:
+    """Kompres batch frame uint8 (N, H, W, 3) dengan H.264 sungguhan (FFmpeg), lalu decode."""
+    import subprocess
+
+    n, h, w, _ = frames.shape
+    pad_h, pad_w = h % 2, w % 2  # yuv420p butuh dimensi genap
+    if pad_h or pad_w:
+        frames = np.pad(frames, ((0, 0), (0, pad_h), (0, pad_w), (0, 0)), mode="edge")
+    H, W = frames.shape[1:3]
+    enc = subprocess.run(
+        ["ffmpeg", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", "30", "-i", "-",
+         "-c:v", "libx264", "-preset", preset, "-crf", str(int(crf)), "-pix_fmt", "yuv420p", "-f", "h264", "-"],
+        input=np.ascontiguousarray(frames).tobytes(), capture_output=True, check=True,
+    ).stdout
+    dec = subprocess.run(
+        ["ffmpeg", "-v", "error", "-f", "h264", "-i", "-", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+        input=enc, capture_output=True, check=True,
+    ).stdout
+    out = np.frombuffer(dec, dtype=np.uint8).reshape(-1, H, W, 3)[:n]
+    return out[:, :h, :w].copy()
+
+
+def h264_ste(x: torch.Tensor, crf: int) -> torch.Tensor:
+    """H.264 sungguhan di forward, gradien identitas di backward (seperti jpeg_ste)."""
+    arr = np.round(x.detach().clamp(0, 1).permute(0, 2, 3, 1).cpu().numpy() * 255).astype(np.uint8)
+    dec = h264_roundtrip_np(arr, crf)
+    y = torch.from_numpy(dec.astype(np.float32) / 255.0).permute(0, 3, 1, 2).to(x.device, x.dtype)
+    return x + (y - x).detach()
+
+
 def gaussian_blur(x: torch.Tensor, sigma: float) -> torch.Tensor:
     radius = max(1, int(round(2 * sigma)))
     coords = torch.arange(-radius, radius + 1, device=x.device, dtype=x.dtype)
@@ -65,6 +115,9 @@ class EOTSampler:
         jpeg_quality: tuple[int, int] = (50, 95),
         blur_prob: float = 0.2,
         noise_std: float = 0.01,
+        chroma_prob: float = 0.0,
+        h264_prob: float = 0.0,
+        h264_crf: tuple[int, int] = (23, 32),
         seed: int = 0,
     ) -> None:
         self.work_hw = work_hw
@@ -73,6 +126,9 @@ class EOTSampler:
         self.jpeg_quality = jpeg_quality
         self.blur_prob = blur_prob
         self.noise_std = noise_std
+        self.chroma_prob = chroma_prob
+        self.h264_prob = h264_prob
+        self.h264_crf = h264_crf
         self.rng = random.Random(seed)
 
     def sample_size(self) -> tuple[int, int]:
@@ -87,7 +143,12 @@ class EOTSampler:
             x = gaussian_blur(x, self.rng.uniform(0.3, 1.0))
         if self.noise_std > 0:
             x = x + torch.randn_like(x) * self.rng.uniform(0, self.noise_std)
+        if self.chroma_prob > 0 and self.rng.random() < self.chroma_prob:
+            x = chroma_subsample(x)
         x = x.clamp(0, 1)
-        if self.jpeg_prob > 0 and self.rng.random() < self.jpeg_prob:
+        # H.264 dan JPEG saling eksklusif dalam satu sampel (keduanya kompresi akhir).
+        if self.h264_prob > 0 and self.rng.random() < self.h264_prob:
+            x = h264_ste(x, self.rng.randint(*self.h264_crf))
+        elif self.jpeg_prob > 0 and self.rng.random() < self.jpeg_prob:
             x = jpeg_ste(x, self.rng.randint(*self.jpeg_quality))
         return x
