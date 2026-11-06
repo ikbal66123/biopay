@@ -16,8 +16,8 @@
         .app-container { width: 100%; max-width: 400px; height: 800px; background-color: #1e293b; position: relative; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border-radius: 2.5rem; border: 12px solid #0f172a; flex-shrink: 0;}
         .app-container::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background-color: #0f172a; border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; z-index: 100; }
         
-        .screen, .screen-p2 { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; flex-direction: column; padding: 2rem; padding-top: 3.5rem; animation: fadeIn 0.3s ease-out; }
-        .screen.active, .screen-p2.active { display: flex; }
+        .screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; flex-direction: column; padding: 2rem; padding-top: 3.5rem; animation: fadeIn 0.3s ease-out; }
+        .screen.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .scanner-box { position: relative; overflow: hidden; border-radius: 1rem; border: 2px dashed #38bdf8; background: rgba(56, 189, 248, 0.05); }
         .scanner-line { position: absolute; left: 0; width: 100%; height: 4px; background: #38bdf8; box-shadow: 0 0 15px 4px rgba(56, 189, 248, 0.5); animation: scan 2s infinite linear alternate; }
@@ -74,8 +74,8 @@
 
         /* FIX: Layar scan/konfirmasi dulu melebar penuh (900-1200px) sehingga kotak kamera aspect-ratio
            jauh lebih tinggi dari layar 800px dan terpotong. Batasi lebar konten agar proporsional. */
-        .screen:not(#screen-dashboard) > *, .screen-p2:not(#screen-dashboard-p2) > * { width: 100%; max-width: 440px; margin-left: auto; margin-right: auto; }
-        .screen:not(#screen-dashboard), .screen-p2:not(#screen-dashboard-p2) { align-items: center; overflow-y: auto; }
+        .screen:not([id^="screen-dashboard"]) > * { width: 100%; max-width: 440px; margin-left: auto; margin-right: auto; }
+        .screen:not([id^="screen-dashboard"]) { align-items: center; overflow-y: auto; }
         .scanner-box { max-height: 52vh; max-height: min(52vh, 460px); }
         .scanner-box.aspect-square { max-width: min(100%, 360px); }
 
@@ -1160,274 +1160,8 @@
                         <i class="ph-bold ph-x text-lg"></i>
                     </button>
 
-                    <!-- Screen P2: Start Payment (Exact replica of Screen 1) -->
-                    <div id="screen-start-p2" class="screen-p2 active flex-col items-center justify-center text-center px-6 bg-[#020617]">
-                        <div class="w-12 h-12 flex items-center justify-center mb-3">
-                            <i class="ph-fill ph-shield text-4xl text-sky-400 drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]"></i>
-                        </div>
-                        <h1 class="text-xl font-bold mb-1 text-white tracking-wide">Otorisasi Biometrik BioPay</h1>
-                        <p class="text-slate-400 text-xs mb-10">Verifikasi 2 Tahap Keamanan Akses Travel</p>
-                        <div class="relative w-48 h-48 rounded-full border-[3px] border-sky-900 flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(56,189,248,0.05)] overflow-hidden bg-slate-900/30">
-                            <div class="absolute inset-0 bg-sky-500/5 rounded-full"></div>
-                            <div class="absolute left-0 w-full h-[3px] bg-sky-400 shadow-[0_0_15px_4px_rgba(56,189,248,0.6)] z-20" style="animation: scan-vertical 3s infinite ease-in-out;"></div>
-                            <div class="w-16 h-16 bg-sky-500 rounded-full flex items-center justify-center z-10 shadow-[0_0_20px_rgba(56,189,248,0.3)]">
-                                <i class="ph-bold ph-smiley text-4xl text-slate-900"></i>
-                            </div>
-                        </div>
-                        <div class="bg-slate-900/60 border border-slate-700/50 rounded-xl p-4 w-full mb-6 text-center shadow-lg">
-                            <p class="text-sky-500 text-sm font-semibold mb-1">Silakan lakukan Scan Wajah untuk memulai login</p>
-                            <p class="text-slate-500 text-[11px]">Posisikan wajah Anda tepat di depan kamera terminal</p>
-                        </div>
-                        <button onclick="goToScreenP2('screen-face-scan-p2')" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 flex items-center justify-center gap-2 mb-6 cursor-pointer">
-                            <i class="ph-fill ph-camera text-lg"></i> Mulai Scan Wajah
-                        </button>
-                        <p class="text-[10px] text-slate-600 font-medium tracking-widest uppercase mt-auto">Dilindungi BioPay Mesh Protocol v3.2</p>
-                    </div>
-
-                    <!-- Screen P2: Face Scan (Exact replica of Screen 2) -->
-                    <div id="screen-face-scan-p2" class="screen-p2 flex-col items-center bg-[#020617]">
-                        <div class="text-center w-full mb-8 mt-4">
-                            <h2 class="text-xl font-bold">Verifikasi Wajah</h2>
-                            <p class="text-sm text-slate-400">Mohon tersenyum ke kamera</p>
-                        </div>
-                        <div class="w-full aspect-[3/4] scanner-box flex flex-col justify-center items-center mt-4 relative">
-                            <video id="video-face-p2" class="absolute inset-0 w-full h-full object-cover z-0 -scale-x-100" autoplay muted playsinline></video>
-                            <div class="scanner-line z-10"></div>
-                            
-                            <div class="absolute top-4 left-4 z-20 bg-emerald-900/80 px-2 py-1.5 rounded border border-emerald-500/50 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
-                                <i class="ph-fill ph-shield-check text-emerald-400 text-sm animate-pulse"></i>
-                                <span class="text-emerald-400 text-[9px] font-bold tracking-wider uppercase">3D Liveness Active</span>
-                            </div>
-
-                            <i class="ph ph-smiley text-7xl text-sky-400/50 mb-4 absolute z-[-1]"></i>
-                            <div class="absolute bottom-4 z-10 bg-slate-900/80 px-4 py-1.5 rounded-full border border-sky-400/30 backdrop-blur-sm">
-                                <p class="text-sky-400 animate-pulse text-sm font-medium">Mendeteksi Kedalaman 3D Wajah...</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Screen P2: User Identity (Exact replica of Screen 3) -->
-                    <div id="screen-identity-p2" class="screen-p2 justify-center items-center text-center bg-[#020617]">
-                        <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6 text-green-400 text-4xl">
-                            <i class="ph-fill ph-check-circle"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold mb-1">Identitas Ditemukan</h2>
-                        <div class="bg-slate-700/50 w-full p-4 rounded-xl mt-6 border border-slate-600">
-                            <p class="text-slate-400 text-sm mb-1">Nama Pengguna</p>
-                            <p class="text-xl font-bold text-white mb-4">IKBAL</p>
-                            <p class="text-slate-400 text-sm mb-1">BioID</p>
-                            <p class="text-lg font-mono tracking-widest text-sky-400">12345</p>
-                        </div>
-                        <button onclick="goToScreenP2('screen-hand-scan-p2')" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-4 rounded-xl shadow-lg shadow-sky-500/30 transition-all active:scale-95 mt-8 cursor-pointer">
-                            Lanjutkan Scan Tangan
-                        </button>
-                    </div>
-
-                    <!-- Screen P2: Hand Scan (Exact replica of Screen 4) -->
-                    <div id="screen-hand-scan-p2" class="screen-p2 flex-col items-center bg-[#020617]">
-                        <div class="text-center w-full mb-8 mt-4">
-                            <h2 class="text-xl font-bold">Verifikasi Tangan</h2>
-                            <p class="text-sm text-slate-400">Letakkan telapak tangan Anda</p>
-                        </div>
-                        <div class="w-full aspect-square scanner-box flex flex-col justify-center items-center mt-12 rounded-full border-4 border-dashed relative">
-                            <video id="video-hand-p2" class="absolute inset-0 w-full h-full object-cover z-0 -scale-x-100" autoplay muted playsinline></video>
-                            <div class="scanner-line z-10"></div>
-                            
-                            <div class="absolute top-8 left-1/2 -translate-x-1/2 z-20 bg-emerald-900/80 px-2 py-1.5 rounded-full border border-emerald-500/50 backdrop-blur-md flex items-center gap-1.5 shadow-lg w-max">
-                                <i class="ph-fill ph-shield-check text-emerald-400 text-sm animate-pulse"></i>
-                                <span class="text-emerald-400 text-[9px] font-bold tracking-wider uppercase">Vein Anti-Spoofing</span>
-                            </div>
-
-                            <i class="ph ph-hand-palm text-8xl text-sky-400/50 mb-4 absolute z-[-1]"></i>
-                            <div class="absolute bottom-8 z-10 bg-slate-900/80 px-4 py-1.5 rounded-full border border-sky-400/30 backdrop-blur-sm">
-                                <p class="text-sky-400 animate-pulse text-sm font-medium">Memindai Suhu & Aliran Darah...</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Screen P2: Dashboard BioPay (100% Code-Level Clone of Screen 8 / POV 1 Dashboard) -->
-                    <div id="screen-dashboard-p2" class="screen-p2 flex-col justify-start !p-0 overflow-hidden bg-[#0a0f1c]">
-                        <!-- Header -->
-                        <div class="bg-gradient-to-r from-[#0ea5e9] to-[#6366f1] w-full p-6 pb-4 rounded-t-[2rem] flex flex-col shrink-0 pt-8">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h2 class="text-xl font-bold text-white mb-0.5">BioPay Travel Hub</h2>
-                                    <p class="text-sky-100 text-[10px] tracking-wide">Universal Biometric Operational Manager</p>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="relative w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm shadow-sm cursor-pointer hover:bg-white/30" onclick="showToast('Ada aktivitas login dari perangkat baru!', 'ph-bell-ringing', 'text-yellow-400', 2)">
-                                        <i class="ph-fill ph-bell text-white text-base"></i>
-                                        <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-[#5a6ce2] rounded-full"></span>
-                                    </div>
-                                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm shadow-sm cursor-pointer hover:bg-white/30" onclick="switchTabP2('pengaturan')">
-                                        <i class="ph-fill ph-gear text-white text-base"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center bg-indigo-900/40 rounded-lg p-2 backdrop-blur-sm border border-white/10 cursor-pointer">
-                                <div class="flex items-center gap-2 text-white text-xs">
-                                    <i class="ph-fill ph-user text-base"></i>
-                                    <span class="font-semibold tracking-wide">Ikbal Habibi (#12345)</span>
-                                </div>
-                                <span class="bg-indigo-500/50 text-indigo-100 text-[9px] px-2 py-0.5 rounded font-mono uppercase tracking-wider">Status: Terverifikasi</span>
-                            </div>
-                        </div>
-
-                        <!-- Navigation Tabs P2 -->
-                        <div class="flex justify-between items-center w-full px-3 py-3 bg-[#151e2f] border-b border-slate-700/50 shrink-0 shadow-md z-10 overflow-x-auto gap-2 custom-scrollbar">
-                            <div id="nav-home-p2" onclick="switchTabP2('home')" class="flex flex-col items-center gap-1 text-[#38bdf8] min-w-[50px] cursor-pointer shrink-0">
-                                <i class="ph-fill ph-house text-xl"></i><span class="text-[9px] font-bold border-b-2 border-[#38bdf8] pb-1 tracking-wide">Home</span>
-                            </div>
-                            <div id="nav-operasional-p2" onclick="switchTabP2('operasional')" class="flex flex-col items-center gap-1 text-slate-400 min-w-[50px] cursor-pointer hover:text-slate-200 transition-colors shrink-0">
-                                <i class="ph-bold ph-faders text-xl"></i><span class="text-[9px] font-semibold pb-1 border-b-2 border-transparent tracking-wide">Operasional</span>
-                            </div>
-                            <div id="nav-travel-p2" onclick="switchTabP2('travel')" class="flex flex-col items-center gap-1 text-slate-400 min-w-[50px] cursor-pointer hover:text-slate-200 transition-colors shrink-0">
-                                <i class="ph-fill ph-airplane-tilt text-xl"></i><span class="text-[9px] font-semibold pb-1 border-b-2 border-transparent tracking-wide">Travel</span>
-                            </div>
-                            <div id="nav-wallets-p2" onclick="switchTabP2('wallets')" class="flex flex-col items-center gap-1 text-slate-400 min-w-[50px] cursor-pointer hover:text-slate-200 transition-colors shrink-0">
-                                <i class="ph-fill ph-wallet text-xl"></i><span class="text-[9px] font-semibold pb-1 border-b-2 border-transparent tracking-wide">Wallets</span>
-                            </div>
-                            <div id="nav-riwayat-p2" onclick="switchTabP2('riwayat')" class="flex flex-col items-center gap-1 text-slate-400 min-w-[50px] cursor-pointer hover:text-slate-200 transition-colors shrink-0">
-                                <i class="ph-bold ph-clock-counter-clockwise text-xl"></i><span class="text-[9px] font-semibold pb-1 border-b-2 border-transparent tracking-wide">Riwayat</span>
-                            </div>
-                            <div id="nav-biopass-p2" onclick="switchTabP2('biopass')" class="flex flex-col items-center gap-1 text-slate-400 min-w-[50px] cursor-pointer hover:text-slate-200 transition-colors shrink-0">
-                                <i class="ph-fill ph-address-book text-xl"></i><span class="text-[9px] font-semibold pb-1 border-b-2 border-transparent tracking-wide">Bio-Pass</span>
-                            </div>
-                        </div>
-
-                        <!-- Content Area P2 -->
-                        <div class="flex-1 overflow-y-auto custom-scrollbar p-4 bg-[#0a0f1c] flex flex-col gap-4 pb-20 relative">
-                            
-                            <!-- Tab: Home P2 -->
-                            <div id="tab-home-p2" class="flex flex-col gap-4">
-                                <div class="bg-gradient-to-br from-[#0ea5e9] to-[#4f46e5] rounded-2xl p-4 shadow-[0_10px_25px_rgba(14,165,233,0.3)] text-white relative overflow-hidden">
-                                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-                                    <p class="text-sky-100 text-[10px] font-medium mb-1 relative z-10">Total Saldo DANA (Terhubung)</p>
-                                    <h2 class="text-2xl font-bold mb-1 flex items-center gap-2 relative z-10">
-                                        <span id="p2-balance-text">Rp 1.000.000.000</span>
-                                    </h2>
-                                    <div class="flex gap-2 mt-3 relative z-10">
-                                        <button onclick="closeBioPayInPOV2(); showEwalletTopUp();" class="flex-1 bg-white/20 hover:bg-white/30 transition-colors py-2 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1.5 backdrop-blur-sm shadow-inner border border-white/20 cursor-pointer"><i class="ph-bold ph-plus-circle text-base"></i> Top Up</button>
-                                        <button onclick="closeBioPayInPOV2(); showEwalletKirim();" class="flex-1 bg-white/20 hover:bg-white/30 transition-colors py-2 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1.5 backdrop-blur-sm shadow-inner border border-white/20 cursor-pointer"><i class="ph-bold ph-paper-plane-tilt text-base"></i> Transfer Uang</button>
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-5 gap-2 mt-1">
-                                    <div onclick="showToast('Fitur Scan Bayar Aktif', 'ph-qr-code', 'text-sky-400', 2)" class="flex flex-col items-center gap-1.5 cursor-pointer hover:scale-105 transition-transform"><div class="w-11 h-11 rounded-xl bg-[#151e2f] border border-slate-700 flex items-center justify-center text-[#38bdf8] shadow-sm"><i class="ph-fill ph-qr-code text-xl"></i></div><span class="text-slate-400 text-[9px] font-medium text-center leading-tight">Scan<br>Bayar</span></div>
-                                    <div onclick="showToast('Fitur Tarik Tunai Aktif', 'ph-money', 'text-red-400', 2)" class="flex flex-col items-center gap-1.5 cursor-pointer hover:scale-105 transition-transform"><div class="w-11 h-11 rounded-xl bg-[#151e2f] border border-slate-700 flex items-center justify-center text-[#ef4444] shadow-sm"><i class="ph-fill ph-money text-xl"></i></div><span class="text-slate-400 text-[9px] font-medium text-center leading-tight">Tarik<br>Tunai</span></div>
-                                    <div onclick="closeBioPayInPOV2(); showEwalletMinta();" class="flex flex-col items-center gap-1.5 cursor-pointer hover:scale-105 transition-transform"><div class="w-11 h-11 rounded-xl bg-[#151e2f] border border-slate-700 flex items-center justify-center text-[#10b981] shadow-sm"><i class="ph-fill ph-hand-coins text-xl"></i></div><span class="text-slate-400 text-[9px] font-medium text-center leading-tight">Minta<br>Dana</span></div>
-                                    <div onclick="closeBioPayInPOV2(); openEwalletService('Listrik PLN', 'ph-lightning', 250000);" class="flex flex-col items-center gap-1.5 cursor-pointer hover:scale-105 transition-transform"><div class="w-11 h-11 rounded-xl bg-[#151e2f] border border-slate-700 flex items-center justify-center text-[#f59e0b] shadow-sm"><i class="ph-fill ph-receipt text-xl"></i></div><span class="text-slate-400 text-[9px] font-medium text-center leading-tight">Tagihan<br>Bulanan</span></div>
-                                    <div onclick="showToast('Fitur Tukar Valas Aktif', 'ph-currency-circle-dollar', 'text-purple-400', 2)" class="flex flex-col items-center gap-1.5 cursor-pointer hover:scale-105 transition-transform"><div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.2)]"><i class="ph-fill ph-currency-circle-dollar text-xl"></i></div><span class="text-slate-400 text-[9px] font-medium text-center leading-tight">Tukar<br>Valas</span></div>
-                                </div>
-
-                                <div onclick="showToast('Sistem biometrik aktif dan melacak upaya intrusi.', 'ph-shield-check', 'text-emerald-500', 2)" class="bg-gradient-to-r from-[#151e2f] to-[#1e293b] rounded-xl border border-[#10b981]/30 p-3 flex items-center justify-between cursor-pointer mt-2">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-[#10b981]/10 flex items-center justify-center text-[#10b981]"><i class="ph-fill ph-shield-check text-lg"></i></div>
-                                        <div><h3 class="text-white font-bold text-[11px] mb-0.5">Keamanan Biometrik</h3><p class="text-slate-400 text-[9px]">Perlindungan ganda BioPay aktif</p></div>
-                                    </div>
-                                    <div class="text-[#10b981] font-bold text-[9px] flex items-center gap-1 bg-[#10b981]/10 px-1.5 py-0.5 rounded border border-[#10b981]/20"><i class="ph-bold ph-check"></i> Aman</div>
-                                </div>
-                            </div>
-
-                            <!-- Tab: Operasional P2 -->
-                            <div id="tab-operasional-p2" class="hidden flex-col gap-4">
-                                <div class="bg-[#151e2f] rounded-xl border border-slate-700 p-4">
-                                    <div class="flex justify-between items-center mb-4">
-                                        <div class="flex items-center gap-2 text-white font-bold text-[10px] tracking-wider uppercase"><i class="ph-fill ph-hard-drives text-[#38bdf8] text-base"></i> MODE OPERASIONAL</div>
-                                        <span class="text-[9px] text-[#059669] font-mono border border-[#059669]/30 bg-[#059669]/10 px-2 py-0.5 rounded-full font-bold uppercase">Aktif</span>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <div class="bg-[#0f172a] rounded-lg p-2 border border-slate-700 cursor-pointer" onclick="showToast('Sensor: IR Face + Palm Vein (Akurasi 99.9%)', 'ph-scan', 'text-sky-400', 2)"><p class="text-slate-400 text-[9px] mb-1">Sensor Pemindai</p><p class="text-white text-xs font-bold">Face + Palm</p></div>
-                                        <div class="bg-[#0f172a] rounded-lg p-2 border border-slate-700 cursor-pointer" onclick="showToast('Latensi Settlement: 1.15 Detik via Jaringan Solana', 'ph-lightning', 'text-yellow-400', 2)"><p class="text-slate-400 text-[9px] mb-1">Settlement</p><p class="text-[#38bdf8] text-xs font-bold">&lt; 1.2 Detik</p></div>
-                                    </div>
-                                </div>
-                                <div class="bg-[#151e2f] rounded-xl border border-slate-700 p-4">
-                                    <div class="flex items-center gap-2 text-white font-bold text-[10px] tracking-wider uppercase mb-4"><i class="ph-fill ph-gear text-[#38bdf8] text-base"></i> PENGATURAN KEAMANAN</div>
-                                    <div class="flex flex-col gap-3">
-                                        <div class="bg-[#0f172a] rounded-lg p-3 border border-slate-700 flex justify-between items-center cursor-pointer" onclick="toggleSetting(this, 'Verifikasi Ganda (2FA)')">
-                                            <div><p class="text-white text-xs font-bold mb-0.5">Verifikasi Ganda (2FA)</p><p class="text-slate-400 text-[9px]">Wajibkan scan wajah + telapak</p></div>
-                                            <div class="toggle-btn w-5 h-5 rounded bg-[#38bdf8] flex items-center justify-center text-[#0f172a] transition-all"><i class="ph-bold ph-check text-xs"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tab: Travel P2 -->
-                            <div id="tab-travel-p2" class="hidden flex-col gap-4">
-                                <div class="bg-[#151e2f] rounded-xl border border-slate-700 p-4 cursor-pointer" onclick="showToast('Arahkan wajah ke kasir untuk bayar tiket travel otomatis.', 'ph-airplane-tilt', 'text-sky-400', 2)">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <div class="w-10 h-10 rounded-lg bg-[#0ea5e9]/20 flex items-center justify-center text-[#38bdf8]"><i class="ph-fill ph-airplane-tilt text-xl"></i></div>
-                                        <div><h3 class="text-white font-bold text-xs">Hubungkan Travel</h3><p class="text-slate-400 text-[9px]">Sambungkan app travel ke BioPay.</p></div>
-                                    </div>
-                                    <div class="bg-[#059669]/10 border border-[#059669]/30 rounded-lg p-2"><p class="text-slate-400 text-[9px] leading-relaxed">Cukup katakan: <span class="text-[#38bdf8] font-bold">"Bayar Pakai BioPay Travel"</span></p></div>
-                                </div>
-                                <div class="mt-1">
-                                    <h3 class="text-slate-400 font-bold text-[9px] tracking-wider uppercase mb-2 px-1">DAFTAR PLATFORM PERJALANAN</h3>
-                                    <div class="flex flex-col gap-2">
-                                        <div class="bg-[#151e2f] rounded-xl border border-[#38bdf8]/40 p-3 flex items-center justify-between cursor-pointer" onclick="showToast('Traveloka sudah menjadi platform utama', 'ph-check-circle', 'text-sky-400', 2)">
-                                            <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-[#0ea5e9] flex justify-center items-center text-white"><i class="ph-fill ph-airplane-tilt text-base"></i></div><div><div class="flex items-center gap-2"><h4 class="text-white font-bold text-xs">Traveloka</h4><span class="bg-[#38bdf8]/20 text-[#38bdf8] text-[8px] px-1 rounded font-bold">Utama</span></div><p class="text-slate-400 text-[9px]">Terhubung</p></div></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tab: Wallets P2 -->
-                            <div id="tab-wallets-p2" class="hidden flex-col gap-3">
-                                <div class="flex justify-between items-center mb-1 px-1">
-                                    <h3 class="text-slate-400 font-bold text-[9px] tracking-wider uppercase">SUMBER DANA</h3>
-                                </div>
-                                <div class="flex flex-col gap-2">
-                                    <div class="bg-[#151e2f] rounded-xl border border-[#38bdf8]/40 p-3 flex justify-between items-center">
-                                        <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center text-white font-bold text-xs">DDA</div><div><h4 class="text-white font-bold text-xs">DANA</h4><p id="p2-wallet-bal" class="text-slate-400 text-[9px]">Saldo: Rp 1.000.000.000</p></div></div>
-                                        <span class="border border-[#059669]/50 bg-[#059669]/10 text-[#10b981] px-2 py-0.5 rounded-full text-[9px] font-bold">Utama</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tab: Riwayat P2 -->
-                            <div id="tab-riwayat-p2" class="hidden flex-col gap-3">
-                                <h3 class="text-slate-400 font-bold text-[9px] tracking-wider uppercase px-1">RIWAYAT TRANSAKSI</h3>
-                                <div class="flex flex-col gap-2">
-                                    <div class="bg-[#151e2f] rounded-xl border border-slate-700 p-3 flex justify-between cursor-pointer hover:border-slate-500">
-                                        <div><h4 class="text-white font-bold text-xs">US Retail Coffee (USA)</h4><p class="text-slate-400 text-[9px]">17 Okt &bull; DANA</p></div>
-                                        <div class="text-right"><p class="text-[#10b981] font-bold text-xs">-$4.50 USD</p><p class="text-slate-400 text-[9px]">Rp 72.000</p></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tab: Bio-Pass P2 -->
-                            <div id="tab-biopass-p2" class="hidden flex-col gap-4">
-                                <div class="bg-gradient-to-b from-[#2b275a] to-[#151e2f] border border-indigo-500/30 rounded-2xl p-5 flex flex-col items-center text-center cursor-pointer">
-                                    <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 mb-3"><i class="ph-fill ph-address-book text-2xl"></i></div>
-                                    <h3 class="text-white font-bold text-sm mb-1">Global Bio-Passport Token</h3>
-                                    <p class="text-slate-300 text-[9px] mb-4">Akses tanpa dokumen kertas untuk pemeriksaan imigrasi dan hotel merchant.</p>
-                                    <div class="bg-[#0b101a] border border-slate-700 w-full rounded-lg p-3 flex flex-col gap-2 text-left">
-                                        <div class="flex justify-between items-center"><span class="text-slate-400 text-[9px] font-mono">Pemilik:</span><span class="text-white font-bold text-[10px]">Ikbal Habibi</span></div>
-                                        <div class="flex justify-between items-center"><span class="text-slate-400 text-[9px] font-mono">No. ID Paspor:</span><span class="text-[#38bdf8] font-mono font-bold text-[10px]">BIO-ID-12345-US</span></div>
-                                        <div class="flex justify-between items-center"><span class="text-slate-400 text-[9px] font-mono">Status Biometrik:</span><span class="text-[#10b981] font-mono font-bold text-[10px]">VERIFIED</span></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tab: Pengaturan P2 -->
-                            <div id="tab-pengaturan-p2" class="hidden flex-col gap-4">
-                                <h3 class="text-slate-400 font-bold text-[9px] tracking-wider uppercase px-1 mt-1">PROFIL & AKUN</h3>
-                                <div class="bg-[#151e2f] rounded-xl border border-slate-700 p-4 flex items-center gap-4">
-                                    <div class="w-14 h-14 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-3xl border border-sky-500/30">
-                                        <i class="ph-fill ph-user"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h4 class="text-white font-bold text-sm">Ikbal Habibi</h4>
-                                        <p class="text-slate-400 text-[10px] mb-1">ikbal@biopay.id</p>
-                                        <span class="bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 text-[9px] px-2 py-0.5 rounded-full font-bold">BioID: #12345</span>
-                                    </div>
-                                </div>
-                                <button onclick="closeBioPayInPOV2()" class="w-full bg-slate-800 text-slate-300 text-[11px] py-3 rounded-xl mt-4 border border-slate-600 cursor-pointer hover:bg-slate-700 transition-colors">
-                                    Tutup BioPay & Kembali ke E-Wallet
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Isi BioPay POV 2 dibangun otomatis dari POV 1 oleh JavaScript (buildBioPayCloneHTML) -->
+                    <div id="biopay-p2-root" class="absolute inset-0"></div>
                 </div>
                 <!-- ========================================== -->
 
@@ -1440,11 +1174,6 @@
         // ==========================================
         // CORE VARIABLES: KAMERA & STATE
         // ==========================================
-        let cameraStream = null;
-        let qrCamera = null;
-        let tfCamera = null;
-        let sharingCamera = null;
-        let p2CameraStream = null;
         let ewalletTagihCamera = null;
 
         async function requestCameraAccess(videoId, facing = 'user') {
@@ -1476,27 +1205,12 @@
             return null;
         }
 
-        // ==========================================
-        // STATE STANDALONE: POV 1 (BIOPAY)
-        // ==========================================
-        const screens = document.querySelectorAll('.screen');
-        let currentPaymentIDR = 0;
-        let currentVatIDR = 0;
-        let currentForeignTotal = "";
-        let currentForeignVat = "";
-        let isTouristTransaction = false;
-
         const uiTranslations = {
             'ID': { 'nav-home': 'Home', 'nav-op': 'Operasional', 'nav-travel': 'Travel', 'nav-wallets': 'Wallets', 'nav-history': 'Riwayat', 'nav-biopass': 'Bio-Pass', 'nav-sharing': 'Sharing', 'btn-topup': 'Top Up', 'btn-transfer': 'Transfer Uang', 'text-scan-pay': 'Scan<br>Bayar', 'text-withdraw': 'Tarik<br>Tunai', 'text-request': 'Minta<br>Dana', 'text-bills': 'Tagihan<br>Bulanan', 'text-exchange': 'Tukar<br>Valas', 'title-auth': 'Otorisasi Biometrik BioPay' },
             'EN': { 'nav-home': 'Home', 'nav-op': 'Operations', 'nav-travel': 'Travel', 'nav-wallets': 'Wallets', 'nav-history': 'History', 'nav-biopass': 'Bio-Pass', 'nav-sharing': 'Sharing', 'btn-topup': 'Top Up', 'btn-transfer': 'Transfer', 'text-scan-pay': 'Scan<br>Pay', 'text-withdraw': 'Withdraw', 'text-request': 'Request', 'text-bills': 'Monthly<br>Bills', 'text-exchange': 'Exchange', 'title-auth': 'BioPay Biometric Auth' },
             'JP': { 'nav-home': 'ホーム', 'nav-op': '操作', 'nav-travel': '旅行', 'nav-wallets': '財布', 'nav-history': '履歴', 'nav-biopass': 'バイオパス', 'nav-sharing': '共有', 'btn-topup': 'チャージ', 'btn-transfer': '送金', 'text-scan-pay': 'スキャン', 'text-withdraw': '出金', 'text-request': '請求', 'text-bills': '月々の<br>請求', 'text-exchange': '両替', 'title-auth': 'BioPay 生体認証' }
         };
 
-        let walletBalances = { 'DANA': 1000000000, 'GoPay Wallet': 1000000000, 'BCA M-Banking': 1000000000 };
-        let currentWalletName = "DANA";
-        let isBalanceHidden = false;
-        let foreignBalances = { 'USD': 0, 'EUR': 0, 'SGD': 0, 'JPY': 0, 'GBP': 0 };
-        
         const dummyMerchants = [
             { name: 'Starbucks Times Square', loc: 'USA', cur: 'USD', min: 2, max: 25 },
             { name: 'Lawson Station', loc: 'JP', cur: 'JPY', min: 200, max: 3500 },
@@ -1535,467 +1249,508 @@
         }
 
         // ==========================================
-        // FUNGSI MANDIRI POV 1 (BIOPAY KIRI)
+        // APLIKASI BIOPAY (dipakai 2x: POV 1 terminal & mini-app di POV 2)
+        // createBioPay(suffix, pov, NS):
+        //   suffix -> akhiran ID elemen ('' untuk POV 1, '-p2' untuk POV 2)
+        //   pov    -> tujuan toast (1 / 2)
+        //   NS     -> prefix nama fungsi pada HTML yang dibuat JS ('' / 'BP2.')
         // ==========================================
-        function addBiopayHistory(title, subtitle, amountStr, isExpense = true) {
-            const bpList = document.getElementById('riwayat-biopay-list');
-            const bpHtml = `
-                <div class="bg-[#151e2f] rounded-xl border border-slate-700 p-3 flex justify-between cursor-pointer hover:border-slate-500 animation-slide-in">
-                    <div><h4 class="text-white font-bold text-xs">${escapeHTML(title)}</h4><p class="text-slate-400 text-[9px]">Baru saja &bull; ${escapeHTML(currentWalletName)}</p></div>
-                    <div class="text-right"><p class="${isExpense ? 'text-[#ef4444]' : 'text-[#10b981]'} font-bold text-xs">${isExpense ? '-' : '+'}${escapeHTML(amountStr)}</p><p class="text-slate-400 text-[9px]">${escapeHTML(subtitle)}</p></div>
-                </div>`;
-            bpList.insertAdjacentHTML('afterbegin', bpHtml);
-        }
+        function createBioPay(suffix, pov, NS) {
+            const sid = id => id + suffix;
+            const $ = id => document.getElementById(id + suffix);
+            const root = $('screen-start').parentElement;
+            const toast = (m, i, c) => showToast(m, i, c, pov);
+            const isScreenActive = id => { const el = $(id); return !!el && el.classList.contains('active'); };
+            function closeAllModals() { root.querySelectorAll('[id^="modal-"]').forEach(m => m.classList.add('hidden')); }
+            function stopCameras() {
+                cameraStream = stopSpecificCamera(cameraStream); qrCamera = stopSpecificCamera(qrCamera);
+                tfCamera = stopSpecificCamera(tfCamera); sharingCamera = stopSpecificCamera(sharingCamera);
+                tfScanToken++; sharingScanToken++;
+            }
 
-        function syncWalletUI(walletName) {
-            const elId = 'bal-' + walletName.replace(/\s/g, '');
-            const el = document.getElementById(elId);
-            if (el) { el.innerText = 'Saldo: Rp ' + walletBalances[walletName].toLocaleString('id-ID'); }
-        }
+            // ==========================================
+            // STATE STANDALONE: POV 1 (BIOPAY)
+            // ==========================================
+            const screens = root.querySelectorAll('.screen');
+            let currentPaymentIDR = 0;
+            let currentVatIDR = 0;
+            let currentForeignTotal = "";
+            let currentForeignVat = "";
+            let isTouristTransaction = false;
 
-        function updateBalanceDisplay() {
-            const balanceText = document.getElementById('main-balance-text');
-            if (isBalanceHidden) balanceText.innerHTML = "Rp &bull;&bull;&bull;&bull;&bull;&bull;&bull;";
-            else balanceText.innerHTML = "Rp " + walletBalances[currentWalletName].toLocaleString('id-ID');
+            let walletBalances = { 'DANA': 1000000000, 'GoPay Wallet': 1000000000, 'BCA M-Banking': 1000000000 };
+            let currentWalletName = "DANA";
+            let isBalanceHidden = false;
+            let foreignBalances = { 'USD': 0, 'EUR': 0, 'SGD': 0, 'JPY': 0, 'GBP': 0 };
+        
+            let cameraStream = null, qrCamera = null, tfCamera = null, sharingCamera = null;
 
-            const fbContainer = document.getElementById('foreign-balances-container');
-            fbContainer.innerHTML = '';
-            let hasForeign = false;
-            for (const [cur, amt] of Object.entries(foreignBalances)) {
-                if (amt > 0) {
-                    hasForeign = true;
-                    let displayAmt = cur === 'JPY' ? Math.floor(amt).toLocaleString('en-US') : formatForeign(cur, amt);
-                    let hiddenText = isBalanceHidden ? "&bull;&bull;&bull;" : displayAmt;
+            // ==========================================
+            // FUNGSI MANDIRI POV 1 (BIOPAY KIRI)
+            // ==========================================
+            function addBiopayHistory(title, subtitle, amountStr, isExpense = true) {
+                const bpList = $('riwayat-biopay-list');
+                const bpHtml = `
+                    <div class="bg-[#151e2f] rounded-xl border border-slate-700 p-3 flex justify-between cursor-pointer hover:border-slate-500 animation-slide-in">
+                        <div><h4 class="text-white font-bold text-xs">${escapeHTML(title)}</h4><p class="text-slate-400 text-[9px]">Baru saja &bull; ${escapeHTML(currentWalletName)}</p></div>
+                        <div class="text-right"><p class="${isExpense ? 'text-[#ef4444]' : 'text-[#10b981]'} font-bold text-xs">${isExpense ? '-' : '+'}${escapeHTML(amountStr)}</p><p class="text-slate-400 text-[9px]">${escapeHTML(subtitle)}</p></div>
+                    </div>`;
+                bpList.insertAdjacentHTML('afterbegin', bpHtml);
+            }
 
-                    fbContainer.insertAdjacentHTML('beforeend', `
-                        <div class="bg-white/10 backdrop-blur-sm border border-white/20 px-2 py-1 rounded-md text-[10px] font-bold text-white flex items-center gap-1 shadow-sm">
-                            <span class="text-sky-200">${curSymbols[cur]}</span> ${hiddenText} <span class="text-[8px] text-sky-100 font-normal">${cur}</span>
-                        </div>
-                    `);
+            function syncWalletUI(walletName) {
+                const elId = 'bal-' + walletName.replace(/\s/g, '');
+                const el = $(elId);
+                if (el) { el.innerText = 'Saldo: Rp ' + walletBalances[walletName].toLocaleString('id-ID'); }
+            }
+
+            function updateBalanceDisplay() {
+                const balanceText = $('main-balance-text');
+                if (isBalanceHidden) balanceText.innerHTML = "Rp &bull;&bull;&bull;&bull;&bull;&bull;&bull;";
+                else balanceText.innerHTML = "Rp " + walletBalances[currentWalletName].toLocaleString('id-ID');
+
+                const fbContainer = $('foreign-balances-container');
+                fbContainer.innerHTML = '';
+                let hasForeign = false;
+                for (const [cur, amt] of Object.entries(foreignBalances)) {
+                    if (amt > 0) {
+                        hasForeign = true;
+                        let displayAmt = cur === 'JPY' ? Math.floor(amt).toLocaleString('en-US') : formatForeign(cur, amt);
+                        let hiddenText = isBalanceHidden ? "&bull;&bull;&bull;" : displayAmt;
+
+                        fbContainer.insertAdjacentHTML('beforeend', `
+                            <div class="bg-white/10 backdrop-blur-sm border border-white/20 px-2 py-1 rounded-md text-[10px] font-bold text-white flex items-center gap-1 shadow-sm">
+                                <span class="text-sky-200">${curSymbols[cur]}</span> ${hiddenText} <span class="text-[8px] text-sky-100 font-normal">${cur}</span>
+                            </div>
+                        `);
+                    }
                 }
+                if (hasForeign) { fbContainer.classList.remove('hidden'); fbContainer.classList.add('flex'); } 
+                else { fbContainer.classList.add('hidden'); fbContainer.classList.remove('flex'); }
             }
-            if (hasForeign) { fbContainer.classList.remove('hidden'); fbContainer.classList.add('flex'); } 
-            else { fbContainer.classList.add('hidden'); fbContainer.classList.remove('flex'); }
-        }
 
-        function toggleBalance() {
-            isBalanceHidden = !isBalanceHidden;
-            updateBalanceDisplay();
-            const icon = document.getElementById('toggle-balance-icon');
-            icon.className = isBalanceHidden ? "ph-bold ph-eye text-base text-sky-200/70 cursor-pointer" : "ph-bold ph-eye-slash text-base text-sky-200/70 cursor-pointer hover:text-white transition-colors";
-        }
-
-        function generateRandomPayment() {
-            const m = dummyMerchants[Math.floor(Math.random() * dummyMerchants.length)];
-            let subtotal = (Math.random() * (m.max - m.min) + m.min);
-            if (m.cur === 'JPY' || m.cur === 'IDR') subtotal = Math.floor(subtotal / 100) * 100;
-            else subtotal = parseFloat(subtotal.toFixed(2));
-            let vat = (m.cur === 'JPY' || m.cur === 'IDR') ? Math.floor(subtotal * 0.1) : parseFloat((subtotal * 0.1).toFixed(2));
-            let total = (m.cur === 'JPY' || m.cur === 'IDR') ? subtotal + vat : Math.round((subtotal + vat) * 100) / 100;
-
-            currentPaymentIDR = Math.ceil(total * fxRates[m.cur]);
-            currentVatIDR = Math.ceil(vat * fxRates[m.cur]);
-            isTouristTransaction = (m.cur !== 'IDR');
-
-            document.getElementById('payment-merchant-name').innerText = m.name;
-            document.getElementById('payment-txt-walletname').innerText = currentWalletName;
-            document.getElementById('payment-txt-balstart').innerText = `Saldo Awal: Rp ${walletBalances[currentWalletName].toLocaleString('id-ID')}`;
-
-            document.getElementById('payment-label-intl').style.display = isTouristTransaction ? 'block' : 'none';
-            document.getElementById('payment-label-intl').innerText = `INTL MERCHANT (${m.loc})`;
-            document.getElementById('payment-txt-currency').innerText = `Rincian Tagihan (${m.cur})`;
-            document.getElementById('payment-txt-subtotal').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, subtotal)}`;
-            document.getElementById('payment-txt-vat').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, vat)}`;
-            document.getElementById('payment-txt-amount').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, total)}`;
-            
-            const taxBadge = document.getElementById('tax-free-badge');
-            if(isTouristTransaction) {
-                taxBadge.style.display = 'flex';
-                currentForeignTotal = `${curSymbols[m.cur]}${formatForeign(m.cur, total)} ${m.cur}`;
-                currentForeignVat = `${curSymbols[m.cur]}${formatForeign(m.cur, vat)} ${m.cur}`;
-            } else { taxBadge.style.display = 'none'; }
-
-            document.getElementById('payment-fx-badge').style.display = isTouristTransaction ? 'flex' : 'none';
-            document.getElementById('payment-fx-details').style.display = isTouristTransaction ? 'flex' : 'none';
-            if (isTouristTransaction) {
-                document.getElementById('payment-txt-rate-label').innerText = `Kurs (1 ${m.cur})`;
-                document.getElementById('payment-txt-rate').innerText = `Rp ${fxRates[m.cur].toLocaleString('id-ID')}`;
-            }
-            document.getElementById('payment-txt-idreq').innerText = `Rp ${currentPaymentIDR.toLocaleString('id-ID')}`;
-
-            const remaining = walletBalances[currentWalletName] - currentPaymentIDR;
-            const btn = document.getElementById('btn-confirm-payment');
-            const txtEnd = document.getElementById('payment-txt-balend');
-
-            if (remaining >= 0) {
-                txtEnd.innerText = `Sisa: Rp ${remaining.toLocaleString('id-ID')}`;
-                txtEnd.className = "text-[#38bdf8] text-[9px] font-bold block";
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-slate-600', 'hover:bg-slate-700');
-                btn.classList.add('bg-green-500', 'hover:bg-green-600');
-                btn.innerHTML = `<i class="ph-bold ph-check"></i> Konfirmasi Bayar (Oke)`;
-            } else {
-                txtEnd.innerText = `Sisa: Saldo Tidak Cukup`;
-                txtEnd.className = "text-red-500 text-[9px] font-bold block";
-                btn.disabled = true;
-                btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-slate-600', 'hover:bg-slate-700');
-                btn.classList.remove('bg-green-500', 'hover:bg-green-600');
-                btn.innerHTML = `<i class="ph-bold ph-warning"></i> Saldo Tidak Cukup`;
-            }
-        }
-
-        async function goToScreen(screenId) {
-            screens.forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            
-            cameraStream = stopSpecificCamera(cameraStream);
-            
-            // FIX: kamera bisa selesai dibuka setelah pengguna pindah layar -> stream bocor/tetap menyala.
-            // Juga timer otomatis hanya boleh pindah layar bila layar scan masih aktif.
-            const openCam = async (videoId) => {
-                const stream = await requestCameraAccess(videoId);
-                if (!isScreenActive(screenId)) { stopSpecificCamera(stream); return null; }
-                return stream;
-            };
-            if (screenId === 'screen-face-scan') { 
-                showToast('Menganalisis Kedalaman 3D Wajah (Anti-Spoofing)...', 'ph-shield-check', 'text-emerald-400');
-                setTimeout(() => { if (isScreenActive(screenId)) goToScreen('screen-identity'); }, 2500); 
-                cameraStream = await openCam('video-face');
-            } else if (screenId === 'screen-hand-scan') { 
-                showToast('Memindai Aliran Darah & Suhu Tangan...', 'ph-shield-check', 'text-emerald-400');
-                setTimeout(() => { if (isScreenActive(screenId)) { generateRandomPayment(); goToScreen('screen-options'); } }, 2500); 
-                cameraStream = await openCam('video-hand');
-            } else if (screenId === 'screen-menu-auth') { 
-                showToast('Liveness 3D SDK Aktif...', 'ph-shield-check', 'text-emerald-400');
-                setTimeout(() => { if (isScreenActive(screenId)) { switchTab('home'); goToScreen('screen-dashboard'); } }, 2500); 
-                cameraStream = await openCam('video-auth');
-            }
-        }
-
-        function changeLanguage(code, name) {
-            document.getElementById('current-language-display').innerText = code;
-            const t = uiTranslations[code];
-            if (t) {
-                document.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (t[key]) el.innerHTML = t[key];
-                });
-                const authTitle = document.getElementById('txt-auth-title');
-                if(authTitle) authTitle.innerText = t['title-auth'];
-            }
-            closeModal('modal-language');
-            showToast(`Bahasa diubah ke ${name}`, 'ph-translate', 'text-emerald-400');
-        }
-
-        function processPayment() {
-            if (!isScreenActive('screen-options')) return; // cegah double-click membayar 2x
-            if (walletBalances[currentWalletName] >= currentPaymentIDR) {
-                walletBalances[currentWalletName] -= currentPaymentIDR;
-                const merchantName = document.getElementById('payment-merchant-name').innerText;
-                const formattedCur = isTouristTransaction ? currentForeignTotal : `Rp ${currentPaymentIDR.toLocaleString('id-ID')}`;
-                addBiopayHistory(merchantName, "Pembayaran Ritel", formattedCur, true);
-
+            function toggleBalance() {
+                isBalanceHidden = !isBalanceHidden;
                 updateBalanceDisplay();
-                syncWalletUI(currentWalletName); 
-                showScreen('screen-success');
-                
-                setTimeout(() => {
-                    if (!isScreenActive('screen-success')) return;
+                const icon = $('toggle-balance-icon');
+                icon.className = isBalanceHidden ? "ph-bold ph-eye text-base text-sky-200/70 cursor-pointer" : "ph-bold ph-eye-slash text-base text-sky-200/70 cursor-pointer hover:text-white transition-colors";
+            }
+
+            function generateRandomPayment() {
+                const m = dummyMerchants[Math.floor(Math.random() * dummyMerchants.length)];
+                let subtotal = (Math.random() * (m.max - m.min) + m.min);
+                if (m.cur === 'JPY' || m.cur === 'IDR') subtotal = Math.floor(subtotal / 100) * 100;
+                else subtotal = parseFloat(subtotal.toFixed(2));
+                let vat = (m.cur === 'JPY' || m.cur === 'IDR') ? Math.floor(subtotal * 0.1) : parseFloat((subtotal * 0.1).toFixed(2));
+                let total = (m.cur === 'JPY' || m.cur === 'IDR') ? subtotal + vat : Math.round((subtotal + vat) * 100) / 100;
+
+                currentPaymentIDR = Math.ceil(total * fxRates[m.cur]);
+                currentVatIDR = Math.ceil(vat * fxRates[m.cur]);
+                isTouristTransaction = (m.cur !== 'IDR');
+
+                $('payment-merchant-name').innerText = m.name;
+                $('payment-txt-walletname').innerText = currentWalletName;
+                $('payment-txt-balstart').innerText = `Saldo Awal: Rp ${walletBalances[currentWalletName].toLocaleString('id-ID')}`;
+
+                $('payment-label-intl').style.display = isTouristTransaction ? 'block' : 'none';
+                $('payment-label-intl').innerText = `INTL MERCHANT (${m.loc})`;
+                $('payment-txt-currency').innerText = `Rincian Tagihan (${m.cur})`;
+                $('payment-txt-subtotal').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, subtotal)}`;
+                $('payment-txt-vat').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, vat)}`;
+                $('payment-txt-amount').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, total)}`;
+            
+                const taxBadge = $('tax-free-badge');
                 if(isTouristTransaction) {
-                        document.getElementById('refund-txt-total').innerText = currentForeignTotal;
-                        document.getElementById('refund-txt-vat').innerText = currentForeignVat;
-                        document.getElementById('refund-txt-idr').innerText = `Rp ${currentVatIDR.toLocaleString('id-ID')}`;
-                        document.getElementById('refund-txt-wallet').innerText = currentWalletName;
-                        goToScreen('screen-tax-refund');
-                    } else { goToScreen('screen-start'); }
-                }, 2000);
-            } else { showToast('Saldo tidak cukup!', 'ph-warning', 'text-red-500'); }
-        }
+                    taxBadge.style.display = 'flex';
+                    currentForeignTotal = `${curSymbols[m.cur]}${formatForeign(m.cur, total)} ${m.cur}`;
+                    currentForeignVat = `${curSymbols[m.cur]}${formatForeign(m.cur, vat)} ${m.cur}`;
+                } else { taxBadge.style.display = 'none'; }
 
-        function showScreen(screenId) {
-            cameraStream = stopSpecificCamera(cameraStream);
-            screens.forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
-
-        function switchTab(tabName) {
-            const tabs = ['home', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'sharing', 'pengaturan'];
-            tabs.forEach(tab => {
-                const nav = document.getElementById(`nav-${tab}`);
-                if (nav) nav.classList.remove('hover:text-slate-200');
-                const content = document.getElementById(`tab-${tab}`);
-                if (tab === tabName) {
-                    if (nav) {
-                        nav.classList.add('text-[#38bdf8]'); nav.classList.remove('text-slate-400');
-                        nav.querySelector('span').classList.add('border-[#38bdf8]'); nav.querySelector('span').classList.remove('border-transparent');
-                    }
-                    if (content) { content.classList.remove('hidden'); content.classList.add('flex'); }
-                } else {
-                    if (nav) {
-                        nav.classList.remove('text-[#38bdf8]'); nav.classList.add('text-slate-400');
-                        nav.querySelector('span').classList.remove('border-[#38bdf8]'); nav.querySelector('span').classList.add('border-transparent');
-                    }
-                    if (content) { content.classList.add('hidden'); content.classList.remove('flex'); }
+                $('payment-fx-badge').style.display = isTouristTransaction ? 'flex' : 'none';
+                $('payment-fx-details').style.display = isTouristTransaction ? 'flex' : 'none';
+                if (isTouristTransaction) {
+                    $('payment-txt-rate-label').innerText = `Kurs (1 ${m.cur})`;
+                    $('payment-txt-rate').innerText = `Rp ${fxRates[m.cur].toLocaleString('id-ID')}`;
                 }
-            });
-        }
+                $('payment-txt-idreq').innerText = `Rp ${currentPaymentIDR.toLocaleString('id-ID')}`;
 
-        function closeModal(modalId) { document.getElementById(modalId).classList.add('hidden'); }
-        
-        function showTopUpModal() { document.getElementById('topup-amount').value = ''; document.getElementById('modal-topup').classList.remove('hidden'); }
-        function showWithdrawModal() { document.getElementById('withdraw-amount').value = ''; document.getElementById('modal-withdraw').classList.remove('hidden'); }
-        function showReceiveModal() { document.getElementById('modal-receive').classList.remove('hidden'); }
-        function showBillsModal() { document.getElementById('modal-bills').classList.remove('hidden'); }
-        function showLanguageModal() { document.getElementById('modal-language').classList.remove('hidden'); }
-        
-        function showExchangeModal() { 
-            document.getElementById('exchange-amount').value = ''; 
-            document.getElementById('exchange-result').innerText = '$ 0.00'; 
-            const selectWallet = document.getElementById('exchange-source-wallet');
-            selectWallet.innerHTML = '';
-            for (const [wName, wBal] of Object.entries(walletBalances)) {
-                const isSelected = wName === currentWalletName ? 'selected' : '';
-                selectWallet.insertAdjacentHTML('beforeend', `<option value="${wName}" ${isSelected}>${wName} (Rp ${wBal.toLocaleString('id-ID')})</option>`);
+                const remaining = walletBalances[currentWalletName] - currentPaymentIDR;
+                const btn = $('btn-confirm-payment');
+                const txtEnd = $('payment-txt-balend');
+
+                if (remaining >= 0) {
+                    txtEnd.innerText = `Sisa: Rp ${remaining.toLocaleString('id-ID')}`;
+                    txtEnd.className = "text-[#38bdf8] text-[9px] font-bold block";
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-slate-600', 'hover:bg-slate-700');
+                    btn.classList.add('bg-green-500', 'hover:bg-green-600');
+                    btn.innerHTML = `<i class="ph-bold ph-check"></i> Konfirmasi Bayar (Oke)`;
+                } else {
+                    txtEnd.innerText = `Sisa: Saldo Tidak Cukup`;
+                    txtEnd.className = "text-red-500 text-[9px] font-bold block";
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-slate-600', 'hover:bg-slate-700');
+                    btn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                    btn.innerHTML = `<i class="ph-bold ph-warning"></i> Saldo Tidak Cukup`;
+                }
             }
-            updateExchangeRate(); document.getElementById('modal-exchange').classList.remove('hidden'); 
-        }
 
-        async function showScanQRModal() { 
-            document.getElementById('modal-scan-qr').classList.remove('hidden'); 
-            const cam = await requestCameraAccess('video-qr', 'environment');
-            if (document.getElementById('modal-scan-qr').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
-            qrCamera = cam;
-        }
-        function closeScanQRModal() { qrCamera = stopSpecificCamera(qrCamera); closeModal('modal-scan-qr'); }
-
-        function processTopUp() {
-            const amt = parseInt(document.getElementById('topup-amount').value);
-            if(amt > 0) { 
-                walletBalances[currentWalletName] += amt;
-                addBiopayHistory("Top Up Saldo", "Via M-Banking", `Rp ${amt.toLocaleString('id-ID')}`, false);
-                updateBalanceDisplay(); syncWalletUI(currentWalletName);
-                closeModal('modal-topup'); showToast(`Top Up Rp ${amt.toLocaleString('id-ID')} berhasil`, 'ph-check-circle', 'text-emerald-400'); 
-            } else { showToast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); }
-        }
-        
-        let tfMethod = 'rek';
-        let tfBioTarget = "";
-
-        function showTransferModal() {
-            document.getElementById('transfer-amount').value = ''; document.getElementById('transfer-target').value = '';
-            document.getElementById('tf-bio-result').classList.add('hidden'); tfBioTarget = "";
-            toggleTransferMethod('rek'); document.getElementById('modal-transfer').classList.remove('hidden'); 
-        }
-
-        function toggleTransferMethod(method) {
-            tfMethod = method;
-            const btnRek = document.getElementById('tab-tf-rek'); const btnBio = document.getElementById('tab-tf-bio');
-            const contRek = document.getElementById('container-tf-rek'); const contBio = document.getElementById('container-tf-bio');
-            if (method === 'rek') {
-                btnRek.className = "flex-1 py-2 text-[9px] font-bold rounded bg-indigo-600 text-white transition-colors shadow shadow-indigo-600/50 cursor-pointer";
-                btnBio.className = "flex-1 py-2 text-[9px] font-bold rounded text-slate-400 hover:text-white transition-colors cursor-pointer";
-                contRek.classList.remove('hidden'); contBio.classList.add('hidden');
-            } else {
-                btnBio.className = "flex-1 py-2 text-[9px] font-bold rounded bg-indigo-600 text-white transition-colors shadow shadow-indigo-600/50 cursor-pointer";
-                btnRek.className = "flex-1 py-2 text-[9px] font-bold rounded text-slate-400 hover:text-white transition-colors cursor-pointer";
-                contBio.classList.remove('hidden'); contRek.classList.add('hidden');
-            }
-        }
-
-        let tfScanToken = 0;
-        async function startTransferBiometricScan() {
-            const token = ++tfScanToken;
-            document.getElementById('modal-tf-scan').classList.remove('hidden');
-            setTimeout(() => {
-                // FIX: dulu tetap "menemukan penerima" walau pengguna sudah menekan Batal
-                if (token !== tfScanToken || document.getElementById('modal-tf-scan').classList.contains('hidden')) return;
-                tfCamera = stopSpecificCamera(tfCamera);
-                document.getElementById('modal-tf-scan').classList.add('hidden');
-                document.getElementById('tf-bio-result').classList.remove('hidden');
-                tfBioTarget = "Budi Santoso"; document.getElementById('tf-bio-name').innerText = tfBioTarget;
-                showToast('Identitas penerima ditemukan!', 'ph-check-circle', 'text-emerald-400');
-            }, 3000);
-            let cam = await requestCameraAccess('video-tf-scan', 'environment');
-            if (!cam) cam = await requestCameraAccess('video-tf-scan', 'user');
-            if (token !== tfScanToken || document.getElementById('modal-tf-scan').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
-            tfCamera = cam;
-        }
-
-        function closeTfScanModal() { tfScanToken++; tfCamera = stopSpecificCamera(tfCamera); document.getElementById('modal-tf-scan').classList.add('hidden'); }
-
-        function processTransfer() {
-            const amt = parseInt(document.getElementById('transfer-amount').value);
-            const destWallet = document.getElementById('transfer-dest-wallet').value;
-            let targetName = tfMethod === 'rek' ? document.getElementById('transfer-target').value : tfBioTarget;
-            targetName = (targetName || '').trim();
-            if(!targetName) { showToast('Tujuan belum diisi!', 'ph-warning', 'text-red-500'); return; }
-            if(!(amt > 0)) { showToast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
-            if(amt <= walletBalances[currentWalletName]) { 
-                walletBalances[currentWalletName] -= amt;
-                addBiopayHistory(`Transfer ke ${targetName}`, destWallet, `Rp ${amt.toLocaleString('id-ID')}`, true);
-                updateBalanceDisplay(); syncWalletUI(currentWalletName);
-                closeModal('modal-transfer'); showToast(`Rp ${amt.toLocaleString('id-ID')} dikirim ke ${targetName}`, 'ph-paper-plane-tilt', 'text-sky-400'); 
-            } else { showToast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); }
-        }
-        
-        function processWithdraw() {
-            const amt = parseInt(document.getElementById('withdraw-amount').value);
-            if(!(amt > 0)) { showToast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
-            if(amt <= walletBalances[currentWalletName]) { 
-                walletBalances[currentWalletName] -= amt;
-                addBiopayHistory("Tarik Tunai", "Ke Rekening Pribadi", `Rp ${amt.toLocaleString('id-ID')}`, true);
-                updateBalanceDisplay(); syncWalletUI(currentWalletName);
-                closeModal('modal-withdraw'); showToast(`Tarik Tunai Rp ${amt.toLocaleString('id-ID')} berhasil`, 'ph-money', 'text-red-400'); 
-            } else showToast('Saldo tidak cukup', 'ph-warning', 'text-red-500');
-        }
-        
-        function payBill(name, amt) {
-            closeModal('modal-bills');
-            if(walletBalances[currentWalletName] >= amt) { 
-                walletBalances[currentWalletName] -= amt;
-                addBiopayHistory(`Bayar Tagihan ${name}`, "Billing Otomatis", `Rp ${amt.toLocaleString('id-ID')}`, true);
-                updateBalanceDisplay(); syncWalletUI(currentWalletName);
-                showToast(`Tagihan ${name} lunas`, 'ph-receipt', 'text-emerald-400'); 
-            } else showToast('Saldo tidak cukup', 'ph-warning', 'text-red-500');
-        }
-
-        function updateExchangeRate() {
-            const cur = document.getElementById('exchange-currency').value;
-            document.getElementById('exchange-rate-text').innerText = `Kurs: 1 ${cur} = Rp ${fxRates[cur].toLocaleString('id-ID')}`;
-            calculateExchange();
-        }
-
-        function calculateExchange() {
-            const cur = document.getElementById('exchange-currency').value;
-            const amount = parseInt(document.getElementById('exchange-amount').value) || 0;
-            const result = amount / fxRates[cur];
-            let displayResult = cur === 'JPY' ? Math.floor(result).toLocaleString('en-US') : parseFloat(result.toFixed(2)).toLocaleString('en-US', {minimumFractionDigits: 2});
-            document.getElementById('exchange-result').innerText = curSymbols[cur] + ' ' + displayResult;
-        }
-
-        function processExchange() {
-            const amount = parseInt(document.getElementById('exchange-amount').value);
-            const cur = document.getElementById('exchange-currency').value;
-            const sourceWallet = document.getElementById('exchange-source-wallet').value;
+            async function goToScreen(screenId) {
+                screens.forEach(s => s.classList.remove('active'));
+                $(screenId).classList.add('active');
             
-            if(!(amount > 0)) { showToast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
-            if(amount <= walletBalances[sourceWallet]) {
+                cameraStream = stopSpecificCamera(cameraStream);
+            
+                // FIX: kamera bisa selesai dibuka setelah pengguna pindah layar -> stream bocor/tetap menyala.
+                // Juga timer otomatis hanya boleh pindah layar bila layar scan masih aktif.
+                const openCam = async (videoId) => {
+                    const stream = await requestCameraAccess(sid(videoId));
+                    if (!isScreenActive(screenId)) { stopSpecificCamera(stream); return null; }
+                    return stream;
+                };
+                if (screenId === 'screen-face-scan') { 
+                    toast('Menganalisis Kedalaman 3D Wajah (Anti-Spoofing)...', 'ph-shield-check', 'text-emerald-400');
+                    setTimeout(() => { if (isScreenActive(screenId)) goToScreen('screen-identity'); }, 2500); 
+                    cameraStream = await openCam('video-face');
+                } else if (screenId === 'screen-hand-scan') { 
+                    toast('Memindai Aliran Darah & Suhu Tangan...', 'ph-shield-check', 'text-emerald-400');
+                    setTimeout(() => { if (isScreenActive(screenId)) { generateRandomPayment(); goToScreen('screen-options'); } }, 2500); 
+                    cameraStream = await openCam('video-hand');
+                } else if (screenId === 'screen-menu-auth') { 
+                    toast('Liveness 3D SDK Aktif...', 'ph-shield-check', 'text-emerald-400');
+                    setTimeout(() => { if (isScreenActive(screenId)) { switchTab('home'); goToScreen('screen-dashboard'); } }, 2500); 
+                    cameraStream = await openCam('video-auth');
+                }
+            }
+
+            function changeLanguage(code, name) {
+                $('current-language-display').innerText = code;
+                const t = uiTranslations[code];
+                if (t) {
+                    root.querySelectorAll('[data-i18n]').forEach(el => {
+                        const key = el.getAttribute('data-i18n');
+                        if (t[key]) el.innerHTML = t[key];
+                    });
+                    const authTitle = $('txt-auth-title');
+                    if(authTitle) authTitle.innerText = t['title-auth'];
+                }
+                closeModal('modal-language');
+                toast(`Bahasa diubah ke ${name}`, 'ph-translate', 'text-emerald-400');
+            }
+
+            function processPayment() {
+                if (!isScreenActive('screen-options')) return; // cegah double-click membayar 2x
+                if (walletBalances[currentWalletName] >= currentPaymentIDR) {
+                    walletBalances[currentWalletName] -= currentPaymentIDR;
+                    const merchantName = $('payment-merchant-name').innerText;
+                    const formattedCur = isTouristTransaction ? currentForeignTotal : `Rp ${currentPaymentIDR.toLocaleString('id-ID')}`;
+                    addBiopayHistory(merchantName, "Pembayaran Ritel", formattedCur, true);
+
+                    updateBalanceDisplay();
+                    syncWalletUI(currentWalletName); 
+                    showScreen('screen-success');
+                
+                    setTimeout(() => {
+                        if (!isScreenActive('screen-success')) return;
+                    if(isTouristTransaction) {
+                            $('refund-txt-total').innerText = currentForeignTotal;
+                            $('refund-txt-vat').innerText = currentForeignVat;
+                            $('refund-txt-idr').innerText = `Rp ${currentVatIDR.toLocaleString('id-ID')}`;
+                            $('refund-txt-wallet').innerText = currentWalletName;
+                            goToScreen('screen-tax-refund');
+                        } else { goToScreen('screen-start'); }
+                    }, 2000);
+                } else { toast('Saldo tidak cukup!', 'ph-warning', 'text-red-500'); }
+            }
+
+            function showScreen(screenId) {
+                cameraStream = stopSpecificCamera(cameraStream);
+                screens.forEach(s => s.classList.remove('active'));
+                $(screenId).classList.add('active');
+            }
+
+            function switchTab(tabName) {
+                const tabs = ['home', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'sharing', 'pengaturan'];
+                tabs.forEach(tab => {
+                    const nav = $(`nav-${tab}`);
+                    if (nav) nav.classList.remove('hover:text-slate-200');
+                    const content = $(`tab-${tab}`);
+                    if (tab === tabName) {
+                        if (nav) {
+                            nav.classList.add('text-[#38bdf8]'); nav.classList.remove('text-slate-400');
+                            nav.querySelector('span').classList.add('border-[#38bdf8]'); nav.querySelector('span').classList.remove('border-transparent');
+                        }
+                        if (content) { content.classList.remove('hidden'); content.classList.add('flex'); }
+                    } else {
+                        if (nav) {
+                            nav.classList.remove('text-[#38bdf8]'); nav.classList.add('text-slate-400');
+                            nav.querySelector('span').classList.remove('border-[#38bdf8]'); nav.querySelector('span').classList.add('border-transparent');
+                        }
+                        if (content) { content.classList.add('hidden'); content.classList.remove('flex'); }
+                    }
+                });
+            }
+
+            function closeModal(modalId) { $(modalId).classList.add('hidden'); }
+        
+            function showTopUpModal() { $('topup-amount').value = ''; $('modal-topup').classList.remove('hidden'); }
+            function showWithdrawModal() { $('withdraw-amount').value = ''; $('modal-withdraw').classList.remove('hidden'); }
+            function showReceiveModal() { $('modal-receive').classList.remove('hidden'); }
+            function showBillsModal() { $('modal-bills').classList.remove('hidden'); }
+            function showLanguageModal() { $('modal-language').classList.remove('hidden'); }
+        
+            function showExchangeModal() { 
+                $('exchange-amount').value = ''; 
+                $('exchange-result').innerText = '$ 0.00'; 
+                const selectWallet = $('exchange-source-wallet');
+                selectWallet.innerHTML = '';
+                for (const [wName, wBal] of Object.entries(walletBalances)) {
+                    const isSelected = wName === currentWalletName ? 'selected' : '';
+                    selectWallet.insertAdjacentHTML('beforeend', `<option value="${wName}" ${isSelected}>${wName} (Rp ${wBal.toLocaleString('id-ID')})</option>`);
+                }
+                updateExchangeRate(); $('modal-exchange').classList.remove('hidden'); 
+            }
+
+            async function showScanQRModal() { 
+                $('modal-scan-qr').classList.remove('hidden'); 
+                const cam = await requestCameraAccess(sid('video-qr'), 'environment');
+                if ($('modal-scan-qr').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
+                qrCamera = cam;
+            }
+            function closeScanQRModal() { qrCamera = stopSpecificCamera(qrCamera); closeModal('modal-scan-qr'); }
+
+            function processTopUp() {
+                const amt = parseInt($('topup-amount').value);
+                if(amt > 0) { 
+                    walletBalances[currentWalletName] += amt;
+                    addBiopayHistory("Top Up Saldo", "Via M-Banking", `Rp ${amt.toLocaleString('id-ID')}`, false);
+                    updateBalanceDisplay(); syncWalletUI(currentWalletName);
+                    closeModal('modal-topup'); toast(`Top Up Rp ${amt.toLocaleString('id-ID')} berhasil`, 'ph-check-circle', 'text-emerald-400'); 
+                } else { toast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); }
+            }
+        
+            let tfMethod = 'rek';
+            let tfBioTarget = "";
+
+            function showTransferModal() {
+                $('transfer-amount').value = ''; $('transfer-target').value = '';
+                $('tf-bio-result').classList.add('hidden'); tfBioTarget = "";
+                toggleTransferMethod('rek'); $('modal-transfer').classList.remove('hidden'); 
+            }
+
+            function toggleTransferMethod(method) {
+                tfMethod = method;
+                const btnRek = $('tab-tf-rek'); const btnBio = $('tab-tf-bio');
+                const contRek = $('container-tf-rek'); const contBio = $('container-tf-bio');
+                if (method === 'rek') {
+                    btnRek.className = "flex-1 py-2 text-[9px] font-bold rounded bg-indigo-600 text-white transition-colors shadow shadow-indigo-600/50 cursor-pointer";
+                    btnBio.className = "flex-1 py-2 text-[9px] font-bold rounded text-slate-400 hover:text-white transition-colors cursor-pointer";
+                    contRek.classList.remove('hidden'); contBio.classList.add('hidden');
+                } else {
+                    btnBio.className = "flex-1 py-2 text-[9px] font-bold rounded bg-indigo-600 text-white transition-colors shadow shadow-indigo-600/50 cursor-pointer";
+                    btnRek.className = "flex-1 py-2 text-[9px] font-bold rounded text-slate-400 hover:text-white transition-colors cursor-pointer";
+                    contBio.classList.remove('hidden'); contRek.classList.add('hidden');
+                }
+            }
+
+            let tfScanToken = 0;
+            async function startTransferBiometricScan() {
+                const token = ++tfScanToken;
+                $('modal-tf-scan').classList.remove('hidden');
+                setTimeout(() => {
+                    // FIX: dulu tetap "menemukan penerima" walau pengguna sudah menekan Batal
+                    if (token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden')) return;
+                    tfCamera = stopSpecificCamera(tfCamera);
+                    $('modal-tf-scan').classList.add('hidden');
+                    $('tf-bio-result').classList.remove('hidden');
+                    tfBioTarget = "Budi Santoso"; $('tf-bio-name').innerText = tfBioTarget;
+                    toast('Identitas penerima ditemukan!', 'ph-check-circle', 'text-emerald-400');
+                }, 3000);
+                let cam = await requestCameraAccess(sid('video-tf-scan'), 'environment');
+                if (!cam) cam = await requestCameraAccess(sid('video-tf-scan'), 'user');
+                if (token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
+                tfCamera = cam;
+            }
+
+            function closeTfScanModal() { tfScanToken++; tfCamera = stopSpecificCamera(tfCamera); $('modal-tf-scan').classList.add('hidden'); }
+
+            function processTransfer() {
+                const amt = parseInt($('transfer-amount').value);
+                const destWallet = $('transfer-dest-wallet').value;
+                let targetName = tfMethod === 'rek' ? $('transfer-target').value : tfBioTarget;
+                targetName = (targetName || '').trim();
+                if(!targetName) { toast('Tujuan belum diisi!', 'ph-warning', 'text-red-500'); return; }
+                if(!(amt > 0)) { toast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
+                if(amt <= walletBalances[currentWalletName]) { 
+                    walletBalances[currentWalletName] -= amt;
+                    addBiopayHistory(`Transfer ke ${targetName}`, destWallet, `Rp ${amt.toLocaleString('id-ID')}`, true);
+                    updateBalanceDisplay(); syncWalletUI(currentWalletName);
+                    closeModal('modal-transfer'); toast(`Rp ${amt.toLocaleString('id-ID')} dikirim ke ${targetName}`, 'ph-paper-plane-tilt', 'text-sky-400'); 
+                } else { toast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); }
+            }
+        
+            function processWithdraw() {
+                const amt = parseInt($('withdraw-amount').value);
+                if(!(amt > 0)) { toast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
+                if(amt <= walletBalances[currentWalletName]) { 
+                    walletBalances[currentWalletName] -= amt;
+                    addBiopayHistory("Tarik Tunai", "Ke Rekening Pribadi", `Rp ${amt.toLocaleString('id-ID')}`, true);
+                    updateBalanceDisplay(); syncWalletUI(currentWalletName);
+                    closeModal('modal-withdraw'); toast(`Tarik Tunai Rp ${amt.toLocaleString('id-ID')} berhasil`, 'ph-money', 'text-red-400'); 
+                } else toast('Saldo tidak cukup', 'ph-warning', 'text-red-500');
+            }
+        
+            function payBill(name, amt) {
+                closeModal('modal-bills');
+                if(walletBalances[currentWalletName] >= amt) { 
+                    walletBalances[currentWalletName] -= amt;
+                    addBiopayHistory(`Bayar Tagihan ${name}`, "Billing Otomatis", `Rp ${amt.toLocaleString('id-ID')}`, true);
+                    updateBalanceDisplay(); syncWalletUI(currentWalletName);
+                    toast(`Tagihan ${name} lunas`, 'ph-receipt', 'text-emerald-400'); 
+                } else toast('Saldo tidak cukup', 'ph-warning', 'text-red-500');
+            }
+
+            function updateExchangeRate() {
+                const cur = $('exchange-currency').value;
+                $('exchange-rate-text').innerText = `Kurs: 1 ${cur} = Rp ${fxRates[cur].toLocaleString('id-ID')}`;
+                calculateExchange();
+            }
+
+            function calculateExchange() {
+                const cur = $('exchange-currency').value;
+                const amount = parseInt($('exchange-amount').value) || 0;
                 const result = amount / fxRates[cur];
-                walletBalances[sourceWallet] -= amount; foreignBalances[cur] += result; 
-                let displayResult = cur === 'JPY' ? Math.floor(result).toLocaleString('en-US') : formatForeign(cur, result);
-                if(sourceWallet === currentWalletName) { addBiopayHistory(`Tukar Valas ke ${cur}`, `Dapat ${curSymbols[cur]}${displayResult}`, `Rp ${amount.toLocaleString('id-ID')}`, true); updateBalanceDisplay(); }
-                syncWalletUI(sourceWallet); closeModal('modal-exchange'); showToast(`Berhasil menukar ke ${cur}`, 'ph-currency-circle-dollar', 'text-purple-400');
-            } else { showToast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); }
-        }
-
-        function toggleSetting(el, name) {
-            const btn = el.querySelector('.toggle-btn');
-            if(btn.classList.contains('bg-[#38bdf8]')) { btn.classList.replace('bg-[#38bdf8]', 'bg-slate-600'); btn.innerHTML = ''; showToast(`${name} dinonaktifkan`, 'ph-bell-slash', 'text-slate-400'); } 
-            else { btn.classList.replace('bg-slate-600', 'bg-[#38bdf8]'); btn.innerHTML = '<i class="ph-bold ph-check text-xs"></i>'; showToast(`${name} diaktifkan`, 'ph-check-circle', 'text-sky-400'); }
-        }
-
-        function showAddWalletModal() { document.getElementById('modal-add-wallet').classList.remove('hidden'); }
-        function selectWalletOption(el) {
-            document.querySelectorAll('.wallet-option').forEach(opt => {
-                opt.classList.remove('active', 'border-[#38bdf8]'); opt.classList.add('border-slate-700');
-                opt.querySelector('.radio-circle').innerHTML = ''; opt.querySelector('.radio-circle').className = "radio-circle w-3 h-3 rounded-full border-2 border-slate-500";
-            });
-            el.classList.add('active', 'border-[#38bdf8]'); el.classList.remove('border-slate-700');
-            el.querySelector('.radio-circle').className = "radio-circle w-3 h-3 rounded-full border-2 border-white bg-white flex items-center justify-center";
-            el.querySelector('.radio-circle').innerHTML = '<div class="w-1.5 h-1.5 rounded-full bg-[#151e2f]"></div>';
-        }
-        function confirmAddWallet() {
-            const active = document.querySelector('.wallet-option.active');
-            // FIX: opsi yang sudah ditambahkan disembunyikan tapi masih 'active' -> bisa ditambahkan berkali-kali (ID duplikat)
-            if (!active || active.style.display === 'none') { showToast('Pilih wallet terlebih dahulu', 'ph-warning', 'text-red-500'); return; }
-            if (walletBalances[active.querySelector('span.text-white').innerText] !== undefined) { showToast('Wallet sudah terhubung', 'ph-info', 'text-sky-400'); closeModal('modal-add-wallet'); return; }
-            if(active) {
-                const abbr = active.querySelector('div.w-6').innerText; const name = active.querySelector('span.text-white').innerText;
-                const bgClass = Array.from(active.querySelector('div.w-6').classList).find(c => c.startsWith('bg-'));
-                walletBalances[name] = 1000000000; const elId = 'bal-' + name.replace(/\s/g, '');
-                const html = `<div class="wallet-card bg-[#151e2f] rounded-xl border border-slate-700 p-3 flex flex-col cursor-pointer" onclick="setMainWallet(this, '${name}')">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl ${bgClass} flex items-center justify-center text-white font-bold text-xs">${abbr}</div><div><h4 class="text-white font-bold text-xs">${name}</h4><p id="${elId}" class="text-slate-400 text-[9px] wallet-bal">Saldo: Rp 1.000.000.000</p></div></div>
-                        <div class="status-container"><span class="text-[#10b981] text-[9px]">Baru</span></div>
-                    </div>
-                </div>`;
-                document.getElementById('wallet-list-container').insertAdjacentHTML('beforeend', html);
-                active.style.display = 'none'; active.classList.remove('active', 'border-[#38bdf8]'); active.classList.add('border-slate-700');
-                const next = Array.from(document.querySelectorAll('.wallet-option')).find(o => o.style.display !== 'none');
-                if (next) selectWalletOption(next);
-                showToast(`${name} ditambahkan`, 'ph-wallet', 'text-sky-400');
+                let displayResult = cur === 'JPY' ? Math.floor(result).toLocaleString('en-US') : parseFloat(result.toFixed(2)).toLocaleString('en-US', {minimumFractionDigits: 2});
+                $('exchange-result').innerText = curSymbols[cur] + ' ' + displayResult;
             }
-            closeModal('modal-add-wallet');
-        }
 
-        function setMainWallet(cardEl, name) {
-            document.querySelectorAll('.wallet-card').forEach(c => {
-                c.classList.remove('border-[#38bdf8]/40'); c.classList.add('border-slate-700');
-                c.querySelector('.status-container').innerHTML = '<span class="text-slate-400 text-[9px]">Terhubung</span>';
-            });
-            cardEl.classList.remove('border-slate-700'); cardEl.classList.add('border-[#38bdf8]/40');
-            cardEl.querySelector('.status-container').innerHTML = '<span class="border border-[#059669]/50 bg-[#059669]/10 text-[#10b981] px-2 py-0.5 rounded-full text-[9px] font-bold">Utama</span>';
+            function processExchange() {
+                const amount = parseInt($('exchange-amount').value);
+                const cur = $('exchange-currency').value;
+                const sourceWallet = $('exchange-source-wallet').value;
             
-            currentWalletName = name;
-            document.getElementById('home-wallet-name').innerText = name;
-            document.getElementById('payment-txt-walletname').innerText = name;
-            document.getElementById('refund-txt-wallet').innerText = name;
-            updateBalanceDisplay();
-            showToast(`${name} diatur sebagai utama.`, 'ph-check-circle', 'text-sky-400');
-        }
+                if(!(amount > 0)) { toast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
+                if(amount <= walletBalances[sourceWallet]) {
+                    const result = amount / fxRates[cur];
+                    walletBalances[sourceWallet] -= amount; foreignBalances[cur] += result; 
+                    let displayResult = cur === 'JPY' ? Math.floor(result).toLocaleString('en-US') : formatForeign(cur, result);
+                    if(sourceWallet === currentWalletName) { addBiopayHistory(`Tukar Valas ke ${cur}`, `Dapat ${curSymbols[cur]}${displayResult}`, `Rp ${amount.toLocaleString('id-ID')}`, true); updateBalanceDisplay(); }
+                    syncWalletUI(sourceWallet); closeModal('modal-exchange'); toast(`Berhasil menukar ke ${cur}`, 'ph-currency-circle-dollar', 'text-purple-400');
+                } else { toast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); }
+            }
 
-        function showAddSharingModal() { document.getElementById('sharing-name').value = ''; document.getElementById('sharing-role').value = ''; document.getElementById('modal-add-sharing').classList.remove('hidden'); }
+            function toggleSetting(el, name) {
+                const btn = el.querySelector('.toggle-btn');
+                if(btn.classList.contains('bg-[#38bdf8]')) { btn.classList.replace('bg-[#38bdf8]', 'bg-slate-600'); btn.innerHTML = ''; toast(`${name} dinonaktifkan`, 'ph-bell-slash', 'text-slate-400'); } 
+                else { btn.classList.replace('bg-slate-600', 'bg-[#38bdf8]'); btn.innerHTML = '<i class="ph-bold ph-check text-xs"></i>'; toast(`${name} diaktifkan`, 'ph-check-circle', 'text-sky-400'); }
+            }
+
+            function showAddWalletModal() { $('modal-add-wallet').classList.remove('hidden'); }
+            function selectWalletOption(el) {
+                root.querySelectorAll('.wallet-option').forEach(opt => {
+                    opt.classList.remove('active', 'border-[#38bdf8]'); opt.classList.add('border-slate-700');
+                    opt.querySelector('.radio-circle').innerHTML = ''; opt.querySelector('.radio-circle').className = "radio-circle w-3 h-3 rounded-full border-2 border-slate-500";
+                });
+                el.classList.add('active', 'border-[#38bdf8]'); el.classList.remove('border-slate-700');
+                el.querySelector('.radio-circle').className = "radio-circle w-3 h-3 rounded-full border-2 border-white bg-white flex items-center justify-center";
+                el.querySelector('.radio-circle').innerHTML = '<div class="w-1.5 h-1.5 rounded-full bg-[#151e2f]"></div>';
+            }
+            function confirmAddWallet() {
+                const active = root.querySelector('.wallet-option.active');
+                // FIX: opsi yang sudah ditambahkan disembunyikan tapi masih 'active' -> bisa ditambahkan berkali-kali (ID duplikat)
+                if (!active || active.style.display === 'none') { toast('Pilih wallet terlebih dahulu', 'ph-warning', 'text-red-500'); return; }
+                if (walletBalances[active.querySelector('span.text-white').innerText] !== undefined) { toast('Wallet sudah terhubung', 'ph-info', 'text-sky-400'); closeModal('modal-add-wallet'); return; }
+                if(active) {
+                    const abbr = active.querySelector('div.w-6').innerText; const name = active.querySelector('span.text-white').innerText;
+                    const bgClass = Array.from(active.querySelector('div.w-6').classList).find(c => c.startsWith('bg-'));
+                    walletBalances[name] = 1000000000; const elId = 'bal-' + name.replace(/\s/g, '');
+                    const html = `<div class="wallet-card bg-[#151e2f] rounded-xl border border-slate-700 p-3 flex flex-col cursor-pointer" onclick="${NS}setMainWallet(this, '${name}')">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl ${bgClass} flex items-center justify-center text-white font-bold text-xs">${abbr}</div><div><h4 class="text-white font-bold text-xs">${name}</h4><p id="${sid(elId)}" class="text-slate-400 text-[9px] wallet-bal">Saldo: Rp 1.000.000.000</p></div></div>
+                            <div class="status-container"><span class="text-[#10b981] text-[9px]">Baru</span></div>
+                        </div>
+                    </div>`;
+                    $('wallet-list-container').insertAdjacentHTML('beforeend', html);
+                    active.style.display = 'none'; active.classList.remove('active', 'border-[#38bdf8]'); active.classList.add('border-slate-700');
+                    const next = Array.from(root.querySelectorAll('.wallet-option')).find(o => o.style.display !== 'none');
+                    if (next) selectWalletOption(next);
+                    toast(`${name} ditambahkan`, 'ph-wallet', 'text-sky-400');
+                }
+                closeModal('modal-add-wallet');
+            }
+
+            function setMainWallet(cardEl, name) {
+                root.querySelectorAll('.wallet-card').forEach(c => {
+                    c.classList.remove('border-[#38bdf8]/40'); c.classList.add('border-slate-700');
+                    c.querySelector('.status-container').innerHTML = '<span class="text-slate-400 text-[9px]">Terhubung</span>';
+                });
+                cardEl.classList.remove('border-slate-700'); cardEl.classList.add('border-[#38bdf8]/40');
+                cardEl.querySelector('.status-container').innerHTML = '<span class="border border-[#059669]/50 bg-[#059669]/10 text-[#10b981] px-2 py-0.5 rounded-full text-[9px] font-bold">Utama</span>';
+            
+                currentWalletName = name;
+                $('home-wallet-name').innerText = name;
+                $('payment-txt-walletname').innerText = name;
+                $('refund-txt-wallet').innerText = name;
+                updateBalanceDisplay();
+                toast(`${name} diatur sebagai utama.`, 'ph-check-circle', 'text-sky-400');
+            }
+
+            function showAddSharingModal() { $('sharing-name').value = ''; $('sharing-role').value = ''; $('modal-add-sharing').classList.remove('hidden'); }
         
-        let tempSharingName = ''; let tempSharingRole = ''; let sharingScanToken = 0;
-        async function startSharingScan() {
-            const name = document.getElementById('sharing-name').value.trim(); const role = document.getElementById('sharing-role').value.trim();
-            if(!name || !role) { showToast('Nama dan Peran wajib diisi!', 'ph-warning', 'text-red-500'); return; }
-            const token = ++sharingScanToken;
-            tempSharingName = name; tempSharingRole = role; closeModal('modal-add-sharing');
-            document.getElementById('scan-target-name').innerText = name; document.getElementById('modal-sharing-scan').classList.remove('hidden');
+            let tempSharingName = ''; let tempSharingRole = ''; let sharingScanToken = 0;
+            async function startSharingScan() {
+                const name = $('sharing-name').value.trim(); const role = $('sharing-role').value.trim();
+                if(!name || !role) { toast('Nama dan Peran wajib diisi!', 'ph-warning', 'text-red-500'); return; }
+                const token = ++sharingScanToken;
+                tempSharingName = name; tempSharingRole = role; closeModal('modal-add-sharing');
+                $('scan-target-name').innerText = name; $('modal-sharing-scan').classList.remove('hidden');
             
-            setTimeout(() => { 
-                if (token !== sharingScanToken) return;
+                setTimeout(() => { 
+                    if (token !== sharingScanToken) return;
+                    sharingCamera = stopSpecificCamera(sharingCamera);
+                    closeModal('modal-sharing-scan'); 
+                    addSharingMemberToList(tempSharingName, tempSharingRole); 
+                }, 3500);
+                const cam = await requestCameraAccess(sid('video-sharing-qr'), 'user');
+                if (token !== sharingScanToken) { stopSpecificCamera(cam); return; }
+                sharingCamera = cam;
+            }
+            function cancelSharingScan() {
+                sharingScanToken++;
                 sharingCamera = stopSpecificCamera(sharingCamera);
-                closeModal('modal-sharing-scan'); 
-                addSharingMemberToList(tempSharingName, tempSharingRole); 
-            }, 3500);
-            const cam = await requestCameraAccess('video-sharing-qr', 'user');
-            if (token !== sharingScanToken) { stopSpecificCamera(cam); return; }
-            sharingCamera = cam;
-        }
-        function cancelSharingScan() {
-            sharingScanToken++;
-            sharingCamera = stopSpecificCamera(sharingCamera);
-            closeModal('modal-sharing-scan');
-            showToast('Registrasi dibatalkan', 'ph-x-circle', 'text-slate-400');
-        }
-        function removeSharingMember() {
-            const card = document.getElementById(activeSharingCardId);
-            if (card) card.remove();
-            closeModal('modal-sharing-limit');
-            if (!document.querySelector('#sharing-list-container > div')) document.getElementById('sharing-empty').classList.remove('hidden');
-            showToast('Anggota dihapus', 'ph-trash', 'text-red-400');
+                closeModal('modal-sharing-scan');
+                toast('Registrasi dibatalkan', 'ph-x-circle', 'text-slate-400');
+            }
+            function removeSharingMember() {
+                const card = $(activeSharingCardId);
+                if (card) card.remove();
+                closeModal('modal-sharing-limit');
+                if (!root.querySelector('#sharing-list-container > div')) $('sharing-empty').classList.remove('hidden');
+                toast('Anggota dihapus', 'ph-trash', 'text-red-400');
+            }
+
+            function addSharingMemberToList(name, role) {
+                const cardId = 'share-' + Date.now();
+                $('sharing-empty').classList.add('hidden');
+                const safeName = escapeHTML(name), safeRole = escapeHTML(role);
+                const html = `<div id="${sid(cardId)}" class="bg-[#151e2f] rounded-xl border border-slate-700 p-3 flex flex-col gap-2 animation-slide-in">
+                        <div class="flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl"><i class="ph-fill ph-user-circle"></i></div><div><h4 class="text-white font-bold text-xs flex items-center gap-1.5">${safeName} <span class="bg-slate-700 text-slate-300 text-[8px] px-1.5 py-0.5 rounded font-medium uppercase tracking-wide">${safeRole}</span></h4><p class="text-emerald-400 text-[9px] flex items-center gap-0.5 mt-0.5"><i class="ph-bold ph-fingerprint"></i> Biometrik Aktif</p></div></div>
+                        <button onclick="${NS}showSharingLimitModal('${cardId}')" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-sky-400 hover:bg-slate-700 transition-colors cursor-pointer"><i class="ph-fill ph-sliders-horizontal text-base"></i></button></div>
+                        <div class="bg-[#0f172a] rounded-lg p-2.5 flex justify-between items-center border border-slate-800 mt-1"><span class="text-slate-400 text-[9px] flex items-center gap-1"><i class="ph-bold ph-wallet"></i> Limit Belanja Harian:</span><span class="sharing-limit-val text-[#38bdf8] text-xs font-bold">Rp 1.000.000</span></div>
+                    </div>`;
+                $('sharing-list-container').insertAdjacentHTML('beforeend', html); toast(`${name} berhasil didaftarkan!`, 'ph-check-circle', 'text-emerald-400');
+            }
+
+            let activeSharingCardId = '';
+            function showSharingLimitModal(cardId) { activeSharingCardId = cardId; const card = $(cardId); $('limit-target-name').innerText = card ? card.querySelector('h4').firstChild.textContent.trim() : '-'; $('sharing-limit-amount').value = ''; $('modal-sharing-limit').classList.remove('hidden'); }
+            function processSetSharingLimit() {
+                const limitInput = parseInt($('sharing-limit-amount').value);
+                if (limitInput > 0) { const card = $(activeSharingCardId); if (card) { card.querySelector('.sharing-limit-val').innerText = 'Rp ' + limitInput.toLocaleString('id-ID'); } closeModal('modal-sharing-limit'); toast('Limit diperbarui!', 'ph-check-circle', 'text-emerald-400'); } else { toast('Nominal tidak valid!', 'ph-warning', 'text-red-500'); }
+            }
+
+            return { toast, stopCameras, closeAllModals, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
         }
 
-        function addSharingMemberToList(name, role) {
-            const cardId = 'share-' + Date.now();
-            document.getElementById('sharing-empty').classList.add('hidden');
-            const safeName = escapeHTML(name), safeRole = escapeHTML(role);
-            const html = `<div id="${cardId}" class="bg-[#151e2f] rounded-xl border border-slate-700 p-3 flex flex-col gap-2 animation-slide-in">
-                    <div class="flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl"><i class="ph-fill ph-user-circle"></i></div><div><h4 class="text-white font-bold text-xs flex items-center gap-1.5">${safeName} <span class="bg-slate-700 text-slate-300 text-[8px] px-1.5 py-0.5 rounded font-medium uppercase tracking-wide">${safeRole}</span></h4><p class="text-emerald-400 text-[9px] flex items-center gap-0.5 mt-0.5"><i class="ph-bold ph-fingerprint"></i> Biometrik Aktif</p></div></div>
-                    <button onclick="showSharingLimitModal('${cardId}')" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-sky-400 hover:bg-slate-700 transition-colors cursor-pointer"><i class="ph-fill ph-sliders-horizontal text-base"></i></button></div>
-                    <div class="bg-[#0f172a] rounded-lg p-2.5 flex justify-between items-center border border-slate-800 mt-1"><span class="text-slate-400 text-[9px] flex items-center gap-1"><i class="ph-bold ph-wallet"></i> Limit Belanja Harian:</span><span class="sharing-limit-val text-[#38bdf8] text-xs font-bold">Rp 1.000.000</span></div>
-                </div>`;
-            document.getElementById('sharing-list-container').insertAdjacentHTML('beforeend', html); showToast(`${name} berhasil didaftarkan!`, 'ph-check-circle', 'text-emerald-400');
-        }
-
-        let activeSharingCardId = '';
-        function showSharingLimitModal(cardId) { activeSharingCardId = cardId; const card = document.getElementById(cardId); document.getElementById('limit-target-name').innerText = card ? card.querySelector('h4').firstChild.textContent.trim() : '-'; document.getElementById('sharing-limit-amount').value = ''; document.getElementById('modal-sharing-limit').classList.remove('hidden'); }
-        function processSetSharingLimit() {
-            const limitInput = parseInt(document.getElementById('sharing-limit-amount').value);
-            if (limitInput > 0) { const card = document.getElementById(activeSharingCardId); if (card) { card.querySelector('.sharing-limit-val').innerText = 'Rp ' + limitInput.toLocaleString('id-ID'); } closeModal('modal-sharing-limit'); showToast('Limit diperbarui!', 'ph-check-circle', 'text-emerald-400'); } else { showToast('Nominal tidak valid!', 'ph-warning', 'text-red-500'); }
-        }
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error
         function copyToClipboard(text, type, pov = 1) {
             const done = () => showToast(`${type} disalin`, 'ph-copy', 'text-sky-400', pov);
@@ -2019,11 +1774,6 @@
             if (ewBal) {
                 ewBal.innerHTML = isEwalletBalanceHidden ? '&bull;&bull;&bull;&bull;&bull;&bull;' : ewalletBalance.toLocaleString('id-ID');
             }
-            // Sinkronkan saldo ke mini-app BioPay di POV 2
-            const p2Bal = document.getElementById('p2-balance-text');
-            if (p2Bal) p2Bal.innerText = formatRp(ewalletBalance);
-            const p2WBal = document.getElementById('p2-wallet-bal');
-            if (p2WBal) p2WBal.innerText = 'Saldo: ' + formatRp(ewalletBalance);
         }
 
         function toggleEwalletBalance() {
@@ -2229,74 +1979,55 @@
         // FITUR BIOPAY MINI-APP DI DALAM POV 2
         // ==========================================
 
+        // Template BioPay POV 1 diambil SEBELUM ada interaksi, lalu disalin ke POV 2 dengan ID berakhiran
+        // '-p2' dan handler diarahkan ke instance BP2 -> tampilan & fitur 100% sama dengan POV 1.
+        const BIOPAY_TEMPLATE = document.getElementById('biopay-device').innerHTML;
+        const BP1 = createBioPay('', 1, '');
+        Object.assign(window, BP1); // handler onclick POV 1 memanggil fungsi global
+
+        function buildBioPayCloneHTML(template, suffix, ns, names) {
+            const box = document.createElement('div');
+            box.innerHTML = template;
+            box.querySelectorAll('.toast-container').forEach(el => el.remove());
+            const fnRe = new RegExp('(^|[^\\w.])(' + names.join('|') + ')\\(', 'g');
+            box.querySelectorAll('*').forEach(el => {
+                if (el.id) el.id = el.id + suffix;
+                for (const attr of Array.from(el.attributes)) {
+                    if (!attr.name.startsWith('on')) continue;
+                    let v = attr.value
+                        .replace(/getElementById\('([\w-]+)'\)/g, (m, id) => `getElementById('${id}${suffix}')`)
+                        .replace(/(^|[^\w.])showToast\(/g, `$1${ns}toast(`)
+                        .replace(/copyToClipboard\(([^)]*)\)/g, 'copyToClipboard($1, 2)')
+                        .replace(fnRe, `$1${ns}$2(`);
+                    el.setAttribute(attr.name, v);
+                }
+            });
+            return box.innerHTML;
+        }
+
+        const BP2_NAMES = Object.keys(BP1).filter(k => typeof BP1[k] === 'function' && k !== 'toast');
+        document.getElementById('biopay-p2-root').innerHTML = buildBioPayCloneHTML(BIOPAY_TEMPLATE, '-p2', 'BP2.', BP2_NAMES);
+        const BP2 = createBioPay('-p2', 2, 'BP2.');
+
         function openBioPayInPOV2() {
             closeEwalletModal('modal-biopay-options');
-            
-            // Sembunyikan e-wallet, tampilkan biopay kloningan 100% identik
             document.getElementById('ewallet-wrapper').classList.add('hidden');
             document.getElementById('ewallet-wrapper').classList.remove('flex');
-            
             document.getElementById('biopay-wrapper-p2').classList.remove('hidden');
             document.getElementById('biopay-wrapper-p2').classList.add('flex');
-            
-            // Samakan persis alur & fungsi layar pertama
-            goToScreenP2('screen-start-p2');
-            showToast('Membuka BioPay (100% Kloning Identik & Operasional)...', 'ph-app-window', 'text-sky-400', 2);
+            BP2.closeAllModals();
+            BP2.goToScreen('screen-start');
+            showToast('Membuka BioPay...', 'ph-app-window', 'text-sky-400', 2);
         }
 
         function closeBioPayInPOV2() {
-            p2CameraStream = stopSpecificCamera(p2CameraStream);
+            BP2.stopCameras();
+            BP2.closeAllModals();
+            BP2.showScreen('screen-start');
             document.getElementById('biopay-wrapper-p2').classList.add('hidden');
             document.getElementById('biopay-wrapper-p2').classList.remove('flex');
-            
             document.getElementById('ewallet-wrapper').classList.remove('hidden');
             document.getElementById('ewallet-wrapper').classList.add('flex');
-        }
-
-        async function goToScreenP2(screenId) {
-            document.querySelectorAll('.screen-p2').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            
-            p2CameraStream = stopSpecificCamera(p2CameraStream);
-            const p2Open = () => !document.getElementById('biopay-wrapper-p2').classList.contains('hidden') && isScreenActive(screenId);
-            const openCamP2 = async (videoId) => {
-                const stream = await requestCameraAccess(videoId, 'user');
-                if (!p2Open()) { stopSpecificCamera(stream); return null; }
-                return stream;
-            };
-            
-            if (screenId === 'screen-face-scan-p2') { 
-                showToast('Menganalisis Kedalaman 3D Wajah (Anti-Spoofing)...', 'ph-shield-check', 'text-emerald-400', 2);
-                setTimeout(() => { if (p2Open()) goToScreenP2('screen-identity-p2'); }, 2500); 
-                p2CameraStream = await openCamP2('video-face-p2');
-            } else if (screenId === 'screen-hand-scan-p2') {
-                showToast('Memindai Aliran Darah & Suhu Tangan...', 'ph-shield-check', 'text-emerald-400', 2);
-                setTimeout(() => { if (p2Open()) { switchTabP2('home'); goToScreenP2('screen-dashboard-p2'); } }, 2500); 
-                p2CameraStream = await openCamP2('video-hand-p2');
-            } else if (screenId === 'screen-dashboard-p2') {
-                showToast('Autentikasi BioPay Berhasil. Dashboard Aktif.', 'ph-check-circle', 'text-emerald-400', 2);
-            }
-        }
-
-        function switchTabP2(tabName) {
-            const tabs = ['home', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'pengaturan'];
-            tabs.forEach(tab => {
-                const nav = document.getElementById(`nav-${tab}-p2`);
-                const content = document.getElementById(`tab-${tab}-p2`);
-                if (tab === tabName) {
-                    if (nav) {
-                        nav.classList.add('text-[#38bdf8]'); nav.classList.remove('text-slate-400');
-                        nav.querySelector('span').classList.add('border-[#38bdf8]'); nav.querySelector('span').classList.remove('border-transparent');
-                    }
-                    if (content) { content.classList.remove('hidden'); content.classList.add('flex'); }
-                } else {
-                    if (nav) {
-                        nav.classList.remove('text-[#38bdf8]'); nav.classList.add('text-slate-400');
-                        nav.querySelector('span').classList.remove('border-[#38bdf8]'); nav.querySelector('span').classList.add('border-transparent');
-                    }
-                    if (content) { content.classList.add('hidden'); content.classList.remove('flex'); }
-                }
-            });
         }
 
     </script>
