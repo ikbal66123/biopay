@@ -7,6 +7,12 @@ wajahmu ditempel ke video "maling ayam").
 - **Foto**: `python scripts/protect_photo.py fotoku.jpg`
 - **Video**: `python scripts/protect_video.py videoku.mp4`, lihat
   [Tahap 2: Video](#tahap-2-video).
+- **Aplikasi web demo**: `pip install fastapi uvicorn python-multipart`, lalu
+  `python app/server.py` dan buka http://localhost:8000. Upload foto/video →
+  progress → hasil berdampingan + angka → download. Satu job diproses sekaligus.
+  Pengaturan lewat env `ANTIDEEPFAKE_PRESET` (fast/balanced/strong),
+  `ANTIDEEPFAKE_DEVICE`, dan `ANTIDEEPFAKE_VAE` (lihat `app/server.py`).
+  Ini prototipe lokal: jangan dibuka ke internet tanpa login & pembatasan.
 
 Cara kerjanya: kamu memasukkan satu foto dan mendapat satu foto baru yang
 terlihat sama, tapi isinya sudah:
@@ -75,6 +81,7 @@ anti-deepfake/
 │   ├── metrics.py           # PSNR, SSIM, LPIPS (opsional)
 │   ├── imageio.py           # baca/tulis gambar, JPEG, resize
 │   └── device.py            # pilih CUDA / MPS / CPU
+├── app/                     # aplikasi web demo (FastAPI + satu halaman HTML)
 ├── scripts/
 │   ├── protect_photo.py     # lindungi foto
 │   ├── evaluate_photo.py    # uji: edit AI pada foto asli vs terlindungi, + kompresi

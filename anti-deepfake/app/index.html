@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anti-Deepfake</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #16181d; --muted: #5d6470; --line: #e3e6eb;
+    --accent: #2f6fed; --accent-ink: #ffffff; --ok: #1f8a4c; --warn: #b26a00; --err: #c62828;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1115; --card: #181b21; --text: #e8eaee; --muted: #9aa1ad; --line: #2a2f38;
+      --accent: #5b8cff; --accent-ink: #0b0d12; --ok: #4cc27f; --warn: #e3a33a; --err: #ff6b6b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  #drop { display: block; border: 2px dashed var(--line); border-radius: 12px; padding: 32px 16px; text-align: center; cursor: pointer;
+          transition: border-color .15s, background .15s; }
+  #drop.over, #drop:hover { border-color: var(--accent); }
+  #drop strong { display: block; font-size: 17px; margin-bottom: 4px; }
+  #drop span { color: var(--muted); font-size: 14px; }
+  button, .btn { appearance: none; border: 0; border-radius: 8px; padding: 10px 16px; font: inherit; font-weight: 600;
+                 background: var(--accent); color: var(--accent-ink); cursor: pointer; text-decoration: none; display: inline-block; }
+  .btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--line); }
+  button:disabled { opacity: .5; cursor: default; }
+  .bar { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 12px 0 6px; }
+  .bar > div { height: 100%; width: 0; background: var(--accent); transition: width .4s; }
+  .stage { color: var(--muted); font-size: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  figure { margin: 0; }
+  figure img, figure video { width: 100%; border-radius: 8px; background: #000; display: block; }
+  figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; }
+  td { padding: 6px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { color: var(--muted); padding-right: 12px; width: 50%; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .note { font-size: 13px; color: var(--muted); }
+  .err { color: var(--err); white-space: pre-wrap; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Anti-Deepfake</h1>
+  <p class="sub">Upload foto atau video. Hasilnya terlihat sama, tapi lebih sulit dipakai AI untuk face swap &amp; editing.</p>
+
+  <section class="card" id="upload">
+    <label id="drop">
+      <input id="file" type="file" accept="image/*,video/*" hidden>
+      <strong>Pilih atau seret file ke sini</strong>
+      <span>Foto (JPG/PNG) atau video (MP4/MOV), maks 300 MB</span>
+    </label>
+    <p class="note" id="cfg"></p>
+  </section>
+
+  <section class="card hidden" id="status">
+    <div><strong id="fname"></strong></div>
+    <div class="bar"><div id="bar"></div></div>
+    <div class="stage" id="stage"></div>
+    <div class="err" id="error"></div>
+  </section>
+
+  <section class="card hidden" id="result">
+    <div class="grid">
+      <figure><div id="origBox"></div><figcaption>Asli</figcaption></figure>
+      <figure><div id="protBox"></div><figcaption>Terlindungi</figcaption></figure>
+    </div>
+    <table id="summary"></table>
+    <div class="actions">
+      <a class="btn" id="download">Download hasil</a>
+      <button class="btn secondary" id="again">Proses file lain</button>
+    </div>
+    <p class="note">Simpan file asli di tempat aman sebagai bukti. Perlindungan ini lapisan tambahan, bukan jaminan:
+      paling efektif melawan face swap berbasis ArcFace (mis. inswapper); lemah melawan editing Stable Diffusion
+      pada video. Lihat README untuk detail.</p>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+let timer = null;
+
+fetch("/api/config").then(r => r.json()).then(c => {
+  $("cfg").textContent = `Mode: ${c.preset} · perangkat: ${c.device} · model: ${c.vae.map(v => v.split("/").pop()).join(", ")}`;
+}).catch(() => {});
+
+const drop = $("drop");
+["dragenter", "dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", ev => ev.dataTransfer.files[0] && start(ev.dataTransfer.files[0]));
+$("file").addEventListener("change", ev => ev.target.files[0] && start(ev.target.files[0]));
+$("again").addEventListener("click", () => {
+  $("result").classList.add("hidden"); $("status").classList.add("hidden");
+  $("upload").classList.remove("hidden"); $("file").value = "";
+});
+
+async function start(file) {
+  $("upload").classList.add("hidden");
+  $("status").classList.remove("hidden");
+  $("result").classList.add("hidden");
+  $("fname").textContent = file.name;
+  $("error").textContent = "";
+  setProgress(0, "mengupload…");
+  const fd = new FormData(); fd.append("file", file);
+  const r = await fetch("/api/jobs", { method: "POST", body: fd });
+  if (!r.ok) { const e = await r.json().catch(() => ({})); return fail(e.detail || r.statusText); }
+  const job = await r.json();
+  poll(job.id);
+}
+
+function setProgress(p, text) {
+  $("bar").style.width = `${Math.round(p * 100)}%`;
+  $("stage").textContent = `${Math.round(p * 100)}% · ${text}`;
+}
+
+function fail(msg) {
+  $("error").textContent = msg;
+  $("upload").classList.remove("hidden");
+}
+
+function poll(id) {
+  clearTimeout(timer);
+  fetch(`/api/jobs/${id}`).then(r => r.json()).then(job => {
+    setProgress(job.progress || 0, job.stage || job.state);
+    if (job.state === "done") return show(job);
+    if (job.state === "error") return fail(job.error);
+    timer = setTimeout(() => poll(id), 1500);
+  }).catch(() => { timer = setTimeout(() => poll(id), 3000); });
+}
+
+function media(kind, src) {
+  const el = document.createElement(kind === "video" ? "video" : "img");
+  el.src = src;
+  if (kind === "video") { el.controls = true; el.muted = true; el.loop = true; el.playsInline = true; }
+  return el;
+}
+
+function show(job) {
+  $("result").classList.remove("hidden");
+  const t = Date.now();
+  $("origBox").replaceChildren(media(job.kind, `/api/jobs/${job.id}/original?t=${t}`));
+  $("protBox").replaceChildren(media(job.kind, `/api/jobs/${job.id}/result?t=${t}`));
+  $("download").href = `/api/jobs/${job.id}/result?download=true`;
+  const rows = Object.entries(job.summary || {}).filter(([, v]) => v !== null && v !== undefined);
+  rows.push(["Waktu proses", `${job.seconds} detik`]);
+  $("summary").replaceChildren(...rows.map(([k, v]) => {
+    const tr = document.createElement("tr");
+    const a = document.createElement("td"); a.textContent = k;
+    const b = document.createElement("td"); b.textContent = String(v);
+    tr.append(a, b); return tr;
+  }));
+  $("upload").classList.remove("hidden");
+}
+</script>
+</body>
+</html>

@@ -167,10 +167,20 @@ def _thumb(frame: np.ndarray) -> np.ndarray:
     return cv2.resize(cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY), (64, 36), interpolation=cv2.INTER_AREA).astype(np.float32) / 255
 
 
-def _tqdm(**kw):
+def _tqdm(on_progress=None, **kw):
+    """Progress bar terminal; `on_progress(tahap, selesai, total)` opsional untuk UI lain (mis. web)."""
     from tqdm.auto import tqdm
 
-    return tqdm(dynamic_ncols=True, **kw)
+    class _Bar(tqdm):
+        _done = 0
+
+        def update(self, n=1):
+            self._done += n
+            if on_progress:
+                on_progress(kw.get("desc", ""), self._done, kw.get("total") or 0)
+            return super().update(n)
+
+    return _Bar(dynamic_ncols=True, **kw)
 
 
 @dataclass
@@ -241,6 +251,7 @@ def protect_video(
     detector=None,
     keep_audio: bool = False,
     show_progress: bool = True,
+    on_progress=None,
 ) -> dict:
     """Lindungi satu video. Mengembalikan laporan (juga ditulis ke manifest JSON)."""
     cfg = config or VideoProtectConfig()
@@ -262,7 +273,7 @@ def protect_video(
     det = detector or FaceDetector(cfg.detector, cfg.detect_size)
     tracker = FaceTracker(margin=cfg.margin, max_faces=cfg.max_faces)
     prev_thumb, cuts, n_frames = None, [], 0
-    bar = _tqdm(total=est, desc="1/4 deteksi wajah", unit="frame", disable=not show_progress)
+    bar = _tqdm(on_progress, total=est, desc="1/4 deteksi wajah", unit="frame", disable=not show_progress)
     for i, frame in enumerate(iter_frames(input_path, info)):
         th = _thumb(frame)
         if prev_thumb is not None and float(np.abs(th - prev_thumb).mean()) > cfg.scene_cut:
@@ -288,7 +299,7 @@ def protect_video(
             key_index.setdefault(k, []).append(p)
     n_keys = sum(len(p.keys) for p in plans)
     if n_keys:
-        bar = _tqdm(total=n_frames, desc="2/4 ambil keyframe", unit="frame", disable=not show_progress)
+        bar = _tqdm(on_progress, total=n_frames, desc="2/4 ambil keyframe", unit="frame", disable=not show_progress)
         for i, frame in enumerate(iter_frames(input_path, info)):
             for p in key_index.get(i, []):
                 p.crops[i] = extract_crop(frame, p.track.boxes[i], p.size)
@@ -315,7 +326,7 @@ def protect_video(
         if arc is not None:
             pcfg = replace(pcfg, identity_weight=cfg.identity_weight)
         n_chunks = sum(math.ceil(len(p.keys) / cfg.batch_size) for p in plans)
-        bar = _tqdm(total=n_chunks * pcfg.steps, desc="3/4 optimasi perlindungan", unit="step",
+        bar = _tqdm(on_progress, total=n_chunks * pcfg.steps, desc="3/4 optimasi perlindungan", unit="step",
                     disable=not show_progress)
         for p in plans:
             attack = EncoderAttack(models, replace(pcfg, work_size=p.size), dev)
@@ -352,7 +363,7 @@ def protect_video(
     audio_path = None
     try:
         audio_path = extract_audio(input_path, tmp) if info.has_audio else None
-        bar = _tqdm(total=n_frames, desc="4/4 tulis video", unit="frame", disable=not show_progress)
+        bar = _tqdm(on_progress, total=n_frames, desc="4/4 tulis video", unit="frame", disable=not show_progress)
         written = n_aligned = n_box = 0
         with VideoWriter(output_path, info.width, info.height, info.fps, audio=audio_path,
                          audio_codec=info.audio_codec, crf=cfg.crf, preset=cfg.x264_preset) as wr:
