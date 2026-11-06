@@ -202,7 +202,10 @@ def embed_layers(image: np.ndarray, owner: str, second: str | None) -> np.ndarra
     """Watermark DCT (lapis 1) + opsional lapis 2 ("rivagan" / "trustmark")."""
     out = image
     if second:
-        out = SECOND_LAYER[second][0](out, owner)
+        try:
+            out = SECOND_LAYER[second][0](out, owner)
+        except Exception as e:  # noqa: BLE001  (library/model tidak tersedia: lanjut dengan lapis 1 saja)
+            print(f"[!] Watermark lapis 2 ({second}) dilewati: {type(e).__name__}: {e}")
     return embed_watermark(out, owner)
 
 

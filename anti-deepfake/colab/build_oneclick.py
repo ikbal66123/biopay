@@ -70,7 +70,13 @@ os.chdir(APP)
 say(f"✅ 2/5 Kode aplikasi siap (versi {CODE_VERSION})")
 
 # 3) Library (PyTorch+CUDA sudah ada di Colab)
-if not os.path.exists("/content/.adf_installed"):
+# Pasang ulang bila versi kode berbeda ATAU ada modul yang belum ada (mis. sesi lama).
+NEEDED = ["diffusers", "insightface", "onnx2torch", "open_clip", "imwatermark", "fastapi", "uvicorn", "multipart"]
+missing = [m for m in NEEDED if subprocess.run([sys.executable, "-c", f"import {m}"], capture_output=True).returncode]
+marker = f"/content/.adf_installed_{CODE_VERSION}"
+if missing or not os.path.exists(marker):
+    if missing:
+        say(f"   modul belum ada: {', '.join(missing)}")
     say("⏳ 3/5 Memasang library (±3–6 menit, sekali per sesi)…")
     sh(f"{sys.executable} -m pip install -q diffusers transformers accelerate scikit-image tqdm "
        "insightface onnxruntime-gpu onnx2torch open_clip_torch fastapi uvicorn python-multipart")
@@ -81,7 +87,10 @@ if not os.path.exists("/content/.adf_installed"):
         sh(f"{sys.executable} -m pip install -q 'opencv-python-headless<5'")
     if subprocess.run("which ffmpeg", shell=True).returncode != 0:
         sh("apt-get -qq install -y ffmpeg")
-    open("/content/.adf_installed", "w").close()
+    open(marker, "w").close()
+    still = [m for m in NEEDED if subprocess.run([sys.executable, "-c", f"import {m}"], capture_output=True).returncode]
+    if still:
+        raise SystemExit(f"❌ Library gagal terpasang: {', '.join(still)}. Coba Runtime → Disconnect and delete runtime, lalu Run all.")
 say("✅ 3/5 Library terpasang")
 
 # 4) Nyalakan aplikasi (model diunduh otomatis saat pertama dipakai)

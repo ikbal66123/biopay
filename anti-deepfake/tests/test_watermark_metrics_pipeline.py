@@ -49,3 +49,16 @@ def test_pipeline_end_to_end(tmp_path, tiny_vae, make_image):
     assert rep["watermark"]["dct"]["owner_match"] is True
     man = json.loads(open(rep["manifest"]).read())
     assert len(man["original"]["sha256"]) == 64 and man["imperceptibility"]["psnr_db"] > 30
+
+
+def test_second_layer_failure_falls_back_to_dct(make_image, monkeypatch):
+    from antideepfake import watermark as wm
+
+    def boom(*a, **k):
+        raise ModuleNotFoundError("No module named 'imwatermark'")
+
+    monkeypatch.setitem(wm.SECOND_LAYER, "rivagan", (boom, boom))
+    img = make_image(256, 256, seed=9)
+    out = wm.embed_layers(img, "ikbal", "rivagan")
+    res = wm.detect_layers(out, "ikbal", "rivagan")
+    assert res["dct"]["owner_match"] is True and "error" in res["rivagan"]
