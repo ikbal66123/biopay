@@ -7,6 +7,9 @@ wajahmu ditempel ke video "maling ayam").
 - **Foto**: `python scripts/protect_photo.py fotoku.jpg`
 - **Video**: `python scripts/protect_video.py videoku.mp4`, lihat
   [Tahap 2: Video](#tahap-2-video).
+- **Coba di Google Colab (GPU gratis, link publik)**:
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ikbal66123/biopay/blob/claude/bold-allen-vmzjvm/anti-deepfake/colab/anti_deepfake_colab.ipynb)
+  (`colab/anti_deepfake_colab.ipynb`; langkah-langkahnya ada di dalam notebook)
 - **Aplikasi web demo**: `pip install fastapi uvicorn python-multipart`, lalu
   `python app/server.py` dan buka http://localhost:8000. Upload foto/video →
   progress → hasil berdampingan + angka → download. Satu job diproses sekaligus.
