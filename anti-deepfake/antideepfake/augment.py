@@ -91,6 +91,25 @@ def h264_ste(x: torch.Tensor, crf: int) -> torch.Tensor:
     return x + (y - x).detach()
 
 
+def color_jitter(x: torch.Tensor, brightness: float, contrast: float, saturation: float) -> torch.Tensor:
+    """Perubahan warna kecil (diferensiabel), seperti filter/auto-enhance di HP & aplikasi."""
+    x = x * (1 + brightness)
+    mean = x.mean(dim=(1, 2, 3), keepdim=True)
+    x = (x - mean) * (1 + contrast) + mean
+    gray = (0.299 * x[:, 0:1] + 0.587 * x[:, 1:2] + 0.114 * x[:, 2:3])
+    return (x - gray) * (1 + saturation) + gray
+
+
+def random_crop_resize(x: torch.Tensor, frac: float, rng) -> torch.Tensor:
+    """Potong acak hingga `frac` di tiap sisi lalu kembalikan ke ukuran semula (diferensiabel)."""
+    h, w = x.shape[-2:]
+    t, b = int(h * rng.uniform(0, frac)), int(h * rng.uniform(0, frac))
+    l, r = int(w * rng.uniform(0, frac)), int(w * rng.uniform(0, frac))
+    if t + b >= h - 8 or l + r >= w - 8:
+        return x
+    return resize(x[..., t: h - b, l: w - r], (h, w))
+
+
 def gaussian_blur(x: torch.Tensor, sigma: float) -> torch.Tensor:
     radius = max(1, int(round(2 * sigma)))
     coords = torch.arange(-radius, radius + 1, device=x.device, dtype=x.dtype)
@@ -118,6 +137,8 @@ class EOTSampler:
         chroma_prob: float = 0.0,
         h264_prob: float = 0.0,
         h264_crf: tuple[int, int] = (23, 32),
+        crop_frac: float = 0.0,
+        color: float = 0.0,
         seed: int = 0,
     ) -> None:
         self.work_hw = work_hw
@@ -129,6 +150,8 @@ class EOTSampler:
         self.chroma_prob = chroma_prob
         self.h264_prob = h264_prob
         self.h264_crf = h264_crf
+        self.crop_frac = crop_frac
+        self.color = color
         self.rng = random.Random(seed)
 
     def sample_size(self) -> tuple[int, int]:
@@ -137,8 +160,17 @@ class EOTSampler:
         # VAE butuh kelipatan 8
         return max(8, int(h * s) // 8 * 8), max(8, int(w * s) // 8 * 8)
 
+    def geometric(self, x: torch.Tensor) -> torch.Tensor:
+        """Crop kecil acak (untuk cabang yang tidak bergantung pada posisi landmark)."""
+        if self.crop_frac > 0 and self.rng.random() < 0.5:
+            x = random_crop_resize(x, self.crop_frac, self.rng)
+        return x
+
     def photometric(self, x: torch.Tensor) -> torch.Tensor:
         """Transformasi non-geometris (hanya untuk gambar yang dilindungi)."""
+        if self.color > 0 and self.rng.random() < 0.5:
+            c = self.color
+            x = color_jitter(x, self.rng.uniform(-c, c), self.rng.uniform(-c, c), self.rng.uniform(-c, c))
         if self.blur_prob > 0 and self.rng.random() < self.blur_prob:
             x = gaussian_blur(x, self.rng.uniform(0.3, 1.0))
         if self.noise_std > 0:

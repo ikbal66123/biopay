@@ -6,7 +6,9 @@ Jalankan (dari folder anti-deepfake):
     python app/server.py                 # lalu buka http://localhost:8000
 
 Pengaturan lewat environment variable:
-    ANTIDEEPFAKE_VAE     VAE yang diserang, dipisah koma (default: stabilityai/sd-vae-ft-mse)
+    ANTIDEEPFAKE_VAE     VAE yang diserang, dipisah koma (default GPU: SD1.5 + SDXL; CPU: SD1.5)
+    ANTIDEEPFAKE_EMBEDDERS encoder CLIP/SigLIP, dipisah koma (default GPU: CLIP ViT-L/14 + SigLIP B/16)
+    ANTIDEEPFAKE_WATERMARK2 watermark lapis kedua: rivagan / trustmark / kosong (default: rivagan)
     ANTIDEEPFAKE_DEVICE  auto / cuda / mps / cpu (default: auto)
     ANTIDEEPFAKE_PRESET  fast / balanced / strong (default: balanced)
     ANTIDEEPFAKE_DATA    folder penyimpanan job (default: app_data/)
@@ -35,8 +37,13 @@ from fastapi import FastAPI, File, HTTPException, UploadFile  # noqa: E402
 from fastapi.responses import FileResponse, HTMLResponse  # noqa: E402
 
 from antideepfake.photoguard import DEFAULT_VAE  # noqa: E402
+from antideepfake.pipeline import ENSEMBLE_EMBEDDERS, ENSEMBLE_VAES  # noqa: E402
 
-VAES = [v.strip() for v in os.environ.get("ANTIDEEPFAKE_VAE", DEFAULT_VAE).split(",") if v.strip()]
+_gpu = __import__("torch").cuda.is_available()
+# Di GPU default ensemble (SD1.5 + SDXL VAE, CLIP ViT-L/14, SigLIP); di CPU hanya SD1.5 VAE.
+VAES = [v.strip() for v in os.environ.get("ANTIDEEPFAKE_VAE", ",".join(ENSEMBLE_VAES) if _gpu else DEFAULT_VAE).split(",") if v.strip()]
+EMBEDDERS = [v.strip() for v in os.environ.get("ANTIDEEPFAKE_EMBEDDERS", ",".join(ENSEMBLE_EMBEDDERS) if _gpu else "").split(",") if v.strip()]
+WATERMARK2 = os.environ.get("ANTIDEEPFAKE_WATERMARK2", "rivagan") or None
 DEVICE = os.environ.get("ANTIDEEPFAKE_DEVICE", "auto")
 PRESET = os.environ.get("ANTIDEEPFAKE_PRESET", "balanced")
 DATA = Path(os.environ.get("ANTIDEEPFAKE_DATA", ROOT / "app_data"))
@@ -69,7 +76,8 @@ def run_job(job_id: str) -> None:
                 update(job_id, progress=i / n, stage=f"optimasi perlindungan ({i}/{n})")
 
             rep = protect_photo_file(src, src.parent / "protected.png", preset=PRESET, owner="demo",
-                                     vae_ids=VAES, device=DEVICE, progress=prog)
+                                     vae_ids=VAES, device=DEVICE, progress=prog, embedder_specs=EMBEDDERS,
+                                     watermark2=WATERMARK2)
             att = rep["attack"]
             summary = {
                 "Wajah terdeteksi": rep["faces_detected"],
@@ -79,7 +87,10 @@ def run_job(job_id: str) -> None:
                 "Jarak latent VAE (1 = tak berefek)": round(att["final_loss"], 3),
                 "Kemiripan wajah ArcFace (rendah = bagus)": None if att.get("final_identity_cos") is None
                 else round(att["final_identity_cos"], 3),
-                "Watermark terbaca": rep["watermark"]["owner_match"] if rep["watermark"] else None,
+                "Watermark terbaca": ", ".join(f"{k}: {'ya' if v.get('owner_match') else 'tidak'}"
+                                               for k, v in rep["watermark"].items()) if rep["watermark"] else None,
+                "Encoder multimodal (ensemble)": ", ".join(rep["embedders"]) or "-",
+                "Kekuatan setelah batas SSIM": rep["strength_after_ssim_guard"],
             }
             out = rep["output"]
         else:
@@ -176,7 +187,7 @@ def get_result(job_id: str, download: bool = False):
 
 @app.get("/api/config")
 def config():
-    return {"vae": VAES, "device": DEVICE, "preset": PRESET}
+    return {"vae": VAES + EMBEDDERS, "device": DEVICE, "preset": PRESET}
 
 
 @app.get("/", response_class=HTMLResponse)

@@ -447,6 +447,106 @@ noise lalu membersihkannya) **belum teruji**.
    tidak bergantung pada grid 8×8.
 
 
+## Pembaruan: ensemble, EOT kuat, batas SSIM, watermark lapis 2
+
+Pembaruan ini menindaklanjuti hasil uji nyata pengguna:
+- face swap pada foto terlindungi **rusak** (berhasil);
+- AI image generator komersial (Gemini/ChatGPT) **masih bisa mengedit** (gagal);
+- foto besar dari HP terlihat **bertekstur/rusak**.
+
+### Yang berubah
+| | Sebelum | Sekarang |
+|---|---|---|
+| Encoder yang diserang | VAE SD 1.5 (+ ArcFace) | **ensemble**: VAE SD 1.5 + SDXL, **CLIP ViT-L/14**, **SigLIP B/16**, ArcFace (`--ensemble`, default aplikasi di GPU). Bisa ditambah, mis. VAE FLUX (`--vae black-forest-labs/FLUX.1-schnell`) atau SigLIP So400m (`--embedder openclip:hf-hub:timm/ViT-SO400M-14-SigLIP-384`) |
+| EOT foto | resize 0,75–1×, JPEG 50–95 | **resize 512–1024 px, JPEG 60–90, crop acak ≤5%, warna ±5%**, blur, noise |
+| Foto besar | dioptimasi lewat resize di resolusi penuh → **pola kotak/tekstur** (bug) | dioptimasi di ≤1024 px, perturbasi **diperbesar halus** (bikubik) |
+| Tak terlihat | eps adaptif saja | + **pengaman SSIM**: kekuatan diturunkan otomatis sampai SSIM ≥ 0,95 (termasuk watermark) |
+| Watermark | DCT-QIM | DCT-QIM + **lapis 2: RivaGAN** (default aplikasi) atau **TrustMark** (`--watermark2`) |
+
+LPIPS tidak dipakai sebagai batasan karena bobotnya tidak bisa diunduh di lingkungan
+pengembangan. Sebagai gantinya dipakai SSIM, yang terukur dan dijamin ≥ 0,95.
+
+### Cara pakai
+```bash
+python scripts/protect_photo.py fotoku.jpg --ensemble --watermark2 rivagan     # GPU disarankan
+python scripts/eval_transfer.py fotoku.jpg --name uji --train-vae ... --eval-vae ...   # uji held-out
+python scripts/eval_watermark.py fotoku.jpg --vae taesd:/path/taef1_encoder.pth      # uji watermark
+```
+
+### Hasil 3 eksperimen (jujur)
+
+**Kondisi.** Hanya CPU, tanpa akses Hugging Face. Karena itu VAE yang dipakai adalah
+versi ringan TAESD (SD 1.5, SDXL, SD3, Flux); CLIP ViT-L/14 tidak bisa diunduh, jadi
+encoder multimodal yang dipakai adalah **SigLIP asli Google** (B/16). Gambar uji: 2 foto
+(astronaut 512 px dan versi 3000 px seukuran foto HP), 100 iterasi. Sampelnya kecil, jadi
+anggap angka ini indikasi, bukan bukti.
+
+Cara membaca:
+- Angka = rata-rata similarity foto terlindungi vs asli. Untuk VAE, angkanya jarak ke
+  target (1 = tidak berefek). Untuk CLIP/SigLIP dan wajah, angkanya cosine (1 = sama
+  persis; makin rendah makin terganggu).
+- Dalam kurung = kontrol noise acak dengan besar per-piksel yang sama.
+- "upload" = maks 1024 px + JPEG 75. "berat" = maks 512 px + JPEG 60.
+
+**Eksperimen 1: baseline** (VAE SD 1.5 + ArcFace, EOT lama)
+
+| encoder | status | mentah | upload | berat |
+|---|---|---|---|---|
+| VAE SD 1.5 (taesd) | dilatih | **0,855** (1,03) | **0,886** (1,01) | **0,91** (1,01) |
+| VAE SDXL / SD3 / Flux | held-out | 0,99–1,02 (~1,0) | ~1,0 | ~1,0 |
+| SigLIP B/16 | held-out | 0,995 (0,999) | 0,996 | 0,997 |
+| SigLIP i18n B/16-256 | held-out | 0,989 (0,999) | 0,989 | 0,99 |
+| Wajah ArcFace w600k (dipakai inswapper) | dilatih | **0,08** (0,99) | **0,16** (0,99) | **0,33** (0,98) |
+| Wajah glintr100 (antelopev2) | **held-out** | **0,39** (0,99) | **0,43** (0,99) | **0,49** (0,98) |
+
+**Eksperimen 2: ensemble + EOT kuat** (VAE SD 1.5 + SDXL, SigLIP B/16, ArcFace)
+
+| encoder | status | mentah | upload | berat |
+|---|---|---|---|---|
+| VAE SD 1.5 / SDXL | dilatih | 0,98 / 1,01 | 0,99 / 1,01 | 0,99 / 1,01 |
+| VAE SD3 / Flux | held-out | 1,02 / 1,00 | 1,01 / 1,00 | 1,01 / 1,00 |
+| SigLIP B/16 | dilatih | **0,20** (0,999) | **0,33** (0,999) | **0,57** (0,999) |
+| SigLIP i18n B/16-256 | **held-out** | **0,971** (0,999) | 0,975 | 0,973 |
+| Wajah ArcFace w600k | dilatih | **0,05** (0,99) | **0,13** (0,99) | **0,36** (0,98) |
+| Wajah glintr100 | **held-out** | **0,35** (0,99) | **0,39** (0,99) | **0,48** (0,98) |
+
+Kualitas (kedua eksperimen): SSIM 0,951–0,963, PSNR 35–38 dB, dan target SSIM ≥ 0,95
+terpenuhi. Pada foto 3000 px, pola kotak dari versi lama hilang, tapi di-zoom masih
+terlihat belang halus di kulit.
+
+**Eksperimen 3: ketahanan watermark** (% bit benar; 50% = tebakan acak, ≥ 90% = pemilik terbukti; 3 gambar)
+
+| watermark | PSNR / SSIM | tanpa serangan | JPEG 75 | resize 50% | crop 10% | warna +8% | regenerasi VAE SD | regenerasi VAE Flux |
+|---|---|---|---|---|---|---|---|---|
+| DCT-QIM (lapis 1) | 50,3 dB / 0,995 | 100% | 100% | 88% | 55% | 100% | 62% | 85% |
+| **RivaGAN** (lapis 2) | 40,8 dB / 0,963 | 100% | 100% | **100%** | **100%** | 100% | 79% | 88% |
+| TrustMark | – | tidak bisa diuji di sini (model diunduh dari server Adobe yang diblokir); didukung di kode |
+
+**Kesimpulan**
+1. **Anti face-swap kuat dan menular.** Serangan ArcFace juga menurunkan similarity di
+   pengenal wajah lain yang tidak dilatih (glintr100: 0,35–0,48 vs 0,98 untuk noise),
+   tetap bertahan setelah kompresi. Ini sesuai dengan laporan uji nyata pengguna (face swap rusak).
+2. **Ensemble hanya kuat pada encoder yang ikut dilatih.** SigLIP yang dilatih turun ke
+   0,20, tetapi SigLIP lain (held-out) hanya ke 0,97. Untuk VAE pun hampir tidak ada
+   transfer: efek di SD3/Flux ≈ noise. Model komersial seperti Gemini/ChatGPT memakai
+   encoder tertutup (setara "held-out"), jadi **perlindungan ini kemungkinan besar tetap
+   tidak menghentikan mereka**, dengan atau tanpa ensemble. Ini sejalan dengan riset
+   (mis. Hönig dkk. 2024).
+3. **Dalam ensemble, efek VAE melemah** (0,855 → 0,98), karena anggaran perturbasi yang
+   sama (dibatasi SSIM ≥ 0,95) dibagi ke lebih banyak target. Tidak ada yang gratis:
+   menyerang lebih banyak model berarti tiap model kebagian lebih sedikit.
+4. **Watermark tidak membuktikan kepemilikan setelah foto "digambar ulang" AI.** RivaGAN
+   tahan resize, crop, JPEG, dan warna, tetapi setelah regenerasi VAE hanya 79–88% (di
+   bawah ambang 90%). Foto hasil edit Gemini/ChatGPT kemungkinan besar kehilangan
+   watermark. Bukti terkuatmu tetap **file asli + manifest (hash & waktu)**, dan ke depan
+   C2PA. RivaGAN juga menurunkan SSIM (0,963), sehingga pengaman SSIM mengurangi
+   kekuatan perlindungan bila keduanya dipakai.
+
+**Rekomendasi pemakaian:** pakai aplikasi ini terutama untuk **anti face-swap/deepfake
+wajah**, yang terbukti bekerja. Jangan mengandalkannya untuk mencegah editing oleh AI
+komersial. Untuk itu, langkah yang lebih efektif adalah membatasi resolusi dan jumlah
+foto wajah yang diunggah publik, menyimpan bukti asli, dan melaporkan penyalahgunaan.
+
 ## Keterbatasan (baca ini)
 
 Bagian ini sengaja ditulis lugas. Perlindungan adversarial adalah bidang riset

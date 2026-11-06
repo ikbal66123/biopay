@@ -134,3 +134,83 @@ def detect_watermark(image: np.ndarray, owner: str | None = None) -> dict:
         # 64 bit acak cocok >= 90% secara kebetulan: peluang ~1e-11
         result["owner_match"] = acc >= 0.9
     return result
+
+
+# ---------------------------------------------------------------------------
+# Lapis kedua: watermark berbasis jaringan saraf (lebih tahan edit, lihat README)
+# ---------------------------------------------------------------------------
+
+def _owner_bits(owner: str, n: int) -> np.ndarray:
+    raw = hashlib.sha256(("wm2:" + owner).encode("utf-8")).digest()
+    return np.unpackbits(np.frombuffer(raw, dtype=np.uint8))[:n]
+
+
+def embed_rivagan(image: np.ndarray, owner: str) -> np.ndarray:
+    """RivaGAN (paket invisible-watermark, model ONNX ikut di paket): 32 bit dari hash pemilik."""
+    from imwatermark import WatermarkEncoder
+
+    WatermarkEncoder.loadModel()
+    enc = WatermarkEncoder()
+    enc.set_watermark("bits", _owner_bits(owner, 32).tolist())
+    out = enc.encode(np.ascontiguousarray(image[:, :, ::-1]), "rivaGan")
+    return np.ascontiguousarray(out[:, :, ::-1]).astype(np.uint8)
+
+
+def detect_rivagan(image: np.ndarray, owner: str) -> dict:
+    from imwatermark import WatermarkDecoder
+
+    WatermarkDecoder.loadModel()
+    dec = WatermarkDecoder("bits", 32)
+    bits = np.array(dec.decode(np.ascontiguousarray(image[:, :, ::-1]), "rivaGan"), dtype=np.uint8)
+    acc = float((bits == _owner_bits(owner, 32)).mean())
+    return {"method": "rivagan", "bit_accuracy": acc, "owner_match": acc >= 0.9}
+
+
+_TM = None
+
+
+def _trustmark():
+    global _TM
+    if _TM is None:
+        from trustmark import TrustMark
+
+        _TM = TrustMark(verbose=False, model_type="Q")
+    return _TM
+
+
+def embed_trustmark(image: np.ndarray, owner: str) -> np.ndarray:
+    """TrustMark (Adobe, pip install trustmark; model diunduh otomatis saat pertama dipakai)."""
+    from PIL import Image
+
+    secret = hashlib.sha256(("wm2:" + owner).encode()).hexdigest()[:8]  # 32 bit, muat di skema BCH
+    out = _trustmark().encode(Image.fromarray(image), secret)
+    return np.asarray(out.convert("RGB"), dtype=np.uint8).copy()
+
+
+def detect_trustmark(image: np.ndarray, owner: str) -> dict:
+    from PIL import Image
+
+    secret, present, _ = _trustmark().decode(Image.fromarray(image))
+    expected = hashlib.sha256(("wm2:" + owner).encode()).hexdigest()[:8]
+    return {"method": "trustmark", "present": bool(present), "owner_match": bool(present) and secret == expected}
+
+
+SECOND_LAYER = {"rivagan": (embed_rivagan, detect_rivagan), "trustmark": (embed_trustmark, detect_trustmark)}
+
+
+def embed_layers(image: np.ndarray, owner: str, second: str | None) -> np.ndarray:
+    """Watermark DCT (lapis 1) + opsional lapis 2 ("rivagan" / "trustmark")."""
+    out = image
+    if second:
+        out = SECOND_LAYER[second][0](out, owner)
+    return embed_watermark(out, owner)
+
+
+def detect_layers(image: np.ndarray, owner: str, second: str | None) -> dict:
+    res = {"dct": detect_watermark(image, owner)}
+    if second:
+        try:
+            res[second] = SECOND_LAYER[second][1](image, owner)
+        except Exception as e:  # noqa: BLE001
+            res[second] = {"error": f"{type(e).__name__}: {e}"}
+    return res

@@ -50,3 +50,32 @@ def test_jpeg_straight_through_has_identity_gradient():
     y.sum().backward()
     assert torch.allclose(x.grad, torch.ones_like(x))
     assert not torch.allclose(y, x)  # forward benar-benar berubah karena JPEG
+
+
+def test_large_image_optimized_small_then_upsampled(tiny_vae, make_image):
+    from antideepfake.photoguard import EncoderAttack
+
+    img = make_image(300, 260, seed=7)
+    cfg = small_cfg(steps=3, opt_max_side=96)  # paksa jalur "optimasi kecil -> perbesar"
+    res = EncoderAttack(tiny_vae, cfg, "cpu").protect(img)
+    assert res.image.shape == img.shape and res.linf <= 9
+    assert res.delta.shape == img.shape
+
+
+def test_fit_ssim_respects_target(make_image):
+    from antideepfake.metrics import ssim
+    from antideepfake.pipeline import fit_ssim
+
+    img = make_image(128, 128, seed=8)
+    delta = np.random.default_rng(0).choice([-8.0, 8.0], size=img.shape).astype(np.float32)
+    out, scale, s = fit_ssim(img, delta, 0.97)
+    assert s >= 0.97 and 0 <= scale < 1 and abs(ssim(img, out) - s) < 1e-6
+
+
+def test_crop_and_color_eot_keep_shape():
+    from antideepfake.augment import color_jitter, random_crop_resize
+    import random
+
+    x = torch.rand(2, 3, 64, 48)
+    assert random_crop_resize(x, 0.1, random.Random(0)).shape == x.shape
+    assert color_jitter(x, 0.05, -0.05, 0.05).shape == x.shape

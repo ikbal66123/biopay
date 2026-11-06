@@ -16,6 +16,11 @@ pytest>=8.0
 insightface>=0.7.3
 onnxruntime>=1.17
 onnx2torch>=1.5
+open_clip_torch>=2.24   # ensemble CLIP / SigLIP
+
+# Watermark lapis kedua RivaGAN: pasang TERPISAH tanpa dependensi (paketnya menarik opencv-python
+# yang bentrok):  pip install --no-deps invisible-watermark
+# TrustMark (opsional):  pip install trustmark omegaconf
 
 # opsional: metrik perseptual
 # lpips>=0.1.4

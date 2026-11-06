@@ -46,6 +46,6 @@ def test_pipeline_end_to_end(tmp_path, tiny_vae, make_image):
     out = load_rgb(rep["output"])
     assert rep["output"].endswith("foto_protected.png")
     assert out.shape == load_rgb(src).shape
-    assert rep["watermark"]["owner_match"] is True
+    assert rep["watermark"]["dct"]["owner_match"] is True
     man = json.loads(open(rep["manifest"]).read())
     assert len(man["original"]["sha256"]) == 64 and man["imperceptibility"]["psnr_db"] > 30

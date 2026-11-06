@@ -18,7 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from antideepfake.photoguard import DEFAULT_VAE, PRESETS  # noqa: E402
-from antideepfake.pipeline import protect_photo_file  # noqa: E402
+from antideepfake.pipeline import ENSEMBLE_EMBEDDERS, ENSEMBLE_VAES, protect_photo_file  # noqa: E402
 
 
 def main() -> None:
@@ -34,6 +34,13 @@ def main() -> None:
     ap.add_argument("--eps", type=float, help="batas perubahan per piksel dalam skala 0-255 (default preset: 8)")
     ap.add_argument("--steps", type=int, help="jumlah iterasi PGD")
     ap.add_argument("--no-eot", action="store_true", help="matikan simulasi resize/JPEG saat optimasi")
+    ap.add_argument("--embedder", action="append",
+                    help="encoder multimodal untuk ensemble, bisa diulang (mis. openclip:ViT-L-14:openai)")
+    ap.add_argument("--ensemble", action="store_true",
+                    help="pakai ensemble default: VAE SD1.5+SDXL, CLIP ViT-L/14, SigLIP B/16 (+ArcFace). Butuh GPU")
+    ap.add_argument("--weak-eot", action="store_true", help="EOT lama (tanpa resize 512-1024, crop, warna)")
+    ap.add_argument("--ssim-target", type=float, default=0.95, help="kekuatan diturunkan otomatis sampai SSIM >= nilai ini (0 = mati)")
+    ap.add_argument("--watermark2", choices=["rivagan", "trustmark"], help="watermark lapis kedua yang lebih tahan edit")
     ap.add_argument("--identity", default="auto", choices=["auto", "on", "off"],
                     help="serangan identitas ArcFace (anti face-swap). auto = aktif jika insightface+onnx2torch terpasang")
     ap.add_argument("--no-adaptive", action="store_true", help="eps sama rata di semua piksel (tanpa masking tekstur)")
@@ -67,12 +74,16 @@ def main() -> None:
             owner=owner,
             face_only=args.face_only,
             watermark=not args.no_watermark,
-            vae_ids=args.vae or [DEFAULT_VAE],
+            vae_ids=args.vae or (list(ENSEMBLE_VAES) if args.ensemble else [DEFAULT_VAE]),
             device=args.device,
             fp16=args.fp16,
             config_overrides=overrides,
             progress=progress,
             identity=args.identity,
+            embedder_specs=(ENSEMBLE_EMBEDDERS if args.ensemble else ()) + tuple(args.embedder or ()),
+            strong_eot=not args.weak_eot,
+            ssim_target=args.ssim_target or None,
+            watermark2=args.watermark2,
         )
         imp = report["imperceptibility"]
         att = report["attack"]
@@ -83,8 +94,9 @@ def main() -> None:
             print(f"    identitas ArcFace: cosine {att['final_identity_cos']:.3f} terhadap wajah asli (makin rendah makin baik)")
         elif report["identity_attack"]["note"]:
             print(f"    [!] {report['identity_attack']['note']}")
+        print(f"    kekuatan akhir   : {report['strength_after_ssim_guard']} (diturunkan otomatis bila SSIM < target)")
         if report["watermark"]:
-            print(f"    watermark        : terbaca={report['watermark']['owner_match']}")
+            print(f"    watermark        : " + ", ".join(f"{k}={v.get('owner_match')}" for k, v in report["watermark"].items()))
         print(f"    hasil            : {report['output']}")
         print(f"    manifest         : {report['manifest']}")
         print(f"    waktu            : {att['seconds']} s")

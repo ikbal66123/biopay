@@ -51,14 +51,14 @@ def vae_metrics(vae, orig: np.ndarray, prot: np.ndarray, device) -> tuple[dict, 
     )
 
 
-def _insightface_app(modules=None):
+def _insightface_app(modules=None, name: str = "buffalo_l"):
     from insightface.app import FaceAnalysis
 
     from .faces import _onnx_providers
 
     providers, ctx = _onnx_providers()
     kw = {"allowed_modules": modules} if modules else {}
-    app = FaceAnalysis(name="buffalo_l", providers=providers, **kw)
+    app = FaceAnalysis(name=name, providers=providers, **kw)
     app.prepare(ctx_id=ctx, det_size=(640, 640))
     return app
 
@@ -67,8 +67,10 @@ class IdentityModel:
     """Embedding identitas ArcFace (512-d, ternormalisasi). Cosine similarity:
     > ~0.5 umumnya dianggap orang yang sama oleh sistem pengenal wajah, < ~0.3 orang berbeda."""
 
-    def __init__(self) -> None:
-        self.app = _insightface_app(["detection", "recognition"])
+    def __init__(self, name: str = "buffalo_l") -> None:
+        """name: paket model InsightFace. buffalo_l = ArcFace w600k_r50 (dipakai inswapper);
+        antelopev2 = glintr100 (pengenal wajah lain, berguna sebagai uji held-out)."""
+        self.app = _insightface_app(["detection", "recognition"], name)
 
     def faces(self, rgb: np.ndarray):
         return self.app.get(np.ascontiguousarray(rgb[:, :, ::-1]))

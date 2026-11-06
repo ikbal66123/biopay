@@ -61,9 +61,11 @@ else:
 
 # 2) Kode aplikasi (tertanam di notebook ini, tidak perlu GitHub)
 APP = "/content/anti-deepfake"
-if not os.path.isdir(APP):
+if (open(f"{APP}/.version").read().strip() if os.path.exists(f"{APP}/.version") else "") != CODE_VERSION:
+    subprocess.run(f"rm -rf {APP}", shell=True)  # kode lama dari sesi sebelumnya -> ganti
     with tarfile.open(fileobj=io.BytesIO(base64.b64decode(CODE)), mode="r:gz") as t:
         t.extractall("/content", filter="data")
+    open(f"{APP}/.version", "w").write(CODE_VERSION)
 os.chdir(APP)
 say(f"✅ 2/5 Kode aplikasi siap (versi {CODE_VERSION})")
 
@@ -71,7 +73,8 @@ say(f"✅ 2/5 Kode aplikasi siap (versi {CODE_VERSION})")
 if not os.path.exists("/content/.adf_installed"):
     say("⏳ 3/5 Memasang library (±3–6 menit, sekali per sesi)…")
     sh(f"{sys.executable} -m pip install -q diffusers transformers accelerate scikit-image tqdm "
-       "insightface onnxruntime-gpu onnx2torch fastapi uvicorn python-multipart")
+       "insightface onnxruntime-gpu onnx2torch open_clip_torch fastapi uvicorn python-multipart")
+    sh(f"{sys.executable} -m pip install -q --no-deps invisible-watermark")
     ok = subprocess.run([sys.executable, "-c", "import cv2; assert hasattr(cv2, 'CascadeClassifier')"]).returncode == 0
     if not ok:  # insightface kadang menarik OpenCV 5 (tanpa Haar cascade)
         subprocess.run(f"{sys.executable} -m pip uninstall -y -q opencv-python opencv-python-headless opencv-contrib-python", shell=True)
@@ -85,10 +88,11 @@ say("✅ 3/5 Library terpasang")
 PORT = 8000
 subprocess.run("pkill -f 'app/server.py'; pkill -f cloudflared", shell=True)
 time.sleep(1)
-say("⏳ 4/5 Mengunduh model AI & menyalakan aplikasi (±1–3 menit)…")
+say("⏳ 4/5 Mengunduh model AI (VAE SD1.5+SDXL, CLIP ViT-L/14, SigLIP, ArcFace) & menyalakan aplikasi (±3–6 menit)…")
 warm = subprocess.run([sys.executable, "-c",
     "import sys; sys.path.insert(0,'.');"
-    "from antideepfake.photoguard import load_vae, DEFAULT_VAE; load_vae(DEFAULT_VAE, 'cpu');"
+    "from antideepfake.pipeline import get_vaes, get_embedders, ENSEMBLE_VAES, ENSEMBLE_EMBEDDERS;"
+    "import torch; d=torch.device('cpu'); get_vaes(ENSEMBLE_VAES, d, strict=False); get_embedders(ENSEMBLE_EMBEDDERS, d, strict=False);"
     "from antideepfake.faces import FaceDetector; FaceDetector('insightface');"
     "from antideepfake.identity_attack import ArcFaceTorch; ArcFaceTorch('cpu')"], capture_output=True, text=True)
 if warm.returncode != 0:

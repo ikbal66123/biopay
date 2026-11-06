@@ -50,6 +50,10 @@ class ProtectConfig:
     h264_prob: float = 0.0        # simulasi H.264 sungguhan via FFmpeg (video); 0 untuk foto
     h264_crf: tuple[int, int] = (23, 32)
     identity_weight: float = 0.0  # bobot serangan identitas ArcFace (anti face-swap); 0 = mati
+    embed_weight: float = 1.0     # bobot serangan encoder multimodal (CLIP/SigLIP), jika diberikan
+    crop_frac: float = 0.0        # EOT: crop acak hingga x% per sisi
+    color: float = 0.0            # EOT: perubahan kecerahan/kontras/saturasi hingga +-x
+    opt_max_side: int = 1024      # foto lebih besar dioptimasi di ukuran ini, perturbasi lalu diperbesar halus
     seed: int = 0
 
 
@@ -78,6 +82,8 @@ class ProtectResult:
     seconds: float
     loss_history: list[float] = field(default_factory=list)
     final_identity_cos: float | None = None  # cosine ArcFace vs wajah asli (jika serangan identitas aktif)
+    final_embed_cos: list | None = None      # cosine tiap encoder multimodal vs gambar asli
+    delta: np.ndarray | None = None          # perturbasi float (H, W, 3) skala 0-255, sebelum pembulatan
 
     def summary(self) -> dict:
         return {
@@ -195,6 +201,8 @@ class EncoderAttack:
             chroma_prob=cfg.chroma_prob if cfg.eot else 0.0,
             h264_prob=cfg.h264_prob if cfg.eot else 0.0,
             h264_crf=cfg.h264_crf,
+            crop_frac=cfg.crop_frac if cfg.eot else 0.0,
+            color=cfg.color if cfg.eot else 0.0,
             seed=cfg.seed,
         )
 
@@ -207,6 +215,7 @@ class EncoderAttack:
         residual_ratio: float = 0.3,
         init_shared: torch.Tensor | None = None,
         identity: dict | None = None,
+        embed: dict | None = None,
         progress: Callable[[int, int, float], None] | None = None,
     ) -> dict:
         """PGD pada batch x (B, 3, H, W) dalam [0, 1].
@@ -254,7 +263,7 @@ class EncoderAttack:
             norms = [per_item_mse(encode(v, x0), z).clamp_min(1e-8) for v, z in zip(self.vaes, zt0)]
 
         def loss_items(x_adv: torch.Tensor, size: tuple[int, int], photometric: bool) -> torch.Tensor:
-            xi = resize(x_adv, size)
+            xi = resize(sampler.geometric(x_adv) if photometric else x_adv, size)
             if photometric:
                 xi = sampler.photometric(xi)
             zts = self._target_latents(target, size, cache)
@@ -286,6 +295,13 @@ class EncoderAttack:
             return torch.clamp(d, -eps_map, eps_map)
 
         use_id = identity is not None and cfg.identity_weight > 0
+        use_emb = embed is not None and cfg.embed_weight > 0
+
+        def embed_cos(x_adv: torch.Tensor, eot: bool) -> torch.Tensor:
+            """(n_encoder, B) cosine embedding terlindungi vs asli."""
+            xi = sampler.photometric(sampler.geometric(x_adv)) if eot else x_adv
+            return torch.stack([(m_.embed(xi.to(m_.device)) * r_).sum(-1).to(x_adv.device)
+                                for m_, r_ in zip(embed["models"], embed["refs"])])
 
         def identity_cos(x_adv: torch.Tensor, eot: bool) -> torch.Tensor:
             xi = x_adv
@@ -313,6 +329,8 @@ class EncoderAttack:
                     v = identity["valid"]
                     id_loss = (identity_cos(x_adv, cfg.eot) * v).sum() / v.sum()
                     loss = loss + cfg.identity_weight * id_loss
+                if use_emb:
+                    loss = loss + cfg.embed_weight * embed_cos(x_adv, cfg.eot).mean()
                 gs = torch.autograd.grad(loss / n, params)
                 for acc, g in zip(grads, gs):
                     acc += g
@@ -332,6 +350,7 @@ class EncoderAttack:
             delta = compose(params)
             final = loss_items((x + delta * m).clamp(0, 1), work_hw, photometric=False)
             final_id = identity_cos((x + delta * m).clamp(0, 1), False).cpu() if use_id else None
+            final_emb = embed_cos((x + delta * m).clamp(0, 1), False).cpu() if use_emb else None
         return {
             "delta": delta * m,
             "shared": params[0].detach() if shared else None,
@@ -339,6 +358,7 @@ class EncoderAttack:
             "history": history,
             "final_loss": final.detach().cpu(),
             "final_identity_cos": final_id,
+            "final_embed_cos": final_emb,
             "work_hw": work_hw,
             "loss_fn": loss_items,
         }
@@ -349,20 +369,54 @@ class EncoderAttack:
         mask: np.ndarray | None = None,
         progress: Callable[[int, int, float], None] | None = None,
         identity: dict | None = None,
+        identity_model=None,
+        embedders: list | None = None,
     ) -> ProtectResult:
-        """Lindungi gambar RGB uint8 (H, W, 3). `mask` opsional (H, W) float 0..1
-        membatasi perturbasi (mis. hanya area wajah). `identity` opsional, lihat attack_batch."""
+        """Lindungi gambar RGB uint8 (H, W, 3).
+
+        mask           : (H, W) 0..1 opsional, area yang boleh diubah (mis. hanya wajah).
+        identity_model : `ArcFaceTorch` opsional (anti face-swap); landmark dicari otomatis.
+        embedders      : daftar `Embedder` opsional (CLIP/SigLIP) untuk ensemble.
+        identity       : (lama) hasil ArcFaceTorch.prepare yang sudah dihitung pada `image`.
+
+        Foto besar (> opt_max_side) dioptimasi di versi kecilnya, lalu perturbasi diperbesar
+        dengan interpolasi bikubik. Mengoptimasi langsung di resolusi penuh lewat resize
+        menghasilkan pola kotak-kotak yang terlihat sebagai tekstur.
+        """
+        import cv2
+
+        from . import embedders as emb_mod
+
         cfg = self.config
         t0 = time.time()
         torch.manual_seed(cfg.seed)
-        x = to_tensor(image, self.device)
-        m = None
+        H, W = image.shape[:2]
+        scale = min(1.0, cfg.opt_max_side / max(H, W))
+        small = image if scale >= 1 else cv2.resize(image, (max(8, round(W * scale)), max(8, round(H * scale))),
+                                                     interpolation=cv2.INTER_AREA)
+        small_mask = None
         if mask is not None:
-            m = torch.from_numpy(mask.astype(np.float32))[None, None].to(self.device)
+            small_mask = mask if scale >= 1 else cv2.resize(mask, (small.shape[1], small.shape[0]), interpolation=cv2.INTER_AREA)
+        if identity_model is not None:
+            identity = identity_model.prepare([small])
+        elif identity is not None and scale < 1:
+            identity = None  # matriks align dihitung untuk ukuran lain; aman dilewati
+        x = to_tensor(small, self.device)
+        m = None if small_mask is None else torch.from_numpy(small_mask.astype(np.float32))[None, None].to(self.device)
+        emb = emb_mod.prepare(embedders or [], x)
 
-        r = self.attack_batch(x, m, identity=identity, progress=progress)
+        r = self.attack_batch(x, m, identity=identity, embed=emb, progress=progress)
         with torch.no_grad():
-            out = to_uint8((x + r["delta"]).clamp(0, 1))
+            d = r["delta"]
+            xf = to_tensor(image, self.device)
+            if scale < 1:
+                d = F.interpolate(d, size=(H, W), mode="bicubic", align_corners=False)
+                eps_full = texture_eps_map(xf, cfg.eps, cfg.flat_ratio) if cfg.adaptive_eps else torch.full_like(xf[:, :1], cfg.eps)
+                d = torch.clamp(d, -eps_full, eps_full)
+                if mask is not None:
+                    d = d * torch.from_numpy(mask.astype(np.float32))[None, None].to(self.device)
+            out = to_uint8((xf + d).clamp(0, 1))
+            delta_np = (d[0].permute(1, 2, 0).cpu().numpy() * 255).astype(np.float32)
             # Evaluasi akhir setelah dibulatkan ke 8-bit, tanpa transformasi acak.
             final = r["loss_fn"](to_tensor(out, self.device), r["work_hw"], False).item()
         linf = float(np.abs(out.astype(np.int16) - image.astype(np.int16)).max())
@@ -375,6 +429,8 @@ class EncoderAttack:
             seconds=time.time() - t0,
             loss_history=r["history"],
             final_identity_cos=float(r["final_identity_cos"][0]) if r["final_identity_cos"] is not None else None,
+            final_embed_cos=r["final_embed_cos"][:, 0].tolist() if r["final_embed_cos"] is not None else None,
+            delta=delta_np,
         )
 
 
