@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+eval_output/
+examples/*
+!examples/.gitkeep
+*_protected.png
+*_protected.json

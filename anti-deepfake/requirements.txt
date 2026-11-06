@@ -1,0 +1,13 @@
+# Pasang PyTorch sesuai GPU kamu lebih dulu (lihat https://pytorch.org/get-started/locally/),
+# misalnya: pip install torch --index-url https://download.pytorch.org/whl/cu124
+torch>=2.2
+diffusers>=0.30
+transformers>=4.40      # dibutuhkan pipeline img2img di evaluate_photo.py
+accelerate>=0.30
+numpy>=1.24
+pillow>=10.0
+opencv-python-headless>=4.8,<5   # OpenCV 5 tidak lagi menyertakan Haar cascade
+scikit-image>=0.22
+pytest>=8.0
+# opsional: metrik perseptual
+# lpips>=0.1.4
