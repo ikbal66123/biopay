@@ -28,13 +28,13 @@
   .pill.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px;animation:blink 1.2s infinite}
   @keyframes blink{50%{opacity:.25}}
 
-  .app{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;padding:20px;max-width:1500px;margin:0 auto}
+  .app{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:20px;padding:20px;max-width:1500px;margin:0 auto}
   .stage{position:relative;background:#000;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9;border:1px solid var(--line);align-self:start}
   #out{width:100%;height:100%;object-fit:contain;display:block;background:#000}
   .overlay{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;background:radial-gradient(ellipse at center,#1d1430 0%,#07070c 70%)}
   .overlay h1{font-size:clamp(22px,3vw,34px);margin:0 0 8px;letter-spacing:-.02em}
   .overlay p{color:var(--muted);max-width:520px;margin:0 auto 20px}
-  .btn{border:0;border-radius:10px;padding:10px 16px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);transition:background .15s,border-color .15s}
+  .btn{border-radius:10px;padding:10px 16px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);transition:background .15s,border-color .15s}
   .btn:hover{border-color:#44445e}
   .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));border:0;color:#fff}
   .btn.primary:hover{filter:brightness(1.08)}
@@ -43,13 +43,15 @@
   .btn.rec{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.5)}
   .progress{margin-top:14px;font-size:13px;color:var(--muted);min-height:20px}
 
-  .toast{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(10,10,18,.88);backdrop-filter:blur(8px);border:1px solid var(--line);padding:8px 14px;border-radius:10px;font-size:13px;max-width:90%;opacity:0;transition:opacity .25s;pointer-events:none}
+  .toast{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(10,10,18,.9);backdrop-filter:blur(8px);border:1px solid var(--line);padding:8px 14px;border-radius:10px;font-size:13px;max-width:92%;opacity:0;transition:opacity .25s;pointer-events:none}
   .toast.show{opacity:1}
+  .thinking{position:absolute;left:12px;top:12px;font-size:12.5px;padding:5px 10px;border-radius:999px;background:rgba(10,10,18,.8);border:1px solid var(--line);display:none}
+  .thinking.show{display:block}
 
   aside{display:flex;flex-direction:column;gap:16px;min-width:0}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
   .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 12px;font-weight:700}
-  textarea{width:100%;min-height:92px;resize:vertical;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;outline:none}
+  textarea{width:100%;min-height:84px;resize:vertical;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;outline:none}
   textarea:focus,input:focus,select:focus{border-color:var(--accent-2)}
   .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .row.end{justify-content:flex-end;margin-top:10px}
@@ -57,6 +59,8 @@
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{font-size:12.5px;padding:6px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);text-align:left}
   .chip:hover{border-color:var(--accent-2)}
+  .mode{font-size:12px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .mode.ai{color:#c4b5fd;border-color:rgba(139,92,246,.5)}
 
   #effects{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
   #effects li{display:flex;gap:10px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px}
@@ -70,10 +74,10 @@
   .fx-actions{display:flex;gap:4px}
   .icon-btn{width:30px;height:30px;border-radius:8px;background:transparent;border:1px solid var(--line);display:grid;place-items:center;font-size:13px}
   .icon-btn:hover{border-color:#55557a}
-  .empty{font-size:13px;color:var(--muted);padding:6px 0}
+  .empty{font-size:13px;color:var(--muted)}
 
   label.field{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);flex:1;min-width:140px}
-  select,input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none;width:100%}
+  select,input[type=text],input[type=password]{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none;width:100%}
   .switch{display:flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer}
   .switch input{accent-color:var(--accent)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -84,7 +88,8 @@
   details summary{cursor:pointer;color:var(--text);font-weight:600}
   details ol{padding-left:18px;margin:8px 0 0}
   details li{margin-bottom:4px}
-  code{background:var(--bg);padding:1px 5px;border-radius:5px;font-size:12px}
+  details p{margin:8px 0}
+  a{color:#c4b5fd}
 
   @media (max-width:980px){
     .app{grid-template-columns:1fr;padding:16px;gap:16px}
@@ -101,6 +106,7 @@
     <span class="pill opt">Model: <b id="mStatus">belum dimuat</b></span>
     <span class="pill">FPS <b id="fps">0</b></span>
     <span class="pill opt">AI <b id="segMs">0</b> ms</span>
+    <span class="pill opt">Badan: <b id="poseStatus">–</b></span>
     <span class="pill live" id="livePill" hidden>LIVE</span>
   </div>
 </header>
@@ -108,10 +114,11 @@
 <main class="app">
   <section class="stage" id="stage">
     <canvas id="out" width="1280" height="720"></canvas>
+    <div class="thinking" id="thinking">✦ Memahami perintah…</div>
     <div class="overlay" id="overlay">
       <div>
         <h1>Ubah tampilanmu dengan kata-kata</h1>
-        <p>Ketik perintah seperti <em>"Ubah baju saya menjadi jaket kulit hitam"</em>, lalu baju, benda, tembok, dan latarmu berubah langsung di kamera.</p>
+        <p>Ganti atau tambahkan baju, celana, topi, kacamata, sayap, benda di tangan, tembok, dan latar langsung di kamera, cukup dengan mengetik.</p>
         <button class="btn primary big" id="startBtn">Mulai kamera</button>
         <div class="progress" id="progress"></div>
       </div>
@@ -121,12 +128,15 @@
 
   <aside>
     <div class="card">
-      <h2>Perintah</h2>
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0">Perintah</h2>
+        <span class="mode" id="modeBadge">Pemahaman bawaan</span>
+      </div>
       <form id="cmdForm">
-        <textarea id="cmd" placeholder="Contoh: Ubah baju saya menjadi jaket kulit hitam. Ganti tembok di belakang menjadi dinding bata merah bergaya tua. Ubah cangkir di meja menjadi lampu petromaks yang menyala."></textarea>
+        <textarea id="cmd" placeholder="Contoh: Tambahkan kaos putih ke saya, pakaikan topi koboi dan kacamata hitam, lalu ganti latar jadi pantai saat senja."></textarea>
         <div class="row end">
-          <span class="hint" style="margin-right:auto">Enter untuk kirim, Shift+Enter untuk baris baru</span>
-          <button class="btn primary" type="submit">Terapkan</button>
+          <span class="hint" style="margin-right:auto">Enter untuk kirim · Shift+Enter baris baru</span>
+          <button class="btn primary" type="submit" id="sendBtn">Terapkan</button>
         </div>
       </form>
       <div class="chips" id="chips" style="margin-top:12px"></div>
@@ -146,17 +156,35 @@
     </div>
 
     <div class="card">
+      <h2>Otak AI (perintah bebas)</h2>
+      <p class="hint" style="margin:0 0 10px">Tanpa kunci, aplikasi memakai pemahaman bawaan berbasis kata kunci. Dengan kunci API Claude, kamu bisa mengetik perintah apa saja dengan bahasa santai.</p>
+      <label class="field" style="margin-bottom:10px">Kunci API Claude (disimpan hanya di browser ini)
+        <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+      </label>
+      <div class="grid2">
+        <label class="field">Model
+          <select id="llmModel">
+            <option value="claude-opus-5-5">Claude Opus 5.5 (paling pintar)</option>
+            <option value="claude-haiku-5-5">Claude Haiku 5.5 (paling cepat & murah)</option>
+          </select>
+        </label>
+        <div style="display:flex;align-items:flex-end"><button class="btn" id="testKey" style="width:100%">Tes kunci</button></div>
+      </div>
+      <p class="hint" style="margin:10px 0 0">Buat kunci di <a href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener">platform.claude.com</a>. Biaya dihitung per perintah. Jangan pakai kunci ini di komputer orang lain.</p>
+    </div>
+
+    <div class="card">
       <h2>Siaran</h2>
       <div class="row" style="margin-bottom:12px">
         <button class="btn primary" id="popBtn">Buka jendela siaran</button>
         <button class="btn" id="recBtn">⏺ Rekam</button>
       </div>
       <div class="grid2">
-        <label class="field">Kamera<select id="camSel"><option>—</option></select></label>
+        <label class="field">Kamera<select id="camSel"><option>–</option></select></label>
         <label class="field">Kualitas<select id="qSel">
-          <option value="480">Ringan (480p)</option>
-          <option value="640" selected>Seimbang (640p)</option>
-          <option value="960">Tajam (960p)</option>
+          <option value="640">Ringan (640p)</option>
+          <option value="960" selected>Seimbang (960p)</option>
+          <option value="1280">Tajam (1280p)</option>
         </select></label>
       </div>
       <div class="row" style="margin-top:12px;gap:16px">
@@ -166,15 +194,23 @@
       <details style="margin-top:14px">
         <summary>Cara pakai di TikTok, YouTube, dan Zoom</summary>
         <ol>
-          <li>Klik <b>Buka jendela siaran</b>. Jendela itu hanya berisi video hasil, tanpa tombol.</li>
-          <li>Di <b>OBS Studio</b>: tambah sumber <b>Window Capture</b> dan pilih jendela "AI Live — Keluaran".</li>
-          <li>Klik <b>Start Virtual Camera</b> di OBS. Sekarang "OBS Virtual Camera" bisa dipilih sebagai webcam di Zoom, Meet, dan Discord, atau pakai OBS untuk siaran ke YouTube, Facebook, dan TikTok (TikTok LIVE Studio juga bisa menangkap jendela).</li>
-          <li>Ketik perintah di jendela ini. Jangan diminimalkan, karena browser memperlambat jendela yang disembunyikan.</li>
+          <li>Klik <b>Buka jendela siaran</b>. Jendela itu hanya berisi video hasil.</li>
+          <li>Di <b>OBS Studio</b>: tambah sumber <b>Window Capture</b>, pilih jendela "AI Live — Keluaran".</li>
+          <li>Klik <b>Start Virtual Camera</b> di OBS. "OBS Virtual Camera" bisa dipilih sebagai webcam di Zoom, Meet, dan Discord, atau siarkan lewat OBS atau TikTok LIVE Studio.</li>
+          <li>Ketik perintah di jendela ini. Jangan diminimalkan, karena browser memperlambat jendela tersembunyi.</li>
+        </ol>
+      </details>
+      <details style="margin-top:10px">
+        <summary>Tips supaya hasil stabil</summary>
+        <ol>
+          <li>Pastikan bahu dan badan terlihat kamera. Baju baru dan aksesori menempel ke titik tubuh (bahu, siku, pergelangan, kepala).</li>
+          <li>Cahaya terang dari depan, latar tidak terlalu ramai.</li>
+          <li>Kalau masih lambat, pilih kualitas <b>Ringan</b> dan tutup tab lain.</li>
         </ol>
       </details>
       <details style="margin-top:10px">
         <summary>Pengaturan gambar AI</summary>
-        <p style="margin:8px 0">Gambar AI (tekstur baju, tembok, latar, dan benda pengganti) dibuat oleh layanan teks-ke-gambar. Kalau layanan tidak bisa dihubungi, aplikasi memakai efek cepat buatan sendiri.</p>
+        <p>Tekstur, latar, dan benda baru dibuat oleh layanan teks-ke-gambar. Kalau layanan tidak bisa dihubungi, aplikasi memakai efek cepat buatan sendiri.</p>
         <label class="field">Alamat layanan (pakai {prompt}, {w}, {h}, {seed})
           <input type="text" id="aiUrl">
         </label>
@@ -186,159 +222,308 @@
 <video id="video" playsinline muted hidden></video>
 
 <script type="module">
-/* ================== Konfigurasi ================== */
+/* ============================================================
+   Konfigurasi
+   ============================================================ */
 const MP_VER = '0.10.14';
 const MP_BASE = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VER}`;
-const SEG_MODEL = 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite';
-const DET_MODEL = 'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/int8/latest/efficientdet_lite0.tflite';
+const MODELS = {
+  seg:  'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite',
+  det:  'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/int8/latest/efficientdet_lite0.tflite',
+  pose: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task',
+};
 const DEFAULT_AI_URL = 'https://image.pollinations.ai/prompt/{prompt}?width={w}&height={h}&seed={seed}&nologo=true';
+const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 // Kelas model selfie_multiclass: 0 latar, 1 rambut, 2 kulit tubuh, 3 kulit wajah, 4 pakaian, 5 aksesori
-const CLS_BG = 0, CLS_SKIN = 2, CLS_CLOTH = 4;
+const SEG_W = 256, DET_W = 320;
 
 const $ = s => document.querySelector(s);
 const store = {
   get(k, d){ try{ const v = localStorage.getItem('ailive.'+k); return v==null ? d : JSON.parse(v); }catch{ return d; } },
   set(k, v){ try{ localStorage.setItem('ailive.'+k, JSON.stringify(v)); }catch{} }
 };
-
-/* ================== Elemen & state ================== */
-const video = $('#video'), out = $('#out'), octx = out.getContext('2d');
-const work = document.createElement('canvas'), wctx = work.getContext('2d', { willReadFrequently: true });
-let W = 0, H = 0;
-let segmenter = null, detector = null, stream = null, running = false;
-let bgM, clothM, skinM;            // topeng (0..1) hasil segmentasi
-let clMean = 0.45, bgMean = 0.5;   // rata-rata kecerahan baju/latar, untuk menjaga bayangan
-let frameNo = 0, lastTs = 0;
 const settings = {
-  quality: store.get('quality', 640),
-  mirror: store.get('mirror', true),
-  ai: store.get('ai', true),
-  aiUrl: store.get('aiUrl', DEFAULT_AI_URL),
+  quality: store.get('quality', 960), mirror: store.get('mirror', true), ai: store.get('ai', true),
+  aiUrl: store.get('aiUrl', DEFAULT_AI_URL), apiKey: store.get('apiKey', ''), llmModel: store.get('llmModel', 'claude-opus-5-5'),
 };
-const effects = { clothing: null, scene: null, objects: [] };
+
+/* ============================================================
+   State
+   ============================================================ */
+const video = $('#video'), out = $('#out'), octx = out.getContext('2d');
+const segCanvas = document.createElement('canvas'), segCtx = segCanvas.getContext('2d', { willReadFrequently:true });
+const detCanvas = document.createElement('canvas'), detCtx = detCanvas.getContext('2d');
+const shapeCanvas = document.createElement('canvas'), shapeCtx = shapeCanvas.getContext('2d');
+const objLayer = document.createElement('canvas'), objCtx = objLayer.getContext('2d');
+const behindLayer = document.createElement('canvas'), behindCtx = behindLayer.getContext('2d');
+const glCanvas = document.createElement('canvas');
+
+let W = 0, H = 0, MW = 0, MH = 0;
+let vision = null, fileset = null, segmenter = null, detector = null, poser = null;
+let loadingDet = null, loadingPose = null;
+let stream = null, running = false;
+let bgE, clE, skE, maskBuf, maskDirty = false;
+let clMean = .4, skMean = .55, bgMean = .5;
+let pose = null, poseTs = 0;
+let frameNo = 0, lastTs = 0, lastVT = -1;
+
+const effects = { upper:null, lower:null, scene:null, objects:[], items:[] };
 let idSeq = 1;
+const debug = { cat:null, pose:false };   // untuk pengujian otomatis
 
-/* ================== Kamus bahasa ================== */
+/* ============================================================
+   Kamus bahasa
+   ============================================================ */
 const COLORS = [
-  [/hijau sage|sage/, [156,175,136], 'sage green'],
-  [/hijau tosca|tosca|toska/, [32,178,170], 'teal'],
-  [/hijau army|hijau tentara/, [75,83,32], 'army green'],
-  [/hijau tua/, [20,83,45], 'dark green'],
-  [/hijau muda/, [134,239,172], 'light green'],
-  [/biru muda|biru langit/, [125,190,240], 'light blue'],
-  [/biru tua|biru dongker|navy|dongker/, [24,34,80], 'navy blue'],
-  [/cokelat tua|coklat tua/, [72,44,26], 'dark brown'],
-  [/cokelat muda|coklat muda/, [190,150,110], 'light brown'],
-  [/merah marun|marun|maroon/, [110,20,35], 'maroon'],
-  [/merah muda|pink|merah jambu/, [244,143,177], 'pink'],
-  [/abu-abu|abu abu|abu|kelabu/, [128,128,134], 'grey'],
-  [/hitam/, [24,24,26], 'black'],
-  [/putih/, [238,238,236], 'white'],
-  [/merah/, [200,32,40], 'red'],
-  [/biru/, [37,99,235], 'blue'],
-  [/hijau/, [34,150,70], 'green'],
-  [/kuning/, [245,200,40], 'yellow'],
-  [/ungu|violet/, [130,60,200], 'purple'],
-  [/cokelat|coklat/, [120,72,40], 'brown'],
-  [/oranye|jingga|orange/, [240,120,30], 'orange'],
-  [/emas|gold/, [212,168,60], 'gold'],
-  [/perak|silver/, [190,192,198], 'silver'],
-  [/krem|cream|beige/, [232,218,190], 'cream'],
+  [/hijau sage|sage/, [156,175,136], 'sage green'], [/hijau tosca|tosca|toska/, [32,178,170], 'teal'],
+  [/hijau army|hijau tentara/, [75,83,32], 'army green'], [/hijau tua/, [20,83,45], 'dark green'],
+  [/hijau muda/, [134,239,172], 'light green'], [/biru muda|biru langit/, [125,190,240], 'light blue'],
+  [/biru tua|biru dongker|navy|dongker/, [24,34,80], 'navy blue'], [/cokelat tua|coklat tua/, [72,44,26], 'dark brown'],
+  [/cokelat muda|coklat muda/, [190,150,110], 'light brown'], [/merah marun|marun|maroon/, [110,20,35], 'maroon'],
+  [/merah muda|pink|merah jambu/, [244,143,177], 'pink'], [/abu-abu|abu abu|\babu\b|kelabu/, [128,128,134], 'grey'],
+  [/hitam|black/, [24,24,26], 'black'], [/putih|white/, [238,238,236], 'white'], [/merah|red/, [200,32,40], 'red'],
+  [/biru|blue/, [37,99,235], 'blue'], [/hijau|green/, [34,150,70], 'green'], [/kuning|yellow/, [245,200,40], 'yellow'],
+  [/ungu|violet|purple/, [130,60,200], 'purple'], [/cokelat|coklat|brown/, [120,72,40], 'brown'],
+  [/oranye|jingga|orange/, [240,120,30], 'orange'], [/emas|gold/, [212,168,60], 'gold'],
+  [/perak|silver/, [190,192,198], 'silver'], [/krem|cream|beige/, [232,218,190], 'cream'],
 ];
-function findColor(text){
-  for (const [re, rgb, en] of COLORS){ const m = text.match(re); if (m) return { rgb, en, word: m[0] }; }
-  return null;
-}
+function findColor(text){ for (const [re, rgb, en] of COLORS){ const m = text.match(re); if (m) return { rgb, en, word:m[0] }; } return null; }
 function stripColors(text){ let t = text; for (const [re] of COLORS) t = t.replace(new RegExp(re.source,'g'), ''); return t.replace(/\bwarna\b/g,'').replace(/\s+/g,' ').trim(); }
+const hexToRgb = h => { const m = /^#?([0-9a-f]{6})$/i.exec(h||''); if (!m) return null; const n = parseInt(m[1],16); return [n>>16&255, n>>8&255, n&255]; };
 
-const OBJECTS = [
-  [/gelas anggur|gelas wine/, 'wine glass', 'gelas anggur'],
-  [/cangkir|gelas|mug|\bcup\b/, 'cup', 'cangkir'],
-  [/botol|tumbler|bottle/, 'bottle', 'botol'],
-  [/\bhp\b|ponsel|handphone|telepon|smartphone|hape/, 'cell phone', 'HP'],
-  [/buku|book/, 'book', 'buku'],
-  [/laptop/, 'laptop', 'laptop'],
-  [/gunting/, 'scissors', 'gunting'],
-  [/sendok/, 'spoon', 'sendok'],
-  [/garpu/, 'fork', 'garpu'],
-  [/pisau/, 'knife', 'pisau'],
-  [/\bjam\b/, 'clock', 'jam'],
-  [/remot|remote/, 'remote', 'remot'],
-  [/\bmouse\b|tetikus/, 'mouse', 'mouse'],
-  [/keyboard|papan ketik/, 'keyboard', 'keyboard'],
-  [/\bvas\b|pot bunga/, 'vase', 'vas'],
-  [/tanaman/, 'potted plant', 'tanaman'],
-  [/boneka|teddy/, 'teddy bear', 'boneka'],
-  [/pisang/, 'banana', 'pisang'],
-  [/apel/, 'apple', 'apel'],
-  [/jeruk/, 'orange', 'jeruk'],
-  [/mangkuk|mangkok/, 'bowl', 'mangkuk'],
-  [/payung/, 'umbrella', 'payung'],
-  [/\btas\b/, 'handbag', 'tas'],
-  [/\bbola\b/, 'sports ball', 'bola'],
-  [/sikat gigi/, 'toothbrush', 'sikat gigi'],
-  [/donat/, 'donut', 'donat'],
-  [/\bkue\b/, 'cake', 'kue'],
-  [/\btv\b|televisi/, 'tv', 'TV'],
-  [/kursi/, 'chair', 'kursi'],
+const COCO = [
+  [/gelas anggur|gelas wine/, 'wine glass', 'gelas anggur'], [/cangkir|gelas|mug|\bcup\b/, 'cup', 'cangkir'],
+  [/botol|tumbler|bottle/, 'bottle', 'botol'], [/\bhp\b|ponsel|handphone|smartphone|hape/, 'cell phone', 'HP'],
+  [/\bbuku\b|book/, 'book', 'buku'], [/laptop/, 'laptop', 'laptop'], [/gunting/, 'scissors', 'gunting'],
+  [/sendok/, 'spoon', 'sendok'], [/garpu/, 'fork', 'garpu'], [/pisau/, 'knife', 'pisau'], [/\bjam\b/, 'clock', 'jam'],
+  [/remot|remote/, 'remote', 'remot'], [/\bmouse\b/, 'mouse', 'mouse'], [/keyboard/, 'keyboard', 'keyboard'],
+  [/\bvas\b|pot bunga/, 'vase', 'vas'], [/tanaman/, 'potted plant', 'tanaman'], [/boneka|teddy/, 'teddy bear', 'boneka'],
+  [/pisang/, 'banana', 'pisang'], [/\bapel\b/, 'apple', 'apel'], [/jeruk/, 'orange', 'jeruk'], [/mangkuk|mangkok/, 'bowl', 'mangkuk'],
+  [/payung/, 'umbrella', 'payung'], [/\btas\b/, 'handbag', 'tas'], [/\bbola\b/, 'sports ball', 'bola'],
+  [/sikat gigi/, 'toothbrush', 'sikat gigi'], [/donat/, 'donut', 'donat'], [/\bkue\b/, 'cake', 'kue'],
+  [/\btv\b|televisi/, 'tv', 'TV'], [/kursi/, 'chair', 'kursi'],
+];
+const COCO_LABELS = [...new Set(COCO.map(c => c[1]))];
+const COCO_ID = Object.fromEntries(COCO.map(c => [c[1], c[2]]));
+
+// Aksesori yang menempel di tubuh: [kata, titik tubuh, ukuran relatif]
+const ITEMS = [
+  [/mahkota|crown|tiara/, 'head', 1.3], [/topi|hat|kopiah|peci|blangkon|helm|bando|tanduk|halo|turban|kupluk|beanie|bandana|telinga kucing|telinga kelinci/, 'head', 1.9],
+  [/kacamata|sunglasses|glasses|topeng mata/, 'eyes', 1.15], [/masker|topeng|mask/, 'face', 1.3],
+  [/kumis|jenggot|cerutu|rokok|pipa|mustache|beard/, 'mouth', .75],
+  [/dasi kupu|bow tie/, 'neck', .35], [/dasi\b|\btie\b/, 'tie', .26], [/kalung|necklace|medali|liontin|rantai|chain/, 'neck', .55],
+  [/syal|scarf/, 'neck', .85], [/lencana|\bpin\b|bros|badge|logo/, 'chest', .22],
+  [/sayap|wings/, 'back', 1.25], [/aura|jubah terbang/, 'back', 3.2], [/ransel|backpack/, 'back', 1.6],
 ];
 const EMOJI = [
-  [/petromaks|lampu|lentera|lantern/, '🏮'], [/mikrofon|mic/, '🎤'], [/pedang|sword/, '🗡️'],
-  [/tongkat sihir|tongkat/, '🪄'], [/mahkota/, '👑'], [/piala|trofi/, '🏆'], [/gitar/, '🎸'],
-  [/bunga|mawar/, '🌹'], [/es krim/, '🍦'], [/kue/, '🎂'], [/kopi/, '☕'], [/api|obor/, '🔥'],
-  [/mesin ketik/, '📠'], [/buku/, '📖'], [/bola/, '⚽'], [/kucing/, '🐱'], [/robot/, '🤖'],
-  [/permen|lolipop/, '🍭'], [/berlian|permata/, '💎'], [/bintang/, '⭐'], [/kamera/, '📷'],
-  [/telepon/, '☎️'], [/payung/, '☂️'], [/roket/, '🚀'], [/pizza/, '🍕'], [/burger/, '🍔'],
+  [/mahkota|crown|tiara/, '👑'], [/topi|hat|kopiah|peci|kupluk|beanie/, '🎩'], [/helm/, '⛑️'], [/halo/, '😇'],
+  [/kacamata hitam|sunglasses/, '🕶️'], [/kacamata|glasses/, '👓'], [/topeng|masker|mask/, '🎭'],
+  [/kalung|liontin|necklace/, '📿'], [/medali/, '🏅'], [/dasi kupu|pita|bow/, '🎀'], [/dasi|tie/, '👔'], [/syal|scarf/, '🧣'],
+  [/sayap|wings/, '🪽'], [/ransel|backpack/, '🎒'], [/lencana|badge|pin/, '📛'],
+  [/petromaks|lampu|lentera|lantern/, '🏮'], [/mikrofon|\bmic/, '🎤'], [/pedang|sword/, '🗡️'], [/tongkat sihir|tongkat|wand/, '🪄'],
+  [/piala|trofi/, '🏆'], [/gitar/, '🎸'], [/bunga|mawar|rose/, '🌹'], [/es krim/, '🍦'], [/\bkue\b|cake/, '🎂'], [/kopi|coffee/, '☕'],
+  [/\bapi\b|obor|fire/, '🔥'], [/buku/, '📖'], [/\bbola\b/, '⚽'], [/kucing|cat/, '🐱'], [/anjing|dog/, '🐶'], [/burung|beo|parrot/, '🦜'],
+  [/robot/, '🤖'], [/permen|lolipop/, '🍭'], [/berlian|permata/, '💎'], [/bintang/, '⭐'], [/kamera/, '📷'], [/roket/, '🚀'],
+  [/pizza/, '🍕'], [/burger/, '🍔'], [/uang|duit/, '💸'], [/hati|love/, '❤️'], [/balon/, '🎈'], [/payung/, '☂️'],
 ];
-const GLOW_RE = /menyala|bercahaya|nyala|bersinar|glow|berpendar|terang|api/;
+const GLOW_RE = /menyala|bercahaya|nyala|bersinar|glow|berpendar|\bapi\b|neon|lightsaber|pedang cahaya/;
 
-const VERBS = 'ubah|ganti|cat|pakaikan|pindahkan|bawa|jadikan|tambahkan|kembalikan|matikan|hapus|hilangkan|simpan|pakai|buat|bikin|change|make|turn|put';
-const CLOTH_RE = /baju|kaos|kaus|kemeja|jaket|hoodie|pakaian|outfit|\bjas\b|blazer|seragam|sweater|atasan|kostum|busana|dress|gaun|pakaikan|kebaya|rompi|cardigan|kardigan|jersey|shirt|jacket/;
+const VERBS = 'ubah|ganti|cat|pakaikan|pakai|pake|kenakan|pindahkan|bawa|jadikan|tambah|tambahkan|tambahin|kasih|kasi|beri|berikan|pasang|pasangkan|pasangin|pegang|pegangkan|taruh|letakkan|munculkan|kembalikan|matikan|hapus|hilangkan|lepas|lepaskan|copot|simpan|gunakan|buat|bikin|change|make|turn|put|add|remove';
+const CLOTH_RE = /baju|kaos|kaus|t-?shirt|kemeja|jaket|hoodie|pakaian|outfit|\bjas\b|blazer|seragam|sweater|atasan|kostum|busana|dress|gaun|kebaya|rompi|cardigan|kardigan|jersey|shirt|jacket|celana|\brok\b|sarung|legging|jeans|polo|singlet|tank ?top|jubah|terusan|tuksedo|piyama|daster/;
+const LOWER_RE = /celana|\brok\b|sarung|legging|pants|skirt|trousers|hotpants/;
+const FULL_RE = /gaun|dress|terusan|jumpsuit|overall|kostum|jubah|piyama|daster|baju adat/;
 const WALL_RE = /tembok|dinding|\bwall\b|\bcat\b/;
-const BG_RE = /latar|background|ruangan|pemandangan|suasana|pindahkan saya|bawa saya|pindahkan aku|bawa aku|\bscene\b|tempat/;
+const BG_RE = /latar|background|ruangan|pemandangan|suasana|pindahkan (saya|aku|kita|gue)|bawa (saya|aku|kita|gue)|\bscene\b/;
+const NEG_RE = /\b(gak|ga|nggak|enggak|tidak|tak|belum|lagi gak|lagi tidak)\b.*\b(pake|pakai|punya|ada)\b/;
 
-/* ================== Pemahaman perintah ================== */
+/* ============================================================
+   Pemahaman perintah bawaan (tanpa internet)
+   ============================================================ */
 function parseCommand(raw){
   const text = raw.toLowerCase().replace(/[“”"']/g,'"').replace(/\s+/g,' ').trim();
   const clauses = text
-    .split(new RegExp(`[.;!\\n]+|,\\s*(?=(?:${VERBS})\\b)|\\s+(?:dan|lalu|terus|kemudian)\\s+(?=(?:${VERBS})\\b)`))
+    .split(new RegExp(`[.;!?\\n]+|,\\s*(?:(?:dan|lalu|terus|trus|kemudian|juga)\\s+)?(?=(?:${VERBS})\\b)|\\s+(?:dan|lalu|terus|trus|kemudian|sama|plus)\\s+(?=(?:${VERBS})\\b)`))
     .map(s => (s||'').trim()).filter(Boolean);
   const actions = [], unknown = [];
-  for (const c of clauses){ const a = parseClause(c); a ? actions.push(a) : unknown.push(c); }
+  for (const c of clauses){
+    const a = parseClause(c);
+    if (a === 'skip') continue;
+    a ? actions.push(...[].concat(a)) : unknown.push(c);
+  }
   return { actions, unknown };
 }
 
+function clothingFromText(desc, subject=''){
+  const all = `${subject} ${desc}`;
+  let part = 'upper';
+  if (FULL_RE.test(desc)) part = 'full';
+  else if (LOWER_RE.test(desc) || (LOWER_RE.test(subject) && !/kaos|kemeja|jaket|hoodie|baju|atasan/.test(desc))) part = 'lower';
+  return { type:'clothing', part, desc, prompt:'', color:null, pattern:'', sleeves:'', legs: /pendek|short|mini|hotpants/.test(all) ? 'short' : '' };
+}
+function itemFromText(desc, verbPhrase){
+  const def = ITEMS.find(([re]) => re.test(desc));
+  let anchor = def ? def[1] : 'scene', side = /\bkiri\b|left/.test(verbPhrase) ? 'left' : /\bkanan\b|right/.test(verbPhrase) ? 'right' : 'center';
+  if (/pegang|genggam|tangan|hold/.test(verbPhrase) && anchor !== 'eyes') anchor = 'hand';
+  else if (/\bbahu\b|pundak|shoulder/.test(verbPhrase)) anchor = 'shoulder';
+  else if (/kepala|head/.test(verbPhrase) && !def) anchor = 'head';
+  else if (/punggung|belakang (saya|aku|kita|badan)/.test(verbPhrase) && !def) anchor = 'back';
+  if ((anchor === 'hand' || anchor === 'shoulder') && side === 'center') side = 'right';
+  const clean = desc.replace(/\s+(di|ke|pada|dekat)\s+(tangan|bahu|pundak|kepala|punggung|leher|dada|mata|wajah|muka|meja|belakang|samping|kiri|kanan|atas|bawah).*$/,'').replace(/\s+(ke|untuk|buat)\s+(saya|aku|kita|gue)\b.*$/,'').trim();
+  return { type:'item', anchor, side, desc: clean || desc, prompt:'', glow: GLOW_RE.test(desc), behind: /di belakang (saya|aku|kita)/.test(verbPhrase) && anchor==='scene', where: verbPhrase };
+}
+
 function parseClause(c){
-  // Kontrol & preset
   let m;
+  if (NEG_RE.test(c) && !new RegExp(`^(?:${VERBS})\\b`).test(c)) return 'skip';
   if ((m = c.match(/simpan .*preset\s+"?([^"]+?)"?$/))) return { type:'savePreset', name: m[1].trim() };
-  if ((m = c.match(/(?:pakai|gunakan|muat|load)\s+preset\s+"?([^"]+?)"?$/))) return { type:'loadPreset', name: m[1].trim() };
-  if (/^(reset|bersihkan)$/.test(c) || /(matikan|hapus|hilangkan|kembalikan|reset).*(semua|seluruh)\s*(efek|perubahan)?/.test(c) && !BG_RE.test(c.replace(/seluruh ruangan/,''))) return { type:'reset' };
-  if (/^(kembalikan|matikan|hapus|hilangkan|copot|lepas)/.test(c)){
-    if (CLOTH_RE.test(c)) return { type:'remove', slot:'clothing' };
-    if (WALL_RE.test(c) || BG_RE.test(c)) return { type:'remove', slot:'scene' };
-    const o = OBJECTS.find(([re]) => re.test(c));
-    if (o) return { type:'remove', slot:'object', coco:o[1] };
+  if ((m = c.match(/(?:pakai|pake|gunakan|muat|load)\s+preset\s+"?([^"]+?)"?$/))) return { type:'loadPreset', name: m[1].trim() };
+  if (/^(reset|bersihkan|normal lagi|balik normal)$/.test(c) || /(matikan|hapus|hilangkan|kembalikan|reset|copot|lepas).*(semua|seluruh)\s*(efek|perubahan|nya)?$/.test(c)) return { type:'reset' };
+  if (/^(kembalikan|matikan|hapus|hilangkan|copot|copotin|lepas|lepaskan|lepasin|buang|remove)\b/.test(c)){
+    if (LOWER_RE.test(c)) return { type:'remove', slot:'lower' };
+    if (CLOTH_RE.test(c)) return { type:'remove', slot:'upper' };
+    if (WALL_RE.test(c) || BG_RE.test(c) || /latar/.test(c)) return { type:'remove', slot:'scene' };
+    const o = COCO.find(([re]) => re.test(c)); if (o) return { type:'remove', slot:'object', coco:o[1] };
+    return { type:'remove', slot:'item', text: c.replace(/^\S+\s+/,'') };
   }
 
-  // Pisahkan subjek dan hasil: "<subjek> menjadi/jadi <hasil>"
-  let subject = c, desc = '';
-  const split = c.match(/^(.*?)\s+(?:menjadi|jadi|jadikan|berubah jadi|into|to)\s+(.+)$/);
-  if (split){ subject = split[1]; desc = split[2]; }
-  else if ((m = c.match(/^(?:pindahkan|bawa)\s+(?:saya|aku|gue)\s+ke\s+(.+)$/))){ subject = 'latar'; desc = m[1]; }
-  else desc = c.replace(new RegExp(`^(?:${VERBS})\\s+`),'').replace(/^(?:saya|aku)\s+/,'');
-  desc = desc.replace(/^(?:sebuah|seperti|berupa|warna)\s+/,'').trim();
-  if (!desc) return null;
+  // "<subjek> menjadi <hasil>"
+  const split = c.match(/^(.*?)\s+(?:menjadi|jadi|jadiin|jadikan|berubah jadi|diganti|into|to)\s+(.+)$/);
+  if (split){
+    const subject = split[1], desc = split[2].replace(/^(?:sebuah|seperti|berupa|warna)\s+/,'').trim();
+    if (BG_RE.test(subject)) return { type:'background', desc, prompt:'' };
+    if (WALL_RE.test(subject)) return { type:'wall', desc, prompt:'' };
+    const obj = COCO.find(([re]) => re.test(subject));
+    if (obj && !CLOTH_RE.test(subject)) return { type:'object', coco: obj[1], desc, prompt:'', glow: GLOW_RE.test(desc) };
+    if (CLOTH_RE.test(subject)) {
+      const cs = clothingFromText(desc, subject);
+      if (LOWER_RE.test(subject) && cs.part === 'upper' && !CLOTH_RE.test(desc)) cs.part = 'lower';
+      return cs;
+    }
+    const it = ITEMS.find(([re]) => re.test(subject)); if (it) return itemFromText(desc + ' ' + subject.replace(new RegExp(`^(?:${VERBS})\\s+`),''), subject);
+    return null;
+  }
+  if ((m = c.match(/^(?:pindahkan|bawa)\s+(?:saya|aku|kita|gue)\s+ke\s+(.+)$/))) return { type:'background', desc:m[1], prompt:'' };
 
-  if (BG_RE.test(subject)) return { type:'background', desc };
-  if (WALL_RE.test(subject)) return { type:'wall', desc };
-  const obj = OBJECTS.find(([re]) => re.test(subject));
-  if (obj && !CLOTH_RE.test(subject)) return { type:'object', coco: obj[1], label: obj[2], desc };
-  if (CLOTH_RE.test(subject) || CLOTH_RE.test(desc)) return { type:'clothing', desc };
+  // "tambahkan/pakaikan/kasih/pegang <sesuatu>"
+  const vm = c.match(new RegExp(`^(?:(?:saya|aku|kita|gue)\\s+)?(?:mau\\s+|pengen\\s+|ingin\\s+|tolong\\s+|coba\\s+)?(${VERBS})\\b\\s*(.*)$`));
+  if (vm){
+    const verb = vm[1]; let rest = vm[2].replace(/^(?:ke |untuk |buat )?(?:saya|aku|kita|gue)\s+/,'').replace(/^(?:sebuah|seekor|satu|se)\s+/,'').trim();
+    if (!rest) return null;
+    if (WALL_RE.test(rest) && /^cat\b/.test(verb)) return { type:'wall', desc: rest.replace(/^(tembok|dinding)\s*/,'').replace(/^(di belakang (saya|aku|kita)\s*)/,'') || rest, prompt:'' };
+    if (BG_RE.test(c) && !ITEMS.some(([re]) => re.test(rest))) return { type:'background', desc: rest.replace(/^(latar|background)\s*(belakang)?\s*(dengan|jadi|ke)?\s*/,''), prompt:'' };
+    if (/neon|lampu hias|poster|lukisan|rak/.test(rest) && /tembok|dinding/.test(rest)) return { type:'wall', desc: rest, prompt:'' };
+    const isItem = t => ITEMS.some(([re]) => re.test(t)) || !!emojiFor(t).match(/[^✨]/);
+    const parts = rest.split(/\s+(?:dan|sama|plus|serta)\s+|,\s*/).map(t => t.trim()).filter(Boolean);
+    if (parts.length > 1 && parts.every(t => CLOTH_RE.test(t) || isItem(t)))
+      return parts.map(t => CLOTH_RE.test(t) && !ITEMS.some(([re]) => re.test(t)) ? clothingFromText(t) : itemFromText(t, `${verb} ${t} ${c}`));
+    if (CLOTH_RE.test(rest) && !ITEMS.some(([re]) => re.test(rest.split(/\s+(dan|dengan)\s+/)[0]))) return clothingFromText(rest.replace(/\s+(ke|untuk|buat)\s+(saya|aku|kita|gue)\b.*$/,''));
+    return itemFromText(rest, c);
+  }
+  if (CLOTH_RE.test(c)) return clothingFromText(c);
   return null;
 }
 
-/* ================== Util kanvas ================== */
+/* ============================================================
+   Otak AI (Claude) untuk perintah bebas
+   ============================================================ */
+const PATTERNS = ['plain','leather','denim','stripes','plaid','camo','batik','floral','knit','satin','brick','wood','marble','stone','concrete','neon'];
+const LLM_SCHEMA = {
+  type:'object', additionalProperties:false, required:['reply','actions'],
+  properties:{
+    reply:{ type:'string' },
+    actions:{ type:'array', items:{ type:'object', additionalProperties:false,
+      required:['type','part','desc','prompt_en','color_hex','pattern','sleeves','legs','anchor','side','coco','glow','name'],
+      properties:{
+        type:{ type:'string', enum:['clothing','wall','background','replace_object','add_item','remove','reset','save_preset','load_preset'] },
+        part:{ type:'string', enum:['upper','lower','full','scene','object','item','none'] },
+        desc:{ type:'string' }, prompt_en:{ type:'string' }, color_hex:{ type:'string' },
+        pattern:{ type:'string', enum: PATTERNS },
+        sleeves:{ type:'string', enum:['long','short','none'] }, legs:{ type:'string', enum:['long','short'] },
+        anchor:{ type:'string', enum:['head','eyes','face','mouth','neck','tie','chest','shoulder','hand','back','scene'] },
+        side:{ type:'string', enum:['left','right','center'] },
+        coco:{ type:'string', enum:[...COCO_LABELS, 'none'] },
+        glow:{ type:'boolean' }, name:{ type:'string' },
+      } } },
+  },
+};
+const LLM_SYSTEM = `You turn a live streamer's typed command (usually casual Indonesian, sometimes English) into actions for a real-time camera effects app. Reply with JSON matching the schema.
+
+What the app can do:
+- clothing: dress the person. part "upper" (shirt/jacket/top), "lower" (pants/skirt) or "full" (dress/costume, both). Works even if the person wears nothing on top: the app paints the garment over the torso and arms using body tracking. Garments are rendered as a new color + fabric pattern + sleeve length following the body, not a new 3D shape. Set sleeves (long/short/none) and legs (long/short) from the garment type (jacket, hoodie, shirt, blazer -> long; t-shirt, polo -> short; tank top, vest -> none). pattern: closest fabric (plain, leather, denim, stripes, plaid, camo, batik, floral, knit, satin). color_hex: main color.
+- wall: repaint or retexture the wall behind the person while keeping room lighting. pattern plain = paint only; brick, wood, marble, stone, concrete, neon, floral, stripes for textures.
+- background: replace everything behind the person with a new scene.
+- replace_object: swap a real object the camera sees. coco = the COCO class of the real object being replaced (cup, bottle, cell phone, book, ...). desc/prompt_en describe the new object. glow true if it should emit light.
+- add_item: add a virtual object or accessory. anchor: head (hats, crowns, horns, halo), eyes (glasses), face (masks), mouth (mustache, cigar), neck (necklace, scarf, bow tie), tie (necktie), chest (badge, pin), shoulder (pet or bird sitting on shoulder), hand (anything held), back (wings, backpack, aura; drawn behind the body), scene (placed in the room, not on the body). side: left/right for hand or shoulder (the person's own side; default right), else center.
+- remove: undo something. part says which (upper, lower, scene, object with coco, item with name = words identifying it).
+- reset: remove all effects. save_preset / load_preset: name = preset name.
+
+Rules:
+- One command may contain several actions; follow the order given. Changing only one property of an existing effect (e.g. "make the jacket red") = repeat that effect with the change applied, keeping the rest from the current state.
+- desc: short Indonesian label for the effect list. prompt_en: concise English text-to-image prompt describing only the material/texture (clothing, wall), the scene (background), or the single object (items, replacements). Leave "" when not relevant.
+- Fill every field; use "", "none", "plain", "center", "long", false for fields that do not apply.
+- Nudity, sexual content, impersonating real people, hate symbols: return no actions and explain kindly in reply.
+- If something cannot be done exactly, pick the closest supported action and say so in reply.
+- reply: one short friendly sentence in the user's language describing what changed.`;
+
+function stateSummary(){
+  const s = [];
+  if (effects.upper) s.push(`upper clothing: ${effects.upper.desc}`);
+  if (effects.lower && effects.lower !== effects.upper) s.push(`lower clothing: ${effects.lower.desc}`);
+  if (effects.scene) s.push(`${effects.scene.recipe.type}: ${effects.scene.desc}`);
+  effects.objects.forEach(o => s.push(`replaced ${o.coco}: ${o.desc}`));
+  effects.items.forEach(i => s.push(`item on ${i.recipe.anchor}: ${i.desc}`));
+  return s.length ? s.join('; ') : 'none';
+}
+
+async function askClaude(text){
+  const model = settings.llmModel;
+  const body = {
+    model, max_tokens: 4000,
+    output_config: { effort:'low', format:{ type:'json_schema', schema: LLM_SCHEMA } },
+    system: LLM_SYSTEM,
+    messages: [{ role:'user', content:`Active effects: ${stateSummary()}\nObjects the camera can recognise for replace_object: ${COCO_LABELS.join(', ')}\n\nCommand: ${text}` }],
+  };
+  const headers = { 'content-type':'application/json', 'x-api-key': settings.apiKey, 'anthropic-version':'2026-10-21', 'anthropic-dangerous-direct-browser-access':'true' };
+  if (model === 'claude-opus-5-5'){ body.fallbacks = 'default'; headers['anthropic-beta'] = 'server-side-fallback-2026-07-01'; }
+  const res = await fetch(ANTHROPIC_URL, { method:'POST', headers, body: JSON.stringify(body) });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok){
+    const msg = data?.error?.message || res.statusText;
+    if (res.status === 401) throw new Error('kunci API tidak valid');
+    if (res.status === 429) throw new Error('terlalu banyak permintaan, tunggu sebentar');
+    if (/credit balance/i.test(msg)) throw new Error('saldo API habis');
+    throw new Error(msg);
+  }
+  if (data.stop_reason === 'refusal') return { reply:'Perintah itu tidak bisa dibuat.', actions:[] };
+  const txt = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+  const parsed = JSON.parse(txt);
+  return { reply: parsed.reply, actions: parsed.actions.map(fromLLM).filter(Boolean) };
+}
+
+function fromLLM(a){
+  const color = hexToRgb(a.color_hex), pattern = a.pattern === 'plain' ? 'solid' : a.pattern;
+  switch (a.type){
+    case 'clothing': return { type:'clothing', part: ['upper','lower','full'].includes(a.part) ? a.part : 'upper', desc:a.desc, prompt:a.prompt_en, color, pattern, sleeves:a.sleeves, legs:a.legs };
+    case 'wall': return { type:'wall', desc:a.desc, prompt:a.prompt_en, color, pattern: a.pattern };
+    case 'background': return { type:'background', desc:`${a.desc} ${a.prompt_en}`.trim(), label:a.desc, prompt:a.prompt_en };
+    case 'replace_object': return a.coco === 'none' ? null : { type:'object', coco:a.coco, desc:a.desc, prompt:a.prompt_en, glow:a.glow, color };
+    case 'add_item': return { type:'item', anchor:a.anchor, side:a.side, desc:a.desc, prompt:a.prompt_en, glow:a.glow, behind: a.anchor === 'back', where:'' };
+    case 'remove':
+      if (a.part === 'upper' || a.part === 'full') return { type:'remove', slot:'upper' };
+      if (a.part === 'lower') return { type:'remove', slot:'lower' };
+      if (a.part === 'scene') return { type:'remove', slot:'scene' };
+      if (a.part === 'object') return { type:'remove', slot:'object', coco:a.coco };
+      return { type:'remove', slot:'item', text: a.name || a.desc };
+    case 'reset': return { type:'reset' };
+    case 'save_preset': return { type:'savePreset', name:a.name };
+    case 'load_preset': return { type:'loadPreset', name:a.name };
+  }
+  return null;
+}
+
+/* ============================================================
+   Util kanvas
+   ============================================================ */
 const mk = (w,h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
 const css = (c,a=1) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
 const mul = (c,f) => c.map(v => Math.max(0, Math.min(255, v*f)));
@@ -348,25 +533,20 @@ function addNoise(ctx, w, h, amt){
   for (let p=0; p<a.length; p+=4){ const n = (Math.random()-.5)*amt; a[p]+=n; a[p+1]+=n; a[p+2]+=n; }
   ctx.putImageData(d,0,0);
 }
-function tileToFrame(tile){
-  const c = mk(W,H), x = c.getContext('2d');
-  x.fillStyle = x.createPattern(tile,'repeat'); x.fillRect(0,0,W,H);
-  return c;
-}
+function tileToFrame(tile){ const c = mk(W,H), x = c.getContext('2d'); x.fillStyle = x.createPattern(tile,'repeat'); x.fillRect(0,0,W,H); return c; }
 function drawCover(img, w, h){
-  const c = mk(w,h), x = c.getContext('2d');
-  const s = Math.max(w/img.width, h/img.height), dw = img.width*s, dh = img.height*s;
-  x.drawImage(img, (w-dw)/2, (h-dh)/2, dw, dh);
-  return c;
+  const c = mk(w,h), x = c.getContext('2d'), s = Math.max(w/img.width, h/img.height), dw = img.width*s, dh = img.height*s;
+  x.drawImage(img, (w-dw)/2, (h-dh)/2, dw, dh); return c;
 }
-const pixels = c => c.getContext('2d', { willReadFrequently:true }).getImageData(0,0,c.width,c.height).data;
-function avgColor(data){
-  let r=0,g=0,b=0,n=0;
-  for (let p=0; p<data.length; p+=64){ r+=data[p]; g+=data[p+1]; b+=data[p+2]; n++; }
-  return [r/n, g/n, b/n];
+function avgColor(canvas){
+  const s = mk(8,8), x = s.getContext('2d', { willReadFrequently:true }); x.drawImage(canvas,0,0,8,8);
+  const d = x.getImageData(0,0,8,8).data; let r=0,g=0,b=0; for (let p=0;p<d.length;p+=4){ r+=d[p]; g+=d[p+1]; b+=d[p+2]; }
+  return [r/64/255, g/64/255, b/64/255];
 }
 
-/* ================== Tekstur cepat (tanpa internet) ================== */
+/* ============================================================
+   Tekstur cepat (tanpa internet)
+   ============================================================ */
 const FAB = {
   solid(c){ const t=mk(128,128),x=t.getContext('2d'); x.fillStyle=css(c); x.fillRect(0,0,128,128); addNoise(x,128,128,8); return t; },
   leather(c){ const t=mk(160,160),x=t.getContext('2d'); x.fillStyle=css(c); x.fillRect(0,0,160,160);
@@ -384,13 +564,14 @@ const FAB = {
   batik(c){ const base=c||[110,62,30], cr=[236,214,170], t=mk(64,64),x=t.getContext('2d'); x.fillStyle=css(base); x.fillRect(0,0,64,64);
     x.fillStyle=css(cr); for(const [cx,cy,r] of [[32,14,0],[32,50,0],[14,32,1.57],[50,32,1.57]]){ x.beginPath(); x.ellipse(cx,cy,7,13,r,0,7); x.fill(); }
     x.fillStyle=css(mul(base,.6)); for(const [cx,cy] of [[32,14],[32,50],[14,32],[50,32]]){ x.beginPath(); x.arc(cx,cy,2.5,0,7); x.fill(); }
-    x.fillStyle=css(cr); x.beginPath(); x.arc(32,32,3,0,7); x.fill(); x.beginPath(); x.arc(0,0,4,0,7); x.arc(64,0,4,0,7); x.fill(); addNoise(x,64,64,10); return t; },
+    x.fillStyle=css(cr); x.beginPath(); x.arc(32,32,3,0,7); x.fill(); addNoise(x,64,64,10); return t; },
   floral(c){ const base=c||[240,220,230], t=mk(90,90),x=t.getContext('2d'); x.fillStyle=css(base); x.fillRect(0,0,90,90);
     for(const [cx,cy] of [[22,22],[67,67],[67,18]]){ for(let k=0;k<5;k++){ const a=k*1.256; x.fillStyle=css([220,70,110]); x.beginPath(); x.arc(cx+Math.cos(a)*7,cy+Math.sin(a)*7,5,0,7); x.fill(); } x.fillStyle=css([250,210,60]); x.beginPath(); x.arc(cx,cy,3.5,0,7); x.fill(); }
     return t; },
   knit(c){ const t=mk(24,24),x=t.getContext('2d'); x.fillStyle=css(mul(c,.85)); x.fillRect(0,0,24,24); x.strokeStyle=css(mul(c,1.2)); x.lineWidth=3;
     for(let y=0;y<24;y+=8){ x.beginPath(); x.moveTo(0,y); x.lineTo(6,y+6); x.lineTo(12,y); x.lineTo(18,y+6); x.lineTo(24,y); x.stroke(); } addNoise(x,24,24,12); return t; },
 };
+FAB.satin = FAB.solid;
 const WALL = {
   brick(c, old){ const base=c||[160,62,44], t=mk(256,128),x=t.getContext('2d'); x.fillStyle=css(old?[150,140,125]:[200,195,185]); x.fillRect(0,0,256,128);
     for(let r=0;r<8;r++){ const off=r%2?32:0; for(let i=-1;i<5;i++){ x.fillStyle=css(mul(base, rnd(old?.6:.85, old?1.15:1.08))); x.fillRect(i*64+off+2, r*16+2, 60, 12); } }
@@ -422,31 +603,31 @@ function sceneFrame(desc){
   const f = mk(W,H), x = f.getContext('2d'), col = findColor(desc);
   const grad = (stops) => { const g = x.createLinearGradient(0,0,0,H); stops.forEach(([o,c]) => g.addColorStop(o,c)); x.fillStyle = g; x.fillRect(0,0,W,H); };
   const bokeh = (cols, n, rMax) => { for(let i=0;i<n;i++){ const r=rnd(rMax*.3,rMax); const g=x.createRadialGradient(0,0,0,0,0,r); const c=cols[i%cols.length]; g.addColorStop(0,css(c,.55)); g.addColorStop(1,css(c,0)); x.save(); x.translate(rnd(0,W),rnd(0,H*.8)); x.fillStyle=g; x.beginPath(); x.arc(0,0,r,0,7); x.fill(); x.restore(); } };
-  if (/pantai|laut|beach|senja|sunset|matahari terbenam|sore/.test(desc)){
+  if (/pantai|laut|beach|senja|sunset|matahari terbenam|sore|ocean/.test(desc)){
     grad([[0,'#2d1b4e'],[.35,'#c2477a'],[.58,'#f7a35c'],[.6,'#e07b54'],[1,'#1d3557']]);
     x.fillStyle='rgba(255,220,150,.95)'; x.beginPath(); x.arc(W*.62,H*.56,H*.09,0,7); x.fill();
     const g=x.createLinearGradient(0,H*.6,0,H); g.addColorStop(0,'#3b4f7a'); g.addColorStop(1,'#0f1c33'); x.fillStyle=g; x.fillRect(0,H*.6,W,H*.4);
     x.fillStyle='rgba(255,200,140,.5)'; for(let i=0;i<30;i++) x.fillRect(W*.62+rnd(-W*.12,W*.12), H*rnd(.62,.95), rnd(10,40), 2);
-  } else if (/angkasa|galaksi|space|bintang|planet/.test(desc)){
+  } else if (/angkasa|galaksi|space|bintang|planet|galaxy/.test(desc)){
     x.fillStyle='#05040d'; x.fillRect(0,0,W,H); bokeh([[90,40,160],[30,80,180],[180,40,120]],6,W*.3);
     x.fillStyle='#fff'; for(let i=0;i<400;i++){ x.globalAlpha=rnd(.3,1); x.fillRect(rnd(0,W),rnd(0,H),rnd(.5,2),rnd(.5,2)); } x.globalAlpha=1;
-  } else if (/salju|snow|musim dingin|es/.test(desc)){
+  } else if (/salju|snow|musim dingin|winter/.test(desc)){
     grad([[0,'#b8d4ec'],[1,'#eef4fa']]); x.fillStyle='#fff'; for(let i=0;i<250;i++){ x.globalAlpha=rnd(.4,1); x.beginPath(); x.arc(rnd(0,W),rnd(0,H),rnd(1,4),0,7); x.fill(); } x.globalAlpha=1;
-  } else if (/hutan|taman|forest|kebun|alam|gunung/.test(desc)){
+  } else if (/hutan|taman|forest|kebun|alam|gunung|garden|mountain/.test(desc)){
     grad([[0,'#9fd3a8'],[.5,'#3d7a4f'],[1,'#173d24']]);
-    for(let i=0;i<14;i++){ x.fillStyle=css([30,50,30],rnd(.25,.6)); const tx=rnd(0,W), tw=rnd(W*.015,W*.04); x.fillRect(tx,0,tw,H); }
+    for(let i=0;i<14;i++){ x.fillStyle=css([30,50,30],rnd(.25,.6)); x.fillRect(rnd(0,W),0,rnd(W*.015,W*.04),H); }
     bokeh([[220,255,200],[255,240,180]],20,W*.05);
-  } else if (/kafe|cafe|kopi|restoran|ruang tamu|kamar|rumah/.test(desc)){
-    const night = /malam|hujan/.test(desc);
+  } else if (/kafe|cafe|kopi|restoran|ruang tamu|kamar|rumah|coffee|room/.test(desc)){
+    const night = /malam|hujan|night|rain/.test(desc);
     grad(night ? [[0,'#1b1210'],[1,'#3a2418']] : [[0,'#6b4a35'],[1,'#2f1f15']]);
     bokeh([[255,190,110],[255,150,80],[255,220,160]], 30, W*.07);
     x.fillStyle='rgba(20,12,8,.6)'; x.fillRect(0,H*.78,W,H*.22);
-  } else if (/studio|berita|news|podcast|kantor|panggung/.test(desc)){
+  } else if (/studio|berita|news|podcast|kantor|panggung|stage|office/.test(desc)){
     grad([[0,'#0a1a3a'],[1,'#03070f']]);
     x.strokeStyle='rgba(80,140,255,.18)'; x.lineWidth=1; for(let i=0;i<W;i+=W/24){ x.beginPath(); x.moveTo(i,0); x.lineTo(i,H); x.stroke(); }
     x.fillStyle='rgba(60,120,255,.25)'; x.fillRect(W*.06,H*.15,W*.25,H*.5); x.fillRect(W*.69,H*.15,W*.25,H*.5);
     bokeh([[60,130,255],[255,60,100]],10,W*.06);
-  } else if (/kota|city|malam|neon|tokyo|jalan/.test(desc)){
+  } else if (/kota|city|malam|neon|tokyo|jalan|night|street/.test(desc)){
     grad([[0,'#0b0a1f'],[1,'#1c1030']]);
     for(let i=0;i<22;i++){ const bw=rnd(W*.03,W*.08), bh=rnd(H*.25,H*.7), bx=rnd(0,W); x.fillStyle='#120f24'; x.fillRect(bx,H-bh,bw,bh);
       x.fillStyle='rgba(255,210,120,.5)'; for(let k=0;k<12;k++) x.fillRect(bx+rnd(2,bw-6),H-bh+rnd(4,bh-6),3,4); }
@@ -458,18 +639,25 @@ function sceneFrame(desc){
   return f;
 }
 
-/* ================== Gambar AI (teks-ke-gambar) ================== */
+/* ============================================================
+   Gambar AI (teks-ke-gambar), dengan cache
+   ============================================================ */
+const aiCache = new Map();
 function aiImage(prompt, w, h){
+  const key = `${prompt}|${w}x${h}`;
+  if (aiCache.has(key)) return aiCache.get(key);
   const url = settings.aiUrl.replace('{prompt}', encodeURIComponent(prompt)).replace('{w}', w).replace('{h}', h).replace('{seed}', Math.floor(Math.random()*1e6));
-  return new Promise((res, rej) => {
+  const p = new Promise((res, rej) => {
     const img = new Image(); img.crossOrigin = 'anonymous';
     const t = setTimeout(() => { img.src=''; rej(new Error('waktu habis')); }, 60000);
     img.onload = () => { clearTimeout(t); res(img); };
     img.onerror = () => { clearTimeout(t); rej(new Error('tidak bisa dihubungi')); };
     img.src = url;
   });
+  p.catch(() => aiCache.delete(key));
+  aiCache.set(key, p); return p;
 }
-// Buang latar putih dari gambar benda (flood-fill dari tepi), lalu potong ke isi.
+// Buang latar putih (flood-fill dari tepi), potong ke isi.
 function keyOutWhite(img){
   const s = 384, c = mk(s,s), x = c.getContext('2d', { willReadFrequently:true });
   x.drawImage(img,0,0,s,s);
@@ -491,136 +679,188 @@ function keyOutWhite(img){
 function emojiCanvas(e){
   const c = mk(256,256), x = c.getContext('2d');
   x.font = '200px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif'; x.textAlign='center'; x.textBaseline='middle';
-  x.fillText(e, 128, 140); return c;
+  x.fillText(e, 128, 140);
+  const d = x.getImageData(0,0,256,256).data; let x0=256,y0=256,x1=0,y1=0;
+  for (let i=3;i<d.length;i+=4) if (d[i] > 20){ const px=(i>>2)%256, py=(i>>2)>>8; if(px<x0)x0=px; if(px>x1)x1=px; if(py<y0)y0=py; if(py>y1)y1=py; }
+  if (x1 <= x0) return c;
+  const r = mk(x1-x0+1, y1-y0+1); r.getContext('2d').drawImage(c, x0,y0,r.width,r.height, 0,0,r.width,r.height); return r;
 }
+const emojiFor = d => (EMOJI.find(([re]) => re.test(d)) || [0,'✨'])[1];
 
-/* ================== Membangun efek ================== */
+/* ============================================================
+   Membangun efek dari resep
+   ============================================================ */
 function setStatus(fx, kind, text){ fx.status = kind; fx.statusText = text; renderEffects(); }
 function runAI(fx, prompt, w, h, onImage){
-  if (!settings.ai){ setStatus(fx,'ok','Efek cepat aktif (gambar AI dimatikan)'); return; }
+  if (!settings.ai){ setStatus(fx,'ok','Efek cepat aktif (gambar AI mati)'); return; }
   const token = fx.token = Math.random();
   setStatus(fx,'wait','Efek cepat aktif · membuat gambar AI…');
   aiImage(prompt, w, h).then(img => {
     if (fx.token !== token) return;
-    try { onImage(img); setStatus(fx,'ok','Gambar AI aktif'); }
+    try { onImage(img); fx.ver++; setStatus(fx,'ok','Gambar AI aktif'); }
     catch(e){ setStatus(fx,'err','Gambar AI tidak bisa dibaca, pakai efek cepat'); }
   }).catch(e => { if (fx.token === token) setStatus(fx,'err',`Gambar AI ${e.message}, pakai efek cepat`); });
 }
+const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
-function buildClothing(recipe){
-  const d = recipe.desc, col = findColor(d.split(' dengan ')[0]);
-  let pat='solid', spec=.15, c=col?.rgb;
-  if (/kulit|leather/.test(d)){ pat='leather'; spec=.9; c=c||[22,22,24]; }
-  else if (/batik/.test(d)){ pat='batik'; }
-  else if (/denim|jeans|jins/.test(d)){ pat='denim'; c=c||[52,84,140]; }
-  else if (/garis|belang|salur|stripe/.test(d)){ pat='stripes'; c=c||[30,40,90]; }
-  else if (/kotak|flanel|plaid|tartan/.test(d)){ pat='plaid'; c=c||[170,30,40]; }
-  else if (/loreng|army|tentara|camo|militer/.test(d)){ pat='camo'; }
-  else if (/bunga|floral|motif/.test(d)){ pat='floral'; }
-  else if (/rajut|sweater|wol|knit/.test(d)){ pat='knit'; c=c||[150,40,50]; }
-  else if (/satin|sutra|silk|metalik|mengkilap/.test(d)){ spec=1.2; }
-  else if (/\bjas\b|blazer|suit|tuksedo/.test(d)){ c=c||[22,24,30]; spec=.25; }
-  else if (/pilot/.test(d)){ c=c||[20,30,70]; spec=.2; }
-  else if (/dokter|perawat/.test(d)){ c=c||[240,242,245]; }
-  else if (/superhero|kostum/.test(d)){ c=c||[190,25,35]; spec=.5; }
-  c = c || [60,90,160];
+function garmentStyle(r){
+  const d = r.desc, col = r.color ? { rgb:r.color } : findColor(d.split(' dengan ')[0]);
+  let pat = r.pattern && FAB[r.pattern] ? r.pattern : '', c = col?.rgb;
+  if (!pat){
+    if (/kulit|leather/.test(d)) pat='leather'; else if (/batik/.test(d)) pat='batik'; else if (/denim|jeans|jins/.test(d)) pat='denim';
+    else if (/garis|belang|salur|stripe/.test(d)) pat='stripes'; else if (/kotak|flanel|plaid|tartan/.test(d)) pat='plaid';
+    else if (/loreng|army|tentara|camo|militer/.test(d)) pat='camo'; else if (/bunga|floral|motif/.test(d)) pat='floral';
+    else if (/rajut|sweater|wol|knit/.test(d)) pat='knit'; else if (/satin|sutra|silk|metalik|mengkilap/.test(d)) pat='satin'; else pat='solid';
+  }
+  if (!c){
+    if (pat==='leather') c=[22,22,24]; else if (pat==='denim') c=[52,84,140]; else if (pat==='stripes') c=[30,40,90];
+    else if (pat==='plaid') c=[170,30,40]; else if (pat==='knit') c=[150,40,50];
+    else if (/\bjas\b|blazer|suit|tuksedo/.test(d)) c=[22,24,30]; else if (/pilot|polisi/.test(d)) c=[20,30,70];
+    else if (/dokter|perawat|chef|koki/.test(d)) c=[240,242,245]; else if (/superhero|kostum/.test(d)) c=[190,25,35];
+    else if (/^(baju|kaos|kaus|pakaian)$/.test(d.trim())) c=[235,235,232];
+    else c=[60,90,160];
+  }
+  const spec = pat==='leather' ? .9 : pat==='satin' ? 1.2 : /\bjas\b|blazer/.test(d) ? .25 : .15;
+  let sleeves = r.sleeves;
+  if (!sleeves){
+    if (/tanpa lengan|tank ?top|singlet|rompi|vest|kemben|kutang/.test(d)) sleeves='none';
+    else if (/lengan panjang|jaket|hoodie|kemeja|\bjas\b|blazer|sweater|cardigan|kardigan|seragam|kebaya|jubah|jacket|coat|mantel|tuksedo|piyama/.test(d)) sleeves='long';
+    else sleeves='short';
+  }
   const tile = FAB[pat](['batik','camo','floral'].includes(pat) ? col?.rgb : c);
-  const fx = { id: idSeq++, kind:'clothing', icon:'👕', title:'Pakaian', desc:d, recipe, enabled:true, spec, tex: pixels(tileToFrame(tile)) };
-  effects.clothing = fx;
-  runAI(fx, `seamless fabric texture of ${d}, flat lay, top-down, even lighting, highly detailed, no folds, no people`, 512, 512, img => {
-    const t = mk(Math.round(W/3.2), Math.round(W/3.2)); t.getContext('2d').drawImage(img,0,0,t.width,t.height);
-    fx.tex = pixels(tileToFrame(t));
+  return { tile, spec, sleeves, legs: r.legs || 'long', nominal: tile.width };
+}
+
+function buildClothing(r){
+  const st = garmentStyle(r);
+  const parts = r.part === 'full' ? 'Pakaian lengkap' : r.part === 'lower' ? 'Celana / rok' : 'Baju';
+  const fx = { id: idSeq++, kind:'clothing', icon: r.part==='lower' ? '👖' : r.part==='full' ? '👗' : '👕', title: parts, desc: r.desc, recipe: r, enabled:true, ver:1, ...st };
+  if (r.part === 'upper' || r.part === 'full') effects.upper = fx;
+  if (r.part === 'lower' || r.part === 'full') effects.lower = fx;
+  needPose();
+  const what = r.prompt || r.desc;
+  runAI(fx, `seamless fabric texture of ${what}, flat lay, top-down, even lighting, highly detailed, no folds, no people`, 512, 512, img => {
+    const t = mk(200,200); t.getContext('2d').drawImage(img,0,0,200,200); fx.tile = t; fx.nominal = 200;
   });
 }
 
-function buildWall(recipe){
-  const d = recipe.desc, col = findColor(d.split(' dengan ')[0]), old = /tua|lama|antik|kuno|vintage|usang|klasik/.test(d);
+function buildWall(r){
+  const d = r.desc, col = r.color ? { rgb:r.color } : findColor(d.split(' dengan ')[0]), old = /tua|lama|antik|kuno|vintage|usang|klasik/.test(d);
+  const p = r.pattern || '';
   let tex = null, mode = 'tint';
-  if (/neon/.test(d)) { mode='replace'; tex = neonFrame(col?.rgb); }
-  else if (/bata|brick/.test(d)) { mode='texture'; tex = tileToFrame(WALL.brick(col?.rgb, old)); }
-  else if (/kayu|panel|papan|wood|jati/.test(d)) { mode='texture'; tex = tileToFrame(WALL.wood(col?.rgb || (/jati/.test(d)?[160,105,50]:null))); }
-  else if (/marmer|marble/.test(d)) { mode='texture'; tex = tileToFrame(WALL.marble()); }
-  else if (/batu|stone/.test(d)) { mode='texture'; tex = tileToFrame(WALL.stone()); }
-  else if (/beton|semen|concrete|industrial/.test(d)) { mode='texture'; tex = tileToFrame(WALL.concrete(col?.rgb)); }
-  else if (/bunga|wallpaper|floral/.test(d)) { mode='texture'; tex = tileToFrame(FAB.floral(col?.rgb)); }
-  else if (/garis|stripe/.test(d)) { mode='texture'; tex = tileToFrame(FAB.stripes(col?.rgb||[200,190,170],[240,236,226])); }
-  const fx = { id: idSeq++, kind:'scene', icon:'🧱', title:'Tembok', desc:d, recipe, enabled:true, mode,
-    color: col ? col.rgb : [200,190,170], tex: tex ? pixels(tex) : null, personTint: mode==='replace' ? avgColor(pixels(tex)) : null };
+  if (p==='neon' || /neon/.test(d)) { mode='replace'; tex = neonFrame(col?.rgb); }
+  else if (p==='brick' || /bata|brick/.test(d)) { mode='texture'; tex = tileToFrame(WALL.brick(col?.rgb, old)); }
+  else if (p==='wood' || /kayu|panel|papan|wood|jati/.test(d)) { mode='texture'; tex = tileToFrame(WALL.wood(col?.rgb || (/jati/.test(d)?[160,105,50]:null))); }
+  else if (p==='marble' || /marmer|marble/.test(d)) { mode='texture'; tex = tileToFrame(WALL.marble()); }
+  else if (p==='stone' || /batu|stone/.test(d)) { mode='texture'; tex = tileToFrame(WALL.stone()); }
+  else if (p==='concrete' || /beton|semen|concrete|industrial/.test(d)) { mode='texture'; tex = tileToFrame(WALL.concrete(col?.rgb)); }
+  else if (p==='floral' || /bunga|wallpaper|floral/.test(d)) { mode='texture'; tex = tileToFrame(FAB.floral(col?.rgb)); }
+  else if (p==='stripes' || /garis|stripe/.test(d)) { mode='texture'; tex = tileToFrame(FAB.stripes(col?.rgb||[200,190,170],[240,236,226])); }
+  const fx = { id: idSeq++, kind:'scene', icon:'🧱', title:'Tembok', desc:d, recipe:r, enabled:true, ver:1, mode,
+    color: (col ? col.rgb : [200,190,170]).map(v => v/255), canvas: tex, personTint: mode==='replace' ? avgColor(tex) : null };
   effects.scene = fx;
   if (mode === 'tint' && col){ setStatus(fx,'ok','Warna tembok aktif'); return; }
-  runAI(fx, `${d}, flat front view of an interior wall, seamless texture, evenly lit, photorealistic, no furniture, no people`, 768, 432, img => {
-    fx.tex = pixels(drawCover(img, W, H)); if (fx.mode==='tint') fx.mode='texture';
+  runAI(fx, `${r.prompt || d}, flat front view of an interior wall, seamless texture, evenly lit, photorealistic, no furniture, no people`, 768, 432, img => {
+    fx.canvas = drawCover(img, W, H); if (fx.mode === 'tint') fx.mode = 'texture';
   });
 }
 
-function buildBackground(recipe){
-  const d = recipe.desc, f = sceneFrame(d), px = pixels(f);
-  const fx = { id: idSeq++, kind:'scene', icon:'🌄', title:'Latar', desc:d, recipe, enabled:true, mode:'replace', tex: px, personTint: avgColor(px) };
+function buildBackground(r){
+  const f = sceneFrame(r.desc);
+  const fx = { id: idSeq++, kind:'scene', icon:'🌄', title:'Latar', desc: r.label || r.desc, recipe:r, enabled:true, ver:1, mode:'replace', canvas:f, personTint: avgColor(f) };
   effects.scene = fx;
-  runAI(fx, `${d}, wide angle photograph, background scene, no people, cinematic lighting, highly detailed`, 1024, 576, img => {
-    const p = pixels(drawCover(img, W, H)); fx.tex = p; fx.personTint = avgColor(p);
+  runAI(fx, `${r.prompt || r.desc}, wide angle photograph, background scene, no people, cinematic lighting, highly detailed`, 1024, 576, img => {
+    fx.canvas = drawCover(img, W, H); fx.personTint = avgColor(fx.canvas);
   });
 }
 
-function buildObject(recipe){
-  const d = recipe.desc, em = (EMOJI.find(([re]) => re.test(d)) || [0,'✨'])[1];
-  const col = findColor(d);
-  const glow = GLOW_RE.test(d) ? (col && !/emas|hitam/.test(col.word) ? col.rgb : [255,170,60]) : null;
-  const old = effects.objects.findIndex(o => o.coco === recipe.coco);
-  const fx = { id: idSeq++, kind:'object', icon:em, title:`${cap(recipe.label)} → benda baru`, desc:d, recipe, enabled:true,
-    coco: recipe.coco, img: emojiCanvas(em), glow, box:null, lastSeen:0 };
+function glowColor(r){ if (!r.glow) return null; const c = r.color || findColor(r.desc)?.rgb; return c && !/emas|hitam|gold|black/.test(r.desc) ? c : [255,170,60]; }
+
+function buildObject(r){
+  const em = emojiFor(r.desc);
+  const fx = { id: idSeq++, kind:'object', icon:em, title:`${cap(COCO_ID[r.coco] || r.coco)} → benda baru`, desc:r.desc, recipe:r, enabled:true, ver:1,
+    coco: r.coco, img: emojiCanvas(em), glow: glowColor(r), box:null, lastSeen:0 };
+  const old = effects.objects.findIndex(o => o.coco === r.coco);
   if (old >= 0) effects.objects[old] = fx; else effects.objects.push(fx);
-  runAI(fx, `${d}, single object, centered, isolated on a pure white background, studio product photo, no shadow`, 512, 512, img => { fx.img = keyOutWhite(img); });
+  needDetector();
+  runAI(fx, `${r.prompt || r.desc}, single object, centered, isolated on a pure white background, studio product photo, no shadow`, 512, 512, img => { fx.img = keyOutWhite(img); });
 }
-const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+const ANCHOR_NAME = { head:'kepala', eyes:'mata', face:'wajah', mouth:'mulut', neck:'leher', tie:'leher', chest:'dada', shoulder:'bahu', hand:'tangan', back:'punggung', scene:'ruangan' };
+function buildItem(r){
+  const em = emojiFor(r.desc);
+  const def = ITEMS.find(([re]) => re.test(r.desc));
+  const fx = { id: idSeq++, kind:'item', icon:em, title:`Tambahan di ${ANCHOR_NAME[r.anchor] || 'ruangan'}${r.side==='left'?' kiri':r.side==='right'&&['hand','shoulder'].includes(r.anchor)?' kanan':''}`,
+    desc:r.desc, recipe:r, enabled:true, ver:1, img: emojiCanvas(em), glow: glowColor(r), size: def ? def[2] : null, smooth:null,
+    pair: r.anchor === 'back' && /sayap|wings/.test(r.desc) };
+  // Satu benda per titik tubuh (kecuali ruangan): topi baru menggantikan topi lama.
+  const same = effects.items.findIndex(i => r.anchor !== 'scene' && i.recipe.anchor === r.anchor && i.recipe.side === r.side);
+  if (same >= 0) effects.items[same] = fx; else effects.items.push(fx);
+  if (r.anchor !== 'scene') needPose();
+  runAI(fx, `${r.prompt || r.desc}, single object, centered, isolated on a pure white background, studio product photo, front view, no shadow, no person`, 512, 512, img => { fx.img = keyOutWhite(img); });
+}
 
 function applyAction(a){
   switch (a.type){
     case 'clothing': {
-      const cur = effects.clothing, onlyColor = !stripColors(a.desc).replace(/\b(nya|yang|lebih|agak|sedikit)\b/g,'').trim();
-      if (cur && onlyColor) a = { type:'clothing', desc: `${stripColors(cur.desc)} ${a.desc.replace(/^warna\s+/,'')}`.trim() };
-      buildClothing(a); return `Pakaian: ${a.desc}`;
+      const cur = a.part === 'lower' ? effects.lower : effects.upper;
+      const onlyColor = !a.pattern && !stripColors(a.desc).replace(/\b(nya|yang|lebih|agak|sedikit|bajunya|jaketnya|kaosnya|celananya)\b/g,'').trim();
+      if (cur && onlyColor) a = { ...cur.recipe, desc: `${stripColors(cur.recipe.desc)} ${a.desc.replace(/^warna\s+/,'')}`.trim(), color: findColor(a.desc)?.rgb || a.color, prompt:'' };
+      buildClothing(a); return `${a.part==='lower'?'Celana':'Baju'}: ${a.desc}`;
     }
     case 'wall': buildWall(a); return `Tembok: ${a.desc}`;
-    case 'background': buildBackground(a); return `Latar: ${a.desc}`;
-    case 'object': buildObject(a); return `${cap(a.label)} → ${a.desc}`;
+    case 'background': buildBackground(a); return `Latar: ${a.label || a.desc}`;
+    case 'object': buildObject(a); return `${cap(COCO_ID[a.coco] || a.coco)} → ${a.desc}`;
+    case 'item': buildItem(a); return `+ ${a.desc}`;
     case 'remove':
-      if (a.slot==='clothing') effects.clothing = null;
-      else if (a.slot==='scene') effects.scene = null;
-      else effects.objects = effects.objects.filter(o => o.coco !== a.coco);
+      if (a.slot === 'upper'){ if (effects.lower === effects.upper) effects.lower = null; effects.upper = null; }
+      else if (a.slot === 'lower'){ if (effects.lower === effects.upper) effects.upper = null; effects.lower = null; }
+      else if (a.slot === 'scene') effects.scene = null;
+      else if (a.slot === 'object') effects.objects = effects.objects.filter(o => o.coco !== a.coco);
+      else {
+        const words = (a.text||'').split(/\s+/).filter(w => w.length > 2);
+        const before = effects.items.length;
+        effects.items = effects.items.filter(i => !words.some(w => i.desc.includes(w)));
+        if (before === effects.items.length && effects.items.length) effects.items.pop();
+      }
       return 'Dikembalikan ke asli';
-    case 'reset': effects.clothing = null; effects.scene = null; effects.objects = []; return 'Semua efek dimatikan';
+    case 'reset': effects.upper = effects.lower = effects.scene = null; effects.objects = []; effects.items = []; return 'Semua efek dimatikan';
     case 'savePreset': savePreset(a.name); return `Preset "${a.name}" disimpan`;
     case 'loadPreset': return loadPreset(a.name) ? `Preset "${a.name}" dipakai` : `Preset "${a.name}" tidak ditemukan`;
   }
 }
 
-function runCommand(text){
-  if (!text.trim()) return;
-  const { actions, unknown } = parseCommand(text);
-  const msgs = actions.map(applyAction);
+let busy = false;
+async function runCommand(text){
+  text = text.trim(); if (!text || busy) return;
+  let actions, unknown = [], reply = '';
+  if (settings.apiKey){
+    busy = true; $('#thinking').classList.add('show'); $('#sendBtn').disabled = true;
+    try { ({ actions, reply } = await askClaude(text)); }
+    catch (e) { console.warn(e); toast(`Otak AI gagal (${e.message}), pakai pemahaman bawaan.`, 4500); ({ actions, unknown } = parseCommand(text)); }
+    finally { busy = false; $('#thinking').classList.remove('show'); $('#sendBtn').disabled = false; }
+  } else ({ actions, unknown } = parseCommand(text));
+  const msgs = actions.map(applyAction).filter(Boolean);
   renderEffects();
-  if (unknown.length) toast(`${msgs.length ? msgs.join(' · ')+' · ' : ''}Belum paham: "${unknown[0]}". Coba pola "Ubah <baju/tembok/latar/benda> menjadi …"`, 5200);
-  else toast(msgs.join(' · '));
+  if (unknown.length) toast(`${msgs.length ? msgs.join(' · ')+' · ' : ''}Belum paham: "${unknown[0]}". Coba "Ubah … jadi …" atau "Tambahkan …", atau isi kunci Claude untuk perintah bebas.`, 6500);
+  else toast(reply || msgs.join(' · ') || 'Tidak ada yang diubah.');
   if (actions.length) $('#cmd').value = '';
 }
 
-/* ================== Preset ================== */
-function currentRecipes(){ return [effects.clothing, effects.scene, ...effects.objects].filter(Boolean).map(f => f.recipe); }
-function savePreset(name){
-  const all = store.get('presets', {}); all[name.toLowerCase()] = { name, recipes: currentRecipes() };
-  store.set('presets', all); renderPresets();
-}
+/* ============================================================
+   Preset
+   ============================================================ */
+function currentRecipes(){ return [...new Set([effects.upper, effects.lower, effects.scene, ...effects.objects, ...effects.items])].filter(Boolean).map(f => f.recipe); }
+function savePreset(name){ const all = store.get('presets', {}); all[name.toLowerCase()] = { name, recipes: currentRecipes() }; store.set('presets', all); renderPresets(); }
 function loadPreset(name){
   const p = store.get('presets', {})[name.toLowerCase()]; if (!p) return false;
-  effects.clothing = null; effects.scene = null; effects.objects = [];
-  p.recipes.forEach(applyAction); renderEffects(); return true;
+  applyAction({ type:'reset' }); p.recipes.forEach(applyAction); renderEffects(); return true;
 }
 function renderPresets(){
   const all = store.get('presets', {}), box = $('#presets'); box.innerHTML = '';
   Object.values(all).forEach(p => {
     const el = document.createElement('span'); el.className = 'preset';
-    const use = document.createElement('button'); use.textContent = p.name; use.style.color='var(--text)'; use.style.padding='0';
+    const use = document.createElement('button'); use.textContent = p.name; use.style.cssText='color:var(--text);padding:0';
     use.onclick = () => { loadPreset(p.name); toast(`Preset "${p.name}" dipakai`); };
     const del = document.createElement('button'); del.textContent = '✕'; del.title = 'Hapus preset';
     del.onclick = () => { const a = store.get('presets',{}); delete a[p.name.toLowerCase()]; store.set('presets',a); renderPresets(); };
@@ -628,9 +868,11 @@ function renderPresets(){
   });
 }
 
-/* ================== Daftar efek ================== */
+/* ============================================================
+   Daftar efek
+   ============================================================ */
 function renderEffects(){
-  const list = $('#effects'), items = [effects.clothing, effects.scene, ...effects.objects].filter(Boolean);
+  const list = $('#effects'), items = [...new Set([effects.upper, effects.lower, effects.scene, ...effects.objects, ...effects.items])].filter(Boolean);
   list.innerHTML = '';
   if (!items.length){ list.innerHTML = '<li class="empty" style="background:none;border:0;padding:0">Belum ada efek. Ketik perintah di atas.</li>'; return; }
   for (const fx of items){
@@ -640,44 +882,157 @@ function renderEffects(){
     li.querySelector('.fx-ico').textContent = fx.icon;
     li.querySelector('.fx-title').textContent = fx.title;
     li.querySelector('.fx-desc').textContent = fx.desc;
-    const st = li.querySelector('.fx-status'); st.textContent = fx.statusText || ''; st.classList.add(fx.status || 'ok');
-    if (fx.kind==='object' && fx.enabled && running && !fx.box) { st.textContent = `Mencari ${fx.recipe.label} di kamera… ` + (fx.statusText||''); }
+    const st = li.querySelector('.fx-status'); st.classList.add(fx.status || 'ok');
+    let s = fx.statusText || '';
+    if (running && fx.enabled){
+      if (fx.kind === 'object' && !fx.box) s = `Mencari ${COCO_ID[fx.coco] || fx.coco} di kamera… ${s}`;
+      if ((fx.kind === 'clothing' || (fx.kind === 'item' && fx.recipe.anchor !== 'scene')) && !pose) s = `Menunggu badan terlihat kamera… ${s}`;
+    }
+    st.textContent = s;
     const t = li.querySelector('[data-a=t]'); t.textContent = fx.enabled ? '⏸' : '▶';
     t.onclick = () => { fx.enabled = !fx.enabled; renderEffects(); };
     li.querySelector('[data-a=x]').onclick = () => {
-      if (fx.kind==='clothing') effects.clothing = null; else if (fx.kind==='scene') effects.scene = null;
-      else effects.objects = effects.objects.filter(o => o !== fx);
+      if (effects.upper === fx) effects.upper = null; if (effects.lower === fx) effects.lower = null; if (effects.scene === fx) effects.scene = null;
+      effects.objects = effects.objects.filter(o => o !== fx); effects.items = effects.items.filter(o => o !== fx);
       renderEffects();
     };
     list.append(li);
   }
 }
 
-/* ================== Model AI ================== */
-async function loadModels(){
+/* ============================================================
+   Model AI (MediaPipe), dimuat sesuai kebutuhan
+   ============================================================ */
+async function initVision(){
+  if (fileset) return;
+  vision = await import(`${MP_BASE}/vision_bundle.mjs`);
+  fileset = await vision.FilesetResolver.forVisionTasks(`${MP_BASE}/wasm`);
+}
+const withGpu = make => make('GPU').catch(() => make('CPU'));
+async function loadSegmenter(){
   const prog = $('#progress');
   try {
     prog.textContent = 'Memuat mesin AI…'; $('#mStatus').textContent = 'memuat';
-    const vision = await import(`${MP_BASE}/vision_bundle.mjs`);
-    const fileset = await vision.FilesetResolver.forVisionTasks(`${MP_BASE}/wasm`);
-    const mkSeg = delegate => vision.ImageSegmenter.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: SEG_MODEL, delegate }, runningMode: 'VIDEO', outputConfidenceMasks: true, outputCategoryMask: false });
-    const mkDet = delegate => vision.ObjectDetector.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: DET_MODEL, delegate }, runningMode: 'VIDEO', scoreThreshold: 0.3, maxResults: 8 });
+    await initVision();
     prog.textContent = 'Memuat model pengenal tubuh & pakaian…';
-    segmenter = await mkSeg('GPU').catch(() => mkSeg('CPU'));
-    prog.textContent = 'Memuat model pengenal benda…';
-    detector = await mkDet('GPU').catch(() => mkDet('CPU'));
-    $('#mStatus').textContent = 'siap';
-    prog.textContent = '';
+    segmenter = await withGpu(delegate => vision.ImageSegmenter.createFromOptions(fileset, {
+      baseOptions:{ modelAssetPath: MODELS.seg, delegate }, runningMode:'VIDEO', outputCategoryMask:true, outputConfidenceMasks:false }));
+    $('#mStatus').textContent = 'siap'; prog.textContent = '';
+    if (effects.objects.length) needDetector();
+    if (effects.upper || effects.lower || effects.items.length) needPose();
   } catch (e) {
-    console.error(e);
-    $('#mStatus').textContent = 'gagal';
+    console.error(e); $('#mStatus').textContent = 'gagal';
     toast('Model AI gagal dimuat (cek internet). Kamera tetap jalan tanpa efek.', 6000);
   }
 }
+function needDetector(){
+  if (detector || loadingDet || !fileset) return;
+  loadingDet = withGpu(delegate => vision.ObjectDetector.createFromOptions(fileset, {
+    baseOptions:{ modelAssetPath: MODELS.det, delegate }, runningMode:'VIDEO', scoreThreshold:.3, maxResults:8 }))
+    .then(d => { detector = d; }).catch(e => { console.error(e); toast('Model pengenal benda gagal dimuat.'); loadingDet = null; });
+}
+function needPose(){
+  if (poser || loadingPose || !fileset) return;
+  loadingPose = withGpu(delegate => vision.PoseLandmarker.createFromOptions(fileset, {
+    baseOptions:{ modelAssetPath: MODELS.pose, delegate }, runningMode:'VIDEO', numPoses:1, minPoseDetectionConfidence:.5, minTrackingConfidence:.5 }))
+    .then(p => { poser = p; }).catch(e => { console.error(e); toast('Model pelacak badan gagal dimuat.'); loadingPose = null; });
+}
 
-/* ================== Kamera ================== */
+/* ============================================================
+   WebGL: semua efek digabung di kartu grafis
+   ============================================================ */
+let gl, prog, U = {}, T = [];
+const TX = { video:0, mask:1, shape:2, up:3, lo:4, scene:5, obj:6, behind:7 };
+const VS = `attribute vec2 aPos; varying vec2 vUv; void main(){ vUv = aPos*.5+.5; gl_Position = vec4(aPos,0.,1.); }`;
+const FS = `precision mediump float;
+varying vec2 vUv;
+uniform sampler2D uVideo,uMask,uShape,uUp,uLo,uScene,uObj,uBehind;
+uniform vec2 uRes;
+uniform float uHasShape,uUpOn,uLoOn,uSceneMode,uObjOn,uBehOn,uPTk;
+uniform vec3 uTint,uPT;
+uniform float uSpecU,uSpecL,uClMean,uSkMean,uBgMean;
+uniform vec2 uOrgU,uOrgL,uScU,uScL;
+vec3 garment(sampler2D t, vec2 org, vec2 sc, float spec, float lum, float skinFrac){
+  vec2 px = vec2(vUv.x*uRes.x, (1.0-vUv.y)*uRes.y);
+  vec2 p = (px-org)/sc;
+  vec3 tc = texture2D(t, vec2(fract(p.x), 1.0-fract(p.y))).rgb;
+  float mean = mix(uClMean, uSkMean, skinFrac);
+  float sh = clamp(lum/max(mean,.05), .3, 1.7);
+  return tc*sh + max(lum-mean,0.)*spec;
+}
+void main(){
+  vec3 c = texture2D(uVideo, vUv).rgb;
+  vec4 m = texture2D(uMask, vUv);
+  float lum = dot(c, vec3(.299,.587,.114));
+  float bg = m.r, cl = m.g, sk = m.b;
+  if (uSceneMode > .5){
+    float a = smoothstep(.3,.75,bg);
+    vec3 s;
+    float sh = clamp(lum/max(uBgMean,.05), .3, 1.7);
+    if (uSceneMode < 1.5) s = uTint*sh;
+    else if (uSceneMode < 2.5) s = texture2D(uScene, vUv).rgb*sh;
+    else s = texture2D(uScene, vUv).rgb;
+    c = mix(c, s, a);
+    c = mix(c, uPT, uPTk*(1.0-a));
+  }
+  if (uBehOn > .5){ vec4 b = texture2D(uBehind, vUv); c = mix(c, b.rgb, b.a*smoothstep(.3,.7,bg)); }
+  vec4 shp = uHasShape > .5 ? texture2D(uShape, vUv) : vec4(uUpOn, 0.0, 1.0-uUpOn, 1.0);
+  float cover = 0.0;
+  if (uUpOn > .5){
+    float skin = sk*shp.g;
+    float a = max(cl*shp.r, skin);
+    cover = skin;
+    if (a > .02) c = mix(c, garment(uUp, uOrgU, uScU, uSpecU, lum, skin/(a+.001)), smoothstep(.12,.6,a));
+  }
+  if (uLoOn > .5){
+    float skin = sk*shp.b*uHasShape;
+    float a = max(cl*shp.b, skin);
+    if (a > .02) c = mix(c, garment(uLo, uOrgL, uScL, uSpecL, lum, skin/(a+.001)), smoothstep(.12,.6,a));
+  }
+  if (uObjOn > .5){
+    vec4 o = texture2D(uObj, vUv);
+    float occ = smoothstep(.45,.75,sk)*(1.0-smoothstep(.2,.5,cover));
+    c = mix(c, o.rgb, o.a*(1.0-occ));
+  }
+  gl_FragColor = vec4(c, 1.0);
+}`;
+function initGL(){
+  gl = glCanvas.getContext('webgl', { alpha:false, antialias:false, premultipliedAlpha:false, preserveDrawingBuffer:false });
+  if (!gl) throw new Error('WebGL tidak tersedia');
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+  prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'aPos'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const n = gl.getProgramParameter(prog, gl.ACTIVE_UNIFORMS);
+  for (let i=0;i<n;i++){ const info = gl.getActiveUniform(prog, i); U[info.name] = gl.getUniformLocation(prog, info.name); }
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  const names = ['uVideo','uMask','uShape','uUp','uLo','uScene','uObj','uBehind'];
+  for (let i=0;i<8;i++){
+    T[i] = gl.createTexture(); gl.activeTexture(gl.TEXTURE0+i); gl.bindTexture(gl.TEXTURE_2D, T[i]);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0,0,0,0]));
+    gl.uniform1i(U[names[i]], i);
+  }
+}
+const uploaded = {};
+function upload(unit, src, key){
+  if (key !== undefined && uploaded[unit] === key) return;
+  gl.activeTexture(gl.TEXTURE0+unit); gl.bindTexture(gl.TEXTURE_2D, T[unit]);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+  uploaded[unit] = key;
+}
+function uploadData(unit, w, h, data){
+  gl.activeTexture(gl.TEXTURE0+unit); gl.bindTexture(gl.TEXTURE_2D, T[unit]);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+}
+
+/* ============================================================
+   Kamera & ukuran
+   ============================================================ */
 async function startCamera(deviceId){
   if (stream) stream.getTracks().forEach(t => t.stop());
   stream = await navigator.mediaDevices.getUserMedia({ audio:false, video: {
@@ -687,156 +1042,298 @@ async function startCamera(deviceId){
   const sel = $('#camSel'), cur = stream.getVideoTracks()[0].getSettings().deviceId;
   sel.innerHTML = ''; devs.forEach((d,i) => { const o = document.createElement('option'); o.value = d.deviceId; o.textContent = d.label || `Kamera ${i+1}`; if (d.deviceId===cur) o.selected = true; sel.append(o); });
 }
-
 function resize(){
   const vw = video.videoWidth || 1280, vh = video.videoHeight || 720; // 16:9 sebelum kamera siap
   const nw = Math.min(settings.quality, vw), nh = Math.round(nw * vh / vw / 2) * 2;
   if (nw === W && nh === H) return false;
-  W = work.width = out.width = nw; H = work.height = out.height = nh;
-  bgM = new Float32Array(W*H); clothM = new Float32Array(W*H); skinM = new Float32Array(W*H);
+  W = nw; H = nh;
+  for (const c of [out, glCanvas, objLayer, behindLayer]){ c.width = W; c.height = H; }
+  MW = SEG_W; MH = Math.round(SEG_W * H / W);
+  segCanvas.width = shapeCanvas.width = MW; segCanvas.height = shapeCanvas.height = MH;
+  detCanvas.width = DET_W; detCanvas.height = Math.round(DET_W * H / W);
+  bgE = new Float32Array(MW*MH); clE = new Float32Array(MW*MH); skE = new Float32Array(MW*MH); maskBuf = new Uint8Array(MW*MH*4);
+  if (gl) gl.viewport(0, 0, W, H);
   $('#stage').style.aspectRatio = `${W}/${H}`;
   return true;
 }
-function rebuildAll(){ const r = currentRecipes(); effects.clothing = null; effects.scene = null; effects.objects = []; r.forEach(applyAction); renderEffects(); }
+function rebuildAll(){ const r = currentRecipes(); applyAction({ type:'reset' }); r.forEach(applyAction); renderEffects(); }
 
-function copyMask(mask, dst, keep){
-  const src = mask.getAsFloat32Array(), mw = mask.width, mh = mask.height;
-  if (mw === W && mh === H){ for (let i=0;i<dst.length;i++) dst[i] = dst[i]*keep + src[i]*(1-keep); return; }
-  for (let y=0;y<H;y++){ const sy = ((y*mh/H)|0)*mw, row = y*W; for (let x=0;x<W;x++){ const i=row+x; dst[i] = dst[i]*keep + src[sy+((x*mw/W)|0)]*(1-keep); } }
+/* ============================================================
+   Pose: titik tubuh (dinormalisasi 0..1), dihaluskan
+   ============================================================ */
+function updatePose(lms, ts){
+  if (!lms){ if (pose && ts - poseTs > 900){ pose = null; renderEffects(); } return; }
+  const had = !!pose;
+  if (!pose) pose = lms.map(l => ({ x:l.x, y:l.y, v:l.visibility ?? 1 }));
+  else lms.forEach((l,i) => { const p = pose[i], k = .55; p.x += (l.x-p.x)*k; p.y += (l.y-p.y)*k; p.v += ((l.visibility ?? 1)-p.v)*.5; });
+  poseTs = ts; if (!had) renderEffects();
+}
+const P = (i, w=W, h=H) => [pose[i].x*w, pose[i].y*h];
+const vis = i => pose && pose[i].v > .5;
+const sub = (a,b) => [a[0]-b[0], a[1]-b[1]], add = (a,b) => [a[0]+b[0], a[1]+b[1]], scl = (a,k) => [a[0]*k, a[1]*k];
+const len = a => Math.hypot(a[0], a[1]), norm = a => { const l = len(a) || 1; return [a[0]/l, a[1]/l]; }, lerp2 = (a,b,t) => [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t];
+
+// Kanvas bentuk (resolusi topeng): R = boleh mengganti baju lama (atas), G = kulit yang ditutup baju atas, B = area bawah.
+function drawShapes(){
+  const c = shapeCtx, w = MW, h = MH;
+  c.globalCompositeOperation = 'source-over'; c.fillStyle = '#000'; c.fillRect(0,0,w,h);
+  if (!pose || !vis(11) || !vis(12)) return false;
+  c.globalCompositeOperation = 'lighter'; c.lineCap = 'round'; c.lineJoin = 'round';
+  const ls = P(11,w,h), rs = P(12,w,h), sw = len(sub(ls,rs)), u = norm(sub(ls,rs)), down = [-u[1], u[0]];
+  const hips = vis(23) && vis(24);
+  const lh = hips ? P(23,w,h) : add(ls, scl(down, sw*2.2)), rh = hips ? P(24,w,h) : add(rs, scl(down, sw*2.2));
+  const poly = (pts, color) => { c.fillStyle = color; c.beginPath(); pts.forEach((p,i) => i ? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1])); c.closePath(); c.fill(); };
+  const limb = (pts, width, color) => { c.strokeStyle = color; c.lineWidth = width; c.beginPath(); pts.forEach((p,i) => i ? c.lineTo(p[0],p[1]) : c.moveTo(p[0],p[1])); c.stroke(); };
+  const arm = (s, e, wr, kind, width, color) => {
+    if (kind === 'none') return;
+    const elbow = vis(e) ? P(e,w,h) : null, wrist = vis(wr) ? P(wr,w,h) : null;
+    if (!elbow) return;
+    if (kind === 'short') limb([s, lerp2(s, elbow, .6)], width, color);
+    else limb(wrist ? [s, elbow, lerp2(elbow, wrist, .82)] : [s, elbow], width, color);
+  };
+  const up = effects.upper?.enabled ? effects.upper : null, lo = effects.lower?.enabled ? effects.lower : null;
+  if (up){
+    const ex = sw*.16;
+    poly([add(rs, scl(u,-ex)), add(ls, scl(u,ex)), add(lh, scl(u,ex*1.4)), add(rh, scl(u,-ex*1.4))], 'rgb(255,0,0)');
+    arm(ls, 13, 15, 'long', sw*.5, 'rgb(255,0,0)'); arm(rs, 14, 16, 'long', sw*.5, 'rgb(255,0,0)');
+    const mid = lerp2(ls, rs, .5), dip = add(mid, scl(down, sw*(up.sleeves==='long' ? .2 : .12)));
+    const nL = add(lerp2(mid, ls, .32), scl(down, -sw*.06)), nR = add(lerp2(mid, rs, .32), scl(down, -sw*.06));
+    poly([add(rs, scl(u,-ex*.6)), nR, dip, nL, add(ls, scl(u,ex*.6)), add(lh, scl(u,ex)), add(rh, scl(u,-ex))], 'rgb(0,255,0)');
+    arm(ls, 13, 15, up.sleeves, sw*.36, 'rgb(0,255,0)'); arm(rs, 14, 16, up.sleeves, sw*.36, 'rgb(0,255,0)');
+    if (up.sleeves !== 'none'){ c.fillStyle='rgb(0,255,0)'; for (const s of [ls, rs]){ c.beginPath(); c.arc(s[0], s[1], sw*.2, 0, 7); c.fill(); } }
+  }
+  if (lo && hips){
+    const hw = len(sub(lh, rh)), uh = norm(sub(lh, rh)), dh = [-uh[1], uh[0]];
+    const waistL = add(add(lh, scl(dh, -hw*.35)), scl(uh, hw*.25)), waistR = add(add(rh, scl(dh, -hw*.35)), scl(uh, -hw*.25));
+    poly([waistR, waistL, add(lh, scl(uh, hw*.3)), add(rh, scl(uh, -hw*.3))], 'rgb(0,0,255)');
+    for (const [hp, kn, an] of [[23,25,27],[24,26,28]]){
+      const H0 = P(hp,w,h), K = vis(kn) ? P(kn,w,h) : null, A = vis(an) ? P(an,w,h) : null;
+      if (!K){ limb([H0, add(H0, scl(dh, hw*1.6))], hw*.75, 'rgb(0,0,255)'); continue; }
+      limb(lo.legs === 'short' ? [H0, lerp2(H0, K, .7)] : (A ? [H0, K, A] : [H0, K]), hw*.7, 'rgb(0,0,255)');
+    }
+  }
+  return true;
 }
 
-/* ================== Loop utama ================== */
-let fpsCount = 0, fpsT = performance.now(), segAvg = 0;
+/* ============================================================
+   Penempatan aksesori di tubuh
+   ============================================================ */
+function placeItem(it){
+  const r = it.recipe, img = it.img, asp = img.width / img.height;
+  const side = r.side === 'left' ? 'L' : 'R';
+  if (r.anchor === 'scene'){
+    const wq = /kecil|small/.test(r.where||'') ? .12 : /besar|big|large/.test(r.where||'') ? .35 : .22;
+    let cx = .82, cy = .7;
+    if (/\bkiri\b|left/.test(r.where||'')) cx = .18; if (/atas|top|langit/.test(r.where||'')) cy = .22; if (/tengah|center/.test(r.where||'')) cx = .5;
+    return { cx: cx*W, cy: cy*H, w: wq*W, h: wq*W/asp, rot:0 };
+  }
+  if (!pose) return null;
+  const eyeL = P(2), eyeR = P(5), earL = P(7), earR = P(8), nose = P(0);
+  const sL = P(11), sR = P(12), sw = len(sub(sL, sR));
+  const headW = (vis(7) && vis(8)) ? len(sub(earL, earR)) : len(sub(eyeL, eyeR)) * 2.4;
+  const ang = Math.atan2(eyeL[1]-eyeR[1], eyeL[0]-eyeR[0]), upv = [Math.sin(ang), -Math.cos(ang)];
+  const sang = Math.atan2(sL[1]-sR[1], sL[0]-sR[0]), sdown = [-Math.sin(sang), Math.cos(sang)];
+  const eyes = lerp2(eyeL, eyeR, .5), shMid = lerp2(sL, sR, .5);
+  const sz = it.size;
+  const box = (center, width, rot) => ({ cx:center[0], cy:center[1], w:width, h:width/asp, rot });
+  switch (r.anchor){
+    case 'head': { const w = headW*(sz||1.6), h = w/asp; return box(add(eyes, scl(upv, headW*.42 + h*.38)), w, ang); }
+    case 'eyes': return box(add(eyes, scl(upv, -headW*.02)), headW*(sz||1.15), ang);
+    case 'face': return box(lerp2(eyes, nose, .6), headW*(sz||1.25), ang);
+    case 'mouth': { const m = lerp2(P(9), P(10), .5); return box(lerp2(nose, m, .65), headW*(sz||.7), ang); }
+    case 'neck': return box(add(shMid, scl(sdown, sw*.08)), sw*(sz||.55), sang);
+    case 'tie': { const w = sw*(sz||.26), h = w/asp; return box(add(shMid, scl(sdown, h*.5 + sw*.02)), w, sang); }
+    case 'chest': return box(add(add(shMid, scl(sdown, sw*.45)), scl(norm(sub(sL,sR)), sw*.22)), sw*(sz||.22), sang);
+    case 'shoulder': { const s = side === 'L' ? sL : sR, w = sw*(sz||.5); return box(add(s, scl(sdown, -w/asp*.45)), w, sang); }
+    case 'back': return box(add(shMid, scl(sdown, it.pair ? -sw*.05 : sw*.35)), sw*(sz||3.2), sang);
+    case 'hand': {
+      const [ei, wi, ii] = side === 'L' ? [13,15,19] : [14,16,20];
+      if (!vis(wi)) return null;
+      const wr = P(wi), el = vis(ei) ? P(ei) : add(wr, [0, sw*.6]), hand = vis(ii) ? lerp2(wr, P(ii), .6) : add(wr, scl(norm(sub(wr, el)), sw*.15));
+      const w = sw*(sz||.75); return box(hand, w, 0);
+    }
+  }
+  return null;
+}
+function drawItem(ctx, it, pl, ts){
+  const s = it.smooth = it.smooth ? { cx: it.smooth.cx+(pl.cx-it.smooth.cx)*.6, cy: it.smooth.cy+(pl.cy-it.smooth.cy)*.6, w: it.smooth.w+(pl.w-it.smooth.w)*.4, h: it.smooth.h+(pl.h-it.smooth.h)*.4, rot: pl.rot } : pl;
+  if (it.glow) drawGlow(ctx, s.cx, s.cy, Math.max(s.w, s.h), it.glow, ts);
+  ctx.save(); ctx.translate(s.cx, s.cy); ctx.rotate(s.rot);
+  if (it.pair){ ctx.drawImage(it.img, s.w*.12, -s.h*.75, s.w, s.h); ctx.scale(-1,1); ctx.drawImage(it.img, s.w*.12, -s.h*.75, s.w, s.h); }
+  else ctx.drawImage(it.img, -s.w/2, -s.h/2, s.w, s.h);
+  ctx.restore();
+}
+function drawGlow(ctx, cx, cy, size, col, ts){
+  const f = .85 + .1*Math.sin(ts/90) + Math.random()*.06, R = size*1.5*f;
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+  g.addColorStop(0, css(col,.5)); g.addColorStop(.4, css(col,.16)); g.addColorStop(1, css(col,0));
+  ctx.fillStyle = g; ctx.fillRect(cx-R, cy-R, R*2, R*2);
+}
+
+/* ============================================================
+   Loop utama
+   ============================================================ */
+let fpsCount = 0, fpsT = performance.now(), infAvg = 0, segEvery = 1;
 function loop(){
   requestAnimationFrame(loop);
   if (video.readyState < 2) return;
+  if (video.currentTime === lastVT) return;      // hanya proses bingkai kamera yang baru
+  lastVT = video.currentTime;
   if (resize()) rebuildAll();
   let ts = performance.now(); if (ts <= lastTs) ts = lastTs + 1; lastTs = ts;
   frameNo++;
-  wctx.drawImage(video, 0, 0, W, H);
 
-  const cl = effects.clothing?.enabled ? effects.clothing : null;
+  const up = effects.upper?.enabled ? effects.upper : null, lo = effects.lower?.enabled ? effects.lower : null;
   const sc = effects.scene?.enabled ? effects.scene : null;
-  const objs = effects.objects.filter(o => o.enabled);
+  const objs = effects.objects.filter(o => o.enabled), items = effects.items.filter(i => i.enabled);
+  const anyFx = up || lo || sc || objs.length || items.length;
 
-  if (segmenter && (cl || sc || objs.length)){
-    const t0 = performance.now();
-    try {
-      segmenter.segmentForVideo(work, ts, res => {
-        const m = res.confidenceMasks; if (!m) return;
-        copyMask(m[CLS_BG], bgM, .35); copyMask(m[CLS_CLOTH], clothM, .35); copyMask(m[CLS_SKIN], skinM, 0);
-      });
-    } catch(e){ console.warn(e); }
-    segAvg = segAvg*.9 + (performance.now()-t0)*.1;
+  if (!anyFx){ drawPlain(); count(ts); return; }
+
+  // --- AI: segmentasi, pose, deteksi benda (resolusi kecil) ---
+  const t0 = performance.now();
+  const needSeg = segmenter && (up || lo || sc || objs.length || items.some(i => i.recipe.anchor === 'back'));
+  const needPoseNow = poser && (up || lo || items.some(i => i.recipe.anchor !== 'scene'));
+  if (needSeg || needPoseNow) segCtx.drawImage(video, 0, 0, MW, MH);
+  if (needSeg && frameNo % segEvery === 0){
+    const px = segCtx.getImageData(0, 0, MW, MH).data;
+    try { segmenter.segmentForVideo(segCanvas, ts, res => onMask(res, px)); } catch(e){ console.warn(e); }
   }
-  if (detector && objs.length && frameNo % 3 === 0){
-    try { trackObjects(detector.detectForVideo(work, ts).detections, objs, ts); } catch(e){ console.warn(e); }
+  if (needPoseNow && frameNo % 2 === 0){
+    try { const r = poser.detectForVideo(segCanvas, ts); if (!debug.pose) updatePose(r.landmarks?.[0], ts); } catch(e){ console.warn(e); }
+  }
+  if (detector && objs.length && frameNo % 5 === 0){
+    detCtx.drawImage(video, 0, 0, detCanvas.width, detCanvas.height);
+    try { trackObjects(detector.detectForVideo(detCanvas, ts).detections, objs, ts); } catch(e){ console.warn(e); }
+  }
+  const tInf = performance.now() - t0;
+  infAvg = infAvg*.9 + tInf*.1;
+  segEvery = infAvg > 28 ? 2 : 1;
+
+  // --- Lapisan benda (depan, bisa tertutup tangan) & lapisan belakang badan ---
+  let objOn = 0, behOn = 0;
+  objCtx.clearRect(0,0,W,H); behindCtx.clearRect(0,0,W,H);
+  for (const o of objs){ if (o.box){ drawObject(objCtx, o, ts); objOn = 1; } }
+  const front = [];
+  for (const it of items){
+    const pl = placeItem(it); if (!pl){ it.smooth = null; continue; }
+    const a = it.recipe.anchor;
+    if (a === 'back' || it.recipe.behind){ drawItem(behindCtx, it, pl, ts); behOn = 1; }
+    else if (a === 'hand' || a === 'scene'){ drawItem(objCtx, it, pl, ts); objOn = 1; }
+    else front.push([it, pl]);
   }
 
-  if (cl || sc || objs.length){
-    const img = wctx.getImageData(0, 0, W, H);
-    composite(img.data, cl, sc);
-    wctx.putImageData(img, 0, 0);
-    if (objs.length) drawObjects(objs, img.data, ts);
-  }
+  // --- Gabungkan di GPU ---
+  const hasShape = (up || lo) && drawShapes();
+  upload(TX.video, video);
+  if (maskDirty){ uploadData(TX.mask, MW, MH, maskBuf); maskDirty = false; }
+  if (hasShape) upload(TX.shape, shapeCanvas);
+  if (objOn) upload(TX.obj, objLayer);
+  if (behOn) upload(TX.behind, behindLayer);
+  gl.uniform2f(U.uRes, W, H);
+  gl.uniform1f(U.uHasShape, hasShape ? 1 : 0);
+  gl.uniform1f(U.uObjOn, objOn); gl.uniform1f(U.uBehOn, behOn);
+  gl.uniform1f(U.uClMean, clMean); gl.uniform1f(U.uSkMean, skMean); gl.uniform1f(U.uBgMean, bgMean);
+  setGarment(up, 'U', TX.up, 11, 12);
+  setGarment(lo, 'L', TX.lo, 23, 24);
+  if (sc){
+    gl.uniform1f(U.uSceneMode, sc.mode === 'tint' ? 1 : sc.mode === 'texture' ? 2 : 3);
+    gl.uniform3fv(U.uTint, sc.color || [1,1,1]);
+    if (sc.canvas) upload(TX.scene, sc.canvas, `${sc.id}:${sc.ver}`);
+    gl.uniform3fv(U.uPT, sc.personTint || [0,0,0]); gl.uniform1f(U.uPTk, sc.personTint ? .07 : 0);
+  } else gl.uniform1f(U.uSceneMode, 0);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
+  // --- Keluaran: cermin + aksesori depan + penanda ---
   octx.save();
   if (settings.mirror){ octx.translate(W, 0); octx.scale(-1, 1); }
-  octx.drawImage(work, 0, 0); octx.restore();
-  if (cl || sc || objs.length) drawBadge();
-
+  octx.drawImage(glCanvas, 0, 0);
+  for (const [it, pl] of front) drawItem(octx, it, pl, ts);
+  octx.restore();
+  drawBadge();
+  count(ts);
+}
+function setGarment(g, k, unit, a, b){
+  gl.uniform1f(U[`u${k==='U'?'Up':'Lo'}On`], g ? 1 : 0);
+  if (!g) return;
+  upload(unit, g.tile, `${g.id}:${g.ver}`);
+  gl.uniform1f(U[`uSpec${k}`], g.spec);
+  let org = [0,0], tile = g.nominal * (W/640);
+  if (pose && vis(a) && vis(b)){
+    const m = lerp2(P(a), P(b), .5), sw = len(sub(P(a), P(b)));
+    org = m; tile *= Math.max(.6, Math.min(2, sw/(.22*W)));
+  }
+  gl.uniform2f(U[`uOrg${k}`], org[0], org[1]); gl.uniform2f(U[`uSc${k}`], tile, tile);
+}
+function drawPlain(){
+  octx.save(); if (settings.mirror){ octx.translate(W,0); octx.scale(-1,1); }
+  octx.drawImage(video, 0, 0, W, H); octx.restore();
+}
+function count(ts){
   fpsCount++;
-  if (ts - fpsT > 1000){ $('#fps').textContent = fpsCount; $('#segMs').textContent = segAvg.toFixed(0); fpsCount = 0; fpsT = ts; }
+  if (ts - fpsT > 1000){
+    $('#fps').textContent = fpsCount; $('#segMs').textContent = infAvg.toFixed(0);
+    $('#poseStatus').textContent = poser ? (pose ? 'terlacak' : 'tidak terlihat') : '–';
+    fpsCount = 0; fpsT = ts;
+  }
 }
 
-function composite(d, cl, sc){
-  const n = W*H, ct = cl?.tex, spec = cl?.spec || 0, cM = clMean, bM = bgMean;
-  const st = sc?.tex, mode = sc?.mode, tint = sc?.color, pt = sc?.personTint;
-  let cSum=0, cW=0, bSum=0, bW=0;
+function onMask(res, px){
+  const cm = res.categoryMask; if (!cm) return;
+  const a = debug.cat || cm.getAsUint8Array(), n = MW*MH; if (a.length !== n) return;
+  let cs=0,cn=0,ss=0,sn=0,bs=0,bn=0;
+  const k = .55;
   for (let i=0, p=0; i<n; i++, p+=4){
-    let r = d[p], g = d[p+1], b = d[p+2];
-    const lum = (r*.299 + g*.587 + b*.114) / 255;
-    if (cl){
-      const a = clothM[i];
-      if (a > .08){
-        cSum += lum*a; cW += a;
-        const s = Math.min(1.8, Math.max(.25, lum / cM)), hl = lum > cM ? (lum - cM) * spec * 255 : 0;
-        const nr = ct[p]*s + hl, ng = ct[p+1]*s + hl, nb = ct[p+2]*s + hl;
-        r += (nr-r)*a; g += (ng-g)*a; b += (nb-b)*a;
-      }
+    const c = a[i], tb = c===0 ? 1 : 0, tc = c===4 ? 1 : 0, tk = c===2 ? 1 : 0;
+    bgE[i] += (tb-bgE[i])*k; clE[i] += (tc-clE[i])*k; skE[i] += (tk-skE[i])*k;
+    maskBuf[p] = bgE[i]*255; maskBuf[p+1] = clE[i]*255; maskBuf[p+2] = skE[i]*255; maskBuf[p+3] = 255;
+    if ((i & 3) === 0){
+      const l = (px[p]*.299 + px[p+1]*.587 + px[p+2]*.114)/255;
+      if (tc){ cs+=l; cn++; } else if (tk){ ss+=l; sn++; } else if (tb){ bs+=l; bn++; }
     }
-    if (sc){
-      const a = bgM[i];
-      if (a > .08){
-        let nr, ng, nb;
-        if (mode === 'replace'){ nr = st[p]; ng = st[p+1]; nb = st[p+2]; }
-        else {
-          bSum += lum*a; bW += a;
-          const s = Math.min(1.7, Math.max(.3, lum / bM));
-          if (mode === 'texture'){ nr = st[p]*s; ng = st[p+1]*s; nb = st[p+2]*s; }
-          else { nr = tint[0]*s; ng = tint[1]*s; nb = tint[2]*s; }
-        }
-        r += (nr-r)*a; g += (ng-g)*a; b += (nb-b)*a;
-      } else if (pt){ r += (pt[0]-r)*.07; g += (pt[1]-g)*.07; b += (pt[2]-b)*.07; }
-    }
-    d[p] = r; d[p+1] = g; d[p+2] = b;
   }
-  if (cW > 200) clMean = Math.max(.08, clMean*.85 + (cSum/cW)*.15);
-  if (bW > 200) bgMean = Math.max(.08, bgMean*.85 + (bSum/bW)*.15);
+  if (cn > 30) clMean += (Math.max(.08, cs/cn) - clMean)*.2;
+  if (sn > 30) skMean += (Math.max(.08, ss/sn) - skMean)*.2;
+  if (bn > 30) bgMean += (Math.max(.08, bs/bn) - bgMean)*.2;
+  maskDirty = true;
 }
 
 function trackObjects(dets, objs, ts){
+  const sx = W / detCanvas.width, sy = H / detCanvas.height;
   for (const o of objs){
     let best = null, bestScore = -1;
     for (const det of dets){
       const cat = det.categories[0]; if (!cat || cat.categoryName !== o.coco) continue;
-      const bb = det.boundingBox; let score = cat.score;
-      if (o.box){ const dx = (bb.originX+bb.width/2) - (o.box.x+o.box.w/2), dy = (bb.originY+bb.height/2) - (o.box.y+o.box.h/2); score -= Math.hypot(dx,dy)/W; }
-      if (score > bestScore){ bestScore = score; best = bb; }
+      const bb = det.boundingBox, nb = { x:bb.originX*sx, y:bb.originY*sy, w:bb.width*sx, h:bb.height*sy };
+      let score = cat.score;
+      if (o.box) score -= Math.hypot((nb.x+nb.w/2)-(o.box.x+o.box.w/2), (nb.y+nb.h/2)-(o.box.y+o.box.h/2))/W;
+      if (score > bestScore){ bestScore = score; best = nb; }
     }
     if (best){
-      const nb = { x:best.originX, y:best.originY, w:best.width, h:best.height }, had = !!o.box;
-      o.box = had ? { x:o.box.x+(nb.x-o.box.x)*.5, y:o.box.y+(nb.y-o.box.y)*.5, w:o.box.w+(nb.w-o.box.w)*.5, h:o.box.h+(nb.h-o.box.h)*.5 } : nb;
+      const had = !!o.box;
+      o.box = had ? { x:o.box.x+(best.x-o.box.x)*.5, y:o.box.y+(best.y-o.box.y)*.5, w:o.box.w+(best.w-o.box.w)*.4, h:o.box.h+(best.h-o.box.h)*.4 } : best;
       o.lastSeen = ts; if (!had) renderEffects();
     } else if (o.box && ts - o.lastSeen > 1500){ o.box = null; renderEffects(); }
   }
 }
-
-function drawObjects(objs, base, ts){
-  for (const o of objs){
-    const bx = o.box; if (!bx) continue;
-    const img = o.img, ia = img.width / img.height, k = 1.35;
-    let dw = bx.w*k, dh = dw/ia; if (dh > bx.h*k){ dh = bx.h*k; dw = dh*ia; }
-    const cx = bx.x + bx.w/2, cy = bx.y + bx.h/2, x0 = cx-dw/2, y0 = cy-dh/2;
-    if (o.glow){
-      const f = .85 + .1*Math.sin(ts/90) + Math.random()*.08, R = Math.max(dw,dh)*1.6*f;
-      const g = wctx.createRadialGradient(cx, cy, 0, cx, cy, R);
-      g.addColorStop(0, css(o.glow,.55)); g.addColorStop(.4, css(o.glow,.18)); g.addColorStop(1, css(o.glow,0));
-      wctx.globalCompositeOperation = 'lighter'; wctx.fillStyle = g; wctx.fillRect(cx-R, cy-R, R*2, R*2); wctx.globalCompositeOperation = 'source-over';
-    }
-    wctx.drawImage(img, x0, y0, dw, dh);
-    // Tangan tetap di depan benda: kembalikan piksel kulit di area benda.
-    const rx = Math.max(0, x0|0), ry = Math.max(0, y0|0), rw = Math.min(W, Math.ceil(x0+dw)) - rx, rh = Math.min(H, Math.ceil(y0+dh)) - ry;
-    if (rw > 0 && rh > 0){
-      const reg = wctx.getImageData(rx, ry, rw, rh), a = reg.data;
-      for (let y=0; y<rh; y++) for (let x=0; x<rw; x++){
-        const i = (ry+y)*W + rx + x, s = skinM[i];
-        if (s > .45){ const p = (y*rw+x)*4, q = i*4, t = Math.min(1,(s-.45)*4); a[p]+= (base[q]-a[p])*t; a[p+1]+=(base[q+1]-a[p+1])*t; a[p+2]+=(base[q+2]-a[p+2])*t; }
-      }
-      wctx.putImageData(reg, rx, ry);
-    }
-  }
+function drawObject(ctx, o, ts){
+  const bx = o.box, img = o.img, ia = img.width / img.height, k = 1.35;
+  let dw = bx.w*k, dh = dw/ia; if (dh > bx.h*k){ dh = bx.h*k; dw = dh*ia; }
+  const cx = bx.x + bx.w/2, cy = bx.y + bx.h/2;
+  if (o.glow) drawGlow(ctx, cx, cy, Math.max(dw,dh), o.glow, ts);
+  ctx.drawImage(img, cx-dw/2, cy-dh/2, dw, dh);
 }
-
 function drawBadge(){
-  const s = Math.max(12, W/48), pad = s*.6, txt = '✦ Diubah AI';
+  const s = Math.max(12, W/52), pad = s*.6, txt = '✦ Diubah AI';
   octx.font = `700 ${s}px "Plus Jakarta Sans",sans-serif`;
   const tw = octx.measureText(txt).width, x = W - tw - pad*3, y = pad;
   octx.fillStyle = 'rgba(0,0,0,.45)'; octx.beginPath(); octx.roundRect(x, y, tw+pad*2, s+pad*1.2, s*.5); octx.fill();
   octx.fillStyle = '#fff'; octx.textBaseline = 'top'; octx.fillText(txt, x+pad, y+pad*.6);
 }
 
-/* ================== Siaran: jendela keluaran & rekam ================== */
+/* ============================================================
+   Siaran: jendela keluaran & rekam
+   ============================================================ */
 let outStream = null, popup = null, recorder = null, chunks = [];
 const getStream = () => outStream || (outStream = out.captureStream(30));
 $('#popBtn').onclick = () => {
@@ -854,7 +1351,7 @@ $('#recBtn').onclick = () => {
   if (!running) return toast('Mulai kamera dulu.');
   if (recorder){ recorder.stop(); return; }
   const type = ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4'].find(t => MediaRecorder.isTypeSupported(t));
-  recorder = new MediaRecorder(getStream(), type ? { mimeType:type, videoBitsPerSecond: 5e6 } : undefined); chunks = [];
+  recorder = new MediaRecorder(getStream(), type ? { mimeType:type, videoBitsPerSecond: 6e6 } : undefined); chunks = [];
   recorder.ondataavailable = e => e.data.size && chunks.push(e.data);
   recorder.onstop = () => {
     const blob = new Blob(chunks, { type: recorder.mimeType }), a = document.createElement('a');
@@ -864,21 +1361,28 @@ $('#recBtn').onclick = () => {
   recorder.start(1000); $('#recBtn').textContent = '⏹ Berhenti'; $('#recBtn').classList.add('rec'); $('#livePill').hidden = false;
 };
 
-/* ================== UI ================== */
+/* ============================================================
+   UI
+   ============================================================ */
 let toastT;
-function toast(msg, ms=3200){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), ms); }
+function toast(msg, ms=3400){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), ms); }
+function updateModeBadge(){ const b = $('#modeBadge'); b.textContent = settings.apiKey ? 'Otak AI Claude' : 'Pemahaman bawaan'; b.classList.toggle('ai', !!settings.apiKey); }
 
 const EXAMPLES = [
+  'Tambahkan kaos putih ke saya',
   'Ubah baju saya menjadi jaket kulit hitam. Ganti tembok di belakang menjadi dinding bata merah bergaya tua. Ubah cangkir di meja menjadi lampu petromaks yang menyala.',
-  'Ganti kaos saya jadi kemeja batik cokelat',
+  'Pakaikan topi koboi dan kacamata hitam',
+  'Kasih sayap malaikat di punggung saya',
+  'Ganti celana saya jadi jeans biru',
+  'Pegang pedang cahaya biru di tangan kanan',
+  'Pakaikan saya kemeja batik cokelat',
   'Cat tembok di belakang saya jadi hijau sage',
-  'Ganti seluruh ruangan jadi studio berita modern',
   'Pindahkan saya ke pantai Bali saat matahari terbenam',
-  'Ubah botol yang saya pegang jadi mikrofon emas',
-  'Jaketnya jadi warna cokelat tua',
+  'Jaketnya jadi warna merah',
+  'Lepas topinya',
   'Kembalikan baju asli',
 ];
-EXAMPLES.forEach(e => { const b = document.createElement('button'); b.className='chip'; b.type='button'; b.textContent = e.length > 60 ? e.slice(0,57)+'…' : e; b.title = e; b.onclick = () => { $('#cmd').value = e; runCommand(e); }; $('#chips').append(b); });
+EXAMPLES.forEach(e => { const b = document.createElement('button'); b.className='chip'; b.type='button'; b.textContent = e.length > 58 ? e.slice(0,55)+'…' : e; b.title = e; b.onclick = () => runCommand(e); $('#chips').append(b); });
 
 $('#cmdForm').onsubmit = e => { e.preventDefault(); runCommand($('#cmd').value); };
 $('#cmd').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); runCommand($('#cmd').value); } });
@@ -888,24 +1392,35 @@ $('#mirrorChk').checked = settings.mirror; $('#mirrorChk').onchange = e => { set
 $('#aiChk').checked = settings.ai; $('#aiChk').onchange = e => { settings.ai = e.target.checked; store.set('ai', settings.ai); };
 $('#qSel').value = String(settings.quality); $('#qSel').onchange = e => { settings.quality = +e.target.value; store.set('quality', settings.quality); };
 $('#aiUrl').value = settings.aiUrl; $('#aiUrl').onchange = e => { settings.aiUrl = e.target.value.trim() || DEFAULT_AI_URL; e.target.value = settings.aiUrl; store.set('aiUrl', settings.aiUrl); };
+$('#apiKey').value = settings.apiKey; $('#apiKey').onchange = e => { settings.apiKey = e.target.value.trim(); store.set('apiKey', settings.apiKey); updateModeBadge(); };
+$('#llmModel').value = settings.llmModel; $('#llmModel').onchange = e => { settings.llmModel = e.target.value; store.set('llmModel', settings.llmModel); };
+$('#testKey').onclick = async () => {
+  settings.apiKey = $('#apiKey').value.trim(); store.set('apiKey', settings.apiKey); updateModeBadge();
+  if (!settings.apiKey) return toast('Isi kunci API dulu.');
+  const b = $('#testKey'); b.disabled = true; b.textContent = 'Mengetes…';
+  try { const r = await askClaude('tambahkan topi merah'); toast(`Kunci berfungsi ✓ (${r.actions.length} perintah terbaca)`); }
+  catch(e){ toast(`Kunci belum berfungsi: ${e.message}`, 6000); }
+  finally { b.disabled = false; b.textContent = 'Tes kunci'; }
+};
 $('#camSel').onchange = e => startCamera(e.target.value).catch(err => toast('Kamera tidak bisa dibuka: ' + err.message));
 
 $('#startBtn').onclick = async () => {
   const btn = $('#startBtn'); btn.disabled = true;
-  const models = loadModels();
+  try { initGL(); } catch(e){ $('#progress').textContent = `Browser ini tidak mendukung WebGL: ${e.message}`; btn.disabled = false; return; }
+  const models = loadSegmenter();
   try { $('#progress').textContent = 'Meminta izin kamera…'; await startCamera(); }
   catch (e) {
     btn.disabled = false;
     $('#progress').textContent = e.name === 'NotAllowedError' ? 'Izin kamera ditolak. Klik ikon kamera di bilah alamat, izinkan, lalu coba lagi.' : `Kamera tidak bisa dibuka: ${e.message}`;
     return;
   }
-  running = true; resize(); requestAnimationFrame(loop);
+  running = true; resize(); gl.viewport(0,0,W,H); requestAnimationFrame(loop);
   $('#overlay').style.display = 'none';
   await models; renderEffects();
 };
 
-resize(); renderEffects(); renderPresets();
-window.__ailive = { parseCommand, runCommand, effects };
+resize(); renderEffects(); renderPresets(); updateModeBadge();
+window.__ailive = { parseCommand, runCommand, applyAction, effects, debug, get pose(){ return pose; }, setPose(l){ pose = l; poseTs = performance.now(); }, get size(){ return [W,H,MW,MH]; } };
 </script>
 </body>
 </html>
