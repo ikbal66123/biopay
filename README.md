@@ -26,6 +26,22 @@ Jika izin kamera ditolak, alur tetap berjalan (scan disimulasikan).
 
 `tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah**: portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, dan Mini Games. Buka langsung di browser (butuh internet untuk Tailwind, ikon, font, dan foto).
 
+### Tema Signature TAO
+
+Warna dan ornamen mengikuti nuansa interior TAO: Pan-Asia "East meets West", pernis merah, sutra, perunggu, dan cahaya temaram.
+
+- **Palet "TAO Lacquer"**: hitam pernis hangat (`#0B0706`), merah lacquer (`#C8102E`), emas perunggu antik (`#CFA45A`), dan teks gading sutra. Skala `neutral` dan `gray` Tailwind diganti sehingga seluruh aplikasi ikut berubah. Kontras teks 4,9:1 sampai 12:1.
+- **Ornamen**: kisi jendela Asia, lampion merah yang berayun, dan aksara 道 (*Tao*) sebagai watermark di intro, hero, Malam Saya, dan rekap.
+- **Tab aktif** berwarna pernis merah dengan huruf gading, dan garis header merah-emas.
+
+### Fitur Signature
+
+- **Malam Saya** (tab baru): antrean pintu digital (nomor, posisi langsung, jalur prioritas Black Card, QR saat giliran tiba), lagu yang sedang diputar dari DJ booth, dan misi malam ini.
+- **Misi malam ini**: 6 misi (meja, antrean, pesanan, Bottle Show, mini game, tiket) yang otomatis tercatat saat tamu melakukannya, dengan hadiah T-Gold. Direset tiap hari.
+- **Profil preferensi tamu**: nama panggilan, minuman favorit, alergi, ulang tahun, dan musik favorit. Dipakai Concierge untuk menyapa dan memberi rekomendasi, muncul sebagai peringatan alergi di keranjang, dan tampil di dashboard manajemen sebagai *Catatan tamu untuk host*.
+- **Rekap malam**: kartu ringkasan malam (belanja, item, Bottle Show, misi, lagu) yang bisa dibagikan.
+- **Tur fitur 60 detik**: tur berpemandu 8 langkah dengan sorotan (tombol *Tur Fitur* di navigasi dan hero), cocok untuk presentasi.
+
 ### Edisi Mewah
 
 - **Intro pembuka**: monogram TAO emas muncul dari blur, lalu tirai terangkat (sekali per sesi, bisa di-skip dengan ketukan).

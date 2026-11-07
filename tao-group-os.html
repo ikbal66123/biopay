@@ -8,19 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
     
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700&text=%E9%81%93&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        taoGold: '#D4AF37',
-                        taoGoldLight: '#F3E5AB',
-                        taoGoldDark: '#9A7B1C',
-                        taoRed: '#E11D48',
-                        taoDarkBg: '#050505',
-                        taoCardBg: '#121212',
-                        taoCardBorder: '#262626'
+                        // Palet "TAO Lacquer": pernis merah, emas perunggu, hitam hangat, gading sutra
+                        taoGold: '#CFA45A',
+                        taoGoldLight: '#F2DDB0',
+                        taoGoldDark: '#8A6526',
+                        taoRed: '#C8102E',
+                        taoLacquer: '#7E0C14',
+                        taoDarkBg: '#0B0706',
+                        taoCardBg: '#1B1411',
+                        taoCardBorder: '#2A201B',
+                        neutral: { 50: '#FAF6F0', 100: '#F1E8DC', 200: '#E0D2C0', 300: '#C9B7A0', 400: '#A39079', 500: '#7D6B58', 600: '#5C4D40', 700: '#3F332B', 800: '#2A201B', 900: '#1B1411', 950: '#110C0A' },
+                        gray: { 100: '#F6EFE6', 200: '#EADFD2', 300: '#D6C7B5', 400: '#B3A18C', 500: '#95826E', 600: '#6E5E4E', 700: '#4A3E34', 800: '#2A201B', 900: '#1B1411' }
                     },
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
@@ -44,9 +49,9 @@
             background: rgba(18, 18, 18, 0.88);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(207, 164, 90, 0.2);
         }
-        .glow-gold { box-shadow: 0 0 25px rgba(212, 175, 55, 0.25); }
+        .glow-gold { box-shadow: 0 0 25px rgba(207, 164, 90, 0.25); }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -71,8 +76,8 @@
         .animate-float { animation: float 3s ease-in-out infinite; }
         
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 15px rgba(212,175,55,0.4); }
-            50% { box-shadow: 0 0 30px rgba(212,175,55,0.8); }
+            0%, 100% { box-shadow: 0 0 15px rgba(207,164,90,0.4); }
+            50% { box-shadow: 0 0 30px rgba(207,164,90,0.8); }
         }
         .animate-pulse-glow { animation: pulse-glow 2s infinite; }
         
@@ -140,7 +145,7 @@
         /* Tab navigasi: tab aktif terasa seperti tombol logam emas */
         .tab-btn { transition: background-color .25s var(--lux-ease), color .25s var(--lux-ease), box-shadow .25s var(--lux-ease), transform .15s var(--lux-ease); }
         .tab-btn.bg-taoGold {
-            background-image: linear-gradient(180deg, #F3E5AB -40%, #D4AF37 45%, #B8921F 120%);
+            background-image: linear-gradient(180deg, #F2DDB0 -40%, #CFA45A 45%, #B8921F 120%);
             box-shadow: 0 8px 22px -10px rgba(var(--lux-gold),0.85), inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(0,0,0,0.25);
         }
 
@@ -171,7 +176,7 @@
             outline: 2px solid rgba(243,229,171,0.9); outline-offset: 2px; border-radius: 12px;
             box-shadow: 0 0 0 6px rgba(var(--lux-gold),0.18);
         }
-        input, textarea, select { transition: border-color .2s, box-shadow .2s, background-color .2s; caret-color: #D4AF37; }
+        input, textarea, select { transition: border-color .2s, box-shadow .2s, background-color .2s; caret-color: #CFA45A; }
         input:focus, textarea:focus, select:focus { border-color: rgba(var(--lux-gold),0.7) !important; box-shadow: 0 0 0 3px rgba(var(--lux-gold),0.15); }
 
         /* Perpindahan tab & modal yang halus */
@@ -219,11 +224,11 @@
         .font-display:is(.text-xs, .text-sm, .text-\[8px\], .text-\[9px\], .text-\[10px\], .text-\[11px\]) { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; letter-spacing: .02em; }
         h1.font-display { letter-spacing: .16em; font-weight: 700; }
         h2.font-display, h3.font-display { letter-spacing: .005em; }
-        .lux-eyebrow { font: 600 10px/1.4 'Plus Jakarta Sans', sans-serif; letter-spacing: .42em; text-transform: uppercase; color: #D4AF37; }
+        .lux-eyebrow { font: 600 10px/1.4 'Plus Jakarta Sans', sans-serif; letter-spacing: .42em; text-transform: uppercase; color: #CFA45A; }
 
         /* Teks emas yang mengalir pelan */
         .lux-gold-text {
-            background: linear-gradient(100deg, #9A7B1C 0%, #F3E5AB 22%, #D4AF37 42%, #FFF6D5 52%, #B8921F 70%, #F3E5AB 100%);
+            background: linear-gradient(100deg, #9A7B1C 0%, #F2DDB0 22%, #CFA45A 42%, #FFF6D5 52%, #B8921F 70%, #F2DDB0 100%);
             background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent !important;
             animation: lux-goldflow 9s ease-in-out infinite alternate;
         }
@@ -234,7 +239,7 @@
         #luxIntro.lux-out { clip-path: inset(0 0 100% 0); }
         #luxIntro .mono { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(64px, 15vw, 132px); line-height: 1; padding-left: .3em; letter-spacing: .1em; opacity: 0; filter: blur(14px); animation: lux-mono 1.6s .15s cubic-bezier(.22, 1, .36, 1) forwards; }
         @keyframes lux-mono { to { opacity: 1; filter: blur(0); letter-spacing: .3em; } }
-        #luxIntro .rule { width: 0; height: 1px; background: linear-gradient(90deg, transparent, #D4AF37, transparent); animation: lux-rule 1.2s .8s cubic-bezier(.22, 1, .36, 1) forwards; }
+        #luxIntro .rule { width: 0; height: 1px; background: linear-gradient(90deg, transparent, #CFA45A, transparent); animation: lux-rule 1.2s .8s cubic-bezier(.22, 1, .36, 1) forwards; }
         @keyframes lux-rule { to { width: min(340px, 64vw); } }
         #luxIntro .tag { font: 500 10px 'Plus Jakarta Sans', sans-serif; letter-spacing: .55em; padding-left: .55em; text-transform: uppercase; color: #a3a3a3; opacity: 0; animation: lux-fadein .9s 1.2s forwards; }
         #luxIntro .skip { position: absolute; bottom: 28px; font: 500 10px 'Plus Jakarta Sans', sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #525252; opacity: 0; animation: lux-fadein .6s 1.6s forwards; }
@@ -271,30 +276,30 @@
         body.lux-intro-on .lux-hero-fade { animation-delay: 2.95s; }
         body.lux-intro-on .lux-hero-fade-2 { animation-delay: 3.1s; }
         @keyframes lux-lineup { from { transform: translateY(105%); } to { transform: none; } }
-        .lux-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 999px; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #0a0a0a; background: linear-gradient(180deg, #F7E7B4 -30%, #D4AF37 50%, #B08A1E 130%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 12px 30px -12px rgba(212, 175, 55, .8); }
+        .lux-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 999px; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #0a0a0a; background: linear-gradient(180deg, #F7E7B4 -30%, #CFA45A 50%, #B08A1E 130%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 12px 30px -12px rgba(207, 164, 90, .8); }
         .lux-cta::before { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; transform: skewX(-20deg); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent); animation: lux-sweep 4.5s 1.5s ease-in-out infinite; }
         @keyframes lux-sweep { 0%, 70% { left: -60%; } 100% { left: 130%; } }
-        .lux-ghost { display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 999px; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #F3E5AB; border: 1px solid rgba(212, 175, 55, .45); background: rgba(0, 0, 0, .35); backdrop-filter: blur(10px); transition: background-color .3s, border-color .3s; }
-        .lux-ghost:hover { background: rgba(212, 175, 55, .12); border-color: #D4AF37; }
+        .lux-ghost { display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 999px; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #F2DDB0; border: 1px solid rgba(207, 164, 90, .45); background: rgba(0, 0, 0, .35); backdrop-filter: blur(10px); transition: background-color .3s, border-color .3s; }
+        .lux-ghost:hover { background: rgba(207, 164, 90, .12); border-color: #CFA45A; }
 
         /* Kartu member */
         .lux-card-scene { perspective: 1400px; max-width: 380px; margin: 0 auto; cursor: pointer; position: relative; border-radius: 18px; }
         .lux-card { position: relative; aspect-ratio: 1.586; transform-style: preserve-3d; transition: transform 1s cubic-bezier(.22, 1, .36, 1); }
         .lux-card-scene.flipped .lux-card { transform: rotateY(180deg); }
-        .lux-face { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; border: 1px solid rgba(212, 175, 55, .35);
+        .lux-face { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; border: 1px solid rgba(207, 164, 90, .35);
             background: radial-gradient(120% 90% at 0% 0%, #2b2b2b 0%, #0d0d0d 55%, #050505 100%), #0a0a0a;
             box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 1), inset 0 1px 0 rgba(255, 255, 255, .08); }
         .lux-face::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .018) 0 1px, transparent 1px 3px); pointer-events: none; }
         .lux-face.front::after { content: ""; position: absolute; inset: -50%; background: linear-gradient(115deg, transparent 40%, rgba(243, 229, 171, .14) 48%, rgba(255, 255, 255, .22) 50%, rgba(243, 229, 171, .14) 52%, transparent 60%); animation: lux-holo 5s ease-in-out infinite; pointer-events: none; }
         @keyframes lux-holo { 0% { transform: translateX(-30%); } 60%, 100% { transform: translateX(30%); } }
         .lux-face.back { transform: rotateY(180deg); }
-        .lux-chip { width: 44px; height: 34px; border-radius: 7px; background: linear-gradient(135deg, #F3E5AB, #B8921F 60%, #E9D27F); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25); position: relative; }
+        .lux-chip { width: 44px; height: 34px; border-radius: 7px; background: linear-gradient(135deg, #F2DDB0, #B8921F 60%, #E9D27F); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25); position: relative; }
         .lux-chip::before, .lux-chip::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: rgba(0, 0, 0, .35); top: 35%; }
         .lux-chip::after { top: 65%; }
 
         /* Papan LED & selebrasi */
         .lux-led { background: #050505; border: 1px solid #262626; border-radius: 14px; padding: 18px 14px; text-align: center; overflow: hidden; position: relative; background-image: radial-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px); background-size: 6px 6px; }
-        .lux-led span { font: 800 clamp(18px, 4.5vw, 28px)/1.15 'Plus Jakarta Sans', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #fff7d6; text-shadow: 0 0 6px #FFD86B, 0 0 18px #D4AF37, 0 0 36px rgba(212, 175, 55, .8); word-break: break-word; }
+        .lux-led span { font: 800 clamp(18px, 4.5vw, 28px)/1.15 'Plus Jakarta Sans', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #fff7d6; text-shadow: 0 0 6px #FFD86B, 0 0 18px #CFA45A, 0 0 36px rgba(207, 164, 90, .8); word-break: break-word; }
         #luxCelebration { position: fixed; inset: 0; z-index: 9998; background: radial-gradient(circle at 50% 60%, rgba(40, 28, 5, .85), rgba(0, 0, 0, .96)); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 18px; padding: 24px; opacity: 0; transition: opacity .6s; }
         #luxCelebration.on { opacity: 1; }
         #luxCelebration .lux-led { animation: lux-flicker 1.4s ease-out both; max-width: 680px; width: 100%; padding: 30px 18px; }
@@ -302,36 +307,88 @@
         @keyframes lux-flicker { 0% { opacity: 0; } 10% { opacity: 1; } 14% { opacity: .2; } 22% { opacity: 1; } 26% { opacity: .4; } 34%, 100% { opacity: 1; } }
 
         /* Concierge */
-        #conciergeFab { position: fixed; left: 20px; bottom: 20px; z-index: 41; display: flex; align-items: center; gap: 10px; padding: 8px 18px 8px 8px; border-radius: 999px; background: rgba(12, 12, 12, .92); backdrop-filter: blur(14px); border: 1px solid rgba(212, 175, 55, .45); box-shadow: 0 18px 40px -16px rgba(0, 0, 0, .95); color: #F3E5AB; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .18em; text-transform: uppercase; }
+        #conciergeFab { position: fixed; left: 20px; bottom: 20px; z-index: 41; display: flex; align-items: center; gap: 10px; padding: 8px 18px 8px 8px; border-radius: 999px; background: rgba(12, 12, 12, .92); backdrop-filter: blur(14px); border: 1px solid rgba(207, 164, 90, .45); box-shadow: 0 18px 40px -16px rgba(0, 0, 0, .95); color: #F2DDB0; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .18em; text-transform: uppercase; }
         #conciergeFab .orb { width: 36px; height: 36px; border-radius: 999px; display: grid; place-items: center; color: #0a0a0a; background: linear-gradient(180deg, #F7E7B4, #C9A43A); position: relative; }
-        #conciergeFab .orb::after { content: ""; position: absolute; inset: -4px; border-radius: 999px; border: 1px solid rgba(212, 175, 55, .6); animation: lux-orb 2.4s ease-out infinite; }
+        #conciergeFab .orb::after { content: ""; position: absolute; inset: -4px; border-radius: 999px; border: 1px solid rgba(207, 164, 90, .6); animation: lux-orb 2.4s ease-out infinite; }
         @keyframes lux-orb { from { transform: scale(.9); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
         #conciergePanel { position: fixed; z-index: 55; right: 16px; bottom: 16px; top: 16px; width: min(400px, calc(100vw - 32px)); display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; transform: translateX(calc(100% + 24px)); transition: transform .55s cubic-bezier(.22, 1, .36, 1); }
         #conciergePanel.open { transform: none; visibility: visible; transition: transform .55s cubic-bezier(.22, 1, .36, 1); }
         #conciergePanel:not(.open) { visibility: hidden; transition: transform .55s cubic-bezier(.22, 1, .36, 1), visibility 0s .55s; }
         @media (max-width: 640px) { #conciergePanel { right: 8px; left: 8px; bottom: 8px; top: 8px; width: auto; } #conciergeFab span.lbl { display: none; } #conciergeFab { padding: 8px; } }
         .lux-msg-in { animation: lux-card .45s cubic-bezier(.22, 1, .36, 1) both; }
-        .lux-typing i { display: inline-block; width: 6px; height: 6px; margin: 0 2px; border-radius: 99px; background: #D4AF37; animation: lux-dot 1s infinite ease-in-out; }
+        .lux-typing i { display: inline-block; width: 6px; height: 6px; margin: 0 2px; border-radius: 99px; background: #CFA45A; animation: lux-dot 1s infinite ease-in-out; }
         .lux-typing i:nth-child(2) { animation-delay: .15s; } .lux-typing i:nth-child(3) { animation-delay: .3s; }
         @keyframes lux-dot { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
 
         /* Dashboard manajemen */
         .lux-kpi { position: relative; overflow: hidden; }
-        .lux-kpi::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, .6), transparent); }
+        .lux-kpi::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(207, 164, 90, .6), transparent); }
         .lux-bar { transition: height .9s cubic-bezier(.22, 1, .36, 1), background-color .2s; }
         .lux-flash { animation: lux-flash 1.2s ease-out; }
-        @keyframes lux-flash { from { background-color: rgba(212, 175, 55, .18); } to { background-color: transparent; } }
+        @keyframes lux-flash { from { background-color: rgba(207, 164, 90, .18); } to { background-color: transparent; } }
 
         @media (prefers-reduced-motion: reduce) {
             #luxIntro { display: none !important; }
             .lux-kenburns, .lux-cta::before, .lux-face.front::after, #conciergeFab .orb::after { animation: none !important; }
         }
     </style>
+
+    <!-- ===== Tema Signature TAO: lacquer merah, emas perunggu, kisi Asia ===== -->
+    <style id="tao-signature">
+        :root { --lux-gold: 207, 164, 90; --tao-red: 200, 16, 46; }
+        body { background-color: #0B0706 !important; color: #F6EFE6; }
+        .glass-panel { background-color: rgba(26, 18, 14, .86) !important; border-color: rgba(207, 164, 90, .2); }
+        body::before {
+            background:
+                radial-gradient(600px circle at var(--mx) var(--my), rgba(207, 164, 90, .07), transparent 60%),
+                radial-gradient(900px 520px at 8% -12%, rgba(200, 16, 46, .17), transparent 70%),
+                radial-gradient(800px 600px at 105% 108%, rgba(158, 15, 26, .15), transparent 70%);
+        }
+        header.glass-panel::after { background: linear-gradient(90deg, transparent, rgba(200, 16, 46, .55) 22%, #F2DDB0 50%, rgba(200, 16, 46, .55) 78%, transparent); background-size: 200% 100%; }
+
+        /* Tab aktif: pernis merah dengan huruf gading */
+        .tab-btn.bg-taoGold { background-image: linear-gradient(180deg, #E0333F -25%, #B3121E 55%, #7E0C14 135%) !important; color: #FBEBD0 !important; box-shadow: 0 8px 22px -10px rgba(200, 16, 46, .95), inset 0 1px 0 rgba(255, 215, 190, .35), inset 0 -1px 0 rgba(0, 0, 0, .3) !important; }
+        .tab-btn.bg-taoGold i, .tab-btn.bg-taoGold span { color: #FBEBD0 !important; }
+
+        /* Kisi jendela Asia */
+        .tao-lattice { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='none' stroke='%23CFA45A' stroke-width='1'%3E%3Cpath d='M0 24H48M24 0V48M12 12H36V36H12Z M12 0V12M36 0V12M12 36V48M36 36V48M0 12H12M0 36H12M36 12H48M36 36H48'/%3E%3C/svg%3E"); background-size: 48px 48px; }
+        .tao-glyph { font-family: 'Noto Serif TC', 'Noto Serif CJK TC', 'Songti TC', serif; font-weight: 700; line-height: 1; color: rgba(200, 16, 46, .16); text-shadow: 0 0 80px rgba(200, 16, 46, .35); user-select: none; pointer-events: none; }
+
+        /* Lampion */
+        .tao-lantern { position: absolute; width: 30px; height: 40px; border-radius: 46% 46% 42% 42% / 52% 52% 48% 48%; background: radial-gradient(circle at 50% 42%, #FF8A5C 0%, #D9222E 42%, #7A0A12 100%); box-shadow: 0 0 26px 6px rgba(255, 90, 60, .35), 0 0 70px 18px rgba(200, 16, 46, .22); animation: tao-sway 6s ease-in-out infinite; transform-origin: 50% -40px; }
+        .tao-lantern::before { content: ""; position: absolute; left: 50%; top: -5px; width: 16px; height: 5px; margin-left: -8px; border-radius: 2px; background: #CFA45A; }
+        .tao-lantern::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 2px; height: 14px; margin-left: -1px; background: linear-gradient(#CFA45A, transparent); }
+        .tao-lantern i { position: absolute; inset: 22% 18%; border-left: 1px solid rgba(255, 210, 160, .25); border-right: 1px solid rgba(255, 210, 160, .25); border-radius: 50%; }
+        @keyframes tao-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+        #luxIntro { background: radial-gradient(60% 50% at 50% 50%, rgba(158, 15, 26, .35), #0B0706 70%); }
+        #luxIntro .tao-glyph { position: absolute; font-size: min(70vh, 80vw); opacity: 0; animation: lux-fadein 1.6s .1s forwards; }
+
+        /* Komponen Signature */
+        .tao-seal { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #FBEBD0; background: linear-gradient(160deg, #D9222E, #7E0C14); box-shadow: inset 0 1px 0 rgba(255, 220, 200, .35), 0 8px 20px -10px rgba(200, 16, 46, .9); }
+        .tao-eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 18px; }
+        .tao-eq i { width: 3px; border-radius: 2px; background: #CFA45A; animation: tao-eq 1s ease-in-out infinite; }
+        .tao-eq i:nth-child(2) { animation-delay: -.4s; } .tao-eq i:nth-child(3) { animation-delay: -.2s; } .tao-eq i:nth-child(4) { animation-delay: -.7s; } .tao-eq i:nth-child(5) { animation-delay: -.5s; }
+        .tao-eq.paused i { animation-play-state: paused; }
+        @keyframes tao-eq { 0%, 100% { height: 25%; } 50% { height: 100%; } }
+        .tao-ring { transition: stroke-dashoffset 1s cubic-bezier(.22, 1, .36, 1); }
+        #missionToast { position: fixed; top: 84px; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: calc(100vw - 32px); z-index: 70; display: flex; align-items: center; gap: 12px; padding: 10px 18px 10px 10px; border-radius: 999px; background: rgba(20, 13, 10, .95); border: 1px solid rgba(207, 164, 90, .5); box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 1); transform: translateY(-140%); opacity: 0; transition: transform .6s cubic-bezier(.22, 1, .36, 1), opacity .4s; }
+        #missionToast.on { transform: none; opacity: 1; }
+
+        /* Tur fitur */
+        #tourLayer { position: fixed; inset: 0; z-index: 9990; }
+        #tourSpot { position: absolute; border-radius: 18px; border: 1px solid rgba(242, 221, 176, .7); box-shadow: 0 0 0 9999px rgba(8, 5, 4, .8), 0 0 40px rgba(207, 164, 90, .35); transition: all .55s cubic-bezier(.22, 1, .36, 1); pointer-events: none; }
+        #tourCard { position: absolute; width: min(360px, calc(100vw - 32px)); transition: top .55s cubic-bezier(.22, 1, .36, 1), left .55s cubic-bezier(.22, 1, .36, 1), opacity .3s; }
+
+        @media (prefers-reduced-motion: reduce) { .tao-lantern, .tao-eq i { animation: none !important; } #tourSpot, #tourCard { transition: none; } }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-100 bg-[#050505] selection:bg-taoGold selection:text-black">
+<body class="min-h-screen flex flex-col text-slate-100 bg-[#0B0706] selection:bg-taoGold selection:text-black">
 
     <!-- Intro pembuka -->
     <div id="luxIntro" aria-hidden="true">
+        <div class="tao-glyph">道</div>
+        <span class="tao-lantern" style="left:14%;top:12%"><i></i></span><span class="tao-lantern" style="right:14%;top:18%;animation-delay:-3s"><i></i></span>
         <div class="mono lux-gold-text">TAO</div>
         <div class="rule"></div>
         <div class="tag">Group · Global Hospitality</div>
@@ -345,11 +402,11 @@
     <div id="topSpenderOverlay" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-md hidden flex-col items-center justify-center overflow-hidden transition-opacity duration-1000">
         <div id="rainContainer" class="absolute inset-0 z-0 pointer-events-none"></div>
         <div id="topSpenderText" class="relative z-20 text-center space-y-4 opacity-0 flex flex-col items-center justify-center h-full pb-32 pointer-events-none">
-            <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-yellow-700 via-taoGold to-yellow-700 text-black font-extrabold text-xs md:text-sm tracking-widest uppercase shadow-[0_0_30px_rgba(212,175,55,0.6)] border border-yellow-300">
+            <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-yellow-700 via-taoGold to-yellow-700 text-black font-extrabold text-xs md:text-sm tracking-widest uppercase shadow-[0_0_30px_rgba(207,164,90,0.6)] border border-yellow-300">
                 <i class="fa-solid fa-crown animate-bounce text-lg"></i> Peringatan Top Spender
             </div>
             <h2 id="tsTable" class="font-display text-4xl md:text-6xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">VIP MEJA</h2>
-            <p id="tsItem" class="text-taoGold font-bold text-xl md:text-3xl mt-2 drop-shadow-[0_0_15px_rgba(212,175,55,0.8)] max-w-lg mx-auto">Memesan Item VIP</p>
+            <p id="tsItem" class="text-taoGold font-bold text-xl md:text-3xl mt-2 drop-shadow-[0_0_15px_rgba(207,164,90,0.8)] max-w-lg mx-auto">Memesan Item VIP</p>
             <div class="mt-4 px-5 py-2.5 bg-emerald-950/80 border border-emerald-500 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.4)] inline-block pointer-events-auto">
                 <p id="tsSpend" class="text-emerald-400 font-black text-lg tracking-widest uppercase animate-pulse">Total Spend: $--</p>
             </div>
@@ -447,6 +504,7 @@
     <nav class="bg-neutral-950/90 border-b border-white/5 sticky top-[65px] z-30 overflow-x-auto no-scrollbar">
         <div class="max-w-7xl mx-auto flex items-center gap-1 px-4 py-2 min-w-max">
             <button id="tab-mapTab" onclick="switchTab('mapTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 bg-taoGold text-black transition"><i class="fa-solid fa-list"></i> <span>Portofolio Global</span></button>
+            <button id="tab-myNightTab" onclick="switchTab('myNightTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-moon text-taoRed"></i> <span>Malam Saya</span></button>
             <button id="tab-hubTab" onclick="switchTab('hubTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition hidden"><i class="fa-solid fa-fire"></i> <span>Live Hub</span></button>
             <button id="tab-vipTab" onclick="switchTab('vipTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-crown text-taoGold"></i> <span>VIP Ops</span></button>
             <button id="tab-leaderboardTab" onclick="switchTab('leaderboardTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition relative overflow-hidden group">
@@ -463,6 +521,7 @@
             <button id="tab-otherFeaturesTab" onclick="switchTab('otherFeaturesTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-gamepad text-cyan-400"></i> <span>Mini Games</span></button>
             <button id="tab-managerTab" onclick="switchTab('managerTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-chart-line text-taoGold"></i> <span>Manajemen</span></button>
             <button onclick="openCmdk()" class="ml-2 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white border border-neutral-800 hover:border-taoGold/50 transition" aria-label="Cari cepat"><i class="fa-solid fa-magnifying-glass"></i> <span>Cari</span><kbd class="hidden md:inline text-[9px] text-gray-500 border border-neutral-700 rounded px-1 py-0.5 font-sans">Ctrl K</kbd></button>
+            <button onclick="startTour()" class="px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-taoGoldLight border border-taoGold/40 hover:bg-taoGold/10 transition"><i class="fa-solid fa-route"></i> <span>Tur Fitur</span></button>
         </div>
     </nav>
 
@@ -471,7 +530,7 @@
 
         <section id="leaderboardTab" class="tab-content hidden space-y-6">
             <!-- Grand Prize Banner -->
-            <div class="relative rounded-2xl overflow-hidden border-2 border-taoGold/50 shadow-[0_0_30px_rgba(212,175,55,0.2)] bg-neutral-900 group">
+            <div class="relative rounded-2xl overflow-hidden border-2 border-taoGold/50 shadow-[0_0_30px_rgba(207,164,90,0.2)] bg-neutral-900 group">
                 <div class="h-64 sm:h-80 bg-cover bg-center transition duration-1000 group-hover:scale-105" style="background-image: url('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1200&auto=format&fit=crop');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
@@ -501,11 +560,11 @@
                     </div>
                     <!-- Rank 1 -->
                     <div class="flex flex-col items-center group w-1/3 sm:w-40 relative z-20">
-                        <i class="fa-solid fa-crown text-taoGold text-3xl mb-[-10px] z-20 animate-float drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]"></i>
+                        <i class="fa-solid fa-crown text-taoGold text-3xl mb-[-10px] z-20 animate-float drop-shadow-[0_0_10px_rgba(207,164,90,0.8)]"></i>
                         <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 px-2 py-1 rounded border border-taoGold text-[10px] text-taoGold z-30 pointer-events-none">Total Spend: $320K</div>
-                        <img src="https://ui-avatars.com/api/?name=Richard+S&background=121212&color=D4AF37&bold=true&size=128" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-taoGold mb-4 object-cover animate-pulse-glow z-10 bg-neutral-900">
+                        <img src="https://ui-avatars.com/api/?name=Richard+S&background=1B1411&color=CFA45A&bold=true&size=128" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-taoGold mb-4 object-cover animate-pulse-glow z-10 bg-neutral-900">
                         <div class="text-center absolute top-[90px] sm:top-[110px] w-full z-20"><h4 class="text-sm font-bold text-taoGold truncate px-1">Richard S.</h4><p class="text-[10px] text-yellow-200 font-bold">1,250,000 pts</p></div>
-                        <div class="w-full h-32 sm:h-40 bg-gradient-to-b from-yellow-400 via-yellow-600 to-yellow-800 rounded-t-xl relative shadow-[0_0_30px_rgba(212,175,55,0.3)] flex justify-center border-t-2 border-x border-yellow-200"><span class="text-5xl sm:text-6xl font-black text-black/30 mt-4 font-display">1</span><i class="fa-solid fa-trophy absolute bottom-4 text-yellow-300/40 text-4xl"></i></div>
+                        <div class="w-full h-32 sm:h-40 bg-gradient-to-b from-yellow-400 via-yellow-600 to-yellow-800 rounded-t-xl relative shadow-[0_0_30px_rgba(207,164,90,0.3)] flex justify-center border-t-2 border-x border-yellow-200"><span class="text-5xl sm:text-6xl font-black text-black/30 mt-4 font-display">1</span><i class="fa-solid fa-trophy absolute bottom-4 text-yellow-300/40 text-4xl"></i></div>
                     </div>
                     <!-- Rank 3 -->
                     <div class="flex flex-col items-center group w-1/3 sm:w-32 relative">
@@ -594,6 +653,10 @@
                 <div id="luxHeroBg" class="lux-kenburns absolute inset-0 -z-10 bg-cover bg-center"></div>
                 <div class="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/60 to-black/10"></div>
                 <div class="absolute inset-0 -z-10 bg-gradient-to-r from-black/85 via-black/35 to-transparent"></div>
+                <div class="absolute inset-0 -z-10 bg-[radial-gradient(60%_70%_at_85%_20%,rgba(200,16,46,0.35),transparent_70%)]"></div>
+                <div class="absolute inset-0 -z-10 tao-lattice opacity-[0.05] [mask-image:linear-gradient(90deg,transparent,black)]"></div>
+                <div class="tao-glyph absolute -z-10 right-[-2%] top-[-6%] text-[300px] sm:text-[440px] hidden md:block" aria-hidden="true">道</div>
+                <div class="hidden md:block" aria-hidden="true"><span class="tao-lantern" style="right:9%;top:-6px"><i></i></span><span class="tao-lantern" style="right:17%;top:34px;transform:scale(.75);animation-delay:-2s"><i></i></span><span class="tao-lantern" style="right:4%;top:70px;animation-delay:-4s;width:24px;height:32px"><i></i></span></div>
                 <div class="relative p-6 sm:p-10 w-full">
                     <p class="lux-eyebrow lux-hero-fade">TAO Group Hospitality · Members Only</p>
                     <h2 class="font-display text-[2.6rem] sm:text-6xl lg:text-7xl leading-[1.02] text-white max-w-3xl mt-3">
@@ -604,6 +667,7 @@
                     <div class="lux-hero-fade flex flex-wrap gap-3 mt-6">
                         <button onclick="luxScrollToVenues()" class="lux-cta">Reservasi Meja <i class="fa-solid fa-arrow-right"></i></button>
                         <button onclick="openMemberCard()" class="lux-ghost"><i class="fa-solid fa-id-card"></i> Kartu Member</button>
+                        <button onclick="startTour()" class="lux-ghost !border-taoRed/60 !text-white"><i class="fa-solid fa-route text-taoRed"></i> Tur 60 Detik</button>
                     </div>
                     <div id="luxHeroStats" class="lux-hero-fade-2 grid grid-cols-2 sm:grid-cols-4 gap-px mt-8 bg-white/10 rounded-2xl overflow-hidden border border-white/10 max-w-3xl"></div>
                 </div>
@@ -689,7 +753,7 @@
                         </div>
                     </div>
                     <div id="bookingControlsArea" class="flex items-center gap-4 w-full md:w-auto">
-                        <button id="btnRevealHeatmap" onclick="revealHeatmapArea()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-taoGold to-amber-500 text-black font-extrabold text-[10px] uppercase hover:brightness-110 shadow-[0_0_15px_rgba(212,175,55,0.4)] flex items-center gap-1.5 transition whitespace-nowrap">
+                        <button id="btnRevealHeatmap" onclick="revealHeatmapArea()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-taoGold to-amber-500 text-black font-extrabold text-[10px] uppercase hover:brightness-110 shadow-[0_0_15px_rgba(207,164,90,0.4)] flex items-center gap-1.5 transition whitespace-nowrap">
                             <i class="fa-solid fa-map-location-dot"></i> Pilih & Reservasi Meja
                         </button>
                         <div id="runningBillTracker" class="hidden flex items-center gap-4 w-full md:w-auto">
@@ -720,7 +784,7 @@
 
                      <!-- Mega Club Layout -->
                      <div class="bg-neutral-950 p-6 rounded-xl border border-neutral-800 space-y-6 shadow-inner relative overflow-hidden">
-                         <div class="w-full py-3 bg-gradient-to-r from-taoGold/5 via-taoGold/20 to-taoGold/5 border border-taoGold/30 rounded-lg text-taoGold font-bold text-xs uppercase tracking-widest text-center shadow-[0_0_15px_rgba(212,175,55,0.1)]">
+                         <div class="w-full py-3 bg-gradient-to-r from-taoGold/5 via-taoGold/20 to-taoGold/5 border border-taoGold/30 rounded-lg text-taoGold font-bold text-xs uppercase tracking-widest text-center shadow-[0_0_15px_rgba(207,164,90,0.1)]">
                              <i class="fa-solid fa-compact-disc animate-spin mr-2"></i> Main Stage & DJ Booth
                          </div>
 
@@ -940,7 +1004,7 @@
                     </div>
                 </div>
 
-                <div onclick="openBottleShow()" data-tilt="3" class="lux-tilt relative mb-6 rounded-2xl overflow-hidden border border-taoGold/40 cursor-pointer">
+                <div id="bottleShowBanner" onclick="openBottleShow()" data-tilt="3" class="lux-tilt relative mb-6 rounded-2xl overflow-hidden border border-taoGold/40 cursor-pointer">
                     <div class="absolute inset-0 bg-[radial-gradient(120%_140%_at_0%_0%,#3b2a07_0%,#0b0b0b_60%)]"></div>
                     <div class="relative p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
                         <div class="flex items-center gap-4">
@@ -1267,12 +1331,26 @@
             </div>
         </section>
 
+        <!-- Malam Saya -->
+        <section id="myNightTab" class="tab-content hidden space-y-6">
+            <div id="myNightRoot" class="space-y-4"></div>
+        </section>
+
         <!-- Dashboard Manajemen -->
         <section id="managerTab" class="tab-content hidden space-y-6">
             <div id="managerRoot" class="space-y-4"></div>
         </section>
 
     </main>
+
+    <!-- Notifikasi misi -->
+    <div id="missionToast" role="status" aria-live="polite"></div>
+
+    <!-- Tur fitur -->
+    <div id="tourLayer" class="hidden" role="dialog" aria-modal="true" aria-label="Tur fitur">
+        <div id="tourSpot"></div>
+        <div id="tourCard"></div>
+    </div>
 
     <!-- TAO Concierge -->
     <button id="conciergeFab" onclick="toggleConcierge()" aria-label="Buka TAO Concierge"><span class="orb"><i class="fa-solid fa-bell-concierge"></i></span><span class="lbl">Concierge</span></button>
@@ -1612,10 +1690,10 @@
                     </div>
                     <div class="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar pr-1">
                         <!-- Black Card VIP -->
-                        <div class="p-4 bg-gradient-to-b from-neutral-900 to-black border border-taoGold rounded-xl relative overflow-hidden group shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                        <div class="p-4 bg-gradient-to-b from-neutral-900 to-black border border-taoGold rounded-xl relative overflow-hidden group shadow-[0_0_15px_rgba(207,164,90,0.2)]">
                             <div class="absolute top-0 right-0 bg-taoGold text-black text-[9px] font-bold px-3 py-1 rounded-bl-lg shadow-md z-20 uppercase tracking-widest">Status Anda</div>
                             <div class="flex items-center gap-3 mb-3 relative z-10">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-800 to-black border border-taoGold flex items-center justify-center text-taoGold font-bold shadow-[0_0_15px_rgba(212,175,55,0.5)]"><i class="fa-solid fa-gem"></i></div>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-800 to-black border border-taoGold flex items-center justify-center text-taoGold font-bold shadow-[0_0_15px_rgba(207,164,90,0.5)]"><i class="fa-solid fa-gem"></i></div>
                                 <div><h4 class="text-sm font-bold text-taoGold font-display tracking-wider">Black Card VIP</h4><span class="text-[9px] text-gray-400 uppercase tracking-widest">Akses Tanpa Batas</span></div>
                             </div>
                             <ul class="text-xs text-gray-200 space-y-1.5 ml-1 relative z-10">
@@ -1716,7 +1794,7 @@
                                 <label class="cursor-pointer"><input type="radio" name="vibe" value="social" class="peer sr-only"><div class="p-2 rounded-lg border border-neutral-700 bg-neutral-900 peer-checked:border-taoGold peer-checked:bg-taoGold/10 peer-checked:text-taoGold text-[10px] text-gray-400 transition flex items-center justify-between"><span>Social Lounge (Santai)</span> <i class="fa-solid fa-martini-glass text-xs"></i></div></label>
                             </div>
                         </div>
-                        <button type="submit" class="w-full py-3 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase hover:brightness-110 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] mt-2">Masuk ke Sistem Kelab</button>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase hover:brightness-110 transition shadow-[0_0_15px_rgba(207,164,90,0.3)] mt-2">Masuk ke Sistem Kelab</button>
                     </form>
                 </div>
             `);
@@ -1790,7 +1868,7 @@
                 const isWinner = stat.pct === highestPct;
                 let borderClass = 'border-neutral-800', textClass = 'text-gray-300', barColor = 'bg-neutral-600', badgeHtml = '';
                 if (isWinner) {
-                    borderClass = 'border-taoGold/60 shadow-[0_0_15px_rgba(212,175,55,0.15)] bg-taoGold/5';
+                    borderClass = 'border-taoGold/60 shadow-[0_0_15px_rgba(207,164,90,0.15)] bg-taoGold/5';
                     textClass = 'text-taoGold font-extrabold';
                     barColor = 'bg-gradient-to-r from-yellow-500 to-taoGold shadow-[0_0_8px_#d4af37]';
                     badgeHtml += `<span class="absolute -top-2.5 -right-2 text-[9px] bg-gradient-to-r from-yellow-500 to-taoGold text-black px-2 py-0.5 rounded shadow-lg font-bold flex items-center gap-1 z-10"><i class="fa-solid fa-compact-disc animate-spin"></i> Sedang Diputar</span>`;
@@ -1852,7 +1930,7 @@
                 for(let i = 0; i < currentPax; i++) {
                     const name = mockNames[i % mockNames.length];
                     const isHost = i === 0;
-                    profilesHtml += `<div class="flex items-center justify-between p-2 rounded-lg bg-neutral-900/60 border border-neutral-800 hover:border-taoGold/30 transition cursor-pointer" onclick="viewGuestProfile('${name}', '${tableCode}')"><div class="flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=121212&color=D4AF37&bold=true" class="w-8 h-8 rounded-full border border-taoGold/40 shadow-sm"><div><p class="text-xs font-bold text-white hover:text-taoGold transition">${name}</p><p class="text-[9px] ${isHost ? 'text-taoGold font-bold' : 'text-gray-400'}">${isHost ? '<i class="fa-solid fa-crown mr-0.5"></i> Host Meja' : 'Tamu Undangan'}</p></div></div><button onclick="event.stopPropagation(); handleTableAction('message', '${tableCode}')" class="w-6 h-6 rounded-full bg-neutral-800 text-gray-400 hover:text-taoGold flex items-center justify-center transition text-[10px]"><i class="fa-solid fa-paper-plane"></i></button></div>`;
+                    profilesHtml += `<div class="flex items-center justify-between p-2 rounded-lg bg-neutral-900/60 border border-neutral-800 hover:border-taoGold/30 transition cursor-pointer" onclick="viewGuestProfile('${name}', '${tableCode}')"><div class="flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=1B1411&color=CFA45A&bold=true" class="w-8 h-8 rounded-full border border-taoGold/40 shadow-sm"><div><p class="text-xs font-bold text-white hover:text-taoGold transition">${name}</p><p class="text-[9px] ${isHost ? 'text-taoGold font-bold' : 'text-gray-400'}">${isHost ? '<i class="fa-solid fa-crown mr-0.5"></i> Host Meja' : 'Tamu Undangan'}</p></div></div><button onclick="event.stopPropagation(); handleTableAction('message', '${tableCode}')" class="w-6 h-6 rounded-full bg-neutral-800 text-gray-400 hover:text-taoGold flex items-center justify-center transition text-[10px]"><i class="fa-solid fa-paper-plane"></i></button></div>`;
                 }
                 let vibeBadgeHtml = '';
                 if (vibeKey && vibeData[vibeKey]) {
@@ -2057,15 +2135,15 @@
         // --- STREAMING_CHUNK: Friends & Encrypted Chat ---
         function viewGuestProfile(nm, tbl) {
             let f = vipFriends.find(x=>x.name===nm); if(!f) { f={id:'g-'+Date.now(), name:nm, status:'Online', tier:'Guest', avatar:nm.replace(' ','+')}; vipFriends.push(f); }
-            showModal(`<div class="space-y-4 text-center"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=121212&color=D4AF37" class="w-16 h-16 rounded-full mx-auto"><h3 class="font-bold text-white text-lg">${nm}</h3><div class="grid grid-cols-3 gap-2"><button onclick="addFriendFromProfile('${nm}')" class="p-2 bg-neutral-900 border border-neutral-700 text-emerald-400 rounded text-[9px]"><i class="fa-solid fa-user-plus block mb-1"></i>Tambah</button><button onclick="openDirectMessage('${f.id}')" class="p-2 bg-neutral-900 border border-neutral-700 text-cyan-400 rounded text-[9px]"><i class="fa-solid fa-comment block mb-1"></i>Chat</button><button onclick="handleTableAction('drink','${tbl}')" class="p-2 bg-neutral-900 border border-neutral-700 text-taoGold rounded text-[9px]"><i class="fa-solid fa-martini-glass block mb-1"></i>Kirim</button></div></div>`);
+            showModal(`<div class="space-y-4 text-center"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=1B1411&color=CFA45A" class="w-16 h-16 rounded-full mx-auto"><h3 class="font-bold text-white text-lg">${nm}</h3><div class="grid grid-cols-3 gap-2"><button onclick="addFriendFromProfile('${nm}')" class="p-2 bg-neutral-900 border border-neutral-700 text-emerald-400 rounded text-[9px]"><i class="fa-solid fa-user-plus block mb-1"></i>Tambah</button><button onclick="openDirectMessage('${f.id}')" class="p-2 bg-neutral-900 border border-neutral-700 text-cyan-400 rounded text-[9px]"><i class="fa-solid fa-comment block mb-1"></i>Chat</button><button onclick="handleTableAction('drink','${tbl}')" class="p-2 bg-neutral-900 border border-neutral-700 text-taoGold rounded text-[9px]"><i class="fa-solid fa-martini-glass block mb-1"></i>Kirim</button></div></div>`);
         }
         function addFriendFromProfile(nm) { closeModal(); showToast(`Permintaan ke ${nm} terkirim!`, "success"); }
         function openFriendList() {
-            showModal(`<div class="space-y-4"><h3 class="text-white font-bold"><i class="fa-solid fa-user-group text-taoGold"></i> Daftar Teman</h3><div class="space-y-2">${vipFriends.map(f=>`<div onclick="openFriendProfile('${f.id}')" class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl flex items-center justify-between cursor-pointer hover:border-taoGold"><div class="flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=121212&color=D4AF37" class="w-8 h-8 rounded-full"><div><h4 class="text-white text-xs font-bold">${f.name}</h4><p class="text-[9px] text-emerald-400">${f.status}</p></div></div></div>`).join('')}</div></div>`);
+            showModal(`<div class="space-y-4"><h3 class="text-white font-bold"><i class="fa-solid fa-user-group text-taoGold"></i> Daftar Teman</h3><div class="space-y-2">${vipFriends.map(f=>`<div onclick="openFriendProfile('${f.id}')" class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl flex items-center justify-between cursor-pointer hover:border-taoGold"><div class="flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=1B1411&color=CFA45A" class="w-8 h-8 rounded-full"><div><h4 class="text-white text-xs font-bold">${f.name}</h4><p class="text-[9px] text-emerald-400">${f.status}</p></div></div></div>`).join('')}</div></div>`);
         }
         function openFriendProfile(id) {
             const f = vipFriends.find(x=>x.id===id); if(!f)return;
-            showModal(`<div class="space-y-4 text-center"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=121212&color=D4AF37" class="w-20 h-20 rounded-full mx-auto"><h3 class="font-bold text-white text-xl">${f.name}</h3><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="openDirectMessage('${f.id}')" class="p-3 bg-neutral-800 text-cyan-400 text-xs rounded-xl font-bold">Message</button><button onclick="inviteFriendToTable('${f.id}')" class="p-3 bg-taoGold text-black text-xs rounded-xl font-bold">Undang Meja</button></div></div>`);
+            showModal(`<div class="space-y-4 text-center"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=1B1411&color=CFA45A" class="w-20 h-20 rounded-full mx-auto"><h3 class="font-bold text-white text-xl">${f.name}</h3><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="openDirectMessage('${f.id}')" class="p-3 bg-neutral-800 text-cyan-400 text-xs rounded-xl font-bold">Message</button><button onclick="inviteFriendToTable('${f.id}')" class="p-3 bg-taoGold text-black text-xs rounded-xl font-bold">Undang Meja</button></div></div>`);
         }
         function inviteFriendToTable(id) { if(!userHasTable){showToast("Pesan meja dulu!","error");return;} const f=vipFriends.find(x=>x.id===id); closeModal(); showToast(`Undangan terkirim ke ${f.name}`); setTimeout(()=>addNotification("Undangan Diterima",`${f.name} menuju meja Anda.`),4000); }
         function openCompanionInvite() {
@@ -2077,7 +2155,7 @@
         function openInbox() {
             const b = document.getElementById('inboxNotifBadge'); if(b) b.classList.add('hidden');
             const ids = Object.keys(dmHistory);
-            showModal(`<div class="space-y-4"><h3 class="text-white font-bold"><i class="fa-solid fa-envelope text-taoGold"></i> Inbox</h3><div class="space-y-2">${ids.length>0?ids.map(id=>{const f=vipFriends.find(x=>x.id===id); return f?`<div onclick="openDirectMessage('${id}')" class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl cursor-pointer flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=121212&color=D4AF37" class="w-8 h-8 rounded-full"><span class="text-white text-xs font-bold">${f.name}</span></div>`:'';}).join(''):'<div class="text-center py-4 text-gray-500 text-xs">Inbox Kosong</div>'}</div></div>`);
+            showModal(`<div class="space-y-4"><h3 class="text-white font-bold"><i class="fa-solid fa-envelope text-taoGold"></i> Inbox</h3><div class="space-y-2">${ids.length>0?ids.map(id=>{const f=vipFriends.find(x=>x.id===id); return f?`<div onclick="openDirectMessage('${id}')" class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl cursor-pointer flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=1B1411&color=CFA45A" class="w-8 h-8 rounded-full"><span class="text-white text-xs font-bold">${f.name}</span></div>`:'';}).join(''):'<div class="text-center py-4 text-gray-500 text-xs">Inbox Kosong</div>'}</div></div>`);
         }
         function openDirectMessage(id) {
             const f = vipFriends.find(x=>x.id===id); if(!f)return;
@@ -2540,6 +2618,7 @@
                     <div class="flex justify-between text-gray-400"><span>Service charge 10%</span><span>${money(svc)}</span></div>
                     <div class="flex justify-between text-white font-bold pt-1.5 border-t border-neutral-800"><span>Total ke tagihan meja</span><span class="text-taoGold font-display">${money(sub + svc)}</span></div>
                 </div>
+                ${typeof sigAllergyLine === 'function' ? sigAllergyLine() : ''}
                 ${tableLine}
                 <div class="grid grid-cols-3 gap-2">
                     <button onclick="clearCart()" class="py-3 rounded-xl bg-neutral-800 text-gray-300 font-bold text-xs hover:text-white">Kosongkan</button>
@@ -2846,7 +2925,7 @@
                 <p class="text-[11px] text-gray-400">Ketuk saat cincin menyentuh lingkaran emas. ${PULSE_BEATS} ketukan.</p>
                 <div class="flex justify-center gap-6 text-xs"><span class="text-gray-400">Skor <b id="pScore" class="text-white font-display">0</b></span><span class="text-gray-400">Combo <b id="pCombo" class="text-cyan-300 font-display">0</b></span><span class="text-gray-400">Ketukan <b id="pBeat" class="text-white font-display">0/${PULSE_BEATS}</b></span></div>
                 <button id="pulsePad" onpointerdown="pulseTap(event)" aria-label="Ketuk mengikuti irama" class="relative w-56 h-56 mx-auto rounded-full bg-black border border-neutral-800 flex items-center justify-center touch-manipulation">
-                    <span class="absolute w-32 h-32 rounded-full border-4 border-taoGold/80 shadow-[0_0_25px_rgba(212,175,55,0.35)]"></span>
+                    <span class="absolute w-32 h-32 rounded-full border-4 border-taoGold/80 shadow-[0_0_25px_rgba(207,164,90,0.35)]"></span>
                     <span id="pulseRing" class="absolute w-32 h-32 rounded-full border-2 border-cyan-300" style="transform:scale(0)"></span>
                     <span id="pulseJudge" class="relative text-white font-black text-sm tracking-widest">SIAP</span>
                 </button>
@@ -2997,10 +3076,14 @@
         /* ---------- Pencarian cepat (Ctrl/⌘ + K) ---------- */
         let cmdkItems = [], cmdkIndex = 0;
         function cmdkSource() {
-            const tabs = [['mapTab', 'Portofolio Global', 'fa-list'], ['hubTab', 'Live Hub', 'fa-fire'], ['vipTab', 'VIP Ops', 'fa-crown'], ['leaderboardTab', 'Leaderboard', 'fa-trophy'], ['communityTab', 'T-Community', 'fa-comments'], ['eventTab', 'Event', 'fa-calendar-days'], ['socialTab', 'Escrow', 'fa-shield-heart'], ['djTab', 'DJ Request', 'fa-compact-disc'], ['menuTab', 'Menu F&B', 'fa-bell-concierge'], ['otherFeaturesTab', 'Mini Games', 'fa-gamepad'], ['managerTab', 'Dashboard Manajemen', 'fa-chart-line']]
+            const tabs = [['mapTab', 'Portofolio Global', 'fa-list'], ['myNightTab', 'Malam Saya', 'fa-moon'], ['hubTab', 'Live Hub', 'fa-fire'], ['vipTab', 'VIP Ops', 'fa-crown'], ['leaderboardTab', 'Leaderboard', 'fa-trophy'], ['communityTab', 'T-Community', 'fa-comments'], ['eventTab', 'Event', 'fa-calendar-days'], ['socialTab', 'Escrow', 'fa-shield-heart'], ['djTab', 'DJ Request', 'fa-compact-disc'], ['menuTab', 'Menu F&B', 'fa-bell-concierge'], ['otherFeaturesTab', 'Mini Games', 'fa-gamepad'], ['managerTab', 'Dashboard Manajemen', 'fa-chart-line']]
                 .filter(([id]) => { const b = document.getElementById('tab-' + id); return b && !b.classList.contains('hidden'); })
                 .map(([id, label, icon]) => ({ group: 'Halaman', label, icon, run: () => switchTab(id) }));
             const actions = [
+                { group: 'Aksi', label: 'Mulai Tur Fitur', icon: 'fa-route', run: startTour },
+                { group: 'Aksi', label: 'Ambil Antrean Pintu', icon: 'fa-door-open', run: () => switchTab('myNightTab') },
+                { group: 'Aksi', label: 'Preferensi Tamu', icon: 'fa-sliders', run: openPreferences },
+                { group: 'Aksi', label: 'Rekap Malam', icon: 'fa-moon', run: openNightRecap },
                 { group: 'Aksi', label: 'TAO Concierge', icon: 'fa-bell-concierge', run: () => toggleConcierge(true) },
                 { group: 'Aksi', label: 'Kartu Member Saya', icon: 'fa-id-card', run: openMemberCard },
                 { group: 'Aksi', label: 'Rancang Bottle Show', icon: 'fa-wand-magic-sparkles', run: () => openBottleShow() },
@@ -3266,7 +3349,7 @@
                     if (p.life <= 0 || p.y > innerHeight + 20) { parts.splice(i, 1); continue; }
                     ctx.globalAlpha = Math.max(0, p.life);
                     if (p.spark) { ctx.fillStyle = `hsl(45, 100%, ${70 + p.life * 25}%)`; ctx.fillRect(p.x, p.y, p.w, p.h); }
-                    else { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.hue ? '#D4AF37' : '#F3E5AB'; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore(); }
+                    else { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.hue ? '#CFA45A' : '#F2DDB0'; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore(); }
                 }
                 ctx.globalAlpha = 1;
                 if ((el > 8000 && !parts.length) || el > 10000) return closeCelebration();
@@ -3295,7 +3378,8 @@
                 if (!box.dataset.started) {
                     box.dataset.started = '1';
                     const h = new Date().getHours(), greet = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam';
-                    conciergeBot(`${greet}. Saya concierge pribadi Anda di TAO Group. Ada yang bisa saya siapkan untuk malam ini?`, []);
+                    const nm = typeof sigName === 'function' ? sigName() : '';
+                    conciergeBot(`${greet}${nm ? ', <b class="text-taoGold">' + esc(nm) + '</b>' : ''}. Saya concierge pribadi Anda di TAO Group. Ada yang bisa saya siapkan untuk malam ini?`, []);
                 }
                 setTimeout(() => document.getElementById('conciergeInput').focus(), 400);
             }
@@ -3319,6 +3403,8 @@
             const s = q.toLowerCase(), has = (...w) => w.some(x => s.includes(x));
             const venue = currentOutletData ? currentOutletData.name : 'TAO Nightclub';
             if (has('rekomendasi', 'malam ini', 'saran', 'botol', 'minum')) {
+                const fav = typeof sigFavDrink === 'function' ? sigFavDrink() : null;
+                if (fav) { conciergeBot(`Minuman favorit Anda, <b class="text-taoGold">${esc(fav.name)}</b> ($${fav.price.toLocaleString()}), tersedia malam ini di <b class="text-white">${esc(venue)}</b>. Mau saya siapkan bersama Bottle Show LED?`, [['Buka Menu', "toggleConcierge(false); switchTab('menuTab')"], ['Rancang Bottle Show', 'toggleConcierge(false); openBottleShow()']]); return; }
                 const top = menuProducts.filter(p => p.type === 'drinks').sort((a, b) => b.price - a.price).slice(0, 2);
                 conciergeBot(`Untuk malam ini di <b class="text-white">${esc(venue)}</b>, tamu Black Card paling sering memilih <b class="text-taoGold">${esc(top[0].name)}</b> ($${top[0].price.toLocaleString()}) atau <b class="text-taoGold">${esc(top[1].name)}</b>. Padukan dengan Bottle Show LED agar momen Anda jadi sorotan.`, [['Buka Menu', "toggleConcierge(false); switchTab('menuTab')"], ['Rancang Bottle Show', 'toggleConcierge(false); openBottleShow()']]);
             } else if (has('dress', 'pakaian', 'baju', 'outfit')) {
@@ -3417,6 +3503,7 @@
                             <h3 class="text-sm font-bold text-white mb-3">Kedatangan VIP</h3>
                             <div class="space-y-3">${mgr.arrivals.slice(0, 4).map(a => `<div class="flex items-center gap-3 ${a.fresh ? 'lux-flash rounded-lg' : ''}"><div class="w-9 h-9 rounded-full grid place-items-center text-[11px] font-bold ${a.tier === 'Black Card' ? 'bg-taoGold text-black' : 'bg-neutral-800 text-taoGoldLight border border-taoGold/30'}">${a.name.split(' ').map(x => x[0]).join('')}</div><div class="flex-1 min-w-0"><p class="text-xs text-white font-semibold">${a.name}</p><p class="text-[10px] text-gray-500">${a.tier} · ${a.table}</p></div><span class="text-[10px] text-gray-500">${ago(a.t)}</span></div>`).join('')}</div>
                         </div>
+                        ${typeof sigGuestNote === 'function' ? sigGuestNote() : ''}
                         <div class="glass-panel rounded-2xl p-5 border border-neutral-800">
                             <h3 class="text-sm font-bold text-white mb-3">Okupansi venue</h3>
                             <div class="space-y-2.5">${occRows.map(o => `<div><div class="flex justify-between text-[11px] mb-1"><span class="text-gray-300 truncate pr-2">${o.n}</span><span class="text-white font-bold">${o.p}%</span></div><div class="h-1.5 bg-white/[0.05] rounded-full overflow-hidden"><div class="h-full rounded-full ${o.p >= 90 ? 'bg-taoRed' : o.p >= 75 ? 'bg-orange-400' : 'bg-emerald-400'}" style="width:${o.p}%"></div></div></div>`).join('')}</div>
@@ -3473,6 +3560,340 @@
             luxTiltify();
             setTimeout(luxTiltify, 500);
         });
+    </script>
+
+    <!-- ===== Signature TAO: Malam Saya, misi, antrean pintu, now playing, preferensi, rekap, tur ===== -->
+    <script id="tao-signature-js">
+        const SIG_KEY = 'taoos:sig:v1';
+        const todayKey = () => new Date().toISOString().slice(0, 10);
+        let sig = { prefs: null, missions: {}, date: todayKey(), earned: 0, best: {} };
+        try {
+            const s = JSON.parse(localStorage.getItem(SIG_KEY) || 'null');
+            if (s && typeof s === 'object') sig = Object.assign(sig, s);
+            if (sig.date !== todayKey()) { sig.missions = {}; sig.earned = 0; sig.best = {}; sig.date = todayKey(); }
+        } catch (e) {}
+        function sigSave() { try { localStorage.setItem(SIG_KEY, JSON.stringify(sig)); } catch (e) {} }
+        const sigName = () => (sig.prefs && sig.prefs.name) ? sig.prefs.name : '';
+
+        /* ---------- Misi malam ini ---------- */
+        const MISSIONS = [
+            { id: 'table', icon: 'fa-chair', title: 'Amankan meja', desc: 'Reservasi meja di venue mana pun', reward: 100 },
+            { id: 'queue', icon: 'fa-door-open', title: 'Antre digital', desc: 'Masuk lewat antrean pintu digital', reward: 50 },
+            { id: 'order', icon: 'fa-champagne-glasses', title: 'Pesan dari meja', desc: 'Kirim satu pesanan F&B', reward: 150 },
+            { id: 'show', icon: 'fa-wand-magic-sparkles', title: 'Bottle Show', desc: 'Rayakan dengan papan LED pribadi', reward: 250 },
+            { id: 'game', icon: 'fa-gamepad', title: 'Main mini game', desc: 'Selesaikan Trivia atau Kinetic Pulse', reward: 50 },
+            { id: 'ticket', icon: 'fa-ticket', title: 'Tiket event', desc: 'Amankan tiket event berikutnya', reward: 100 }
+        ];
+        function missionDone(id) {
+            if (sig.missions[id]) return;
+            const m = MISSIONS.find(x => x.id === id); if (!m) return;
+            sig.missions[id] = Date.now(); sig.earned += m.reward; sigSave();
+            setTimeout(() => {
+                rewardTGold(m.reward, 'Misi: ' + m.title);
+                const t = document.getElementById('missionToast');
+                if (t) {
+                    t.innerHTML = `<span class="tao-seal !w-9 !h-9 !rounded-full"><i class="fa-solid ${m.icon} text-sm"></i></span><span><span class="block text-[9px] font-bold tracking-[0.3em] uppercase text-taoGold">Misi selesai</span><span class="block text-xs font-bold text-white">${m.title} · +${m.reward} T-Gold</span></span>`;
+                    t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 3200);
+                }
+                renderMissions();
+            }, 900);
+        }
+        function sigWrap(name, after) {
+            const f = window[name]; if (typeof f !== 'function') return;
+            window[name] = function () {
+                const before = { orders: orderHistory.length, tickets: myTickets.length, table: userHasTable };
+                const r = f.apply(this, arguments);
+                try { after(before); } catch (e) {}
+                return r;
+            };
+        }
+        sigWrap('confirmTableBooking', b => { if (!b.table && userHasTable) missionDone('table'); });
+        sigWrap('placeOrder', b => { if (orderHistory.length > b.orders) missionDone('order'); });
+        sigWrap('confirmBottleShow', b => { if (orderHistory.length > b.orders) missionDone('show'); });
+        sigWrap('buyEventTicket', b => { if (myTickets.length > b.tickets) missionDone('ticket'); });
+        sigWrap('finishTrivia', () => { sig.best.trivia = Math.max(sig.best.trivia || 0, trivia.score); sigSave(); missionDone('game'); });
+        sigWrap('finishPulse', () => { sig.best.pulse = Math.max(sig.best.pulse || 0, pulse.score); sigSave(); missionDone('game'); });
+
+        function renderMissions() {
+            const box = document.getElementById('missionList'); if (!box) return;
+            const done = MISSIONS.filter(m => sig.missions[m.id]).length;
+            const pct = Math.round(done / MISSIONS.length * 100);
+            const head = document.getElementById('missionHead');
+            if (head) head.innerHTML = `<span class="font-display text-3xl text-white leading-none">${done}<span class="text-gray-500 text-xl">/${MISSIONS.length}</span></span><span class="text-[10px] text-gray-400 text-right">+${sig.earned.toLocaleString()} T-Gold<br>diperoleh malam ini</span>`;
+            const bar = document.getElementById('missionBar'); if (bar) bar.style.width = pct + '%';
+            box.innerHTML = MISSIONS.map(m => {
+                const ok = !!sig.missions[m.id];
+                return `<div class="flex items-center gap-3 py-2.5">
+                    <span class="w-9 h-9 shrink-0 rounded-xl grid place-items-center ${ok ? 'bg-taoGold text-black' : 'bg-neutral-900 border border-neutral-700 text-taoGold'}"><i class="fa-solid ${ok ? 'fa-check' : m.icon} text-sm"></i></span>
+                    <span class="flex-1 min-w-0"><span class="block text-xs font-bold ${ok ? 'text-gray-400 line-through decoration-taoGold/60' : 'text-white'}">${m.title}</span><span class="block text-[10px] text-gray-500">${m.desc}</span></span>
+                    <span class="text-[10px] font-bold ${ok ? 'text-emerald-400' : 'text-taoGold'} whitespace-nowrap">${ok ? 'Selesai' : '+' + m.reward}</span>
+                </div>`;
+            }).join('');
+        }
+
+        /* ---------- Antrean pintu digital ---------- */
+        let doorQ = null;
+        function joinDoorQueue() {
+            if (doorQ) return;
+            const party = +(document.getElementById('qParty') || { value: 2 }).value || 2;
+            const total = 22 + Math.floor(Math.random() * 14);
+            doorQ = { pos: total, total, party, priority: false, ready: false, code: 'Q' + Math.random().toString(36).slice(2, 7).toUpperCase(), venue: currentOutletData ? currentOutletData.name : 'TAO Nightclub' };
+            doorQ.timer = setInterval(() => {
+                if (!doorQ || doorQ.ready) return;
+                doorQ.pos = Math.max(0, doorQ.pos - (Math.random() < .75 ? 1 : 2) - (doorQ.priority ? 1 : 0));
+                if (doorQ.pos === 0) {
+                    doorQ.ready = true; clearInterval(doorQ.timer);
+                    addNotification('Giliran Anda!', `Silakan menuju pintu ${esc(doorQ.venue)} dan tunjukkan QR ${doorQ.code}.`, 'success');
+                    showToast('Giliran Anda masuk! Tunjukkan QR di pintu.', 'success');
+                    missionDone('queue');
+                }
+                renderQueueCard();
+            }, 2500);
+            showToast('Anda masuk antrean digital', 'success');
+            renderQueueCard();
+        }
+        function usePriorityLane() {
+            if (!doorQ || doorQ.priority || doorQ.ready) return;
+            doorQ.priority = true; doorQ.pos = Math.max(1, Math.ceil(doorQ.pos / 3));
+            showToast('Jalur prioritas Black Card aktif', 'success'); renderQueueCard();
+        }
+        function leaveDoorQueue() { if (!doorQ) return; clearInterval(doorQ.timer); doorQ = null; showToast('Anda keluar dari antrean'); renderQueueCard(); }
+        function renderQueueCard() {
+            const box = document.getElementById('qCard'); if (!box) return;
+            if (!doorQ) {
+                box.innerHTML = `<p class="text-xs text-gray-400 leading-relaxed">Tidak perlu berdiri di luar. Ambil nomor antrean, nikmati waktu Anda, dan kami kabari saat giliran Anda tiba.</p>
+                    <div class="flex items-center justify-between bg-neutral-900 border border-neutral-800 rounded-xl p-3 mt-4"><label for="qParty" class="text-xs font-bold text-white">Jumlah tamu</label>
+                    <select id="qParty" class="bg-neutral-950 border border-neutral-700 rounded-lg px-3 py-2 text-xs text-white">${[1, 2, 3, 4, 5, 6].map(n => `<option ${n === 2 ? 'selected' : ''}>${n}</option>`).join('')}</select></div>
+                    <button onclick="joinDoorQueue()" class="w-full mt-3 py-3 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase tracking-wide"><i class="fa-solid fa-door-open mr-1"></i> Ambil Nomor Antrean</button>`;
+                return;
+            }
+            const C = 2 * Math.PI * 52, frac = doorQ.ready ? 1 : 1 - doorQ.pos / doorQ.total;
+            box.innerHTML = `<div class="flex items-center gap-5">
+                    <div class="relative w-32 h-32 shrink-0">
+                        <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90"><circle cx="60" cy="60" r="52" stroke="rgba(255,255,255,.07)" stroke-width="6" fill="none"/><circle class="tao-ring" cx="60" cy="60" r="52" stroke="${doorQ.ready ? '#34D399' : '#CFA45A'}" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - frac)).toFixed(1)}"/></svg>
+                        <div class="absolute inset-0 grid place-items-center text-center">${doorQ.ready ? '<div><i class="fa-solid fa-check text-emerald-400 text-2xl"></i><p class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest mt-1">Giliran Anda</p></div>' : `<div><p class="font-display text-5xl text-white leading-none">${doorQ.pos}</p><p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1">di depan Anda</p></div>`}</div>
+                    </div>
+                    <div class="min-w-0 space-y-1.5">
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest">No. ${doorQ.code}</p>
+                        <p class="text-sm font-bold text-white">${esc(doorQ.venue)}</p>
+                        <p class="text-[11px] text-gray-400">${doorQ.party} tamu · ${doorQ.ready ? 'silakan ke pintu utama' : `perkiraan ${Math.max(1, Math.round(doorQ.pos * .6))} menit`}</p>
+                        ${doorQ.priority ? '<span class="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-taoGold"><i class="fa-solid fa-crown"></i> Jalur prioritas</span>' : ''}
+                    </div>
+                </div>
+                ${doorQ.ready
+                    ? `<div class="mt-4 flex items-center gap-3 bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-3"><div class="bg-white p-1 rounded-lg shrink-0"><img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${doorQ.code}" alt="QR antrean ${doorQ.code}" class="w-16 h-16" onerror="this.outerHTML='<i class=&quot;fa-solid fa-qrcode text-black text-6xl block w-16 h-16 text-center leading-[4rem]&quot;></i>'"></div><p class="text-[11px] text-emerald-200 leading-relaxed">Tunjukkan QR ini ke host di pintu. Berlaku 15 menit.</p></div>
+                       <button onclick="leaveDoorQueue()" class="w-full mt-3 py-2.5 rounded-xl bg-neutral-800 text-gray-300 font-bold text-xs">Selesai</button>`
+                    : `<div class="grid grid-cols-2 gap-2 mt-4"><button onclick="leaveDoorQueue()" class="py-2.5 rounded-xl bg-neutral-800 text-gray-300 font-bold text-xs">Keluar Antrean</button><button onclick="usePriorityLane()" ${doorQ.priority ? 'disabled' : ''} class="py-2.5 rounded-xl border border-taoGold/50 text-taoGoldLight font-bold text-xs disabled:opacity-40"><i class="fa-solid fa-crown mr-1"></i> Prioritas</button></div>`}`;
+        }
+
+        /* ---------- Sedang diputar ---------- */
+        const setlist = [
+            { t: "Don't You Worry Child", a: 'Swedish House Mafia', d: 212 }, { t: 'Levels', a: 'Avicii', d: 200 },
+            { t: 'Titanium', a: 'David Guetta ft. Sia', d: 245 }, { t: 'Rumble', a: 'Fred again.. & Skrillex', d: 186 }, { t: 'Animals', a: 'Martin Garrix', d: 190 }
+        ];
+        const np = { i: 0, pos: 47, liked: {} };
+        const mmss = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+        function renderNowPlaying() {
+            const box = document.getElementById('npCard'); if (!box) return;
+            const tr = setlist[np.i], nx = [1, 2].map(k => setlist[(np.i + k) % setlist.length]);
+            box.innerHTML = `<div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl shrink-0 grid place-items-center tao-lattice bg-[#2A1410] border border-taoGold/30 relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-br from-taoRed/40 to-transparent"></div><span class="tao-eq relative"><i></i><i></i><i></i><i></i><i></i></span></div>
+                    <div class="min-w-0 flex-1"><p class="text-[9px] font-bold text-taoRed uppercase tracking-[0.3em]"><span class="inline-block w-1.5 h-1.5 rounded-full bg-taoRed animate-pulse mr-1"></span>Live dari DJ booth</p>
+                    <p class="text-base font-bold text-white truncate mt-1">${tr.t}</p><p class="text-xs text-gray-400 truncate">${tr.a}</p></div>
+                    <button onclick="likeTrack()" aria-label="Kirim energi ke DJ" class="w-10 h-10 rounded-full border ${np.liked[np.i] ? 'border-taoRed bg-taoRed/20 text-taoRed' : 'border-neutral-700 text-gray-400'} hover:text-taoRed transition"><i class="fa-${np.liked[np.i] ? 'solid' : 'regular'} fa-heart"></i></button>
+                </div>
+                <div class="mt-4"><div class="h-1 bg-white/10 rounded-full overflow-hidden"><div id="npBar" class="h-full bg-gradient-to-r from-taoRed to-taoGold rounded-full" style="width:${(np.pos / tr.d * 100).toFixed(1)}%"></div></div>
+                <div class="flex justify-between text-[10px] text-gray-500 mt-1.5"><span id="npTime">${mmss(np.pos)}</span><span>${mmss(tr.d)}</span></div></div>
+                <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-3 mb-2">Berikutnya</p>
+                ${nx.map(x => `<div class="flex justify-between text-[11px] py-1"><span class="text-gray-300 truncate pr-2">${x.t}</span><span class="text-gray-500 truncate">${x.a}</span></div>`).join('')}
+                <button onclick="switchTab('djTab')" class="w-full mt-3 py-2.5 rounded-xl border border-neutral-700 text-gray-200 text-xs font-bold hover:border-taoGold transition"><i class="fa-solid fa-compact-disc mr-1"></i> Request Lagu</button>`;
+        }
+        function likeTrack() { np.liked[np.i] = !np.liked[np.i]; if (np.liked[np.i]) showToast('Energi Anda terkirim ke DJ booth', 'success'); renderNowPlaying(); }
+        setInterval(() => {
+            np.pos++;
+            if (np.pos >= setlist[np.i].d) { np.i = (np.i + 1) % setlist.length; np.pos = 0; renderNowPlaying(); return; }
+            const b = document.getElementById('npBar'), t = document.getElementById('npTime');
+            if (b) b.style.width = (np.pos / setlist[np.i].d * 100).toFixed(1) + '%';
+            if (t) t.textContent = mmss(np.pos);
+        }, 1000);
+
+        /* ---------- Profil preferensi tamu ---------- */
+        const ALLERGIES = ['Kacang', 'Seafood', 'Gluten', 'Susu'];
+        const MUSIC = ['EDM', 'House', 'Hip-Hop', 'Open Format'];
+        function openPreferences() {
+            const p = sig.prefs || { name: '', fav: 'b2', allergies: [], bday: '', music: 'EDM' };
+            const drinks = menuProducts.filter(x => x.type === 'drinks');
+            showModal(`<form onsubmit="savePreferences(event)" class="space-y-4 text-left">
+                <div class="border-b border-white/10 pb-3"><p class="lux-eyebrow">Profil Tamu</p><h3 class="font-display text-3xl text-white mt-1">Preferensi Anda</h3><p class="text-[11px] text-gray-400 mt-1">Dibagikan ke VIP Host agar setiap kunjungan terasa personal.</p></div>
+                <div><label for="pName" class="text-[11px] font-bold text-gray-300 block mb-1.5">Nama panggilan</label><input id="pName" maxlength="24" value="${esc(p.name)}" placeholder="Contoh: Rina" class="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-3 py-2.5 text-sm text-white"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label for="pFav" class="text-[11px] font-bold text-gray-300 block mb-1.5">Minuman favorit</label><select id="pFav" class="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-3 py-2.5 text-xs text-white">${drinks.map(d => `<option value="${d.id}" ${d.id === p.fav ? 'selected' : ''}>${esc(d.name)}</option>`).join('')}</select></div>
+                    <div><label for="pBday" class="text-[11px] font-bold text-gray-300 block mb-1.5">Ulang tahun</label><input id="pBday" type="date" value="${esc(p.bday)}" class="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-3 py-2 text-xs text-white [color-scheme:dark]"></div>
+                </div>
+                <fieldset><legend class="text-[11px] font-bold text-gray-300 mb-1.5">Alergi makanan</legend><div class="flex flex-wrap gap-2">${ALLERGIES.map(a => `<label class="cursor-pointer"><input type="checkbox" name="pAllergy" value="${a}" ${p.allergies.includes(a) ? 'checked' : ''} class="peer sr-only"><span class="inline-block px-3 py-1.5 rounded-full border border-neutral-700 text-[11px] text-gray-300 peer-checked:bg-taoRed/20 peer-checked:border-taoRed peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-taoGold">${a}</span></label>`).join('')}</div></fieldset>
+                <fieldset><legend class="text-[11px] font-bold text-gray-300 mb-1.5">Musik favorit</legend><div class="grid grid-cols-4 gap-2">${MUSIC.map(m => `<label class="cursor-pointer"><input type="radio" name="pMusic" value="${m}" ${p.music === m ? 'checked' : ''} class="peer sr-only"><span class="block text-center py-2 rounded-lg border border-neutral-700 text-[10px] font-bold text-gray-300 peer-checked:bg-taoGold peer-checked:text-black peer-checked:border-taoGold peer-focus-visible:ring-2 peer-focus-visible:ring-taoGold">${m}</span></label>`).join('')}</div></fieldset>
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase tracking-wide">Simpan Preferensi</button>
+            </form>`);
+        }
+        function savePreferences(e) {
+            e.preventDefault();
+            sig.prefs = {
+                name: document.getElementById('pName').value.trim().slice(0, 24),
+                fav: document.getElementById('pFav').value,
+                bday: document.getElementById('pBday').value,
+                allergies: [...document.querySelectorAll('input[name="pAllergy"]:checked')].map(x => x.value),
+                music: (document.querySelector('input[name="pMusic"]:checked') || { value: 'EDM' }).value
+            };
+            sigSave(); closeModal(); showToast('Preferensi tersimpan & dibagikan ke VIP Host', 'success'); renderMyNight();
+        }
+        function sigAllergyLine() {
+            const a = sig.prefs && sig.prefs.allergies && sig.prefs.allergies.length ? sig.prefs.allergies : null;
+            return a ? `<div class="flex items-center gap-2 text-[11px] text-rose-200 bg-rose-950/30 border border-taoRed/40 rounded-xl px-3 py-2"><i class="fa-solid fa-triangle-exclamation text-taoRed"></i> Alergi tercatat: <b class="text-white">${a.map(esc).join(', ')}</b>. Dapur akan diberi tahu.</div>` : '';
+        }
+        function sigFavDrink() { const id = sig.prefs && sig.prefs.fav; return id ? menuProducts.find(p => p.id === id) : null; }
+        function sigGuestNote() {
+            const p = sig.prefs;
+            const fav = sigFavDrink();
+            const body = p ? `<div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full grid place-items-center bg-taoRed text-white text-[11px] font-bold">${esc((p.name || 'T').slice(0, 1).toUpperCase())}</div><div><p class="text-xs text-white font-semibold">${esc(p.name || 'Tamu Black Card')}</p><p class="text-[10px] text-gray-500">${userHasTable ? 'Meja ' + esc(myAssignedTable) : 'Belum di meja'} · ${esc(p.music)}</p></div></div>
+                <ul class="mt-3 space-y-1.5 text-[11px] text-gray-300">
+                    ${fav ? `<li><i class="fa-solid fa-wine-bottle text-taoGold w-4"></i> Favorit: ${esc(fav.name)}</li>` : ''}
+                    ${p.allergies.length ? `<li class="text-rose-200"><i class="fa-solid fa-triangle-exclamation text-taoRed w-4"></i> Alergi: ${p.allergies.map(esc).join(', ')}</li>` : ''}
+                    ${p.bday ? `<li><i class="fa-solid fa-cake-candles text-taoGold w-4"></i> Ulang tahun: ${new Date(p.bday + 'T00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'long' })}</li>` : ''}
+                </ul>` : `<p class="text-[11px] text-gray-500">Belum ada profil tamu yang tersinkron. Profil muncul di sini saat tamu mengisi preferensi di tab <b class="text-gray-300">Malam Saya</b>.</p>`;
+            return `<div class="glass-panel rounded-2xl p-5 border border-taoRed/30"><h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-address-card text-taoRed"></i> Catatan tamu untuk host</h3>${body}</div>`;
+        }
+
+        /* ---------- Rekap malam ---------- */
+        function openNightRecap() {
+            const orders = orderHistory.filter(o => !o.id.startsWith('SHOW'));
+            const shows = orderHistory.filter(o => o.id.startsWith('SHOW')).length;
+            const spend = orderHistory.reduce((s, o) => s + o.total, 0);
+            const items = orders.reduce((s, o) => s + o.items.reduce((a, i) => a + i.qty, 0), 0);
+            const done = MISSIONS.filter(m => sig.missions[m.id]).length;
+            const tr = setlist[np.i];
+            const name = sigName();
+            const date = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            const stats = [[money(spend), 'Total belanja'], [items, 'Item dipesan'], [shows, 'Bottle Show'], [`${done}/${MISSIONS.length}`, 'Misi selesai'], [(sig.best.trivia || 0).toLocaleString(), 'Skor trivia'], ['+' + sig.earned.toLocaleString(), 'T-Gold misi']];
+            const shareText = `Malam saya di ${currentOutletData ? currentOutletData.name : 'TAO'}: ${items} item, ${shows} Bottle Show, ${done}/${MISSIONS.length} misi selesai. #TAOGroup`;
+            showModal(`<div class="space-y-4">
+                <div id="recapCard" class="relative rounded-3xl overflow-hidden border border-taoGold/40 bg-[radial-gradient(120%_80%_at_50%_0%,#5A0B12_0%,#140A08_60%,#0B0706_100%)] p-6 text-center">
+                    <div class="absolute inset-0 tao-lattice opacity-[0.05]"></div>
+                    <div class="tao-glyph absolute -right-4 -top-6 text-[160px] opacity-60" aria-hidden="true">道</div>
+                    <div class="relative">
+                        <p class="lux-eyebrow">Rekap Malam Anda</p>
+                        <h3 class="font-display text-4xl text-white mt-2 leading-tight">${name ? esc(name) + ', ' : ''}<span class="italic lux-gold-text">malam yang luar biasa.</span></h3>
+                        <p class="text-[11px] text-gray-400 mt-2">${date}${userHasTable ? ' · Meja ' + esc(myAssignedTable) : ''}</p>
+                        <div class="grid grid-cols-3 gap-px bg-white/10 rounded-2xl overflow-hidden border border-white/10 mt-5">${stats.map(([v, l]) => `<div class="bg-black/50 py-3 px-1"><p class="font-display text-2xl text-white leading-none">${v}</p><p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1.5">${l}</p></div>`).join('')}</div>
+                        <div class="mt-4 flex items-center gap-3 bg-black/40 border border-white/10 rounded-2xl p-3 text-left"><span class="tao-eq"><i></i><i></i><i></i><i></i><i></i></span><div class="min-w-0"><p class="text-[9px] text-gray-500 uppercase tracking-widest">Lagu malam Anda</p><p class="text-xs font-bold text-white truncate">${tr.t} · ${tr.a}</p></div></div>
+                        <p class="font-display text-xl tracking-[0.3em] lux-gold-text mt-5">TAO</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="closeModal()" class="py-3 rounded-xl bg-neutral-800 text-white font-bold text-xs">Tutup</button>
+                    <button onclick='shareRecap(${JSON.stringify(shareText).replace(/'/g, "&#39;")})' class="py-3 rounded-xl bg-taoGold text-black font-bold text-xs"><i class="fa-solid fa-share-nodes mr-1"></i> Bagikan</button>
+                </div>
+            </div>`);
+        }
+        function shareRecap(text) {
+            if (navigator.share) { navigator.share({ title: 'Malam saya di TAO', text }).catch(() => {}); return; }
+            (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => showToast('Teks rekap disalin, siap dibagikan', 'success')).catch(() => showToast('Bagikan: ' + text));
+        }
+
+        /* ---------- Tab Malam Saya ---------- */
+        function renderMyNight() {
+            const root = document.getElementById('myNightRoot'); if (!root) return;
+            const h = new Date().getHours(), greet = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam';
+            const name = sigName();
+            root.innerHTML = `
+                <div class="relative rounded-3xl overflow-hidden border border-taoRed/30 p-6 sm:p-8 bg-[radial-gradient(90%_120%_at_0%_0%,#4A0A10_0%,#160C09_55%,#0B0706_100%)]">
+                    <div class="absolute inset-0 tao-lattice opacity-[0.05]"></div>
+                    <div class="tao-glyph absolute right-4 -top-6 text-[180px] sm:text-[240px] hidden sm:block" aria-hidden="true">道</div>
+                    <div class="relative flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div><p class="lux-eyebrow">Malam Saya</p><h2 class="font-display text-4xl sm:text-5xl text-white mt-2 leading-tight">${greet}${name ? ', <span class="italic lux-gold-text">' + esc(name) + '</span>' : ''}.</h2>
+                        <p class="text-xs text-gray-300 mt-2">${currentOutletData ? esc(currentOutletData.name) + ' · ' : ''}${userHasTable ? 'Meja <b class="text-white">' + esc(myAssignedTable) + '</b> siap untuk Anda' : 'Belum ada meja. Ambil antrean atau reservasi meja.'}</p></div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="openPreferences()" class="lux-ghost !py-3 !px-4"><i class="fa-solid fa-sliders"></i> Preferensi</button>
+                            <button onclick="openNightRecap()" class="lux-cta !py-3 !px-4"><i class="fa-solid fa-moon"></i> Rekap Malam</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lux-stagger">
+                    <div class="glass-panel rounded-2xl p-5 border border-neutral-800"><div class="flex items-center gap-3 mb-4"><span class="tao-seal"><i class="fa-solid fa-door-open"></i></span><div><h3 class="text-sm font-bold text-white">Antrean Pintu Digital</h3><p class="text-[10px] text-gray-500">Tanpa antre fisik di luar</p></div></div><div id="qCard"></div></div>
+                    <div class="glass-panel rounded-2xl p-5 border border-neutral-800"><div class="flex items-center gap-3 mb-4"><span class="tao-seal"><i class="fa-solid fa-music"></i></span><div><h3 class="text-sm font-bold text-white">Sedang Diputar</h3><p class="text-[10px] text-gray-500">Langsung dari DJ booth</p></div></div><div id="npCard"></div></div>
+                    <div class="glass-panel rounded-2xl p-5 border border-neutral-800"><div class="flex items-center gap-3 mb-4"><span class="tao-seal"><i class="fa-solid fa-flag-checkered"></i></span><div><h3 class="text-sm font-bold text-white">Misi Malam Ini</h3><p class="text-[10px] text-gray-500">Selesaikan untuk T-Gold</p></div></div>
+                        <div id="missionHead" class="flex items-end justify-between"></div>
+                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden mt-3"><div id="missionBar" class="h-full bg-gradient-to-r from-taoRed to-taoGold rounded-full transition-all duration-700" style="width:0%"></div></div>
+                        <div id="missionList" class="divide-y divide-white/5 mt-2"></div></div>
+                </div>`;
+            renderQueueCard(); renderNowPlaying(); renderMissions();
+        }
+
+        /* ---------- Tur fitur (untuk presentasi) ---------- */
+        const TOUR = [
+            { tab: 'mapTab', sel: '#luxHero', t: 'Selamat datang di TAO Group OS', d: 'Satu aplikasi untuk reservasi, pesanan, dan pengalaman VIP di seluruh portofolio TAO Group.' },
+            { tab: 'mapTab', sel: '#outletCardsGrid', t: 'Portofolio venue', d: 'Semua venue dengan indikator keramaian langsung. Ketuk kartu untuk memilih venue dan memesan meja.' },
+            { tab: null, sel: 'header [onclick="openMemberCard()"]', t: 'Kartu member digital', d: 'Black Card dengan QR untuk pintu masuk VIP dan progres poin menuju tingkat berikutnya.' },
+            { tab: 'myNightTab', sel: '#myNightRoot', t: 'Malam Saya', d: 'Antrean pintu digital, lagu yang sedang diputar, misi berhadiah, profil preferensi, dan rekap malam yang bisa dibagikan.' },
+            { tab: 'menuTab', sel: '#bottleShowBanner', t: 'Bottle Show', d: 'Tamu merancang perayaan sendiri, lengkap dengan pesan di papan LED. Pendapatan langsung masuk ke tagihan meja.' },
+            { tab: null, sel: '#conciergeFab', t: 'TAO Concierge', d: 'Asisten yang menjawab kebutuhan tamu 24/7 dan mengarahkan ke aksi: reservasi, menu, jemputan, tagihan.' },
+            { tab: 'managerTab', sel: '#managerRoot', t: 'Dashboard Manajemen', d: 'Pendapatan, okupansi, antrean pesanan, kedatangan VIP, dan catatan tamu secara langsung untuk tim operasional.' },
+            { tab: null, sel: 'button[onclick="openCmdk()"]', t: 'Pencarian cepat', d: 'Tekan Ctrl+K untuk lompat ke halaman, venue, menu, atau aksi apa pun.' }
+        ];
+        let tourI = -1;
+        function startTour() { closeModal(); closeCmdk(); toggleConcierge(false); tourI = -1; document.getElementById('tourLayer').classList.remove('hidden'); tourGo(1); }
+        function endTour() { tourI = -1; document.getElementById('tourLayer').classList.add('hidden'); switchTab('mapTab'); window.scrollTo({ top: 0, behavior: luxReduce ? 'auto' : 'smooth' }); }
+        function tourGo(d) {
+            let i = tourI + d;
+            while (i >= 0 && i < TOUR.length) {
+                const s = TOUR[i];
+                if (s.tab && currentActiveAppTab !== s.tab) switchTab(s.tab);
+                const el = document.querySelector(s.sel);
+                if (el && el.getClientRects().length) break;
+                i += d >= 0 ? 1 : -1;
+            }
+            if (i < 0) return;
+            if (i >= TOUR.length) return endTour();
+            tourI = i;
+            const el = document.querySelector(TOUR[i].sel);
+            const fixed = getComputedStyle(el).position === 'fixed' || el.closest('header, nav');
+            if (!fixed) el.scrollIntoView({ block: 'center', behavior: luxReduce ? 'auto' : 'smooth' });
+            const card = document.getElementById('tourCard');
+            card.style.opacity = '0';
+            setTimeout(() => tourPlace(true), fixed ? 60 : 520);
+        }
+        function tourPlace(fill) {
+            if (tourI < 0) return;
+            const s = TOUR[tourI], el = document.querySelector(s.sel); if (!el) return;
+            const r = el.getBoundingClientRect(), pad = 8, vw = innerWidth, vh = innerHeight;
+            const top = Math.max(8, r.top - pad), bottom = Math.min(vh - 8, r.bottom + pad);
+            const spot = document.getElementById('tourSpot');
+            Object.assign(spot.style, { left: Math.max(8, r.left - pad) + 'px', top: top + 'px', width: Math.min(vw - 16, r.width + pad * 2) + 'px', height: Math.max(40, bottom - top) + 'px' });
+            const card = document.getElementById('tourCard');
+            if (fill) card.innerHTML = `<div class="glass-panel rounded-2xl p-5 border border-taoGold/40 shadow-2xl">
+                <div class="flex items-center justify-between"><p class="lux-eyebrow">Tur · ${tourI + 1}/${TOUR.length}</p><button onclick="endTour()" class="text-[10px] text-gray-400 hover:text-white uppercase tracking-widest">Lewati</button></div>
+                <h3 class="font-display text-2xl text-white mt-2 leading-tight">${TOUR[tourI].t}</h3>
+                <p class="text-xs text-gray-300 mt-2 leading-relaxed">${TOUR[tourI].d}</p>
+                <div class="flex items-center justify-between mt-4"><div class="flex gap-1">${TOUR.map((_, k) => `<span class="h-1 rounded-full ${k === tourI ? 'w-5 bg-taoGold' : 'w-1.5 bg-white/20'}"></span>`).join('')}</div>
+                <div class="flex gap-2">${tourI > 0 ? '<button onclick="tourGo(-1)" class="px-3 py-2 rounded-lg bg-neutral-800 text-white text-xs font-bold">Kembali</button>' : ''}<button onclick="tourGo(1)" class="px-4 py-2 rounded-lg bg-taoGold text-black text-xs font-extrabold">${tourI === TOUR.length - 1 ? 'Selesai' : 'Lanjut'}</button></div></div></div>`;
+            const ch = card.offsetHeight || 200, cw = card.offsetWidth || 340;
+            let ct = bottom + 14;
+            if (ct + ch > vh - 8) ct = top - ch - 14;
+            if (ct < 8) ct = Math.max(8, vh - ch - 16);
+            const cl = Math.min(vw - cw - 16, Math.max(16, r.left + r.width / 2 - cw / 2));
+            card.style.top = ct + 'px'; card.style.left = cl + 'px'; card.style.opacity = '1';
+        }
+        window.addEventListener('resize', () => tourPlace(false));
+        window.addEventListener('scroll', () => { if (tourI >= 0) tourPlace(false); }, { passive: true });
+        document.addEventListener('keydown', e => {
+            if (tourI < 0) return;
+            if (e.key === 'Escape') { e.stopPropagation(); endTour(); }
+            else if (e.key === 'ArrowRight') tourGo(1);
+            else if (e.key === 'ArrowLeft') tourGo(-1);
+        }, true);
+
+        const __sigSwitchTab = window.switchTab;
+        window.switchTab = function (tabId, isBackwards) { __sigSwitchTab(tabId, isBackwards); if (tabId === 'myNightTab') renderMyNight(); };
+        window.addEventListener('load', () => { if (currentActiveAppTab === 'myNightTab') renderMyNight(); });
     </script>
 
     <!-- ===== Interaksi visual tambahan (tidak mengubah logika aplikasi) ===== -->
