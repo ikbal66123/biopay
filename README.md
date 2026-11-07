@@ -18,6 +18,8 @@ This repository is an interactive prototype that runs entirely in the browser, a
 | **POV 2** | Merchant | *Kasku* e-wallet (fictional): tap **BioPay → Tagih Pelanggan**, enter an amount, scan the customer's face and palm, and the money lands in the merchant's balance. Also: QRIS, top up, transfer, bill payments. |
 | **POV 3** | Traveler | *Lintas* travel app (fictional): search flights, hotels, trains or attractions, fill in passenger details and add-ons, apply a promo code, then pay with **BioPay** (face + palm), the in-app balance, or a virtual account. You get an e-ticket with a booking code; orders can be cancelled with a refund. The same three BioPay merchant features as POV 2 are built in. |
 
+**Accounts:** on the terminal's start screen, **Daftar BioID** creates an account in three steps (details plus explicit biometric consent, face enrollment, palm enrollment) and issues a BioID; **Masuk** signs in with email or phone plus password, or with your face. The dashboard, Bio-Pass and its passport MRZ line follow the signed-in account, and **Pengaturan** has sign-out and *delete account & biometric data*. Demo account: `ikbal@biopay.id` / `biopay123`.
+
 The landing section at the top of the page has **Try it** buttons that jump straight into each flow. The apps' interface is in Bahasa Indonesia, the launch market. The landing section switches between English and Indonesian.
 
 ## What is real and what is simulated
@@ -27,6 +29,7 @@ The landing section at the top of the page has **Try it** buttons that jump stra
 | Live camera feed on every scan screen | Identity matching: every face resolves to the demo user |
 | On-device detection that a face or a hand is actually in front of the camera ([MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision/face_detector)); the scan only passes once it is seen steadily for about 1.5 s | 3D liveness depth sensing and palm-vein reading |
 | All UI flows, validation, state, and calculations (FX, VAT, promos, refunds) | Balances, payments, settlement, bookings |
+| Sign-up and sign-in with validation; passwords stored as salted SHA-256 hashes | Account storage: `localStorage` in this browser instead of a server |
 
 No image or biometric data leaves the device. If the camera is blocked, or the detection model cannot load, scans fall back to a clearly labelled simulation mode so the demo never gets stuck.
 

@@ -177,6 +177,29 @@
         .bp-balend { font: 600 13px var(--font-mono); color: var(--ok); }
         .bp-balend.is-bad { color: var(--danger); }
 
+        /* Daftar & masuk */
+        .screen:not(.bp-dash) { justify-content: flex-start !important; }
+        .screen:not(.bp-dash) > * { margin-block: auto; }
+        .bp-auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: -8px; }
+        .bp-form { display: flex; flex-direction: column; gap: 14px; }
+        .bp-err { margin: 0; font-size: 13px; line-height: 1.4; color: var(--danger); }
+        .bp-err:empty { display: none; }
+        .bp-field:has(.bp-err:not(:empty)) .bp-hint { display: none; }
+        .bp-input[aria-invalid="true"] { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(180,35,24,.12); }
+        .bp-pass { position: relative; }
+        .bp-pass .bp-input { padding-right: 52px; }
+        .bp-pass-toggle { position: absolute; top: 2px; right: 2px; width: 44px; height: 44px; border: 0; border-radius: 8px; background: none; color: var(--muted); font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .bp-pass-toggle:hover { background: var(--hover); color: var(--ink); }
+        .bp-check { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; font-weight: 400 !important; line-height: 1.5; color: var(--muted) !important; cursor: pointer; }
+        .bp-check input { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--ink); }
+        .bp-check:has(input[aria-invalid="true"]) input { outline: 2px solid var(--danger); outline-offset: 1px; }
+        .bp-switch-auth { display: flex; align-items: center; justify-content: center; gap: 2px; font-size: 14px; color: var(--muted); }
+        .bp-divider { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--faint); }
+        .bp-divider::before, .bp-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+        .bp-demo-hint { margin: 0; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px dashed var(--line-2); border-radius: var(--r-ctl); background: var(--card); font: 500 13px var(--font-mono); color: var(--ink-2); }
+        .bp-btn-danger-solid { background: var(--danger); color: #fff; }
+        .bp-btn-danger-solid:hover { background: #912018; }
+
         /* Chips & notes */
         .bp-chip { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--hover); color: var(--ink-2); font: 600 12px/1 var(--font-sans); white-space: nowrap; flex: none; }
         .bp-chip-ink { background: var(--ink); color: #fff; font-family: var(--font-mono); letter-spacing: .04em; }
@@ -733,6 +756,7 @@
                 <ul>
                     <li><span lang="en"><b>Real:</b> camera access, and on-device detection that a face or palm is actually in front of the camera (MediaPipe, running in your browser). No image or biometric data leaves your device.</span><span lang="id"><b>Nyata:</b> akses kamera, dan deteksi di perangkat bahwa wajah atau telapak benar-benar ada di depan kamera (MediaPipe, berjalan di browser). Tidak ada gambar atau data biometrik yang keluar dari perangkat.</span></li>
                     <li><span lang="en"><b>Simulated:</b> identity matching (every face resolves to the demo user), liveness depth sensing, palm-vein reading, balances, payments and settlement.</span><span lang="id"><b>Simulasi:</b> pencocokan identitas (semua wajah dianggap pengguna demo), sensor kedalaman liveness, pembacaan vena telapak, saldo, pembayaran, dan settlement.</span></li>
+                    <li><span lang="en"><b>Accounts:</b> sign-up (details, consent, face and palm enrollment) and sign-in work, but accounts live only in this browser's storage, with passwords stored as salted SHA-256 hashes. A production system needs a server. Demo login: ikbal@biopay.id / biopay123.</span><span lang="id"><b>Akun:</b> daftar (data diri, persetujuan, rekam wajah dan telapak) dan masuk berfungsi, tetapi akun hanya tersimpan di browser ini dengan kata sandi berupa hash SHA-256 ber-salt. Sistem produksi butuh server. Akun demo: ikbal@biopay.id / biopay123.</span></li>
                     <li><span lang="en">Kasku and Lintas are fictional. DANA, GoPay, BCA, Agoda and other names appear only to illustrate integrations; there is no affiliation.</span><span lang="id">Kasku dan Lintas adalah merek fiktif. DANA, GoPay, BCA, Agoda, dan nama lain hanya ilustrasi integrasi; tidak ada afiliasi.</span></li>
                     <li><span lang="en">If the camera is blocked or the detection model cannot load, scans continue in simulation mode so the demo never gets stuck.</span><span lang="id">Bila kamera diblokir atau model deteksi gagal dimuat, scan berlanjut dalam mode simulasi agar demo tidak macet.</span></li>
                 </ul>
@@ -772,7 +796,123 @@
                         <button type="button" onclick="goToScreen('screen-face-scan')" class="bp-btn bp-btn-primary">
                             <i class="ph-bold ph-scan" aria-hidden="true"></i> Mulai scan wajah
                         </button>
+                        <div class="bp-auth-row">
+                            <button type="button" onclick="openLogin()" class="bp-btn bp-btn-secondary"><i class="ph-bold ph-sign-in" aria-hidden="true"></i> Masuk</button>
+                            <button type="button" onclick="openRegister()" class="bp-btn bp-btn-secondary"><i class="ph-bold ph-user-plus" aria-hidden="true"></i> Daftar BioID</button>
+                        </div>
                         <p class="bp-fine">BioPay Mesh Protocol v3.2 · Template biometrik tidak disimpan di terminal ini</p>
+                    </div>
+                </div>
+
+                <!-- ===== Daftar BioID: data diri ===== -->
+                <div id="screen-register" class="screen">
+                    <div class="bp-stack">
+                        <div class="bp-stack-tight">
+                            <p class="bp-eyebrow">Daftar BioID · Langkah 1 dari 3</p>
+                            <h2 class="bp-h2">Buat akun BioPay</h2>
+                            <p class="bp-sub">Wajah dan telapak tangan direkam di langkah berikutnya. Setelah itu kamu bisa bayar tanpa kartu dan tanpa ponsel.</p>
+                        </div>
+                        <form class="bp-form" novalidate onsubmit="event.preventDefault(); submitRegister();">
+                            <div class="bp-field"><label for="reg-name">Nama lengkap</label><input id="reg-name" class="bp-input" autocomplete="name" maxlength="40" aria-describedby="reg-name-err"><p id="reg-name-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field"><label for="reg-email">Email</label><input id="reg-email" type="email" class="bp-input" autocomplete="email" inputmode="email" maxlength="60" aria-describedby="reg-email-err"><p id="reg-email-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field"><label for="reg-phone">Nomor HP</label><input id="reg-phone" type="tel" class="bp-input" autocomplete="tel" inputmode="tel" placeholder="0812 3456 7890" maxlength="18" aria-describedby="reg-phone-err"><p id="reg-phone-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field"><label for="reg-pass">Kata sandi</label>
+                                <div class="bp-pass"><input id="reg-pass" type="password" class="bp-input" autocomplete="new-password" aria-describedby="reg-pass-hint reg-pass-err"><button type="button" class="bp-pass-toggle" aria-label="Tampilkan kata sandi" aria-pressed="false" onclick="togglePassword('reg-pass', this)"><i class="ph ph-eye" aria-hidden="true"></i></button></div>
+                                <p id="reg-pass-hint" class="bp-fine bp-hint">Minimal 8 karakter, berisi huruf dan angka.</p><p id="reg-pass-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field"><label for="reg-pass2">Ulangi kata sandi</label><input id="reg-pass2" type="password" class="bp-input" autocomplete="new-password" aria-describedby="reg-pass2-err"><p id="reg-pass2-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field">
+                                <label class="bp-check"><input type="checkbox" id="reg-consent" aria-describedby="reg-consent-err"><span>Saya setuju wajah dan telapak tangan saya diproses untuk verifikasi pembayaran. Data ini bisa saya hapus kapan saja dari Pengaturan (UU No. 27/2022 tentang Pelindungan Data Pribadi).</span></label>
+                                <p id="reg-consent-err" class="bp-err" aria-live="polite"></p>
+                            </div>
+                            <button type="submit" class="bp-btn bp-btn-primary">Lanjut: rekam wajah <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
+                        </form>
+                        <div class="bp-switch-auth">Sudah punya BioID? <button type="button" class="bp-link" onclick="openLogin()">Masuk</button></div>
+                        <button type="button" class="bp-btn bp-btn-secondary" onclick="goToScreen('screen-start')">Batal</button>
+                    </div>
+                </div>
+
+                <!-- ===== Daftar BioID: rekam wajah ===== -->
+                <div id="screen-enroll-face" class="screen">
+                    <div class="bp-stack">
+                        <div class="bp-stack-tight">
+                            <p class="bp-eyebrow">Daftar BioID · Langkah 2 dari 3</p>
+                            <h2 class="bp-h2">Rekam wajah</h2>
+                            <p class="bp-sub">Lepas masker atau kacamata hitam, lalu tatap kamera di tempat yang cukup terang.</p>
+                        </div>
+                        <div class="bp-vf bp-vf-portrait">
+                            <span class="bp-vf-ghost" aria-hidden="true"><i class="ph ph-user-focus"></i></span>
+                            <video id="video-enroll-face" autoplay muted playsinline></video>
+                            <span class="bp-corners" aria-hidden="true"></span>
+                            <div class="scanner-line"></div>
+                            <span class="bp-vf-tag"><i class="ph-bold ph-user-focus" aria-hidden="true"></i> Pendaftaran</span>
+                            <p class="bp-vf-status" aria-live="polite">Menyiapkan kamera…</p>
+                        </div>
+                        <button type="button" class="bp-btn bp-btn-secondary" onclick="goToScreen('screen-register')">Kembali ke data diri</button>
+                    </div>
+                </div>
+
+                <!-- ===== Daftar BioID: rekam telapak ===== -->
+                <div id="screen-enroll-palm" class="screen">
+                    <div class="bp-stack">
+                        <div class="bp-stack-tight">
+                            <p class="bp-eyebrow">Daftar BioID · Langkah 3 dari 3</p>
+                            <h2 class="bp-h2">Rekam telapak tangan</h2>
+                            <p class="bp-sub">Buka telapak tangan kanan dan tunjukkan ke kamera, jari sedikit direnggangkan.</p>
+                        </div>
+                        <div class="bp-vf bp-vf-square">
+                            <span class="bp-vf-ghost" aria-hidden="true"><i class="ph ph-hand-palm"></i></span>
+                            <video id="video-enroll-palm" autoplay muted playsinline></video>
+                            <span class="bp-corners" aria-hidden="true"></span>
+                            <div class="scanner-line"></div>
+                            <span class="bp-vf-tag"><i class="ph-bold ph-hand-palm" aria-hidden="true"></i> Pendaftaran</span>
+                            <p class="bp-vf-status" aria-live="polite">Menyiapkan kamera…</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== Daftar BioID: selesai ===== -->
+                <div id="screen-register-done" class="screen">
+                    <div class="bp-stack">
+                        <div class="bp-stack-tight bp-center">
+                            <div class="bp-success-mark" aria-hidden="true"><i class="ph-bold ph-check"></i></div>
+                            <h2 class="bp-h1">BioID kamu aktif</h2>
+                            <p class="bp-sub">Mulai sekarang kamu bisa bayar di semua terminal BioPay dengan wajah dan telapak tangan.</p>
+                        </div>
+                        <div class="bp-idcard">
+                            <div class="bp-idcard-head"><span>DATA BIOID</span><span>BARU</span></div>
+                            <div class="bp-idcard-body">
+                                <div class="bp-photo" aria-hidden="true"><i class="ph-fill ph-user"></i></div>
+                                <dl class="bp-dl">
+                                    <div><dt>Nama</dt><dd data-user="nameUpper">-</dd></div>
+                                    <div><dt>BioID</dt><dd class="bp-num" id="reg-done-bioid">-</dd></div>
+                                    <div><dt>Email</dt><dd data-user="email">-</dd></div>
+                                </dl>
+                            </div>
+                        </div>
+                        <button type="button" class="bp-btn bp-btn-primary" onclick="enterDashboard()">Buka dashboard <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
+                        <button type="button" class="bp-btn bp-btn-secondary" onclick="goToScreen('screen-start')">Kembali ke layar awal</button>
+                    </div>
+                </div>
+
+                <!-- ===== Masuk ===== -->
+                <div id="screen-login" class="screen">
+                    <div class="bp-stack">
+                        <div class="bp-stack-tight">
+                            <p class="bp-eyebrow">Masuk</p>
+                            <h2 class="bp-h2">Masuk ke akun BioPay</h2>
+                        </div>
+                        <form class="bp-form" novalidate onsubmit="event.preventDefault(); submitLogin();">
+                            <div class="bp-field"><label for="login-id">Email atau nomor HP</label><input id="login-id" class="bp-input" autocomplete="username" aria-describedby="login-id-err"><p id="login-id-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field"><label for="login-pass">Kata sandi</label>
+                                <div class="bp-pass"><input id="login-pass" type="password" class="bp-input" autocomplete="current-password" aria-describedby="login-pass-err"><button type="button" class="bp-pass-toggle" aria-label="Tampilkan kata sandi" aria-pressed="false" onclick="togglePassword('login-pass', this)"><i class="ph ph-eye" aria-hidden="true"></i></button></div>
+                                <p id="login-pass-err" class="bp-err" aria-live="polite"></p></div>
+                            <button type="submit" class="bp-btn bp-btn-primary"><i class="ph-bold ph-sign-in" aria-hidden="true"></i> Masuk</button>
+                        </form>
+                        <div class="bp-divider"><span>atau</span></div>
+                        <button type="button" class="bp-btn bp-btn-secondary" onclick="goToScreen('screen-menu-auth')"><i class="ph-bold ph-scan-smiley" aria-hidden="true"></i> Masuk dengan wajah</button>
+                        <p class="bp-demo-hint"><i class="ph ph-info" aria-hidden="true"></i> Akun demo: ikbal@biopay.id · biopay123</p>
+                        <div class="bp-switch-auth">Belum punya BioID? <button type="button" class="bp-link" onclick="openRegister()">Daftar</button></div>
+                        <button type="button" class="bp-btn bp-btn-secondary" onclick="goToScreen('screen-start')">Kembali</button>
                     </div>
                 </div>
 
@@ -807,8 +947,8 @@
                             <div class="bp-idcard-body">
                                 <div class="bp-photo" aria-hidden="true"><i class="ph-fill ph-user"></i></div>
                                 <dl class="bp-dl">
-                                    <div><dt>Nama</dt><dd>IKBAL HABIBI</dd></div>
-                                    <div><dt>BioID</dt><dd class="bp-num">12345</dd></div>
+                                    <div><dt>Nama</dt><dd data-user="nameUpper">IKBAL HABIBI</dd></div>
+                                    <div><dt>BioID</dt><dd class="bp-num" data-user="bioId">12345</dd></div>
                                     <div><dt>Skor kecocokan</dt><dd class="bp-num">99,2%</dd></div>
                                 </dl>
                             </div>
@@ -944,8 +1084,8 @@
                         <div class="bp-side-head">
                             <p class="bp-brand">BioPay <span>Travel Hub</span></p>
                             <button type="button" class="bp-account" onclick="showToast('Profil terverifikasi tingkat 3', 'ph-user-check', 'text-emerald-400')">
-                                <span class="bp-avatar" aria-hidden="true">IH</span>
-                                <span class="bp-account-text"><span id="txt-user-name">Ikbal Habibi</span><small>BioID #12345 · Terverifikasi</small></span>
+                                <span class="bp-avatar" aria-hidden="true" data-user="initials">IH</span>
+                                <span class="bp-account-text"><span id="txt-user-name" data-user="name">Ikbal Habibi</span><small>BioID #<span data-user="bioId">12345</span> · Terverifikasi</small></span>
                             </button>
                         </div>
                         <nav class="bp-nav" role="tablist" aria-label="Menu BioPay">
@@ -1084,18 +1224,18 @@
 
                         <!-- Tab: Bio-Pass -->
                         <section id="tab-biopass" class="bp-panel hidden">
-                            <button type="button" class="bp-passport" onclick="copyToClipboard('BIO-ID-12345-US', 'No. ID Paspor')">
+                            <button type="button" class="bp-passport" onclick="copyPassport()">
                                 <span class="bp-passport-top"><span>BIO-PASS</span><span>DIGITAL TRAVEL CREDENTIAL</span></span>
                                 <span class="bp-passport-body">
                                     <span class="bp-photo" aria-hidden="true"><i class="ph-fill ph-user"></i></span>
                                     <span class="bp-dl">
-                                        <span><small>Pemilik</small><b>Ikbal Habibi</b></span>
-                                        <span><small>No. ID paspor</small><b class="bp-num">BIO-ID-12345-US</b></span>
+                                        <span><small>Pemilik</small><b data-user="name">Ikbal Habibi</b></span>
+                                        <span><small>No. ID paspor</small><b class="bp-num" data-user="passport">BIO-ID-12345-US</b></span>
                                         <span><small>Status biometrik</small><b class="bp-ok-text">VERIFIED</b></span>
                                         <span><small>Berlaku s/d</small><b class="bp-num">06 NOV 2031</b></span>
                                     </span>
                                 </span>
-                                <span class="bp-mrz" aria-hidden="true">P&lt;IDNHABIBI&lt;&lt;IKBAL&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>BIO123456&lt;5IDN9803125M3111061&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;6</span>
+                                <span class="bp-mrz" aria-hidden="true"><span data-user="mrz1">P&lt;IDNHABIBI&lt;&lt;IKBAL</span><br><span data-user="mrz2">BIO12345</span></span>
                             </button>
                             <p class="bp-fine bp-inline"><i class="ph ph-copy" aria-hidden="true"></i> Ketuk kartu untuk menyalin nomor ID paspor. Dipakai di imigrasi dan check-in hotel tanpa dokumen kertas.</p>
                         </section>
@@ -1119,8 +1259,8 @@
                         <!-- Tab: Pengaturan -->
                         <section id="tab-pengaturan" class="bp-panel hidden">
                             <div class="bp-card bp-card-pad bp-profile">
-                                <span class="bp-avatar bp-avatar-lg" aria-hidden="true">IH</span>
-                                <span class="bp-row-main"><b>Ikbal Habibi</b><small>ikbal@biopay.id · BioID #12345</small></span>
+                                <span class="bp-avatar bp-avatar-lg" aria-hidden="true" data-user="initials">IH</span>
+                                <span class="bp-row-main"><b data-user="name">Ikbal Habibi</b><small><span data-user="email">ikbal@biopay.id</span> · BioID #<span data-user="bioId">12345</span></small></span>
                             </div>
                             <div class="bp-section">
                                 <p class="bp-section-title">Preferensi</p>
@@ -1134,9 +1274,10 @@
                                     </button>
                                 </div>
                             </div>
-                            <button type="button" onclick="showToast('Sesi Berakhir. Kembali ke awal...', 'ph-sign-out', 'text-white'); setTimeout(()=>{ switchTab('home'); goToScreen('screen-start'); }, 1500);" class="bp-btn bp-btn-secondary">
-                                <i class="ph-bold ph-sign-out" aria-hidden="true"></i> Keluar ke layar awal
+                            <button type="button" onclick="logout()" class="bp-btn bp-btn-secondary">
+                                <i class="ph-bold ph-sign-out" aria-hidden="true"></i> Keluar
                             </button>
+                            <button type="button" onclick="confirmDeleteAccount()" class="bp-btn bp-btn-danger-text"><i class="ph-bold ph-trash" aria-hidden="true"></i> Hapus akun & data biometrik</button>
                         </section>
                     </main>
                 </div>
@@ -1240,7 +1381,7 @@
                     <div class="bp-dialog bp-center">
                         <h3 id="h-receive">Minta dana</h3>
                         <canvas class="bp-qr" width="180" height="180" aria-label="Kode QRIS milik Ikbal Habibi"></canvas>
-                        <div><b>Ikbal Habibi</b><p class="bp-fine">Tunjukkan kode ini ke pengirim</p></div>
+                        <div><b data-user="name">Ikbal Habibi</b><p class="bp-fine">Tunjukkan kode ini ke pengirim</p></div>
                         <button type="button" onclick="closeModal('modal-receive')" class="bp-btn bp-btn-secondary">Tutup</button>
                     </div>
                 </div>
@@ -1313,6 +1454,16 @@
                         <p class="bp-vf-status" aria-live="polite">Mendaftarkan wajah…</p>
                     </div>
                     <button type="button" onclick="cancelSharingScan()" class="bp-btn bp-btn-paper bp-btn-auto">Batal</button>
+                </div>
+
+                <!-- Hapus akun -->
+                <div id="modal-delete-account" class="bp-modal hidden" role="dialog" aria-modal="true" aria-labelledby="h-delete-account">
+                    <div class="bp-dialog">
+                        <div class="bp-dialog-head"><h3 id="h-delete-account">Hapus akun?</h3><button type="button" class="bp-icon-btn" aria-label="Tutup" onclick="closeModal('modal-delete-account')"><i class="ph-bold ph-x" aria-hidden="true"></i></button></div>
+                        <p class="bp-sub bp-small">Akun <b id="delete-account-name">-</b> beserta template wajah dan telapak tangannya akan dihapus permanen dari perangkat ini. Tindakan ini tidak bisa dibatalkan.</p>
+                        <button type="button" onclick="deleteAccount()" class="bp-btn bp-btn-danger-solid">Ya, hapus permanen</button>
+                        <button type="button" onclick="closeModal('modal-delete-account')" class="bp-btn bp-btn-secondary">Batal</button>
+                    </div>
                 </div>
 
                 <!-- Sharing: limit -->
@@ -1896,6 +2047,85 @@
             })();
         }
 
+        function sha256Hex(message) {
+            const bytes = new TextEncoder().encode(message);
+            const K = [], H = [];
+            const frac = x => (x - Math.floor(x)) * 4294967296 | 0;
+            for (let n = 2, found = 0; found < 64; n++) {
+                let prime = true; for (let d = 2; d * d <= n; d++) if (n % d === 0) { prime = false; break; }
+                if (!prime) continue;
+                if (found < 8) H[found] = frac(Math.pow(n, 1 / 2));
+                K[found++] = frac(Math.cbrt(n));
+            }
+            const len = bytes.length, words = new Array(((len + 8 >> 6) + 1) * 16).fill(0);
+            for (let i = 0; i < len; i++) words[i >> 2] |= bytes[i] << (24 - (i % 4) * 8);
+            words[len >> 2] |= 0x80 << (24 - (len % 4) * 8);
+            words[words.length - 1] = len * 8;
+            const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+            const w = new Array(64);
+            for (let j = 0; j < words.length; j += 16) {
+                let [a, b, c, d, e, f, g, h] = H;
+                for (let i = 0; i < 64; i++) {
+                    if (i < 16) w[i] = words[j + i] | 0;
+                    else {
+                        const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+                        const s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+                        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+                    }
+                    const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25), ch = (e & f) ^ (~e & g);
+                    const t1 = (h + S1 + ch + K[i] + w[i]) | 0;
+                    const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22), maj = (a & b) ^ (a & c) ^ (b & c);
+                    const t2 = (S0 + maj) | 0;
+                    h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+                }
+                H[0] = (H[0] + a) | 0; H[1] = (H[1] + b) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+                H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+            }
+            return H.map(x => (x >>> 0).toString(16).padStart(8, '0')).join('');
+        }
+
+        // ==========================================
+        // AKUN BIOPAY (prototipe tanpa server)
+        // Disimpan di localStorage browser ini. Kata sandi disimpan sebagai SHA-256(salt:kata sandi), bukan teks asli.
+        // Identifikasi wajah masih simulasi: wajah yang terdeteksi dianggap milik akun yang terakhir aktif di perangkat ini.
+        // ==========================================
+        const ACCOUNTS = (() => {
+            const KEY = 'biopay-accounts-v1', LAST = 'biopay-last-active';
+            const SEED = { name: 'Ikbal Habibi', email: 'ikbal@biopay.id', phone: '081234567890', bioId: '12345', passport: 'BIO-ID-12345-US', salt: 'demo-salt', hash: '42b0c544928c1a2c8bc4b7a7c8989f989e1f39bac3a5dfda49b582404f1c3978', created: '2023-08-14', seed: true };
+            let list = [], last = null;
+            try { list = JSON.parse(localStorage.getItem(KEY) || '[]'); last = localStorage.getItem(LAST); } catch (e) { list = []; }
+            if (!Array.isArray(list)) list = [];
+            if (!list.some(a => a.seed)) list.unshift(SEED);
+            const save = () => { try { localStorage.setItem(KEY, JSON.stringify(list)); if (last) localStorage.setItem(LAST, last); else localStorage.removeItem(LAST); } catch (e) {} };
+            const normPhone = v => String(v || '').replace(/\D/g, '').replace(/^62/, '0');
+            const find = login => { const v = String(login || '').trim().toLowerCase(); const ph = normPhone(v); return list.find(a => a.email === v || (ph.length >= 9 && a.phone === ph)); };
+            const randDigits = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), b => b % 10).join('');
+            return {
+                find, normPhone,
+                exists: (email, phone) => ({ email: list.some(a => a.email === email.toLowerCase()), phone: list.some(a => a.phone === normPhone(phone)) }),
+                verify: (acct, password) => !!acct && sha256Hex(acct.salt + ':' + password) === acct.hash,
+                create({ name, email, phone, password }) {
+                    let bioId; do { bioId = String(10000 + Number(randDigits(5)) % 90000); } while (list.some(a => a.bioId === bioId));
+                    const salt = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, '0')).join('');
+                    const acct = { name: name.trim().replace(/\s+/g, ' '), email: email.trim().toLowerCase(), phone: normPhone(phone), bioId, passport: `BIO-ID-${bioId}-ID`, salt, hash: sha256Hex(salt + ':' + password), created: new Date().toISOString().slice(0, 10), faceEnrolled: true, palmEnrolled: true };
+                    list.push(acct); last = acct.email; save(); return acct;
+                },
+                remove(acct) { if (!acct || acct.seed) return false; list = list.filter(a => a.email !== acct.email); if (last === acct.email) last = null; save(); return true; },
+                setActive(acct) { last = acct ? acct.email : null; save(); },
+                // Simulasi 1:N: wajah yang lolos deteksi dicocokkan ke akun terakhir yang aktif di perangkat ini
+                matchFace: () => list.find(a => a.email === last) || list.find(a => a.seed) || list[0] || null,
+                count: () => list.length
+            };
+        })();
+        function userView(acct) {
+            const parts = acct.name.trim().split(/\s+/), surname = parts.length > 1 ? parts[parts.length - 1] : parts[0], given = parts.length > 1 ? parts.slice(0, -1).join(' ') : '';
+            const mrzName = s => s.toUpperCase().normalize('NFD').replace(/[^A-Z ]/g, '').trim().replace(/\s+/g, '<');
+            const line1 = ('P<IDN' + mrzName(surname) + '<<' + mrzName(given)).padEnd(44, '<').slice(0, 44);
+            const line2 = (('BIO' + acct.bioId).padEnd(9, '<') + '5IDN9803125M3111061').padEnd(43, '<').slice(0, 43) + '6';
+            return { name: acct.name, nameUpper: acct.name.toUpperCase(), initials: (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase(), email: acct.email, bioId: acct.bioId, passport: acct.passport, mrz1: line1, mrz2: line2 };
+        }
+
+
         // Escape teks input pengguna sebelum dimasukkan ke innerHTML (cegah HTML/script injection & tampilan rusak)
         function escapeHTML(str) {
             return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -2096,7 +2326,7 @@
                     toast('Menganalisis Kedalaman 3D Wajah (Anti-Spoofing)...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-face');
                     scanBiometric({ videoId: sid('video-face'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
-                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) goToScreen('screen-identity'); });
+                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) { setUser(ACCOUNTS.matchFace()); goToScreen('screen-identity'); } });
                 } else if (screenId === 'screen-hand-scan') { 
                     toast('Memindai Aliran Darah & Suhu Tangan...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-hand');
@@ -2106,7 +2336,17 @@
                     toast('Liveness 3D SDK Aktif...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-auth');
                     scanBiometric({ videoId: sid('video-auth'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
-                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) { switchTab('home'); goToScreen('screen-dashboard'); } });
+                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) { setUser(currentUser || ACCOUNTS.matchFace()); enterDashboard(); } });
+                } else if (screenId === 'screen-enroll-face') {
+                    toast('Merekam template wajah…', 'ph-scan', 'text-sky-400');
+                    cameraStream = await openCam('video-enroll-face');
+                    scanBiometric({ videoId: sid('video-enroll-face'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
+                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) goToScreen('screen-enroll-palm'); });
+                } else if (screenId === 'screen-enroll-palm') {
+                    toast('Merekam pola telapak tangan…', 'ph-hand-palm', 'text-sky-400');
+                    cameraStream = await openCam('video-enroll-palm');
+                    scanBiometric({ videoId: sid('video-enroll-palm'), kind: 'hand', cancelled: () => !isScreenActive(screenId) })
+                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) finishRegister(); });
                 }
             }
 
@@ -2412,7 +2652,86 @@
                 if (limitInput > 0) { const card = $(activeSharingCardId); if (card) { card.querySelector('.sharing-limit-val').innerText = 'Rp ' + limitInput.toLocaleString('id-ID'); } closeModal('modal-sharing-limit'); toast('Limit diperbarui!', 'ph-check-circle', 'text-emerald-400'); } else { toast('Nominal tidak valid!', 'ph-warning', 'text-red-500'); }
             }
 
-            return { toast, stopCameras, closeAllModals, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
+            // ---------- Akun: daftar, masuk, keluar ----------
+            let currentUser = null, pendingReg = null;
+            function renderUser() {
+                const acct = currentUser || ACCOUNTS.matchFace(); if (!acct) return;
+                const v = userView(acct);
+                root.querySelectorAll('[data-user]').forEach(el => { const k = el.getAttribute('data-user'); if (v[k] !== undefined) el.textContent = v[k]; });
+            }
+            function setUser(acct) { currentUser = acct; ACCOUNTS.setActive(acct); renderUser(); }
+            function fieldError(id, msg) {
+                const input = $(id), err = $(id + '-err');
+                if (input) { if (msg) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid'); }
+                if (err) err.textContent = msg || '';
+                return !msg;
+            }
+            function openRegister() {
+                ['reg-name', 'reg-email', 'reg-phone', 'reg-pass', 'reg-pass2'].forEach(id => { $(id).value = ''; fieldError(id, ''); });
+                $('reg-consent').checked = false; fieldError('reg-consent', '');
+                pendingReg = null; goToScreen('screen-register');
+            }
+            function submitRegister() {
+                const name = $('reg-name').value.trim(), email = $('reg-email').value.trim().toLowerCase(), phone = $('reg-phone').value.trim();
+                const pass = $('reg-pass').value, pass2 = $('reg-pass2').value, taken = ACCOUNTS.exists(email, phone);
+                const ok = [
+                    fieldError('reg-name', name.length < 3 ? 'Isi nama lengkap, minimal 3 huruf.' : ''),
+                    fieldError('reg-email', !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? 'Format email belum benar, contoh nama@email.com.' : taken.email ? 'Email ini sudah terdaftar. Silakan masuk.' : ''),
+                    fieldError('reg-phone', !/^0\d{8,13}$/.test(ACCOUNTS.normPhone(phone)) ? 'Nomor HP diawali 0 atau +62, 9–14 digit.' : taken.phone ? 'Nomor HP ini sudah terdaftar.' : ''),
+                    fieldError('reg-pass', pass.length < 8 || !/[A-Za-z]/.test(pass) || !/\d/.test(pass) ? 'Minimal 8 karakter, berisi huruf dan angka.' : ''),
+                    fieldError('reg-pass2', pass2 !== pass || !pass2 ? 'Konfirmasi kata sandi tidak sama.' : ''),
+                    fieldError('reg-consent', !$('reg-consent').checked ? 'Persetujuan diperlukan untuk merekam data biometrik.' : '')
+                ];
+                if (ok.includes(false)) { const first = root.querySelector('#screen-register' + suffix + ' [aria-invalid="true"]'); if (first) first.focus(); return; }
+                pendingReg = { name, email, phone, password: pass };
+                goToScreen('screen-enroll-face');
+            }
+            function finishRegister() {
+                if (!pendingReg) return;
+                const acct = ACCOUNTS.create(pendingReg); pendingReg = null;
+                setUser(acct);
+                $('reg-done-bioid').textContent = acct.bioId;
+                toast(`BioID ${acct.bioId} aktif. Selamat datang, ${acct.name.split(' ')[0]}!`, 'ph-check-circle', 'text-emerald-400');
+                goToScreen('screen-register-done');
+            }
+            function openLogin() { $('login-id').value = ''; $('login-pass').value = ''; fieldError('login-id', ''); fieldError('login-pass', ''); goToScreen('screen-login'); }
+            function submitLogin() {
+                const id = $('login-id').value, pass = $('login-pass').value;
+                if (!fieldError('login-id', id.trim() ? '' : 'Isi email atau nomor HP.') | !fieldError('login-pass', pass ? '' : 'Isi kata sandi.')) return;
+                const acct = ACCOUNTS.find(id);
+                if (!ACCOUNTS.verify(acct, pass)) { fieldError('login-id', ''); fieldError('login-pass', 'Email/nomor HP atau kata sandi salah.'); $('login-pass').value = ''; $('login-pass').focus(); return; }
+                setUser(acct); $('login-pass').value = '';
+                toast(`Masuk sebagai ${acct.name}`, 'ph-user-check', 'text-emerald-400');
+                enterDashboard();
+            }
+            function togglePassword(id, btn) {
+                const input = $(id), show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                btn.setAttribute('aria-pressed', String(show)); btn.setAttribute('aria-label', show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+                btn.querySelector('i').className = 'ph ' + (show ? 'ph-eye-slash' : 'ph-eye');
+            }
+            function enterDashboard() { renderUser(); switchTab('home'); goToScreen('screen-dashboard'); }
+            function logout() {
+                const name = currentUser ? currentUser.name : null;
+                currentUser = null; closeAllModals();
+                toast(name ? `${name} keluar. Sampai jumpa!` : 'Sesi berakhir', 'ph-sign-out', 'text-white');
+                switchTab('home'); goToScreen('screen-start');
+            }
+            function copyPassport() { const acct = currentUser || ACCOUNTS.matchFace(); copyToClipboard(acct.passport, 'No. ID paspor', pov); }
+            function confirmDeleteAccount() {
+                const acct = currentUser || ACCOUNTS.matchFace();
+                if (acct.seed) { toast('Akun demo tidak bisa dihapus. Daftarkan akun baru untuk mencoba fitur ini.', 'ph-info', 'text-sky-400'); return; }
+                $('delete-account-name').textContent = acct.name; $('modal-delete-account').classList.remove('hidden');
+            }
+            function deleteAccount() {
+                const acct = currentUser || ACCOUNTS.matchFace();
+                ACCOUNTS.remove(acct); currentUser = null; closeModal('modal-delete-account'); renderUser();
+                toast('Akun dan data biometrik dihapus.', 'ph-trash', 'text-red-400');
+                switchTab('home'); goToScreen('screen-start');
+            }
+
+            renderUser();
+            return { toast, stopCameras, closeAllModals, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
         }
 
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error
