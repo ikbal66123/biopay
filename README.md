@@ -8,6 +8,8 @@ This repository is an interactive prototype that runs entirely in the browser, a
 
 **Live demo:** https://ikbal66123.github.io/biopay/ (open in Chrome, Edge or Safari and allow camera access)
 
+**Also in this repo:** [AI Live Camera](ai-live-camera/) (https://ikbal66123.github.io/biopay/ai-live-camera/), a browser camera that changes clothes, held objects, wall color and background from typed Indonesian commands. Plan and prompts: [docs/ai-live-camera-prompt.md](docs/ai-live-camera-prompt.md).
+
 ---
 
 ## What to try (about 1 minute each)

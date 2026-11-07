@@ -2,6 +2,8 @@
 
 Dokumen ini memperluas ide aplikasi **AI Live Camera**: kamera siaran langsung yang bisa mengubah baju, benda, latar, dan warna tembok hanya dengan mengetik perintah, lalu hasilnya dipakai sebagai webcam di TikTok Live, Instagram Live, YouTube, Zoom, OBS, dan lainnya.
 
+**Aplikasi versi awal (MVP):** [`ai-live-camera/index.html`](../ai-live-camera/index.html). Buka di Chrome, izinkan kamera, lalu ketik perintah.
+
 ---
 
 ## 1. Penjelasan ide yang diperluas
