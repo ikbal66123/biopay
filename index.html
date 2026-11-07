@@ -14,8 +14,8 @@
         /* Layout: dua perangkat berdampingan di atas "meja" abu dingin. Terminal BioPay = kertas + tinta navy,
            aksen kuningan hanya untuk status penting. Angka selalu mono tabular. */
         :root {
-            --desk: #D7DCE3;
-            --bezel: #121926;
+            --desk: #F1F3F6;
+            --bezel: #D6DCE4;
             --ink: #0F1B2D;
             --ink-2: #26364F;
             --navy: #1D3F8F;
@@ -43,14 +43,15 @@
         }
 
         body { font-family: var(--font-sans); background-color: var(--desk); color: var(--text); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 2rem; box-sizing: border-box; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-        .devices-wrapper { display: flex; flex-direction: column; gap: 3rem; align-items: center; width: 100%; max-width: 1240px; }
+        .devices-wrapper { display: flex; flex-direction: column; gap: 20px; align-items: center; width: 100%; max-width: 1240px; }
         .pov { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
-        .pov-caption { margin: 0; align-self: flex-start; font: 600 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: #3B475A; display: flex; align-items: center; gap: 8px; }
+        .pov-caption { margin: 0; align-self: center; font-size: 14px; line-height: 1.5; color: var(--muted); text-align: center; text-wrap: balance; }
+        .pov[hidden] { display: none !important; }
         .pov-dot { width: 8px; height: 8px; border-radius: 2px; background: var(--brass); }
 
-        .app-container, .device { width: 100%; height: 800px; position: relative; overflow: hidden; border-radius: 22px; border: 12px solid var(--bezel); flex-shrink: 0; box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 24px 40px -24px rgba(15, 27, 45, .45); }
+        .app-container, .device { width: 100%; height: 800px; position: relative; overflow: hidden; border-radius: 24px; border: 1px solid var(--bezel); flex-shrink: 0; box-shadow: 0 1px 2px rgba(15,27,45,.05), 0 30px 60px -30px rgba(15,27,45,.28); }
         #biopay-device { max-width: 980px; background: var(--paper); }
-        #ewallet-device { width: 100% !important; max-width: 1240px !important; height: 800px !important; background: #E9ECF0; }
+        #ewallet-device { width: 100% !important; max-width: 1240px !important; height: 800px !important; background: #F7F8FA; }
 
         .hidden { display: none !important; }
         /* Kontainer perangkat tidak boleh ikut ter-scroll oleh scrollIntoView/fokus input */
@@ -410,8 +411,39 @@
         .pt-note { background: #fff; border: 1px solid #C9D0DA; border-radius: 14px; padding: 4px 18px; }
         .pt-note summary { min-height: 48px; display: flex; align-items: center; font-weight: 600; font-size: 15px; color: var(--ink); cursor: pointer; }
         .pt-note ul { margin: 0 0 16px; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.55; color: #3B475A; }
+        /* --- Versi sederhana: satu kolom, banyak ruang kosong, satu perangkat per tab --- */
+        .pt-bar { background: rgba(241, 243, 246, .9); border-bottom-color: #DDE2E9; }
+        .pt-hero { display: flex; flex-direction: column; align-items: flex-start; gap: 0; max-width: 1240px; padding: 56px 8px 8px; }
+        .pt-h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.05; max-width: 16ch; }
+        .pt-lead { font-size: 18px; max-width: 46ch; margin-top: 16px; }
+        .pt-ctas { margin-top: 28px; }
+        .pt-flow { list-style: none; margin: 32px 0 0; padding: 0; display: flex; align-items: center; gap: 10px; color: var(--ink-2); font-size: 14px; font-weight: 600; }
+        .pt-flow li { display: inline-flex; align-items: center; gap: 6px; }
+        .pt-flow i { font-size: 18px; color: var(--brass); }
+        .pt-flow .pt-flow-sep { width: 28px; height: 1px; background: #C3CAD4; }
+        .pt-demo { padding: 32px 8px 0; gap: 0; }
+        .pt-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 6px; background: #E6EAF0; border-radius: 18px; }
+        .pt-tabs button { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; border: 0; border-radius: 13px; background: transparent; color: var(--muted); text-align: left; font-family: var(--font-sans); cursor: pointer; transition: background-color .18s var(--ease), box-shadow .18s var(--ease), color .18s var(--ease); }
+        .pt-tabs button:hover { background: rgba(255,255,255,.55); color: var(--ink); }
+        .pt-tabs button[aria-selected="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(15,27,45,.08), 0 4px 12px -6px rgba(15,27,45,.18); }
+        .pt-tabs button i { flex: none; font-size: 24px; }
+        .pt-tabs button[aria-selected="true"] i { color: var(--brass); }
+        .pt-tabs button > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .pt-tabs b { font-size: 15px; font-weight: 600; }
+        .pt-tabs small { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pt-tabs :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+        .pt-foot { width: 100%; max-width: 1240px; padding: 0 8px 24px; }
+        .pt-foot .pt-note { background: transparent; border-color: #DDE2E9; }
+        :root:not([data-pitch-lang="id"]) .pt-foot [lang="id"] { display: none; }
+        html[data-pitch-lang="id"] .pt-foot [lang="en"] { display: none; }
+        .pt-foot :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+        @media (max-width: 760px) {
+            .pt-hero { padding-top: 28px; }
+            .pt-tabs { grid-template-columns: 1fr; }
+            .pt-tabs button { min-height: 56px; }
+        }
         .pov-focus { animation: povFocus 1.6s var(--ease); }
-        @keyframes povFocus { 0%, 60% { box-shadow: 0 0 0 4px var(--brass), 0 24px 40px -24px rgba(15,27,45,.45); } 100% { box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 24px 40px -24px rgba(15,27,45,.45); } }
+        @keyframes povFocus { 0%, 50% { box-shadow: 0 0 0 3px rgba(161,98,7,.35), 0 30px 60px -30px rgba(15,27,45,.28); } 100% { box-shadow: 0 1px 2px rgba(15,27,45,.05), 0 30px 60px -30px rgba(15,27,45,.28); } }
 
         @media (max-width: 900px) {
             .pt-hero { grid-template-columns: 1fr; gap: 28px; padding-top: 24px; }
@@ -427,7 +459,7 @@
         .bp-p2-close:hover { background: var(--hover); }
 
         /* ---------- POV 3: Lintas (travel). Biru tua untuk struktur, oranye hanya untuk aksi pemesanan. ---------- */
-        #travel-device { width: 100% !important; max-width: 1240px !important; height: 800px !important; background: #E9ECF0; }
+        #travel-device { width: 100% !important; max-width: 1240px !important; height: 800px !important; background: #F7F8FA; }
         .tv { --tv-primary: #1E3A8A; --tv-primary-2: #274BAE; --tv-accent: #C2410C; --tv-accent-h: #A8380A; --tv-accent-soft: #FFF1E8;
               --tv-bg: #F2F5FA; --tv-line: #DCE3EE; --tv-text: #0E1A33; --tv-muted: #55627A; --tv-soft: #E8EEF8; --tv-ok: #0F7B4F; --tv-ok-soft: #E7F4EC; --tv-bad: #B42318; --tv-bad-soft: #FDECEA;
               position: relative; display: flex; flex-direction: column; height: 100%; max-width: 420px; margin: 0 auto; overflow: hidden;
@@ -677,7 +709,7 @@
         @media (max-width: 640px) {
             body { padding: 1rem 0.5rem; }
             .devices-wrapper { gap: 2rem; }
-            .device, .app-container, #ewallet-device, #travel-device { border-width: 6px !important; height: 760px !important; border-radius: 16px; }
+            .device, .app-container, #ewallet-device, #travel-device { height: 760px !important; border-radius: 18px; }
             .screen { padding: 56px 16px 20px; }
             .bp-main { padding: 16px 16px 32px; }
         }
@@ -693,9 +725,6 @@
             <a class="pt-logo" href="#top">BioPay</a>
             <nav class="pt-links" aria-label="Bagian halaman">
                 <a href="#demo"><span lang="en">Demo</span><span lang="id">Demo</span></a>
-                <a href="#pov-terminal"><span lang="en">Terminal</span><span lang="id">Terminal</span></a>
-                <a href="#pov-kasku">Kasku</a>
-                <a href="#pov-lintas">Lintas</a>
                 <a href="https://github.com/ikbal66123/biopay" target="_blank" rel="noopener">GitHub</a>
             </nav>
             <div class="pt-lang" role="group" aria-label="Language / Bahasa">
@@ -705,85 +734,39 @@
         </header>
 
         <section class="pt-hero" id="top">
-            <div class="pt-hero-text">
-                <p class="pt-eyebrow"><span lang="en">Biometric payments · Southeast Asia</span><span lang="id">Pembayaran biometrik · Asia Tenggara</span></p>
-                <h1 class="pt-h1">
-                    <span lang="en">Pay with your face and palm. No card. No phone.</span>
-                    <span lang="id">Bayar dengan wajah dan telapak tangan. Tanpa kartu. Tanpa ponsel.</span>
-                </h1>
-                <p class="pt-lead">
-                    <span lang="en">BioPay is a two-factor biometric checkout that settles from the wallet people already use. A shopper looks at the terminal, shows a palm, and pays. Merchants can charge customers from their own phone, and apps like travel booking can add face-and-palm checkout.</span>
-                    <span lang="id">BioPay adalah checkout biometrik dua faktor yang menagih langsung dari wallet yang sudah dipakai orang. Pembeli melihat ke terminal, menunjukkan telapak tangan, lalu bayar. Merchant bisa menagih pelanggan dari ponselnya sendiri, dan aplikasi seperti travel bisa menambahkan checkout wajah + telapak.</span>
-                </p>
-                <div class="pt-ctas">
-                    <a class="pt-btn pt-btn-primary" href="#demo"><span lang="en">Take the 60-second tour</span><span lang="id">Ikuti tur 60 detik</span></a>
-                    <button type="button" class="pt-btn pt-btn-ghost" onclick="pitchTry('terminal')"><i class="ph-bold ph-scan" aria-hidden="true"></i> <span lang="en">Scan my face now</span><span lang="id">Scan wajah saya sekarang</span></button>
-                </div>
-                <ul class="pt-facts">
-                    <li><i class="ph-bold ph-camera" aria-hidden="true"></i><span lang="en">Uses your real camera</span><span lang="id">Memakai kamera asli</span></li>
-                    <li><i class="ph-bold ph-cpu" aria-hidden="true"></i><span lang="en">Face &amp; palm detection runs on-device</span><span lang="id">Deteksi wajah &amp; telapak berjalan di perangkat</span></li>
-                    <li><i class="ph-bold ph-coins" aria-hidden="true"></i><span lang="en">All money is simulated</span><span lang="id">Semua uang hanya simulasi</span></li>
-                </ul>
+            <p class="pt-eyebrow"><span lang="en">Biometric payments · Southeast Asia</span><span lang="id">Pembayaran biometrik · Asia Tenggara</span></p>
+            <h1 class="pt-h1"><span lang="en">Pay with your face and palm.</span><span lang="id">Bayar dengan wajah dan telapak tangan.</span></h1>
+            <p class="pt-lead"><span lang="en">No card, no phone. BioPay is a two-factor biometric checkout that pays from the wallet people already use.</span><span lang="id">Tanpa kartu, tanpa ponsel. BioPay adalah checkout biometrik dua faktor yang membayar dari wallet yang sudah dipakai orang.</span></p>
+            <div class="pt-ctas">
+                <a class="pt-btn pt-btn-primary" href="#demo"><span lang="en">Try the demo</span><span lang="id">Coba demonya</span> <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></a>
+                <button type="button" class="pt-btn pt-btn-ghost" onclick="pitchTry('terminal')"><i class="ph-bold ph-scan" aria-hidden="true"></i> <span lang="en">Scan my face now</span><span lang="id">Scan wajah saya</span></button>
             </div>
-            <ol class="pt-how" aria-label="How it works">
-                <li><span class="pt-n">1</span><div><b><span lang="en">Face</span><span lang="id">Wajah</span></b><p><span lang="en">The terminal finds the shopper's BioID from their face, with a liveness check against photos and screens.</span><span lang="id">Terminal menemukan BioID pembeli dari wajahnya, dengan pemeriksaan liveness untuk menolak foto dan layar.</span></p></div></li>
-                <li><span class="pt-n">2</span><div><b><span lang="en">Palm</span><span lang="id">Telapak</span></b><p><span lang="en">A palm scan is the second factor, so a face alone can never move money.</span><span lang="id">Scan telapak menjadi faktor kedua, jadi wajah saja tidak pernah bisa memindahkan uang.</span></p></div></li>
-                <li><span class="pt-n">3</span><div><b><span lang="en">Settle</span><span lang="id">Bayar</span></b><p><span lang="en">Payment comes from the shopper's linked e-wallet or bank. Tourists pay in rupiah with automatic FX and a VAT-refund receipt.</span><span lang="id">Pembayaran diambil dari e-wallet atau bank yang terhubung. Turis bayar dalam rupiah dengan kurs otomatis dan struk tax refund.</span></p></div></li>
+            <ol class="pt-flow" aria-label="How it works">
+                <li><i class="ph ph-scan-smiley" aria-hidden="true"></i><span lang="en">Face</span><span lang="id">Wajah</span></li>
+                <li aria-hidden="true" class="pt-flow-sep"></li>
+                <li><i class="ph ph-hand-palm" aria-hidden="true"></i><span lang="en">Palm</span><span lang="id">Telapak</span></li>
+                <li aria-hidden="true" class="pt-flow-sep"></li>
+                <li><i class="ph ph-check-circle" aria-hidden="true"></i><span lang="en">Paid</span><span lang="id">Lunas</span></li>
             </ol>
         </section>
 
-        <section class="pt-demo" id="demo" aria-labelledby="demo-title">
-            <div class="pt-demo-head">
-                <h2 id="demo-title"><span lang="en">Three ways to try it</span><span lang="id">Tiga cara mencobanya</span></h2>
-                <p><span lang="en">Each takes about a minute. The apps are in Bahasa Indonesia, our launch market. Allow camera access when the browser asks.</span><span lang="id">Masing-masing sekitar satu menit. Aplikasinya berbahasa Indonesia, pasar peluncuran kami. Izinkan akses kamera saat browser meminta.</span></p>
+        <section class="pt-demo" id="demo" aria-label="Demo">
+            <div class="pt-tabs" role="tablist" aria-label="Choose a device">
+                <button type="button" role="tab" id="dev-tab-terminal" data-dev="terminal" aria-controls="pov-terminal" aria-selected="true" onclick="selectDevice('terminal')">
+                    <i class="ph ph-storefront" aria-hidden="true"></i><span><b><span lang="en">Store terminal</span><span lang="id">Terminal toko</span></b><small><span lang="en">Shopper pays with face + palm</span><span lang="id">Pembeli bayar dengan wajah + telapak</span></small></span>
+                </button>
+                <button type="button" role="tab" id="dev-tab-kasku" data-dev="kasku" aria-controls="pov-kasku" aria-selected="false" tabindex="-1" onclick="selectDevice('kasku')">
+                    <i class="ph ph-device-mobile" aria-hidden="true"></i><span><b><span lang="en">Merchant phone</span><span lang="id">Ponsel merchant</span></b><small><span lang="en">Charge a customer, no terminal</span><span lang="id">Tagih pelanggan tanpa terminal</span></small></span>
+                </button>
+                <button type="button" role="tab" id="dev-tab-lintas" data-dev="lintas" aria-controls="pov-lintas" aria-selected="false" tabindex="-1" onclick="selectDevice('lintas')">
+                    <i class="ph ph-airplane-tilt" aria-hidden="true"></i><span><b><span lang="en">Travel app</span><span lang="id">Aplikasi travel</span></b><small><span lang="en">Book a trip, pay with BioPay</span><span lang="id">Pesan tiket, bayar pakai BioPay</span></small></span>
+                </button>
             </div>
-            <div class="pt-cards">
-                <article class="pt-card">
-                    <p class="pt-card-tag">POV 1 · <span lang="en">Shopper</span><span lang="id">Pembeli</span></p>
-                    <h3><span lang="en">Pay at a store terminal</span><span lang="id">Bayar di terminal toko</span></h3>
-                    <ol>
-                        <li><span lang="en">Tap “Mulai scan wajah” and look at the camera.</span><span lang="id">Tekan “Mulai scan wajah” dan lihat ke kamera.</span></li>
-                        <li><span lang="en">Show your open palm.</span><span lang="id">Tunjukkan telapak tangan terbuka.</span></li>
-                        <li><span lang="en">Confirm the receipt. Foreign merchants trigger auto-FX and tax refund.</span><span lang="id">Konfirmasi struk. Merchant luar negeri memicu kurs otomatis dan tax refund.</span></li>
-                    </ol>
-                    <button type="button" class="pt-btn pt-btn-primary" onclick="pitchTry('terminal')"><span lang="en">Try on the terminal</span><span lang="id">Coba di terminal</span> <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></button>
-                </article>
-                <article class="pt-card">
-                    <p class="pt-card-tag">POV 2 · <span lang="en">Merchant</span><span lang="id">Merchant</span></p>
-                    <h3><span lang="en">Charge a customer from a phone</span><span lang="id">Tagih pelanggan dari ponsel</span></h3>
-                    <ol>
-                        <li><span lang="en">In the Kasku wallet, tap “Tagih Pelanggan”.</span><span lang="id">Di wallet Kasku, tekan “Tagih Pelanggan”.</span></li>
-                        <li><span lang="en">Enter an amount, then scan the customer's face.</span><span lang="id">Isi nominal, lalu scan wajah pelanggan.</span></li>
-                        <li><span lang="en">Scan their palm. The money lands in the merchant's balance.</span><span lang="id">Scan telapaknya. Uang masuk ke saldo merchant.</span></li>
-                    </ol>
-                    <button type="button" class="pt-btn pt-btn-primary" onclick="pitchTry('kasku')"><span lang="en">Try in Kasku</span><span lang="id">Coba di Kasku</span> <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></button>
-                </article>
-                <article class="pt-card">
-                    <p class="pt-card-tag">POV 3 · <span lang="en">Traveler</span><span lang="id">Wisatawan</span></p>
-                    <h3><span lang="en">Book a flight, pay with your face</span><span lang="id">Pesan tiket, bayar pakai wajah</span></h3>
-                    <ol>
-                        <li><span lang="en">Search a route in the Lintas travel app and pick a flight.</span><span lang="id">Cari rute di aplikasi travel Lintas lalu pilih penerbangan.</span></li>
-                        <li><span lang="en">Choose “BioPay” at checkout.</span><span lang="id">Pilih “BioPay” saat pembayaran.</span></li>
-                        <li><span lang="en">Face, then palm, then your e-ticket appears.</span><span lang="id">Wajah, lalu telapak, lalu e-tiket muncul.</span></li>
-                    </ol>
-                    <button type="button" class="pt-btn pt-btn-primary" onclick="pitchTry('lintas')"><span lang="en">Try in Lintas</span><span lang="id">Coba di Lintas</span> <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></button>
-                </article>
-            </div>
-            <details class="pt-note">
-                <summary><span lang="en">What is real in this prototype, and what is simulated</span><span lang="id">Apa yang nyata di prototipe ini, dan apa yang simulasi</span></summary>
-                <ul>
-                    <li><span lang="en"><b>Real:</b> camera access, and on-device detection that a face or palm is actually in front of the camera (MediaPipe, running in your browser). No image or biometric data leaves your device.</span><span lang="id"><b>Nyata:</b> akses kamera, dan deteksi di perangkat bahwa wajah atau telapak benar-benar ada di depan kamera (MediaPipe, berjalan di browser). Tidak ada gambar atau data biometrik yang keluar dari perangkat.</span></li>
-                    <li><span lang="en"><b>Simulated:</b> identity matching (every face resolves to the demo user), liveness depth sensing, palm-vein reading, balances, payments and settlement.</span><span lang="id"><b>Simulasi:</b> pencocokan identitas (semua wajah dianggap pengguna demo), sensor kedalaman liveness, pembacaan vena telapak, saldo, pembayaran, dan settlement.</span></li>
-                    <li><span lang="en"><b>Accounts:</b> sign-up (details, consent, face and palm enrollment) and sign-in work, but accounts live only in this browser's storage, with passwords stored as salted SHA-256 hashes. A production system needs a server. Demo login: ikbal@biopay.id / biopay123.</span><span lang="id"><b>Akun:</b> daftar (data diri, persetujuan, rekam wajah dan telapak) dan masuk berfungsi, tetapi akun hanya tersimpan di browser ini dengan kata sandi berupa hash SHA-256 ber-salt. Sistem produksi butuh server. Akun demo: ikbal@biopay.id / biopay123.</span></li>
-                    <li><span lang="en">Kasku and Lintas are fictional. DANA, GoPay, BCA, Agoda and other names appear only to illustrate integrations; there is no affiliation.</span><span lang="id">Kasku dan Lintas adalah merek fiktif. DANA, GoPay, BCA, Agoda, dan nama lain hanya ilustrasi integrasi; tidak ada afiliasi.</span></li>
-                    <li><span lang="en">If the camera is blocked or the detection model cannot load, scans continue in simulation mode so the demo never gets stuck.</span><span lang="id">Bila kamera diblokir atau model deteksi gagal dimuat, scan berlanjut dalam mode simulasi agar demo tidak macet.</span></li>
-                </ul>
-            </details>
         </section>
 
 
-        <div class="pov" id="pov-terminal">
-            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span><span lang="en">POV 1 · BioPay store terminal</span><span lang="id">POV 1 · Mesin terminal BioPay</span></p>
+        <div class="pov" id="pov-terminal" role="tabpanel" aria-labelledby="dev-tab-terminal">
+            <p class="pov-caption"><span lang="en">Tap “Mulai scan wajah”, look at the camera, then show your palm.</span><span lang="id">Tekan “Mulai scan wajah”, lihat ke kamera, lalu tunjukkan telapak tangan.</span></p>
 
             <div class="device bp" id="biopay-device">
                 <div class="toast-container" id="toast-container-1" role="status" aria-live="polite"></div>
@@ -814,10 +797,6 @@
                             <h1 id="txt-auth-title" class="bp-h1" data-i18n="title-auth">Otorisasi Biometrik BioPay</h1>
                             <p class="bp-sub">Bayar tanpa kartu dan tanpa ponsel. Wajah dan telapak tangan Anda dicocokkan dengan BioID sebelum transaksi diproses.</p>
                         </div>
-                        <ol class="bp-steps">
-                            <li><span class="n">1</span><span><b>Scan wajah</b><small>Pemeriksaan kedalaman 3D, sekitar 3 detik</small></span></li>
-                            <li><span class="n">2</span><span><b>Scan telapak tangan</b><small>Pola pembuluh vena sebagai faktor kedua</small></span></li>
-                        </ol>
                         <button type="button" onclick="goToScreen('screen-face-scan')" class="bp-btn bp-btn-primary">
                             <i class="ph-bold ph-scan" aria-hidden="true"></i> Mulai scan wajah
                         </button>
@@ -1554,8 +1533,8 @@
         <!-- ========================================== -->
         <!-- POV 2: PERANGKAT E-WALLET (LAYAR KANAN)    -->
         <!-- ========================================== -->
-        <div class="pov" id="pov-kasku">
-            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span><span id="pov2-title"><span lang="en">POV 2 · Kasku e-wallet on a merchant's phone</span><span lang="id">POV 2 · Aplikasi e-wallet Kasku di ponsel merchant</span></span></p>
+        <div class="pov" id="pov-kasku" role="tabpanel" aria-labelledby="dev-tab-kasku" hidden>
+            <p class="pov-caption" id="pov2-title"><span lang="en">In the Kasku wallet, tap the BioPay button, then “Tagih Pelanggan”.</span><span lang="id">Di wallet Kasku, tekan tombol BioPay, lalu “Tagih Pelanggan”.</span></p>
 
             <!-- E-Wallet Berjalan Mandiri Disini -->
             <div class="app-container flex flex-col relative" id="ewallet-device">
@@ -1883,8 +1862,8 @@
         <!-- ========================================== -->
         <!-- POV 3: APLIKASI TRAVEL "LINTAS"            -->
         <!-- ========================================== -->
-        <div class="pov" id="pov-lintas">
-            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span><span lang="en">POV 3 · Lintas travel app with BioPay checkout</span><span lang="id">POV 3 · Aplikasi travel Lintas dengan checkout BioPay</span></p>
+        <div class="pov" id="pov-lintas" role="tabpanel" aria-labelledby="dev-tab-lintas" hidden>
+            <p class="pov-caption"><span lang="en">Search a flight in Lintas, then choose BioPay at checkout.</span><span lang="id">Cari tiket pesawat di Lintas, lalu pilih BioPay saat bayar.</span></p>
 
             <div class="app-container" id="travel-device">
                 <div class="toast-container" id="toast-container-3" role="status" aria-live="polite"></div>
@@ -1926,6 +1905,19 @@
                 </div>
             </div> <!-- /end travel-device -->
         </div> <!-- /end pov3 wrapper -->
+
+        <section class="pt-foot">
+            <details class="pt-note">
+                <summary><span lang="en">What is real in this prototype, and what is simulated</span><span lang="id">Apa yang nyata di prototipe ini, dan apa yang simulasi</span></summary>
+                <ul>
+                    <li><span lang="en"><b>Real:</b> camera access, and on-device detection that a face or palm is actually in front of the camera (MediaPipe, running in your browser). No image or biometric data leaves your device.</span><span lang="id"><b>Nyata:</b> akses kamera, dan deteksi di perangkat bahwa wajah atau telapak benar-benar ada di depan kamera (MediaPipe, berjalan di browser). Tidak ada gambar atau data biometrik yang keluar dari perangkat.</span></li>
+                    <li><span lang="en"><b>Simulated:</b> identity matching (every face resolves to the demo user), liveness depth sensing, palm-vein reading, balances, payments and settlement.</span><span lang="id"><b>Simulasi:</b> pencocokan identitas (semua wajah dianggap pengguna demo), sensor kedalaman liveness, pembacaan vena telapak, saldo, pembayaran, dan settlement.</span></li>
+                    <li><span lang="en"><b>Accounts:</b> sign-up (details, consent, face and palm enrollment) and sign-in work, but accounts live only in this browser's storage, with passwords stored as salted SHA-256 hashes. A production system needs a server. Demo login: ikbal@biopay.id / biopay123.</span><span lang="id"><b>Akun:</b> daftar (data diri, persetujuan, rekam wajah dan telapak) dan masuk berfungsi, tetapi akun hanya tersimpan di browser ini dengan kata sandi berupa hash SHA-256 ber-salt. Sistem produksi butuh server. Akun demo: ikbal@biopay.id / biopay123.</span></li>
+                    <li><span lang="en">Kasku and Lintas are fictional. DANA, GoPay, BCA, Agoda and other names appear only to illustrate integrations; there is no affiliation.</span><span lang="id">Kasku dan Lintas adalah merek fiktif. DANA, GoPay, BCA, Agoda, dan nama lain hanya ilustrasi integrasi; tidak ada afiliasi.</span></li>
+                    <li><span lang="en">If the camera is blocked or the detection model cannot load, scans continue in simulation mode so the demo never gets stuck.</span><span lang="id">Bila kamera diblokir atau model deteksi gagal dimuat, scan berlanjut dalam mode simulasi agar demo tidak macet.</span></li>
+                </ul>
+            </details>
+        </section>
 
     </div> <!-- /end devices-wrapper -->
 
@@ -3799,10 +3791,26 @@
             try { localStorage.setItem('biopay-pitch-lang', lang); } catch (e) {}
         }
         try { const saved = localStorage.getItem('biopay-pitch-lang'); if (saved === 'id' || saved === 'en') setPitchLang(saved); } catch (e) {}
+        // Satu perangkat tampil dalam satu waktu (tab)
+        const DEVICES = ['terminal', 'kasku', 'lintas'];
+        function selectDevice(kind, focus = false) {
+            DEVICES.forEach(k => {
+                const on = k === kind, tab = document.getElementById('dev-tab-' + k);
+                tab.setAttribute('aria-selected', String(on)); tab.tabIndex = on ? 0 : -1;
+                document.getElementById('pov-' + k).hidden = !on;
+            });
+            if (focus) document.getElementById('dev-tab-' + kind).focus();
+        }
+        document.querySelector('.pt-tabs').addEventListener('keydown', e => {
+            const cur = DEVICES.indexOf(document.querySelector('.pt-tabs [aria-selected="true"]').dataset.dev);
+            const next = { ArrowRight: cur + 1, ArrowLeft: cur - 1, Home: 0, End: DEVICES.length - 1 }[e.key];
+            if (next === undefined) return;
+            e.preventDefault(); selectDevice(DEVICES[(next + DEVICES.length) % DEVICES.length], true);
+        });
         function pitchTry(kind) {
-            const target = { terminal: 'biopay-device', kasku: 'ewallet-device', lintas: 'travel-device' }[kind];
-            const el = document.getElementById(target);
-            el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+            selectDevice(kind);
+            const el = document.getElementById({ terminal: 'biopay-device', kasku: 'ewallet-device', lintas: 'travel-device' }[kind]);
+            document.getElementById('demo').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
             el.classList.remove('pov-focus'); void el.offsetWidth; el.classList.add('pov-focus');
             setTimeout(() => {
                 if (kind === 'terminal') { BP1.closeAllModals(); BP1.goToScreen('screen-face-scan'); }
