@@ -21,3 +21,17 @@ python3 -m http.server 8000
 ```
 
 Jika izin kamera ditolak, alur tetap berjalan (scan disimulasikan).
+
+## TAO Group OS
+
+`tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah** (portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, Mini Games). Isi, teks, data, dan semua fungsinya disalin persis dari file aslinya tanpa perubahan.
+
+Di atasnya ditambahkan satu lapisan visual terpisah (`<style id="lux-layer">` dan `<script id="lux-layer-js">`), mengikuti panduan skill `ui-ux-pro-max`:
+
+- butiran film halus dan cahaya hangat yang mengikuti kursor, supaya latar hitam tidak terlihat datar;
+- garis emas berkilau di bawah header, panel kaca dengan pantulan di tepi atas, tab aktif dan tombol emas bernuansa logam;
+- animasi masuk saat ganti tab, membuka modal, dropdown notifikasi, dan saat gambar dimuat;
+- efek tekan pada tombol dan kartu, kursor tangan pada semua elemen yang bisa diklik;
+- fokus keyboard yang terlihat, label untuk tombol ikon, dan semua animasi mati jika sistem meminta *reduce motion*.
+
+Hapus kedua blok tersebut untuk kembali ke tampilan asli 100%.
