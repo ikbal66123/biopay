@@ -26,6 +26,19 @@ Jika izin kamera ditolak, alur tetap berjalan (scan disimulasikan).
 
 `tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah**: portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, dan Mini Games. Buka langsung di browser (butuh internet untuk Tailwind, ikon, font, dan foto).
 
+### Edisi Mewah
+
+- **Intro pembuka**: monogram TAO emas muncul dari blur, lalu tirai terangkat (sekali per sesi, bisa di-skip dengan ketukan).
+- **Hero sinematik** di halaman utama: foto bergerak pelan, judul serif yang muncul baris per baris, statistik yang menghitung naik.
+- **Tipografi** Cormorant Garamond (judul) + Plus Jakarta Sans (teks), mengikuti rekomendasi *Luxury Serif* dari skill `ui-ux-pro-max`.
+- **Kartu member digital** Black Card: kartu logam dengan kilau holografik, bisa dibalik untuk QR, progres poin menuju tingkat berikutnya.
+- **Bottle Show Experience**: pilih paket, tulis pesan di papan LED, atur waktunya, lalu tonton perayaan layar penuh (sparkler & confetti emas).
+- **TAO Concierge**: asisten chat yang menjawab soal rekomendasi, dress code, reservasi, event, jemputan, dan tagihan, lengkap dengan tombol aksi.
+- **Dashboard Manajemen** (tab *Manajemen*), untuk tim operasional: KPI live (pendapatan, tamu, okupansi, spend per meja), grafik pendapatan per jam, komposisi pendapatan, antrean pesanan, kedatangan VIP, dan okupansi venue. Data diperbarui tiap 3 detik.
+- **Gerak**: perpindahan halaman sinematik, kartu muncul berurutan, kartu miring 3D dengan kilau cahaya (desktop), dan tombol emas dengan kilau melintas. Semua animasi mati jika sistem meminta *reduce motion*.
+
+Semua angka bisnis di dashboard adalah data simulasi untuk demo.
+
 ### Fitur
 
 - **Menu F&B & keranjang**: tambah item, atur jumlah, catatan untuk host, service charge 10%, kirim pesanan ke meja, lalu status pesanan diperbarui otomatis (Diterima → Disiapkan → Dalam Perjalanan → Diantar). Tombol keranjang mengambang muncul saat ada isi.
