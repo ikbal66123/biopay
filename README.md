@@ -26,6 +26,16 @@ Jika izin kamera ditolak, alur tetap berjalan (scan disimulasikan).
 
 `tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah**: portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, dan Mini Games. Buka langsung di browser (butuh internet untuk Tailwind, ikon, font, dan foto).
 
+### Desain
+
+Sistem desain lengkap (warna, huruf, tata letak, gerak, komponen, gaya bahasa) ada di [`DESIGN.md`](DESIGN.md). Skill desain yang dipakai ada di `.claude/skills/` (lihat `.claude/skills/SOURCES.md`): `frontend-design`, `taste-skill`, `web-design-guidelines`, `ui-ux-pro-max`, dan `playwright-cli`.
+
+- **Huruf**: Bodoni Moda untuk judul, Jost untuk teks.
+- **Halaman depan**: foto venue, satu kalimat jelas, dan papan *Paling ramai malam ini* berisi 5 venue langsung (sisa meja atau daftar tunggu) yang bisa diketuk.
+- **Bebas ciri template**: tanpa label huruf kapital di atas judul, tanpa teks "A · B", tanpa aksen satu kata di judul, tanpa panah di tombol, tanpa efek miring atau kilau yang terus bergerak.
+- **Gerak**: satu momen saat halaman dibuka (intro dan teks hero); sisanya hanya menjawab aksi pengguna.
+- **Aksesibilitas**: skip link, `color-scheme: dark`, `theme-color`, elemen klik non-tombol bisa dipakai dengan keyboard, dan teks kecil minimal 11,5px.
+
 ### Tema Monaco Emerald
 
 Gaya *old money* / billionaire yang elegan dan segar: dial jam mewah, kapal pesiar, dan klub privat.
