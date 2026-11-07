@@ -200,6 +200,24 @@
         .bp-btn-danger-solid { background: var(--danger); color: #fff; }
         .bp-btn-danger-solid:hover { background: #912018; }
 
+        .bp-lang { align-self: flex-end; display: inline-flex; align-items: center; gap: 2px; padding: 3px 3px 3px 10px; border: 1px solid var(--line-2); border-radius: var(--r-ctl); background: var(--card); color: var(--muted); }
+        .bp-lang i { font-size: 18px; margin-right: 4px; }
+        .bp-lang button { min-width: 44px; min-height: 36px; padding: 0 8px; border: 0; border-radius: 7px; background: none; color: var(--muted); font: 600 13px var(--font-sans); cursor: pointer; }
+        .bp-lang button:hover { color: var(--ink); background: var(--hover); }
+        .bp-lang button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+        .bp-row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 10px; }
+        .bp-phone { display: grid; grid-template-columns: minmax(0, 132px) minmax(0, 1fr); gap: 8px; }
+        .bp-vf-doc { aspect-ratio: 4 / 3; }
+        .bp-vf-doc video { transform: none; }
+        .bp-doc-frame { position: absolute; z-index: 2; left: 7%; right: 7%; top: 50%; transform: translateY(-50%); aspect-ratio: 1.586; border: 2px dashed rgba(255,255,255,.9); border-radius: 12px; box-shadow: 0 0 0 999px rgba(11,18,32,.45); pointer-events: none; }
+        .bp-doc-preview { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; object-fit: contain; background: var(--vf); }
+        .bp-doc-preview:not(.hidden) ~ .bp-doc-frame { display: none; }
+        .bp-doc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .bp-sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        label.bp-btn:has(+ .bp-sr-only:focus-visible) { outline: 2px solid var(--navy); outline-offset: 2px; }
+        .bp-doc-thumb { flex: none; width: 76px; height: 48px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); }
+        .bp-profile .bp-row-main small + small { margin-top: 2px; }
+
         /* Chips & notes */
         .bp-chip { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--hover); color: var(--ink-2); font: 600 12px/1 var(--font-sans); white-space: nowrap; flex: none; }
         .bp-chip-ink { background: var(--ink); color: #fff; font-family: var(--font-mono); letter-spacing: .04em; }
@@ -779,6 +797,13 @@
                 <!-- Screen 1: Start -->
                 <div id="screen-start" class="screen active">
                     <div class="bp-stack">
+                        <div class="bp-lang" role="group" aria-label="Bahasa">
+                            <i class="ph ph-translate" aria-hidden="true"></i>
+                            <button type="button" data-lang="ID" aria-pressed="true" onclick="changeLanguage('ID', 'Indonesia', true)" lang="id">ID</button>
+                            <button type="button" data-lang="EN" aria-pressed="false" onclick="changeLanguage('EN', 'English', true)" lang="en">EN</button>
+                            <button type="button" data-lang="JP" aria-pressed="false" onclick="changeLanguage('JP', '日本語', true)" lang="ja">日本語</button>
+                        </div>
+
                         <div class="bp-sensor" aria-hidden="true">
                             <span class="bp-corners"></span>
                             <i class="ph ph-scan-smiley"></i>
@@ -808,26 +833,66 @@
                 <div id="screen-register" class="screen">
                     <div class="bp-stack">
                         <div class="bp-stack-tight">
-                            <p class="bp-eyebrow">Daftar BioID · Langkah 1 dari 3</p>
+                            <p class="bp-eyebrow">Daftar BioID · Langkah 1 dari 4</p>
                             <h2 class="bp-h2">Buat akun BioPay</h2>
-                            <p class="bp-sub">Wajah dan telapak tangan direkam di langkah berikutnya. Setelah itu kamu bisa bayar tanpa kartu dan tanpa ponsel.</p>
+                            <p class="bp-sub">Setelah data diri, kamu akan memfoto dokumen identitas, lalu merekam wajah dan telapak tangan.</p>
                         </div>
                         <form class="bp-form" novalidate onsubmit="event.preventDefault(); submitRegister();">
-                            <div class="bp-field"><label for="reg-name">Nama lengkap</label><input id="reg-name" class="bp-input" autocomplete="name" maxlength="40" aria-describedby="reg-name-err"><p id="reg-name-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field"><label for="reg-name">Nama lengkap</label><input id="reg-name" class="bp-input" autocomplete="name" maxlength="40" aria-describedby="reg-name-hint reg-name-err"><p id="reg-name-hint" class="bp-fine bp-hint">Sesuai dokumen identitas.</p><p id="reg-name-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field"><label for="reg-country">Kewarganegaraan</label><select id="reg-country" class="bp-input" autocomplete="country" onchange="onCountryChange()"></select></div>
+                            <div class="bp-field">
+                                <div class="bp-row2">
+                                    <div class="bp-field"><label for="reg-doctype">Jenis dokumen</label><select id="reg-doctype" class="bp-input" onchange="onDocTypeChange()"></select></div>
+                                    <div class="bp-field"><label for="reg-docno">Nomor dokumen</label><input id="reg-docno" class="bp-input" autocomplete="off" maxlength="24" spellcheck="false" aria-describedby="reg-docno-hint reg-docno-err"></div>
+                                </div>
+                                <p id="reg-docno-hint" class="bp-fine bp-hint"></p><p id="reg-docno-err" class="bp-err" aria-live="polite"></p>
+                            </div>
                             <div class="bp-field"><label for="reg-email">Email</label><input id="reg-email" type="email" class="bp-input" autocomplete="email" inputmode="email" maxlength="60" aria-describedby="reg-email-err"><p id="reg-email-err" class="bp-err" aria-live="polite"></p></div>
-                            <div class="bp-field"><label for="reg-phone">Nomor HP</label><input id="reg-phone" type="tel" class="bp-input" autocomplete="tel" inputmode="tel" placeholder="0812 3456 7890" maxlength="18" aria-describedby="reg-phone-err"><p id="reg-phone-err" class="bp-err" aria-live="polite"></p></div>
+                            <div class="bp-field"><label for="reg-phone">Nomor HP</label>
+                                <div class="bp-phone"><select id="reg-dial" class="bp-input" aria-label="Kode negara" autocomplete="tel-country-code" onchange="this.dataset.touched = '1'"></select><input id="reg-phone" type="tel" class="bp-input" autocomplete="tel-national" inputmode="tel" placeholder="812 3456 7890" maxlength="18" aria-describedby="reg-phone-err"></div>
+                                <p id="reg-phone-err" class="bp-err" aria-live="polite"></p></div>
                             <div class="bp-field"><label for="reg-pass">Kata sandi</label>
                                 <div class="bp-pass"><input id="reg-pass" type="password" class="bp-input" autocomplete="new-password" aria-describedby="reg-pass-hint reg-pass-err"><button type="button" class="bp-pass-toggle" aria-label="Tampilkan kata sandi" aria-pressed="false" onclick="togglePassword('reg-pass', this)"><i class="ph ph-eye" aria-hidden="true"></i></button></div>
                                 <p id="reg-pass-hint" class="bp-fine bp-hint">Minimal 8 karakter, berisi huruf dan angka.</p><p id="reg-pass-err" class="bp-err" aria-live="polite"></p></div>
                             <div class="bp-field"><label for="reg-pass2">Ulangi kata sandi</label><input id="reg-pass2" type="password" class="bp-input" autocomplete="new-password" aria-describedby="reg-pass2-err"><p id="reg-pass2-err" class="bp-err" aria-live="polite"></p></div>
                             <div class="bp-field">
-                                <label class="bp-check"><input type="checkbox" id="reg-consent" aria-describedby="reg-consent-err"><span>Saya setuju wajah dan telapak tangan saya diproses untuk verifikasi pembayaran. Data ini bisa saya hapus kapan saja dari Pengaturan (UU No. 27/2022 tentang Pelindungan Data Pribadi).</span></label>
+                                <label class="bp-check"><input type="checkbox" id="reg-consent" aria-describedby="reg-consent-err"><span>Saya setuju wajah, telapak tangan, dan foto dokumen identitas saya diproses untuk verifikasi pembayaran. Data ini bisa saya hapus kapan saja dari Pengaturan (UU No. 27/2022 tentang Pelindungan Data Pribadi).</span></label>
                                 <p id="reg-consent-err" class="bp-err" aria-live="polite"></p>
                             </div>
-                            <button type="submit" class="bp-btn bp-btn-primary">Lanjut: rekam wajah <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
+                            <button type="submit" class="bp-btn bp-btn-primary">Lanjut: foto dokumen <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
                         </form>
                         <div class="bp-switch-auth">Sudah punya BioID? <button type="button" class="bp-link" onclick="openLogin()">Masuk</button></div>
                         <button type="button" class="bp-btn bp-btn-secondary" onclick="goToScreen('screen-start')">Batal</button>
+                    </div>
+                </div>
+
+                <!-- ===== Daftar BioID: foto dokumen identitas ===== -->
+                <div id="screen-enroll-doc" class="screen">
+                    <div class="bp-stack">
+                        <div class="bp-stack-tight">
+                            <p class="bp-eyebrow">Daftar BioID · Langkah 2 dari 4</p>
+                            <h2 class="bp-h2">Foto dokumen identitas</h2>
+                            <p class="bp-sub">Letakkan dokumen di dalam bingkai. Pastikan foto wajah dan semua tulisan terbaca, tanpa pantulan cahaya.</p>
+                        </div>
+                        <div class="bp-vf bp-vf-doc">
+                            <span class="bp-vf-ghost" aria-hidden="true"><i class="ph ph-identification-card"></i></span>
+                            <video id="video-id-doc" autoplay muted playsinline></video>
+                            <img id="doc-preview" class="bp-doc-preview hidden" alt="Pratinjau foto dokumen identitas">
+                            <span class="bp-doc-frame" aria-hidden="true"></span>
+                            <span class="bp-vf-tag"><i class="ph-bold ph-identification-card" aria-hidden="true"></i> <span id="doc-tag">KTP</span></span>
+                            <p class="bp-vf-status" id="doc-status" aria-live="polite">Menyiapkan kamera…</p>
+                        </div>
+                        <div class="bp-doc-actions" id="doc-actions-capture">
+                            <button type="button" class="bp-btn bp-btn-primary" onclick="captureDoc()"><i class="ph-bold ph-camera" aria-hidden="true"></i> Ambil foto</button>
+                            <label class="bp-btn bp-btn-secondary" for="doc-file"><i class="ph-bold ph-upload-simple" aria-hidden="true"></i> Unggah dari galeri</label>
+                            <input type="file" id="doc-file" class="bp-sr-only" accept="image/*" onchange="uploadDoc(this)">
+                        </div>
+                        <div class="bp-doc-actions hidden" id="doc-actions-review">
+                            <button type="button" class="bp-btn bp-btn-secondary" onclick="retakeDoc()"><i class="ph-bold ph-arrow-counter-clockwise" aria-hidden="true"></i> Ulangi</button>
+                            <button type="button" class="bp-btn bp-btn-primary" onclick="confirmDoc()">Pakai foto ini <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></button>
+                        </div>
+                        <p id="doc-err" class="bp-err" aria-live="polite"></p>
+                        <button type="button" class="bp-btn bp-btn-secondary" onclick="goToScreen('screen-register')">Kembali ke data diri</button>
                     </div>
                 </div>
 
@@ -835,7 +900,7 @@
                 <div id="screen-enroll-face" class="screen">
                     <div class="bp-stack">
                         <div class="bp-stack-tight">
-                            <p class="bp-eyebrow">Daftar BioID · Langkah 2 dari 3</p>
+                            <p class="bp-eyebrow">Daftar BioID · Langkah 3 dari 4</p>
                             <h2 class="bp-h2">Rekam wajah</h2>
                             <p class="bp-sub">Lepas masker atau kacamata hitam, lalu tatap kamera di tempat yang cukup terang.</p>
                         </div>
@@ -847,7 +912,6 @@
                             <span class="bp-vf-tag"><i class="ph-bold ph-user-focus" aria-hidden="true"></i> Pendaftaran</span>
                             <p class="bp-vf-status" aria-live="polite">Menyiapkan kamera…</p>
                         </div>
-                        <button type="button" class="bp-btn bp-btn-secondary" onclick="goToScreen('screen-register')">Kembali ke data diri</button>
                     </div>
                 </div>
 
@@ -855,7 +919,7 @@
                 <div id="screen-enroll-palm" class="screen">
                     <div class="bp-stack">
                         <div class="bp-stack-tight">
-                            <p class="bp-eyebrow">Daftar BioID · Langkah 3 dari 3</p>
+                            <p class="bp-eyebrow">Daftar BioID · Langkah 4 dari 4</p>
                             <h2 class="bp-h2">Rekam telapak tangan</h2>
                             <p class="bp-sub">Buka telapak tangan kanan dan tunjukkan ke kamera, jari sedikit direnggangkan.</p>
                         </div>
@@ -885,7 +949,8 @@
                                 <dl class="bp-dl">
                                     <div><dt>Nama</dt><dd data-user="nameUpper">-</dd></div>
                                     <div><dt>BioID</dt><dd class="bp-num" id="reg-done-bioid">-</dd></div>
-                                    <div><dt>Email</dt><dd data-user="email">-</dd></div>
+                                    <div><dt>Dokumen</dt><dd data-user="docLabel">-</dd></div>
+                                    <div><dt>Kewarganegaraan</dt><dd data-user="countryName">-</dd></div>
                                 </dl>
                             </div>
                         </div>
@@ -1232,6 +1297,7 @@
                                         <span><small>Pemilik</small><b data-user="name">Ikbal Habibi</b></span>
                                         <span><small>No. ID paspor</small><b class="bp-num" data-user="passport">BIO-ID-12345-US</b></span>
                                         <span><small>Status biometrik</small><b class="bp-ok-text">VERIFIED</b></span>
+                                        <span><small>Kewarganegaraan</small><b data-user="countryName">Indonesia</b></span>
                                         <span><small>Berlaku s/d</small><b class="bp-num">06 NOV 2031</b></span>
                                     </span>
                                 </span>
@@ -1260,7 +1326,8 @@
                         <section id="tab-pengaturan" class="bp-panel hidden">
                             <div class="bp-card bp-card-pad bp-profile">
                                 <span class="bp-avatar bp-avatar-lg" aria-hidden="true" data-user="initials">IH</span>
-                                <span class="bp-row-main"><b data-user="name">Ikbal Habibi</b><small><span data-user="email">ikbal@biopay.id</span> · BioID #<span data-user="bioId">12345</span></small></span>
+                                <span class="bp-row-main"><b data-user="name">Ikbal Habibi</b><small><span data-user="email">ikbal@biopay.id</span> · BioID #<span data-user="bioId">12345</span></small><small><span data-user="docLabel">KTP</span> · <span data-user="countryName">Indonesia</span> · <span data-user="phone">+6281234567890</span></small></span>
+                                <img class="bp-doc-thumb hidden" data-user-img="docPhoto" alt="Foto dokumen identitas">
                             </div>
                             <div class="bp-section">
                                 <p class="bp-section-title">Preferensi</p>
@@ -1966,11 +2033,32 @@
             return BIO.loading[kind];
         }
 
-        function scanBiometric({ videoId, kind = 'face', cancelled = () => false, statusEl = null, simMs = 2500, needMs = 1500 }) {
+        // Foto dokumen (diam, biasanya lebar): BlazeFace bekerja pada input persegi, jadi periksa beberapa potongan
+        // persegi di sepanjang gambar dengan detektor mode IMAGE.
+        async function detectFaceInImage(canvas) {
+            if (!BIO.docLoading) BIO.docLoading = (async () => {
+                if (!await loadBioModel('face')) return null;
+                const { v, fs } = await BIO.vision;
+                return v.FaceDetector.createFromOptions(fs, { baseOptions: { modelAssetPath: MP_MODELS.face, delegate: 'CPU' }, runningMode: 'IMAGE', minDetectionConfidence: 0.5 });
+            })().catch(e => { console.warn('Detektor foto dokumen gagal dimuat', e); BIO.docLoading = null; return null; });
+            const det = await BIO.docLoading; if (!det) return null;
+            const w = canvas.width, h = canvas.height, side = Math.min(w, h), long = Math.max(w, h);
+            const steps = Math.max(1, Math.ceil(long / side * 1.5)), sq = document.createElement('canvas'); sq.width = sq.height = 320;
+            for (let i = 0; i < steps; i++) {
+                const off = steps === 1 ? 0 : Math.round((long - side) * i / (steps - 1));
+                sq.getContext('2d').drawImage(canvas, w >= h ? off : 0, w >= h ? 0 : off, side, side, 0, 0, 320, 320);
+                if (det.detect(sq).detections.length) return true;
+            }
+            return false;
+        }
+
+        function scanBiometric({ videoId, kind = 'face', cancelled = () => false, statusEl = null, simMs = 2500, needMs = 1500, t = (x, ...a) => a.reduce((r, v, i) => r.replaceAll('{' + i + '}', v), x) }) {
             const video = document.getElementById(videoId);
             const box = video && video.parentElement;
             const status = statusEl || (box && box.querySelector('.bp-vf-status'));
-            const label = kind === 'face' ? 'Wajah' : 'Telapak tangan';
+            const M = kind === 'face'
+                ? { ok: 'Wajah terverifikasi', seen: 'Wajah terdeteksi · {0}%', aim: 'Arahkan wajah ke kamera…' }
+                : { ok: 'Telapak tangan terverifikasi', seen: 'Telapak tangan terdeteksi · {0}%', aim: 'Arahkan telapak tangan ke kamera…' };
             const say = t => { if (status) status.textContent = t; };
             const sleep = ms => new Promise(r => setTimeout(r, ms));
             const mark = st => { if (box) box.setAttribute('data-bio', st); };
@@ -1978,10 +2066,10 @@
 
             return (async () => {
                 if (!video || !video.srcObject) return simulate();
-                mark('loading'); say('Menyiapkan deteksi AI…');
+                mark('loading'); say(t('Menyiapkan deteksi AI…'));
                 const model = await Promise.race([loadBioModel(kind), sleep(15000).then(() => null)]);
                 if (cancelled()) return 'cancelled';
-                if (!model || !video.srcObject) return simulate('Deteksi AI tidak tersedia · simulasi');
+                if (!model || !video.srcObject) return simulate(t('Deteksi AI tidak tersedia · simulasi'));
 
                 let canvas = box.querySelector('canvas.bio-overlay');
                 if (!canvas) { canvas = document.createElement('canvas'); canvas.className = 'bio-overlay'; canvas.setAttribute('aria-hidden', 'true'); box.appendChild(canvas); }
@@ -2011,7 +2099,7 @@
                         if (stopped) return;
                         if (cancelled()) return finish('cancelled');
                         if (skipped) { mark('sim'); return finish('skipped'); }
-                        if (!video.srcObject) { stopped = true; simulate('Kamera terputus · simulasi').then(finish); return; }
+                        if (!video.srcObject) { stopped = true; simulate(t('Kamera terputus · simulasi')).then(finish); return; }
                         const now = performance.now(), dt = Math.min(now - last, 200); last = now;
                         let found = null;
                         if (video.readyState >= 2 && video.videoWidth) {
@@ -2026,17 +2114,17 @@
                                     const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
                                     found = { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys), points: pts };
                                 }
-                            } catch (e) { console.warn('Deteksi gagal', e); stopped = true; simulate('Deteksi AI tidak tersedia · simulasi').then(finish); return; }
+                            } catch (e) { console.warn('Deteksi gagal', e); stopped = true; simulate(t('Deteksi AI tidak tersedia · simulasi')).then(finish); return; }
                         }
                         hit = found ? hit + dt : Math.max(0, hit - dt * 0.6);
                         const ok = hit >= needMs;
                         draw(found, ok);
-                        if (ok) { mark('ok'); say(`${label} terverifikasi`); stopped = true; setTimeout(() => finish('detected'), 450); return; }
-                        say(found ? `${label} terdeteksi · ${Math.min(99, Math.round(hit / needMs * 100))}%` : `Arahkan ${label.toLowerCase()} ke kamera…`);
+                        if (ok) { mark('ok'); say(t(M.ok)); stopped = true; setTimeout(() => finish('detected'), 450); return; }
+                        say(found ? t(M.seen, Math.min(99, Math.round(hit / needMs * 100))) : t(M.aim));
                         if (!skipBtn && now - start > 9000) {
                             skipBtn = document.createElement('button');
                             skipBtn.type = 'button'; skipBtn.className = 'bio-skip';
-                            skipBtn.textContent = 'Lewati · mode demo'; skipBtn.title = `${label} tidak terdeteksi. Lanjutkan tanpa deteksi.`;
+                            skipBtn.textContent = t('Lewati · mode demo');
                             skipBtn.onclick = () => { skipped = true; };
                             box.appendChild(skipBtn);
                         }
@@ -2046,6 +2134,52 @@
                 });
             })();
         }
+
+        // ==========================================
+        // BAHASA (ID / EN / JP): kamus teks Indonesia -> terjemahan. Dipakai untuk menerjemahkan teks di layar
+        // BioPay secara otomatis, termasuk teks yang muncul belakangan.
+        // ==========================================
+        const I18N = {"Pembayaran biometrik": {"EN": "Biometric payment", "JP": "生体認証決済"}, "Otorisasi Biometrik BioPay": {"EN": "BioPay Biometric Authorization", "JP": "BioPay 生体認証"}, "Bayar tanpa kartu dan tanpa ponsel. Wajah dan telapak tangan Anda dicocokkan dengan BioID sebelum transaksi diproses.": {"EN": "Pay without a card or a phone. Your face and palm are matched to your BioID before the payment is processed.", "JP": "カードもスマホも不要。決済の前に、顔と手のひらを BioID と照合します。"}, "Scan wajah": {"EN": "Face scan", "JP": "顔スキャン"}, "Pemeriksaan kedalaman 3D, sekitar 3 detik": {"EN": "3D depth check, about 3 seconds", "JP": "3D 深度チェック（約3秒）"}, "Scan telapak tangan": {"EN": "Palm scan", "JP": "手のひらスキャン"}, "Pola pembuluh vena sebagai faktor kedua": {"EN": "Vein pattern as the second factor", "JP": "静脈パターンによる第二要素"}, "Mulai scan wajah": {"EN": "Start face scan", "JP": "顔スキャンを開始"}, "Masuk": {"EN": "Sign in", "JP": "ログイン"}, "Daftar BioID": {"EN": "Create BioID", "JP": "BioID を作成"}, "BioPay Mesh Protocol v3.2 · Template biometrik tidak disimpan di terminal ini": {"EN": "BioPay Mesh Protocol v3.2 · Biometric templates are not stored on this terminal", "JP": "BioPay Mesh Protocol v3.2 · 生体テンプレートはこの端末に保存されません"}, "Bahasa": {"EN": "Language", "JP": "言語"}, "Daftar BioID · Langkah 1 dari 4": {"EN": "Create BioID · Step 1 of 4", "JP": "BioID 作成 · ステップ 1/4"}, "Daftar BioID · Langkah 2 dari 4": {"EN": "Create BioID · Step 2 of 4", "JP": "BioID 作成 · ステップ 2/4"}, "Daftar BioID · Langkah 3 dari 4": {"EN": "Create BioID · Step 3 of 4", "JP": "BioID 作成 · ステップ 3/4"}, "Daftar BioID · Langkah 4 dari 4": {"EN": "Create BioID · Step 4 of 4", "JP": "BioID 作成 · ステップ 4/4"}, "Buat akun BioPay": {"EN": "Create your BioPay account", "JP": "BioPay アカウントを作成"}, "Setelah data diri, kamu akan memfoto dokumen identitas, lalu merekam wajah dan telapak tangan.": {"EN": "After your details, you'll photograph your ID document, then record your face and palm.", "JP": "個人情報の入力後、本人確認書類を撮影し、顔と手のひらを登録します。"}, "Nama lengkap": {"EN": "Full name", "JP": "氏名"}, "Sesuai dokumen identitas.": {"EN": "As shown on your ID document.", "JP": "本人確認書類の表記どおりに入力してください。"}, "Kewarganegaraan": {"EN": "Nationality", "JP": "国籍"}, "Jenis dokumen": {"EN": "Document type", "JP": "書類の種類"}, "Nomor dokumen": {"EN": "Document number", "JP": "書類番号"}, "Email": {"EN": "Email", "JP": "メールアドレス"}, "Nomor HP": {"EN": "Mobile number", "JP": "携帯電話番号"}, "Kode negara": {"EN": "Country code", "JP": "国番号"}, "Kata sandi": {"EN": "Password", "JP": "パスワード"}, "Minimal 8 karakter, berisi huruf dan angka.": {"EN": "At least 8 characters, with letters and numbers.", "JP": "8文字以上で、英字と数字を含めてください。"}, "Ulangi kata sandi": {"EN": "Repeat password", "JP": "パスワード（確認）"}, "Saya setuju wajah, telapak tangan, dan foto dokumen identitas saya diproses untuk verifikasi pembayaran. Data ini bisa saya hapus kapan saja dari Pengaturan (UU No. 27/2022 tentang Pelindungan Data Pribadi).": {"EN": "I agree that my face, palm and ID document photo are processed to verify payments. I can delete this data at any time in Settings (Indonesian Personal Data Protection Law No. 27/2022).", "JP": "決済確認のため、顔・手のひら・本人確認書類の写真が処理されることに同意します。このデータは設定からいつでも削除できます（インドネシア個人情報保護法 2022年第27号）。"}, "Lanjut: foto dokumen": {"EN": "Next: photograph ID", "JP": "次へ：書類を撮影"}, "Sudah punya BioID?": {"EN": "Already have a BioID?", "JP": "BioID をお持ちですか？"}, "Batal": {"EN": "Cancel", "JP": "キャンセル"}, "Foto dokumen identitas": {"EN": "Photograph your ID document", "JP": "本人確認書類の撮影"}, "Letakkan dokumen di dalam bingkai. Pastikan foto wajah dan semua tulisan terbaca, tanpa pantulan cahaya.": {"EN": "Place the document inside the frame. Make sure the photo and all text are readable, with no glare.", "JP": "書類を枠内に合わせてください。顔写真と文字がはっきり読め、光の反射がないようにしてください。"}, "Ambil foto": {"EN": "Take photo", "JP": "撮影する"}, "Unggah dari galeri": {"EN": "Upload from gallery", "JP": "ギャラリーからアップロード"}, "Ulangi": {"EN": "Retake", "JP": "撮り直す"}, "Pakai foto ini": {"EN": "Use this photo", "JP": "この写真を使う"}, "Kembali ke data diri": {"EN": "Back to details", "JP": "個人情報に戻る"}, "Posisikan dokumen di dalam bingkai": {"EN": "Fit the document inside the frame", "JP": "書類を枠内に合わせてください"}, "Kamera tidak tersedia. Unggah foto dokumen dari galeri.": {"EN": "Camera unavailable. Upload a photo of your document instead.", "JP": "カメラを使用できません。書類の写真をアップロードしてください。"}, "Kamera belum aktif. Gunakan “Unggah dari galeri”.": {"EN": "The camera isn't on. Use “Upload from gallery”.", "JP": "カメラがオフです。「ギャラリーからアップロード」を使ってください。"}, "Memeriksa foto dokumen…": {"EN": "Checking the document photo…", "JP": "書類の写真を確認しています…"}, "Foto wajah di dokumen terdeteksi": {"EN": "Face photo on the document detected", "JP": "書類の顔写真を検出しました"}, "Foto wajah di dokumen tidak terlihat jelas. Sebaiknya ulangi foto.": {"EN": "The face photo on the document isn't clear. Consider retaking it.", "JP": "書類の顔写真が不鮮明です。撮り直しをおすすめします。"}, "Foto dokumen tersimpan. Pemeriksaan otomatis tidak tersedia.": {"EN": "Document photo saved. Automatic check unavailable.", "JP": "書類の写真を保存しました。自動チェックは利用できません。"}, "File harus berupa gambar (JPG, PNG, atau HEIC).": {"EN": "The file must be an image (JPG, PNG or HEIC).", "JP": "画像ファイル（JPG・PNG・HEIC）を選んでください。"}, "Ukuran file maksimal 10 MB.": {"EN": "The file must be 10 MB or smaller.", "JP": "ファイルサイズは 10 MB 以下にしてください。"}, "Gambar tidak bisa dibuka. Coba file lain.": {"EN": "The image couldn't be opened. Try another file.", "JP": "画像を開けませんでした。別のファイルをお試しください。"}, "Ambil atau unggah foto dokumen dulu.": {"EN": "Take or upload a document photo first.", "JP": "先に書類を撮影またはアップロードしてください。"}, "Pratinjau foto dokumen identitas": {"EN": "ID document photo preview", "JP": "本人確認書類のプレビュー"}, "Lanjut: rekam wajah": {"EN": "Next: record face", "JP": "次へ：顔を登録"}, "Pendaftaran": {"EN": "Enrollment", "JP": "登録"}, "Menyiapkan kamera…": {"EN": "Preparing camera…", "JP": "カメラを準備しています…"}, "Rekam wajah": {"EN": "Record your face", "JP": "顔の登録"}, "Lepas masker atau kacamata hitam, lalu tatap kamera di tempat yang cukup terang.": {"EN": "Remove any mask or sunglasses, then look at the camera in good light.", "JP": "マスクやサングラスを外し、明るい場所でカメラを見てください。"}, "Rekam telapak tangan": {"EN": "Record your palm", "JP": "手のひらの登録"}, "Buka telapak tangan kanan dan tunjukkan ke kamera, jari sedikit direnggangkan.": {"EN": "Open your right palm and show it to the camera, fingers slightly apart.", "JP": "右手のひらを開き、指を少し広げてカメラに向けてください。"}, "BioID kamu aktif": {"EN": "Your BioID is active", "JP": "BioID が有効になりました"}, "Mulai sekarang kamu bisa bayar di semua terminal BioPay dengan wajah dan telapak tangan.": {"EN": "You can now pay at any BioPay terminal with your face and palm.", "JP": "これからはすべての BioPay 端末で、顔と手のひらで支払えます。"}, "DATA BIOID": {"EN": "BIOID DATA", "JP": "BIOID データ"}, "BARU": {"EN": "NEW", "JP": "新規"}, "Nama": {"EN": "Name", "JP": "氏名"}, "Dokumen": {"EN": "Document", "JP": "書類"}, "Buka dashboard": {"EN": "Open dashboard", "JP": "ダッシュボードを開く"}, "Kembali ke layar awal": {"EN": "Back to start", "JP": "最初の画面に戻る"}, "Masuk ke akun BioPay": {"EN": "Sign in to BioPay", "JP": "BioPay にログイン"}, "Email atau nomor HP": {"EN": "Email or mobile number", "JP": "メールアドレスまたは携帯番号"}, "atau": {"EN": "or", "JP": "または"}, "Masuk dengan wajah": {"EN": "Sign in with face", "JP": "顔でログイン"}, "Belum punya BioID?": {"EN": "No BioID yet?", "JP": "BioID をお持ちでないですか？"}, "Daftar": {"EN": "Sign up", "JP": "登録"}, "Kembali": {"EN": "Back", "JP": "戻る"}, "Tampilkan kata sandi": {"EN": "Show password", "JP": "パスワードを表示"}, "Sembunyikan kata sandi": {"EN": "Hide password", "JP": "パスワードを隠す"}, "Langkah 1 dari 2": {"EN": "Step 1 of 2", "JP": "ステップ 1/2"}, "Langkah 2 dari 2": {"EN": "Step 2 of 2", "JP": "ステップ 2/2"}, "Verifikasi wajah": {"EN": "Face verification", "JP": "顔認証"}, "Tatap kamera dan tahan posisi sebentar.": {"EN": "Look at the camera and hold still.", "JP": "カメラを見て、そのまま少しお待ちください。"}, "Mengukur kedalaman wajah…": {"EN": "Measuring face depth…", "JP": "顔の奥行きを測定しています…"}, "Wajah cocok": {"EN": "Face matched", "JP": "顔が一致しました"}, "Identitas ditemukan": {"EN": "Identity found", "JP": "本人を確認しました"}, "KELAS 3 · TERVERIFIKASI": {"EN": "LEVEL 3 · VERIFIED", "JP": "レベル3 · 認証済み"}, "Skor kecocokan": {"EN": "Match score", "JP": "一致スコア"}, "Lanjut scan telapak tangan": {"EN": "Continue to palm scan", "JP": "手のひらスキャンへ"}, "Verifikasi telapak tangan": {"EN": "Palm verification", "JP": "手のひら認証"}, "Letakkan telapak tangan terbuka sekitar 10 cm di atas sensor.": {"EN": "Hold your open palm about 10 cm above the sensor.", "JP": "開いた手のひらをセンサーの約10cm上にかざしてください。"}, "Pola vena": {"EN": "Vein pattern", "JP": "静脈パターン"}, "Membaca aliran darah dan suhu…": {"EN": "Reading blood flow and temperature…", "JP": "血流と温度を読み取っています…"}, "Biometrik ganda berhasil": {"EN": "Two-factor biometrics passed", "JP": "二要素生体認証に成功"}, "Konfirmasi pembayaran": {"EN": "Confirm payment", "JP": "支払いの確認"}, "Rincian Tagihan": {"EN": "Bill details", "JP": "請求の内訳"}, "Rincian Tagihan ({0})": {"EN": "Bill details ({0})", "JP": "請求の内訳（{0}）"}, "VAT / pajak 10%": {"EN": "VAT 10%", "JP": "付加価値税 10%"}, "Turis terdeteksi: berhak tax refund": {"EN": "Tourist detected: eligible for tax refund", "JP": "旅行者を検出：免税還付の対象です"}, "Total tagihan": {"EN": "Total", "JP": "合計"}, "Kurs": {"EN": "Exchange rate", "JP": "為替レート"}, "Kurs (1 {0})": {"EN": "Rate (1 {0})", "JP": "レート（1 {0}）"}, "Dipotong dari wallet": {"EN": "Charged to wallet", "JP": "ウォレットから引き落とし"}, "Auto-FX aktif": {"EN": "Auto-FX on", "JP": "自動両替オン"}, "Konfirmasi Bayar": {"EN": "Confirm payment", "JP": "支払う"}, "Saldo tidak cukup": {"EN": "Insufficient balance", "JP": "残高が不足しています"}, "Saldo Awal: {0}": {"EN": "Starting balance: {0}", "JP": "支払前残高：{0}"}, "Sisa: {0}": {"EN": "Remaining: {0}", "JP": "残高：{0}"}, "Lewati ke Menu": {"EN": "Skip to menu", "JP": "メニューへ進む"}, "Pembayaran berhasil": {"EN": "Payment successful", "JP": "お支払いが完了しました"}, "Struk sedang dicetak. Silakan ambil barang Anda.": {"EN": "Printing your receipt. Please take your items.", "JP": "レシートを印刷しています。商品をお受け取りください。"}, "Mencetak struk…": {"EN": "Printing receipt…", "JP": "レシートを印刷中…"}, "Pengembalian pajak turis": {"EN": "Tourist tax refund", "JP": "旅行者向け免税還付"}, "Total pembelian": {"EN": "Total purchase", "JP": "購入合計"}, "Pajak dibayar (VAT)": {"EN": "VAT paid", "JP": "支払った付加価値税"}, "Estimasi refund": {"EN": "Estimated refund", "JP": "還付見込額"}, "Struk ini sudah terdaftar. Refund otomatis masuk ke": {"EN": "This receipt is registered. The refund goes automatically to", "JP": "このレシートは登録済みです。還付金は自動的に"}, "saat Anda melewati autogate imigrasi bandara.": {"EN": "when you pass the airport immigration autogate.", "JP": "へ、空港の自動化ゲート通過時に入金されます。"}, "Selesai": {"EN": "Done", "JP": "完了"}, "Area akun": {"EN": "Account area", "JP": "アカウント"}, "Verifikasi ulang wajah": {"EN": "Verify your face again", "JP": "顔を再認証"}, "Menu akun berisi saldo dan data pribadi, jadi wajah Anda diperiksa sekali lagi.": {"EN": "The account menu shows your balance and personal data, so your face is checked once more.", "JP": "アカウントには残高と個人情報が含まれるため、もう一度顔を確認します。"}, "Menganalisis micro-expression…": {"EN": "Analyzing micro-expressions…", "JP": "微表情を分析しています…"}, "· Terverifikasi": {"EN": "· Verified", "JP": "· 認証済み"}, "Saldo": {"EN": "Balance", "JP": "残高"}, "· sumber dana utama": {"EN": "· main funding source", "JP": "· メインの支払元"}, "Keamanan biometrik aktif": {"EN": "Biometric security on", "JP": "生体認証セキュリティ有効"}, "Wajah + telapak wajib untuk setiap transaksi": {"EN": "Face + palm required for every transaction", "JP": "すべての取引で顔と手のひらが必要です"}, "Aman": {"EN": "Secure", "JP": "安全"}, "Sensor pemindai": {"EN": "Scanner", "JP": "スキャナー"}, "Akurasi 99,9%": {"EN": "99.9% accuracy", "JP": "精度 99.9%"}, "Rata-rata 24 jam": {"EN": "24-hour average", "JP": "24時間平均"}, "Pengaturan keamanan": {"EN": "Security settings", "JP": "セキュリティ設定"}, "Verifikasi ganda (2FA)": {"EN": "Two-factor verification (2FA)", "JP": "二要素認証（2FA）"}, "Wajibkan scan wajah + telapak": {"EN": "Require face + palm scan", "JP": "顔と手のひらのスキャンを必須にする"}, "Konversi kurs otomatis": {"EN": "Automatic currency conversion", "JP": "自動通貨換算"}, "Bayar merchant asing langsung dari saldo rupiah": {"EN": "Pay foreign merchants directly from your rupiah balance", "JP": "海外の加盟店にルピア残高から直接支払う"}, "Bayar perjalanan dengan wajah": {"EN": "Pay for travel with your face", "JP": "旅行代金を顔で支払う"}, "Hubungkan aplikasi travel, lalu cukup ucapkan “Bayar pakai BioPay Travel” saat checkout.": {"EN": "Connect a travel app, then just say “Pay with BioPay Travel” at checkout.", "JP": "旅行アプリを連携し、決済時に「BioPay Travel で支払う」と言うだけです。"}, "Platform terhubung": {"EN": "Connected platforms", "JP": "連携済みサービス"}, "Pesawat, hotel, kereta, atraksi": {"EN": "Flights, hotels, trains, activities", "JP": "航空券・ホテル・鉄道・アクティビティ"}, "Utama": {"EN": "Main", "JP": "メイン"}, "Terhubung": {"EN": "Connected", "JP": "連携済み"}, "Sumber dana": {"EN": "Funding sources", "JP": "支払元"}, "Tambah Wallet": {"EN": "Add wallet", "JP": "ウォレットを追加"}, "Ketuk wallet untuk menjadikannya sumber dana utama.": {"EN": "Tap a wallet to make it your main funding source.", "JP": "ウォレットをタップしてメインの支払元に設定します。"}, "Riwayat transaksi": {"EN": "Transaction history", "JP": "取引履歴"}, "Pemilik": {"EN": "Holder", "JP": "所有者"}, "No. ID paspor": {"EN": "Passport ID no.", "JP": "パスポートID番号"}, "Status biometrik": {"EN": "Biometric status", "JP": "生体認証ステータス"}, "Berlaku s/d": {"EN": "Valid until", "JP": "有効期限"}, "Ketuk kartu untuk menyalin nomor ID paspor. Dipakai di imigrasi dan check-in hotel tanpa dokumen kertas.": {"EN": "Tap the card to copy the passport ID. Used at immigration and hotel check-in without paper documents.", "JP": "カードをタップしてパスポートIDをコピー。紙の書類なしで入国審査やホテルのチェックインに使えます。"}, "Berbagi saldo dengan keluarga": {"EN": "Share your balance with family", "JP": "家族と残高を共有"}, "Anggota membayar dengan wajah dan telapak tangan mereka sendiri, memakai saldo Anda dengan limit harian.": {"EN": "Members pay with their own face and palm, using your balance with a daily limit.", "JP": "メンバーは自分の顔と手のひらで、あなたの残高から1日の上限内で支払えます。"}, "Anggota terdaftar": {"EN": "Members", "JP": "登録メンバー"}, "Tambah Anggota": {"EN": "Add member", "JP": "メンバーを追加"}, "Belum ada anggota. Pilih “Tambah Anggota” untuk mendaftarkan.": {"EN": "No members yet. Choose “Add member” to enroll someone.", "JP": "まだメンバーはいません。「メンバーを追加」から登録してください。"}, "Preferensi": {"EN": "Preferences", "JP": "環境設定"}, "Notifikasi push": {"EN": "Push notifications", "JP": "プッシュ通知"}, "Pemberitahuan transaksi masuk & keluar": {"EN": "Alerts for incoming & outgoing transactions", "JP": "入出金の通知"}, "Bahasa (Language)": {"EN": "Language", "JP": "言語"}, "Bahasa tampilan aplikasi": {"EN": "App display language", "JP": "アプリの表示言語"}, "Keluar": {"EN": "Sign out", "JP": "ログアウト"}, "Hapus akun & data biometrik": {"EN": "Delete account & biometric data", "JP": "アカウントと生体データを削除"}, "Pilih bahasa": {"EN": "Choose language", "JP": "言語を選択"}, "Hubungkan wallet atau bank": {"EN": "Connect a wallet or bank", "JP": "ウォレットまたは銀行を連携"}, "Verifikasi & Hubungkan": {"EN": "Verify & connect", "JP": "認証して連携"}, "Top up saldo utama": {"EN": "Top up main balance", "JP": "メイン残高にチャージ"}, "Nominal (Rp)": {"EN": "Amount (Rp)", "JP": "金額（Rp）"}, "Top Up Sekarang": {"EN": "Top up now", "JP": "今すぐチャージ"}, "Transfer uang": {"EN": "Send money", "JP": "送金"}, "Tujuan": {"EN": "To", "JP": "送金先"}, "No. rek / HP": {"EN": "Account / phone no.", "JP": "口座・電話番号"}, "ID atau nomor HP penerima": {"EN": "Recipient ID or phone number", "JP": "受取人のIDまたは電話番号"}, "Buka kamera, scan wajah penerima": {"EN": "Open camera to scan recipient's face", "JP": "カメラで受取人の顔をスキャン"}, "Penerima:": {"EN": "Recipient:", "JP": "受取人："}, "Kirim Dana": {"EN": "Send", "JP": "送金する"}, "Tarik tunai": {"EN": "Withdraw", "JP": "出金"}, "Dana dikirim ke rekening utama Anda.": {"EN": "Funds go to your main bank account.", "JP": "メインの銀行口座に送金されます。"}, "Konfirmasi tarik tunai": {"EN": "Confirm withdrawal", "JP": "出金を確定"}, "Arahkan kamera ke kode QR": {"EN": "Point the camera at the QR code", "JP": "カメラをQRコードに向けてください"}, "Tutup": {"EN": "Close", "JP": "閉じる"}, "Minta dana": {"EN": "Request money", "JP": "送金を依頼"}, "Tunjukkan kode ini ke pengirim": {"EN": "Show this code to the sender", "JP": "このコードを送金者に見せてください"}, "Tagihan bulan ini": {"EN": "This month's bills", "JP": "今月の請求"}, "Tukar valas": {"EN": "Currency exchange", "JP": "両替"}, "Sumber dana (IDR)": {"EN": "From (IDR)", "JP": "両替元（IDR）"}, "Tukar ke": {"EN": "Exchange to", "JP": "両替先"}, "Anda menerima": {"EN": "You receive", "JP": "受取額"}, "Konfirmasi Tukar": {"EN": "Confirm exchange", "JP": "両替を確定"}, "Scan wajah penerima": {"EN": "Scan recipient's face", "JP": "受取人の顔をスキャン"}, "Arahkan kamera ke wajah teman atau penerima.": {"EN": "Point the camera at your friend's or the recipient's face.", "JP": "友人または受取人の顔にカメラを向けてください。"}, "Mencari wajah penerima…": {"EN": "Looking for the recipient's face…", "JP": "受取人の顔を探しています…"}, "Tambah anggota": {"EN": "Add member", "JP": "メンバーを追加"}, "Nama anggota": {"EN": "Member name", "JP": "メンバー名"}, "Hubungan": {"EN": "Relationship", "JP": "続柄"}, "Lanjut Daftarkan Wajah": {"EN": "Continue: enroll face", "JP": "次へ：顔を登録"}, "Registrasi biometrik": {"EN": "Biometric enrollment", "JP": "生体登録"}, "Memindai wajah": {"EN": "Scanning the face of", "JP": "顔をスキャン中："}, "Mendaftarkan wajah…": {"EN": "Enrolling face…", "JP": "顔を登録しています…"}, "Hapus akun?": {"EN": "Delete account?", "JP": "アカウントを削除しますか？"}, "Akun": {"EN": "Account", "JP": "アカウント"}, "beserta template wajah dan telapak tangannya akan dihapus permanen dari perangkat ini. Tindakan ini tidak bisa dibatalkan.": {"EN": "and its face, palm and document data will be permanently deleted from this device. This can't be undone.", "JP": "と、その顔・手のひら・書類データがこの端末から完全に削除されます。元に戻せません。"}, "Ya, hapus permanen": {"EN": "Yes, delete permanently", "JP": "完全に削除する"}, "Limit harian ·": {"EN": "Daily limit ·", "JP": "1日の上限 ·"}, "Limit per hari (Rp)": {"EN": "Limit per day (Rp)", "JP": "1日あたりの上限（Rp）"}, "Simpan Limit": {"EN": "Save limit", "JP": "上限を保存"}, "Hapus anggota": {"EN": "Remove member", "JP": "メンバーを削除"}, "Notifikasi (1 baru)": {"EN": "Notifications (1 new)", "JP": "通知（新着1件）"}, "Pengaturan": {"EN": "Settings", "JP": "設定"}, "Sembunyikan saldo": {"EN": "Hide balance", "JP": "残高を隠す"}, "Tampilkan saldo": {"EN": "Show balance", "JP": "残高を表示"}, "Menu BioPay": {"EN": "BioPay menu", "JP": "BioPay メニュー"}, "Pilihan wallet": {"EN": "Wallet options", "JP": "ウォレットの選択"}, "Cara memilih penerima": {"EN": "How to choose the recipient", "JP": "受取人の選び方"}, "Contoh: 100000": {"EN": "e.g. 100000", "JP": "例：100000"}, "Contoh: 1550000": {"EN": "e.g. 1550000", "JP": "例：1550000"}, "Contoh: 250000": {"EN": "e.g. 250000", "JP": "例：250000"}, "Contoh: Anak, Istri": {"EN": "e.g. Child, Wife", "JP": "例：子ども、妻"}, "Contoh: 0812 3456 7890": {"EN": "e.g. 0812 3456 7890", "JP": "例：0812 3456 7890"}, "Isi nama lengkap, minimal 3 huruf.": {"EN": "Enter your full name, at least 3 letters.", "JP": "氏名を3文字以上で入力してください。"}, "Format email belum benar, contoh nama@email.com.": {"EN": "Check the email format, e.g. name@email.com.", "JP": "メールアドレスの形式を確認してください（例：name@email.com）。"}, "Email ini sudah terdaftar. Silakan masuk.": {"EN": "This email is already registered. Please sign in.", "JP": "このメールアドレスは登録済みです。ログインしてください。"}, "Nomor HP ini sudah terdaftar.": {"EN": "This mobile number is already registered.", "JP": "この携帯番号は登録済みです。"}, "Nomor HP untuk {0} harus {1} digit.": {"EN": "A {0} mobile number must have {1} digits.", "JP": "{0} の携帯番号は {1} 桁です。"}, "Nomor HP untuk {0} biasanya diawali {1}.": {"EN": "A {0} mobile number usually starts with {1}.", "JP": "{0} の携帯番号は通常 {1} で始まります。"}, "Konfirmasi kata sandi tidak sama.": {"EN": "Passwords don't match.", "JP": "パスワードが一致しません。"}, "Persetujuan diperlukan untuk merekam data biometrik.": {"EN": "Consent is required to record biometric data.", "JP": "生体データの登録には同意が必要です。"}, "Pilih kewarganegaraan.": {"EN": "Choose your nationality.", "JP": "国籍を選択してください。"}, "Format nomor dokumen belum benar. {0}": {"EN": "Check the document number. {0}", "JP": "書類番号を確認してください。{0}"}, "Dokumen ini sudah terdaftar.": {"EN": "This document is already registered.", "JP": "この書類は登録済みです。"}, "Isi email atau nomor HP.": {"EN": "Enter your email or mobile number.", "JP": "メールアドレスまたは携帯番号を入力してください。"}, "Isi kata sandi.": {"EN": "Enter your password.", "JP": "パスワードを入力してください。"}, "Email/nomor HP atau kata sandi salah.": {"EN": "Wrong email/mobile number or password.", "JP": "メールアドレス・携帯番号またはパスワードが違います。"}, "BioID {0} aktif. Selamat datang, {1}!": {"EN": "BioID {0} is active. Welcome, {1}!", "JP": "BioID {0} が有効になりました。ようこそ、{1} さん！"}, "Masuk sebagai {0}": {"EN": "Signed in as {0}", "JP": "{0} としてログインしました"}, "{0} keluar. Sampai jumpa!": {"EN": "{0} signed out. See you!", "JP": "{0} さんがログアウトしました。"}, "Sesi berakhir": {"EN": "Session ended", "JP": "セッションが終了しました"}, "Akun demo tidak bisa dihapus. Daftarkan akun baru untuk mencoba fitur ini.": {"EN": "The demo account can't be deleted. Create a new account to try this.", "JP": "デモアカウントは削除できません。新しいアカウントで試してください。"}, "Akun dan data biometrik dihapus.": {"EN": "Account and biometric data deleted.", "JP": "アカウントと生体データを削除しました。"}, "Merekam template wajah…": {"EN": "Recording face template…", "JP": "顔テンプレートを登録しています…"}, "Merekam pola telapak tangan…": {"EN": "Recording palm pattern…", "JP": "手のひらのパターンを登録しています…"}, "Bahasa diubah ke {0}": {"EN": "Language changed to {0}", "JP": "言語を {0} に変更しました"}, "Menyiapkan deteksi AI…": {"EN": "Preparing AI detection…", "JP": "AI 検出を準備しています…"}, "Deteksi AI tidak tersedia · simulasi": {"EN": "AI detection unavailable · simulation", "JP": "AI 検出は利用できません · シミュレーション"}, "Kamera terputus · simulasi": {"EN": "Camera disconnected · simulation", "JP": "カメラが切断されました · シミュレーション"}, "Wajah terverifikasi": {"EN": "Face verified", "JP": "顔を認証しました"}, "Telapak tangan terverifikasi": {"EN": "Palm verified", "JP": "手のひらを認証しました"}, "Wajah terdeteksi · {0}%": {"EN": "Face detected · {0}%", "JP": "顔を検出 · {0}%"}, "Telapak tangan terdeteksi · {0}%": {"EN": "Palm detected · {0}%", "JP": "手のひらを検出 · {0}%"}, "Arahkan wajah ke kamera…": {"EN": "Point your face at the camera…", "JP": "顔をカメラに向けてください…"}, "Arahkan telapak tangan ke kamera…": {"EN": "Show your palm to the camera…", "JP": "手のひらをカメラに向けてください…"}, "Lewati · mode demo": {"EN": "Skip · demo mode", "JP": "スキップ · デモモード"}, "Menganalisis Kedalaman 3D Wajah (Anti-Spoofing)...": {"EN": "Analyzing 3D face depth (anti-spoofing)…", "JP": "顔の3D深度を分析しています（なりすまし防止）…"}, "Memindai Aliran Darah & Suhu Tangan...": {"EN": "Scanning palm blood flow & temperature…", "JP": "手のひらの血流と温度をスキャンしています…"}, "Liveness 3D SDK Aktif...": {"EN": "3D liveness SDK on…", "JP": "3D ライブネス SDK 起動中…"}, "Kartu identitas Thailand": {"EN": "Thai national ID card", "JP": "タイ国民IDカード"}, "Paspor": {"EN": "Passport", "JP": "パスポート"}};
+
+        // ==========================================
+        // NEGARA, DOKUMEN IDENTITAS & NOMOR HP
+        // ==========================================
+        const COUNTRIES = [
+            ['ID', 'IDN', '62', 'Indonesia', 'Indonesia', 'インドネシア', ['KTP', 'PASSPORT']],
+            ['MY', 'MYS', '60', 'Malaysia', 'Malaysia', 'マレーシア', ['MYKAD', 'PASSPORT']],
+            ['SG', 'SGP', '65', 'Singapura', 'Singapore', 'シンガポール', ['NRIC', 'PASSPORT']],
+            ['TH', 'THA', '66', 'Thailand', 'Thailand', 'タイ', ['THID', 'PASSPORT']],
+            ['VN', 'VNM', '84', 'Vietnam', 'Vietnam', 'ベトナム', ['CCCD', 'PASSPORT']],
+            ['PH', 'PHL', '63', 'Filipina', 'Philippines', 'フィリピン', ['PASSPORT']],
+            ['BN', 'BRN', '673', 'Brunei', 'Brunei', 'ブルネイ', ['PASSPORT']],
+            ['AU', 'AUS', '61', 'Australia', 'Australia', 'オーストラリア', ['PASSPORT']],
+            ['JP', 'JPN', '81', 'Jepang', 'Japan', '日本', ['PASSPORT']],
+            ['KR', 'KOR', '82', 'Korea Selatan', 'South Korea', '韓国', ['PASSPORT']],
+            ['CN', 'CHN', '86', 'Tiongkok', 'China', '中国', ['PASSPORT']],
+            ['IN', 'IND', '91', 'India', 'India', 'インド', ['PASSPORT']],
+            ['SA', 'SAU', '966', 'Arab Saudi', 'Saudi Arabia', 'サウジアラビア', ['PASSPORT']],
+            ['NL', 'NLD', '31', 'Belanda', 'Netherlands', 'オランダ', ['PASSPORT']],
+            ['DE', 'DEU', '49', 'Jerman', 'Germany', 'ドイツ', ['PASSPORT']],
+            ['GB', 'GBR', '44', 'Inggris', 'United Kingdom', 'イギリス', ['PASSPORT']],
+            ['US', 'USA', '1', 'Amerika Serikat', 'United States', 'アメリカ合衆国', ['PASSPORT']]
+        ].map(([code, iso3, dial, ID, EN, JP, docs]) => ({ code, iso3, dial, name: { ID, EN, JP }, docs }));
+        const countryBy = code => COUNTRIES.find(c => c.code === code) || COUNTRIES[0];
+        const PHONE_RULES = {
+            62: { len: [9, 12], start: /^8/, startText: '8' }, 60: { len: [9, 10], start: /^1/, startText: '1' }, 65: { len: [8, 8], start: /^[89]/, startText: '8 / 9' },
+            66: { len: [9, 9], start: /^[689]/, startText: '6 / 8 / 9' }, 84: { len: [9, 9], start: /^[35789]/, startText: '3 / 5 / 7 / 8 / 9' }, 63: { len: [10, 10], start: /^9/, startText: '9' },
+            673: { len: [7, 7] }, 61: { len: [9, 9], start: /^4/, startText: '4' }, 81: { len: [10, 10], start: /^[789]0/, startText: '70 / 80 / 90' }, 82: { len: [9, 10], start: /^1/, startText: '1' },
+            86: { len: [11, 11], start: /^1/, startText: '1' }, 91: { len: [10, 10], start: /^[6-9]/, startText: '6–9' }, 966: { len: [9, 9], start: /^5/, startText: '5' },
+            31: { len: [9, 9], start: /^6/, startText: '6' }, 49: { len: [10, 11], start: /^1/, startText: '1' }, 44: { len: [10, 10], start: /^7/, startText: '7' }, 1: { len: [10, 10] }
+        };
+        const DOC_TYPES = {
+            KTP: { short: { ID: 'KTP', EN: 'KTP', JP: 'KTP' }, label: { ID: 'KTP (NIK)', EN: 'KTP (Indonesian ID card)', JP: 'KTP（インドネシア身分証）' }, re: /^\d{16}$/, clean: v => v.replace(/\D/g, ''), hint: { ID: 'NIK 16 digit yang tertera di KTP.', EN: 'The 16-digit NIK printed on the KTP.', JP: 'KTP に記載の16桁の NIK。' } },
+            MYKAD: { short: { ID: 'MyKad', EN: 'MyKad', JP: 'MyKad' }, label: { ID: 'MyKad', EN: 'MyKad', JP: 'MyKad' }, re: /^\d{12}$/, clean: v => v.replace(/\D/g, ''), hint: { ID: '12 digit, contoh 900101-14-5678.', EN: '12 digits, e.g. 900101-14-5678.', JP: '12桁（例：900101-14-5678）。' } },
+            NRIC: { short: { ID: 'NRIC', EN: 'NRIC', JP: 'NRIC' }, label: { ID: 'NRIC / FIN', EN: 'NRIC / FIN', JP: 'NRIC / FIN' }, re: /^[STFGM]\d{7}[A-Z]$/, clean: v => v.toUpperCase().replace(/[^A-Z0-9]/g, ''), hint: { ID: 'Contoh S1234567D.', EN: 'e.g. S1234567D.', JP: '例：S1234567D。' } },
+            THID: { short: { ID: 'ID Thailand', EN: 'Thai ID', JP: 'タイID' }, label: { ID: 'Kartu identitas Thailand', EN: 'Thai national ID card', JP: 'タイ国民IDカード' }, re: /^\d{13}$/, clean: v => v.replace(/\D/g, ''), hint: { ID: '13 digit.', EN: '13 digits.', JP: '13桁。' } },
+            CCCD: { short: { ID: 'CCCD', EN: 'CCCD', JP: 'CCCD' }, label: { ID: 'CCCD (kartu identitas Vietnam)', EN: 'CCCD (Vietnamese ID card)', JP: 'CCCD（ベトナム身分証）' }, re: /^\d{12}$/, clean: v => v.replace(/\D/g, ''), hint: { ID: '12 digit.', EN: '12 digits.', JP: '12桁。' } },
+            PASSPORT: { short: { ID: 'Paspor', EN: 'Passport', JP: 'パスポート' }, label: { ID: 'Paspor', EN: 'Passport', JP: 'パスポート' }, re: /^[A-Z0-9]{6,9}$/, clean: v => v.toUpperCase().replace(/[^A-Z0-9]/g, ''), hint: { ID: '6–9 huruf/angka, contoh X1234567.', EN: '6–9 letters or digits, e.g. X1234567.', JP: '英数字6〜9文字（例：X1234567）。' } }
+        };
+        function toE164(dial, national) { return '+' + dial + String(national || '').replace(/\D/g, '').replace(/^0+/, ''); }
 
         function sha256Hex(message) {
             const bytes = new TextEncoder().encode(message);
@@ -2091,23 +2225,30 @@
         // ==========================================
         const ACCOUNTS = (() => {
             const KEY = 'biopay-accounts-v1', LAST = 'biopay-last-active';
-            const SEED = { name: 'Ikbal Habibi', email: 'ikbal@biopay.id', phone: '081234567890', bioId: '12345', passport: 'BIO-ID-12345-US', salt: 'demo-salt', hash: '42b0c544928c1a2c8bc4b7a7c8989f989e1f39bac3a5dfda49b582404f1c3978', created: '2023-08-14', seed: true };
+            const SEED = { name: 'Ikbal Habibi', email: 'ikbal@biopay.id', phone: '+6281234567890', country: 'ID', docType: 'KTP', docLast4: '3456', bioId: '12345', passport: 'BIO-ID-12345-US', salt: 'demo-salt', hash: '42b0c544928c1a2c8bc4b7a7c8989f989e1f39bac3a5dfda49b582404f1c3978', created: '2023-08-14', seed: true };
             let list = [], last = null;
             try { list = JSON.parse(localStorage.getItem(KEY) || '[]'); last = localStorage.getItem(LAST); } catch (e) { list = []; }
             if (!Array.isArray(list)) list = [];
-            if (!list.some(a => a.seed)) list.unshift(SEED);
+            list = list.filter(a => !a.seed);
+            list.unshift(SEED);
+            // Migrasi akun lama: nomor 08xx -> +628xx, negara default Indonesia
+            list.forEach(a => { if (/^0/.test(a.phone || '')) a.phone = '+62' + a.phone.slice(1); if (!a.country) a.country = 'ID'; });
             const save = () => { try { localStorage.setItem(KEY, JSON.stringify(list)); if (last) localStorage.setItem(LAST, last); else localStorage.removeItem(LAST); } catch (e) {} };
-            const normPhone = v => String(v || '').replace(/\D/g, '').replace(/^62/, '0');
-            const find = login => { const v = String(login || '').trim().toLowerCase(); const ph = normPhone(v); return list.find(a => a.email === v || (ph.length >= 9 && a.phone === ph)); };
+            const find = login => {
+                const v = String(login || '').trim().toLowerCase(), d = v.replace(/\D/g, '');
+                const byEmail = list.find(a => a.email === v); if (byEmail || d.length < 7) return byEmail;
+                // +62812…, 62812…, atau 0812… (nomor lokal: dicocokkan ke nomor nasional mana pun)
+                return list.find(a => a.phone === '+' + d) || (d.startsWith('0') ? list.find(a => a.phone.endsWith(d.slice(1)) && a.phone.length - d.length <= 4) : undefined);
+            };
             const randDigits = n => Array.from(crypto.getRandomValues(new Uint8Array(n)), b => b % 10).join('');
             return {
-                find, normPhone,
-                exists: (email, phone) => ({ email: list.some(a => a.email === email.toLowerCase()), phone: list.some(a => a.phone === normPhone(phone)) }),
+                find,
+                exists: (email, phone, docKey) => ({ email: list.some(a => a.email === email.toLowerCase()), phone: list.some(a => a.phone === phone), doc: !!docKey && list.some(a => a.docKey === docKey) }),
                 verify: (acct, password) => !!acct && sha256Hex(acct.salt + ':' + password) === acct.hash,
-                create({ name, email, phone, password }) {
+                create({ name, email, phone, password, country, docType, docNumber, docKey, docPhoto, docFace }) {
                     let bioId; do { bioId = String(10000 + Number(randDigits(5)) % 90000); } while (list.some(a => a.bioId === bioId));
                     const salt = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, '0')).join('');
-                    const acct = { name: name.trim().replace(/\s+/g, ' '), email: email.trim().toLowerCase(), phone: normPhone(phone), bioId, passport: `BIO-ID-${bioId}-ID`, salt, hash: sha256Hex(salt + ':' + password), created: new Date().toISOString().slice(0, 10), faceEnrolled: true, palmEnrolled: true };
+                    const acct = { name: name.trim().replace(/\s+/g, ' '), email: email.trim().toLowerCase(), phone, country, docType, docLast4: docNumber.slice(-4), docKey, docPhoto, docFace, bioId, passport: `BIO-ID-${bioId}-${country}`, salt, hash: sha256Hex(salt + ':' + password), created: new Date().toISOString().slice(0, 10), faceEnrolled: true, palmEnrolled: true };
                     list.push(acct); last = acct.email; save(); return acct;
                 },
                 remove(acct) { if (!acct || acct.seed) return false; list = list.filter(a => a.email !== acct.email); if (last === acct.email) last = null; save(); return true; },
@@ -2117,12 +2258,13 @@
                 count: () => list.length
             };
         })();
-        function userView(acct) {
+        function userView(acct, lang = 'ID') {
+            const c = countryBy(acct.country || 'ID'), dt = DOC_TYPES[acct.docType] || DOC_TYPES.KTP;
             const parts = acct.name.trim().split(/\s+/), surname = parts.length > 1 ? parts[parts.length - 1] : parts[0], given = parts.length > 1 ? parts.slice(0, -1).join(' ') : '';
             const mrzName = s => s.toUpperCase().normalize('NFD').replace(/[^A-Z ]/g, '').trim().replace(/\s+/g, '<');
-            const line1 = ('P<IDN' + mrzName(surname) + '<<' + mrzName(given)).padEnd(44, '<').slice(0, 44);
-            const line2 = (('BIO' + acct.bioId).padEnd(9, '<') + '5IDN9803125M3111061').padEnd(43, '<').slice(0, 43) + '6';
-            return { name: acct.name, nameUpper: acct.name.toUpperCase(), initials: (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase(), email: acct.email, bioId: acct.bioId, passport: acct.passport, mrz1: line1, mrz2: line2 };
+            const line1 = ('P<' + c.iso3 + mrzName(surname) + '<<' + mrzName(given)).padEnd(44, '<').slice(0, 44);
+            const line2 = (('BIO' + acct.bioId).padEnd(9, '<') + '5' + c.iso3 + '9803125M3111061').padEnd(43, '<').slice(0, 43) + '6';
+            return { name: acct.name, nameUpper: acct.name.toUpperCase(), initials: (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase(), email: acct.email, bioId: acct.bioId, passport: acct.passport, mrz1: line1, mrz2: line2, countryName: c.name[lang], docLabel: acct.docLast4 ? `${dt.short[lang]} ••••${acct.docLast4}` : dt.short[lang], phone: acct.phone, docPhoto: acct.docPhoto || '' };
         }
 
 
@@ -2195,7 +2337,34 @@
             const sid = id => id + suffix;
             const $ = id => document.getElementById(id + suffix);
             const root = $('screen-start').parentElement;
-            const toast = (m, i, c) => showToast(m, i, c, pov);
+            let lang = 'ID';
+            const tr = (text, ...args) => { const e = I18N[text]; let out = (lang !== 'ID' && e && e[lang]) || text; args.forEach((a, i) => { out = out.replaceAll('{' + i + '}', a); }); return out; };
+            const toast = (m, i, c) => showToast(tr(m), i, c, pov);
+            const ORIG = new WeakMap(), LAST = new WeakMap();
+            function trNode(n) {
+                const p = n.parentElement; if (!p || p.closest('[data-user],script,style,select,option,textarea,[translate="no"]')) return;
+                const cur = n.nodeValue, trimmed = cur.trim(); if (!trimmed) return;
+                let orig = ORIG.get(n);
+                if (orig === undefined || trimmed !== LAST.get(n)) { orig = trimmed; ORIG.set(n, orig); }
+                const target = lang === 'ID' ? orig : ((I18N[orig] && I18N[orig][lang]) || orig);
+                if (target !== trimmed) n.nodeValue = cur.replace(trimmed, target);
+                LAST.set(n, target);
+            }
+            function trAttrs(el) {
+                for (const a of ['placeholder', 'aria-label', 'alt']) {
+                    if (!el.hasAttribute(a)) continue;
+                    const k = 'data-i18n-' + a;
+                    if (!el.hasAttribute(k) || el.getAttribute(a) !== el.getAttribute(k + '-last')) el.setAttribute(k, el.getAttribute(a));
+                    const o = el.getAttribute(k), v = lang === 'ID' ? o : ((I18N[o] && I18N[o][lang]) || o);
+                    el.setAttribute(a, v); el.setAttribute(k + '-last', v);
+                }
+            }
+            function translateTree(node) {
+                if (node.nodeType === 3) return trNode(node);
+                if (node.nodeType !== 1) return;
+                const w = document.createTreeWalker(node, NodeFilter.SHOW_TEXT); let n; while ((n = w.nextNode())) trNode(n);
+                [node, ...node.querySelectorAll('[placeholder],[aria-label],[alt]')].forEach(el => trAttrs(el));
+            }
             const isScreenActive = id => { const el = $(id); return !!el && el.classList.contains('active'); };
             function closeAllModals() { root.querySelectorAll('[id^="modal-"]').forEach(m => m.classList.add('hidden')); }
             function stopCameras() {
@@ -2258,7 +2427,7 @@
                 btn.classList.toggle('ph-eye', isBalanceHidden);
                 btn.classList.toggle('ph-eye-slash', !isBalanceHidden);
                 btn.setAttribute('aria-pressed', String(isBalanceHidden));
-                btn.setAttribute('aria-label', isBalanceHidden ? 'Tampilkan saldo' : 'Sembunyikan saldo');
+                btn.setAttribute('aria-label', tr(isBalanceHidden ? 'Tampilkan saldo' : 'Sembunyikan saldo'));
             }
 
             function generateRandomPayment() {
@@ -2275,11 +2444,11 @@
 
                 $('payment-merchant-name').innerText = m.name;
                 $('payment-txt-walletname').innerText = currentWalletName;
-                $('payment-txt-balstart').innerText = `Saldo Awal: Rp ${walletBalances[currentWalletName].toLocaleString('id-ID')}`;
+                $('payment-txt-balstart').innerText = tr('Saldo Awal: {0}', formatRp(walletBalances[currentWalletName]));
 
                 $('payment-label-intl').classList.toggle('hidden', !isTouristTransaction);
                 $('payment-label-intl').innerText = `INTL MERCHANT (${m.loc})`;
-                $('payment-txt-currency').innerText = `Rincian Tagihan (${m.cur})`;
+                $('payment-txt-currency').innerText = tr('Rincian Tagihan ({0})', m.cur);
                 $('payment-txt-subtotal').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, subtotal)}`;
                 $('payment-txt-vat').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, vat)}`;
                 $('payment-txt-amount').innerText = `${curSymbols[m.cur]}${formatForeign(m.cur, total)}`;
@@ -2293,7 +2462,7 @@
                 $('payment-fx-badge').classList.toggle('hidden', !isTouristTransaction);
                 $('payment-fx-details').classList.toggle('hidden', !isTouristTransaction);
                 if (isTouristTransaction) {
-                    $('payment-txt-rate-label').innerText = `Kurs (1 ${m.cur})`;
+                    $('payment-txt-rate-label').innerText = tr('Kurs (1 {0})', m.cur);
                     $('payment-txt-rate').innerText = `Rp ${fxRates[m.cur].toLocaleString('id-ID')}`;
                 }
                 $('payment-txt-idreq').innerText = `Rp ${currentPaymentIDR.toLocaleString('id-ID')}`;
@@ -2303,10 +2472,10 @@
                 const txtEnd = $('payment-txt-balend');
 
                 const ok = remaining >= 0;
-                txtEnd.textContent = ok ? `Sisa: ${formatRp(remaining)}` : 'Saldo tidak cukup';
+                txtEnd.textContent = ok ? tr('Sisa: {0}', formatRp(remaining)) : tr('Saldo tidak cukup');
                 txtEnd.className = 'bp-balend' + (ok ? '' : ' is-bad');
                 btn.disabled = !ok;
-                btn.innerHTML = ok ? '<i class="ph-bold ph-check" aria-hidden="true"></i> Konfirmasi Bayar' : '<i class="ph-bold ph-warning" aria-hidden="true"></i> Saldo tidak cukup';
+                btn.innerHTML = ok ? `<i class="ph-bold ph-check" aria-hidden="true"></i> ${tr('Konfirmasi Bayar')}` : `<i class="ph-bold ph-warning" aria-hidden="true"></i> ${tr('Saldo tidak cukup')}`;
             }
 
             async function goToScreen(screenId) {
@@ -2325,44 +2494,50 @@
                 if (screenId === 'screen-face-scan') { 
                     toast('Menganalisis Kedalaman 3D Wajah (Anti-Spoofing)...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-face');
-                    scanBiometric({ videoId: sid('video-face'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
+                    scanBiometric({ t: tr, videoId: sid('video-face'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
                         .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) { setUser(ACCOUNTS.matchFace()); goToScreen('screen-identity'); } });
                 } else if (screenId === 'screen-hand-scan') { 
                     toast('Memindai Aliran Darah & Suhu Tangan...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-hand');
-                    scanBiometric({ videoId: sid('video-hand'), kind: 'hand', cancelled: () => !isScreenActive(screenId) })
+                    scanBiometric({ t: tr, videoId: sid('video-hand'), kind: 'hand', cancelled: () => !isScreenActive(screenId) })
                         .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) { generateRandomPayment(); goToScreen('screen-options'); } });
                 } else if (screenId === 'screen-menu-auth') { 
                     toast('Liveness 3D SDK Aktif...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-auth');
-                    scanBiometric({ videoId: sid('video-auth'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
+                    scanBiometric({ t: tr, videoId: sid('video-auth'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
                         .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) { setUser(currentUser || ACCOUNTS.matchFace()); enterDashboard(); } });
+                } else if (screenId === 'screen-enroll-doc') {
+                    const has = !!(pendingReg && pendingReg.docPhoto);
+                    docMode(has);
+                    if (has) $('doc-preview').src = pendingReg.docPhoto;
+                    $('doc-status').textContent = tr('Menyiapkan kamera…');
+                    const cam = await requestCameraAccess(sid('video-id-doc'), 'environment');
+                    if (!isScreenActive(screenId)) { stopSpecificCamera(cam); return; }
+                    cameraStream = cam;
+                    if (!(pendingReg && pendingReg.docPhoto)) $('doc-status').textContent = tr(cam ? 'Posisikan dokumen di dalam bingkai' : 'Kamera tidak tersedia. Unggah foto dokumen dari galeri.');
                 } else if (screenId === 'screen-enroll-face') {
                     toast('Merekam template wajah…', 'ph-scan', 'text-sky-400');
                     cameraStream = await openCam('video-enroll-face');
-                    scanBiometric({ videoId: sid('video-enroll-face'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
+                    scanBiometric({ t: tr, videoId: sid('video-enroll-face'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
                         .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) goToScreen('screen-enroll-palm'); });
                 } else if (screenId === 'screen-enroll-palm') {
                     toast('Merekam pola telapak tangan…', 'ph-hand-palm', 'text-sky-400');
                     cameraStream = await openCam('video-enroll-palm');
-                    scanBiometric({ videoId: sid('video-enroll-palm'), kind: 'hand', cancelled: () => !isScreenActive(screenId) })
+                    scanBiometric({ t: tr, videoId: sid('video-enroll-palm'), kind: 'hand', cancelled: () => !isScreenActive(screenId) })
                         .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) finishRegister(); });
                 }
             }
 
-            function changeLanguage(code, name) {
+            function changeLanguage(code, name, silent = false) {
+                lang = code;
                 $('current-language-display').innerText = code;
                 const t = uiTranslations[code];
-                if (t) {
-                    root.querySelectorAll('[data-i18n]').forEach(el => {
-                        const key = el.getAttribute('data-i18n');
-                        if (t[key]) el.innerHTML = t[key];
-                    });
-                    const authTitle = $('txt-auth-title');
-                    if(authTitle) authTitle.innerText = t['title-auth'];
-                }
+                if (t) root.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (t[key]) el.innerHTML = t[key]; });
+                translateTree(root);
+                root.querySelectorAll('.bp-lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === code)));
+                renderRegisterOptions(); renderUser();
                 closeModal('modal-language');
-                toast(`Bahasa diubah ke ${name}`, 'ph-translate', 'text-emerald-400');
+                if (!silent) toast(tr('Bahasa diubah ke {0}', name), 'ph-translate', 'text-emerald-400');
             }
 
             function processPayment() {
@@ -2404,7 +2579,7 @@
                     if (content) content.classList.toggle('hidden', tab !== tabName);
                 });
                 const nav = $(`nav-${tabName}`);
-                $('dash-title').textContent = nav ? nav.textContent.trim() : (tabName === 'pengaturan' ? 'Pengaturan' : tabName);
+                $('dash-title').textContent = nav ? nav.textContent.trim() : (tabName === 'pengaturan' ? tr('Pengaturan') : tabName);
                 const main = root.querySelector('.bp-main'); if (main) main.scrollTop = 0;
             }
 
@@ -2471,7 +2646,7 @@
                 if (!cam) cam = await requestCameraAccess(sid('video-tf-scan'), 'user');
                 if (token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
                 tfCamera = cam;
-                scanBiometric({ videoId: sid('video-tf-scan'), kind: 'face', cancelled: () => token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden') }).then(r => {
+                scanBiometric({ t: tr, videoId: sid('video-tf-scan'), kind: 'face', cancelled: () => token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden') }).then(r => {
                     if (r === 'cancelled') return;
                     // FIX: dulu tetap "menemukan penerima" walau pengguna sudah menekan Batal
                     if (token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden')) return;
@@ -2607,7 +2782,7 @@
                 const cam = await requestCameraAccess(sid('video-sharing-qr'), 'user');
                 if (token !== sharingScanToken) { stopSpecificCamera(cam); return; }
                 sharingCamera = cam;
-                scanBiometric({ videoId: sid('video-sharing-qr'), kind: 'face', cancelled: () => token !== sharingScanToken }).then(r => {
+                scanBiometric({ t: tr, videoId: sid('video-sharing-qr'), kind: 'face', cancelled: () => token !== sharingScanToken }).then(r => {
                     if (r === 'cancelled' || token !== sharingScanToken) return;
                     sharingCamera = stopSpecificCamera(sharingCamera);
                     closeModal('modal-sharing-scan'); 
@@ -2656,8 +2831,9 @@
             let currentUser = null, pendingReg = null;
             function renderUser() {
                 const acct = currentUser || ACCOUNTS.matchFace(); if (!acct) return;
-                const v = userView(acct);
+                const v = userView(acct, lang);
                 root.querySelectorAll('[data-user]').forEach(el => { const k = el.getAttribute('data-user'); if (v[k] !== undefined) el.textContent = v[k]; });
+                root.querySelectorAll('[data-user-img]').forEach(img => { const src = v[img.getAttribute('data-user-img')]; img.classList.toggle('hidden', !src); if (src) img.src = src; else img.removeAttribute('src'); });
             }
             function setUser(acct) { currentUser = acct; ACCOUNTS.setActive(acct); renderUser(); }
             function fieldError(id, msg) {
@@ -2666,24 +2842,105 @@
                 if (err) err.textContent = msg || '';
                 return !msg;
             }
+            function renderRegisterOptions() {
+                const cSel = $('reg-country'), dSel = $('reg-dial'); if (!cSel) return;
+                const cur = cSel.value || 'ID', dial = dSel.value || '62';
+                cSel.innerHTML = COUNTRIES.map(c => `<option value="${c.code}">${c.name[lang]}</option>`).join('');
+                dSel.innerHTML = COUNTRIES.map(c => `<option value="${c.dial}">+${c.dial} · ${c.name[lang]}</option>`).join('');
+                cSel.value = cur; dSel.value = dial;
+                renderDocTypes();
+            }
+            function renderDocTypes() {
+                const c = countryBy($('reg-country').value), sel = $('reg-doctype'), cur = sel.value;
+                sel.innerHTML = c.docs.map(d => `<option value="${d}">${DOC_TYPES[d].label[lang]}</option>`).join('');
+                if (c.docs.includes(cur)) sel.value = cur;
+                onDocTypeChange();
+            }
+            function onCountryChange() {
+                const c = countryBy($('reg-country').value);
+                if (!$('reg-dial').dataset.touched) $('reg-dial').value = c.dial;
+                renderDocTypes(); fieldError('reg-docno', '');
+            }
+            function onDocTypeChange() {
+                const dt = DOC_TYPES[$('reg-doctype').value] || DOC_TYPES.PASSPORT;
+                $('reg-docno-hint').textContent = dt.hint[lang];
+                $('doc-tag').textContent = dt.short[lang];
+            }
             function openRegister() {
-                ['reg-name', 'reg-email', 'reg-phone', 'reg-pass', 'reg-pass2'].forEach(id => { $(id).value = ''; fieldError(id, ''); });
+                ['reg-name', 'reg-email', 'reg-phone', 'reg-pass', 'reg-pass2', 'reg-docno'].forEach(id => { $(id).value = ''; fieldError(id, ''); });
                 $('reg-consent').checked = false; fieldError('reg-consent', '');
+                $('reg-country').value = 'ID'; $('reg-dial').value = '62'; delete $('reg-dial').dataset.touched; renderDocTypes();
                 pendingReg = null; goToScreen('screen-register');
             }
             function submitRegister() {
-                const name = $('reg-name').value.trim(), email = $('reg-email').value.trim().toLowerCase(), phone = $('reg-phone').value.trim();
-                const pass = $('reg-pass').value, pass2 = $('reg-pass2').value, taken = ACCOUNTS.exists(email, phone);
+                const name = $('reg-name').value.trim(), email = $('reg-email').value.trim().toLowerCase();
+                const c = countryBy($('reg-country').value), docType = $('reg-doctype').value, dt = DOC_TYPES[docType];
+                const docNumber = dt.clean($('reg-docno').value), docKey = sha256Hex(`doc:${c.code}:${docType}:${docNumber}`);
+                const dial = $('reg-dial').value, national = $('reg-phone').value.replace(/\D/g, '').replace(/^0+/, ''), phone = toE164(dial, national);
+                const rule = PHONE_RULES[dial] || { len: [6, 12] }, dialCountry = COUNTRIES.find(x => x.dial === dial) || c;
+                const lenText = rule.len[0] === rule.len[1] ? String(rule.len[0]) : `${rule.len[0]}–${rule.len[1]}`;
+                const phoneErr = national.length < rule.len[0] || national.length > rule.len[1] ? tr('Nomor HP untuk {0} harus {1} digit.', dialCountry.name[lang], lenText)
+                    : rule.start && !rule.start.test(national) ? tr('Nomor HP untuk {0} biasanya diawali {1}.', dialCountry.name[lang], rule.startText) : '';
+                const pass = $('reg-pass').value, pass2 = $('reg-pass2').value, taken = ACCOUNTS.exists(email, phone, docKey);
                 const ok = [
-                    fieldError('reg-name', name.length < 3 ? 'Isi nama lengkap, minimal 3 huruf.' : ''),
-                    fieldError('reg-email', !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? 'Format email belum benar, contoh nama@email.com.' : taken.email ? 'Email ini sudah terdaftar. Silakan masuk.' : ''),
-                    fieldError('reg-phone', !/^0\d{8,13}$/.test(ACCOUNTS.normPhone(phone)) ? 'Nomor HP diawali 0 atau +62, 9–14 digit.' : taken.phone ? 'Nomor HP ini sudah terdaftar.' : ''),
-                    fieldError('reg-pass', pass.length < 8 || !/[A-Za-z]/.test(pass) || !/\d/.test(pass) ? 'Minimal 8 karakter, berisi huruf dan angka.' : ''),
-                    fieldError('reg-pass2', pass2 !== pass || !pass2 ? 'Konfirmasi kata sandi tidak sama.' : ''),
-                    fieldError('reg-consent', !$('reg-consent').checked ? 'Persetujuan diperlukan untuk merekam data biometrik.' : '')
+                    fieldError('reg-name', name.length < 3 ? tr('Isi nama lengkap, minimal 3 huruf.') : ''),
+                    fieldError('reg-docno', !dt.re.test(docNumber) ? tr('Format nomor dokumen belum benar. {0}', dt.hint[lang]) : taken.doc ? tr('Dokumen ini sudah terdaftar.') : ''),
+                    fieldError('reg-email', !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? tr('Format email belum benar, contoh nama@email.com.') : taken.email ? tr('Email ini sudah terdaftar. Silakan masuk.') : ''),
+                    fieldError('reg-phone', phoneErr || (taken.phone ? tr('Nomor HP ini sudah terdaftar.') : '')),
+                    fieldError('reg-pass', pass.length < 8 || !/[A-Za-z]/.test(pass) || !/\d/.test(pass) ? tr('Minimal 8 karakter, berisi huruf dan angka.') : ''),
+                    fieldError('reg-pass2', pass2 !== pass || !pass2 ? tr('Konfirmasi kata sandi tidak sama.') : ''),
+                    fieldError('reg-consent', !$('reg-consent').checked ? tr('Persetujuan diperlukan untuk merekam data biometrik.') : '')
                 ];
                 if (ok.includes(false)) { const first = root.querySelector('#screen-register' + suffix + ' [aria-invalid="true"]'); if (first) first.focus(); return; }
-                pendingReg = { name, email, phone, password: pass };
+                pendingReg = { name, email, phone, password: pass, country: c.code, docType, docNumber, docKey, docPhoto: null, docFace: null };
+                goToScreen('screen-enroll-doc');
+            }
+
+            // ---------- Foto dokumen identitas ----------
+            function docMode(review) {
+                $('doc-actions-capture').classList.toggle('hidden', review);
+                $('doc-actions-review').classList.toggle('hidden', !review);
+                $('doc-preview').classList.toggle('hidden', !review);
+                $('doc-err').textContent = '';
+            }
+            async function processDocImage(src, sx, sy, sw, sh) {
+                const scale = Math.min(1, 760 / sw), out = document.createElement('canvas');
+                out.width = Math.round(sw * scale); out.height = Math.round(sh * scale);
+                out.getContext('2d').drawImage(src, sx, sy, sw, sh, 0, 0, out.width, out.height);
+                pendingReg.docPhoto = out.toDataURL('image/jpeg', 0.75); pendingReg.docFace = null;
+                $('doc-preview').src = pendingReg.docPhoto; docMode(true);
+                const status = $('doc-status'); status.textContent = tr('Memeriksa foto dokumen…');
+                const photo = pendingReg.docPhoto;
+                let found = null;
+                try { found = await Promise.race([detectFaceInImage(out), new Promise(r => setTimeout(() => r(null), 8000))]); } catch (e) { console.warn('Cek wajah dokumen gagal', e); }
+                if (!isScreenActive('screen-enroll-doc') || !pendingReg || pendingReg.docPhoto !== photo) return;
+                pendingReg.docFace = found;
+                status.textContent = pendingReg.docFace === null ? tr('Foto dokumen tersimpan. Pemeriksaan otomatis tidak tersedia.')
+                    : pendingReg.docFace ? tr('Foto wajah di dokumen terdeteksi') : tr('Foto wajah di dokumen tidak terlihat jelas. Sebaiknya ulangi foto.');
+            }
+            function captureDoc() {
+                const video = $('video-id-doc');
+                if (!video.srcObject || !video.videoWidth) { $('doc-err').textContent = tr('Kamera belum aktif. Gunakan “Unggah dari galeri”.'); return; }
+                // Ambil area di dalam bingkai kartu (rasio ID-1 = 1,586), memetakan tampilan object-fit: cover ke piksel video
+                const box = video.parentElement, cw = box.clientWidth, ch = box.clientHeight, vw = video.videoWidth, vh = video.videoHeight;
+                const sc = Math.max(cw / vw, ch / vh), ox = (cw - vw * sc) / 2, oy = (ch - vh * sc) / 2;
+                const fw = cw * 0.86, fh = fw / 1.586, fx = (cw - fw) / 2, fy = (ch - fh) / 2;
+                const sx = Math.max(0, (fx - ox) / sc), sy = Math.max(0, (fy - oy) / sc);
+                processDocImage(video, sx, sy, Math.min(vw - sx, fw / sc), Math.min(vh - sy, fh / sc));
+            }
+            function uploadDoc(input) {
+                const file = input.files && input.files[0]; input.value = '';
+                if (!file || !pendingReg) return;
+                if (!/^image\//.test(file.type) && !/\.(heic|heif)$/i.test(file.name)) { $('doc-err').textContent = tr('File harus berupa gambar (JPG, PNG, atau HEIC).'); return; }
+                if (file.size > 10 * 1024 * 1024) { $('doc-err').textContent = tr('Ukuran file maksimal 10 MB.'); return; }
+                const url = URL.createObjectURL(file), img = new Image();
+                img.onload = () => { processDocImage(img, 0, 0, img.naturalWidth, img.naturalHeight); URL.revokeObjectURL(url); };
+                img.onerror = () => { $('doc-err').textContent = tr('Gambar tidak bisa dibuka. Coba file lain.'); URL.revokeObjectURL(url); };
+                img.src = url;
+            }
+            function retakeDoc() { if (pendingReg) { pendingReg.docPhoto = null; pendingReg.docFace = null; } docMode(false); $('doc-status').textContent = tr($('video-id-doc').srcObject ? 'Posisikan dokumen di dalam bingkai' : 'Kamera tidak tersedia. Unggah foto dokumen dari galeri.'); }
+            function confirmDoc() {
+                if (!pendingReg || !pendingReg.docPhoto) { $('doc-err').textContent = tr('Ambil atau unggah foto dokumen dulu.'); return; }
                 goToScreen('screen-enroll-face');
             }
             function finishRegister() {
@@ -2691,30 +2948,30 @@
                 const acct = ACCOUNTS.create(pendingReg); pendingReg = null;
                 setUser(acct);
                 $('reg-done-bioid').textContent = acct.bioId;
-                toast(`BioID ${acct.bioId} aktif. Selamat datang, ${acct.name.split(' ')[0]}!`, 'ph-check-circle', 'text-emerald-400');
+                toast(tr('BioID {0} aktif. Selamat datang, {1}!', acct.bioId, acct.name.split(' ')[0]), 'ph-check-circle', 'text-emerald-400');
                 goToScreen('screen-register-done');
             }
             function openLogin() { $('login-id').value = ''; $('login-pass').value = ''; fieldError('login-id', ''); fieldError('login-pass', ''); goToScreen('screen-login'); }
             function submitLogin() {
                 const id = $('login-id').value, pass = $('login-pass').value;
-                if (!fieldError('login-id', id.trim() ? '' : 'Isi email atau nomor HP.') | !fieldError('login-pass', pass ? '' : 'Isi kata sandi.')) return;
+                if (!fieldError('login-id', id.trim() ? '' : tr('Isi email atau nomor HP.')) | !fieldError('login-pass', pass ? '' : tr('Isi kata sandi.'))) return;
                 const acct = ACCOUNTS.find(id);
-                if (!ACCOUNTS.verify(acct, pass)) { fieldError('login-id', ''); fieldError('login-pass', 'Email/nomor HP atau kata sandi salah.'); $('login-pass').value = ''; $('login-pass').focus(); return; }
+                if (!ACCOUNTS.verify(acct, pass)) { fieldError('login-id', ''); fieldError('login-pass', tr('Email/nomor HP atau kata sandi salah.')); $('login-pass').value = ''; $('login-pass').focus(); return; }
                 setUser(acct); $('login-pass').value = '';
-                toast(`Masuk sebagai ${acct.name}`, 'ph-user-check', 'text-emerald-400');
+                toast(tr('Masuk sebagai {0}', acct.name), 'ph-user-check', 'text-emerald-400');
                 enterDashboard();
             }
             function togglePassword(id, btn) {
                 const input = $(id), show = input.type === 'password';
                 input.type = show ? 'text' : 'password';
-                btn.setAttribute('aria-pressed', String(show)); btn.setAttribute('aria-label', show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+                btn.setAttribute('aria-pressed', String(show)); btn.setAttribute('aria-label', tr(show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'));
                 btn.querySelector('i').className = 'ph ' + (show ? 'ph-eye-slash' : 'ph-eye');
             }
             function enterDashboard() { renderUser(); switchTab('home'); goToScreen('screen-dashboard'); }
             function logout() {
                 const name = currentUser ? currentUser.name : null;
                 currentUser = null; closeAllModals();
-                toast(name ? `${name} keluar. Sampai jumpa!` : 'Sesi berakhir', 'ph-sign-out', 'text-white');
+                toast(name ? tr('{0} keluar. Sampai jumpa!', name) : tr('Sesi berakhir'), 'ph-sign-out', 'text-white');
                 switchTab('home'); goToScreen('screen-start');
             }
             function copyPassport() { const acct = currentUser || ACCOUNTS.matchFace(); copyToClipboard(acct.passport, 'No. ID paspor', pov); }
@@ -2730,8 +2987,10 @@
                 switchTab('home'); goToScreen('screen-start');
             }
 
+            new MutationObserver(muts => { if (lang === 'ID') return; muts.forEach(m => m.addedNodes.forEach(translateTree)); }).observe(root, { childList: true, subtree: true });
+            renderRegisterOptions();
             renderUser();
-            return { toast, stopCameras, closeAllModals, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
+            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
         }
 
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error
