@@ -53,12 +53,14 @@
         #ewallet-device { width: 100% !important; max-width: 1240px !important; height: 800px !important; background: #E9ECF0; }
 
         .hidden { display: none !important; }
+        /* Kontainer perangkat tidak boleh ikut ter-scroll oleh scrollIntoView/fokus input */
+        .app-container, .device, .tv, .bp-dash, #ewallet-wrapper { overflow: clip !important; }
 
         /* ---------- BioPay app (POV 1 & mini-app POV 2) ---------- */
-        .bp, #biopay-p2-root { font-family: var(--font-sans); color: var(--text); background: var(--paper); container-type: inline-size; }
-        .bp *, #biopay-p2-root * { box-sizing: border-box; }
-        .bp button, #biopay-p2-root button { font-family: inherit; }
-        .bp :focus-visible, #biopay-p2-root :focus-visible, #ewallet-device :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+        .bp, #biopay-p2-root, #biopay-p3-root { font-family: var(--font-sans); color: var(--text); background: var(--paper); container-type: inline-size; }
+        .bp *, #biopay-p2-root *, #biopay-p3-root * { box-sizing: border-box; }
+        .bp button, #biopay-p2-root button, #biopay-p3-root button { font-family: inherit; }
+        .bp :focus-visible, #biopay-p2-root :focus-visible, #biopay-p3-root :focus-visible, #ewallet-device :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
 
         .screen { display: none; position: absolute; inset: 0; flex-direction: column; padding: 64px 24px 28px; animation: fadeIn .22s var(--ease); }
         .screen.active { display: flex; }
@@ -68,7 +70,7 @@
 
         .bp-strip { position: absolute; top: 0; left: 0; right: 0; height: 40px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: var(--card); border-bottom: 1px solid var(--line); font: 500 12px/1 var(--font-mono); color: var(--muted); letter-spacing: .02em; }
         .bp-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); margin-right: 8px; vertical-align: 0; }
-        #biopay-p2-root .bp-strip { padding-left: 68px; }
+        #biopay-p2-root .bp-strip, #biopay-p3-root .bp-strip { padding-left: 68px; }
 
         .bp-stack { display: flex; flex-direction: column; gap: 20px; }
         .bp-stack-tight { display: flex; flex-direction: column; gap: 8px; }
@@ -327,6 +329,233 @@
         .bp-p2-close { position: absolute; top: 0; left: 0; z-index: 200; width: 56px; height: 40px; display: flex; align-items: center; justify-content: center; border: 0; border-right: 1px solid var(--line); background: var(--card); color: var(--ink); font-size: 18px; cursor: pointer; }
         .bp-p2-close:hover { background: var(--hover); }
 
+        /* ---------- POV 3: Lintas (travel). Biru tua untuk struktur, oranye hanya untuk aksi pemesanan. ---------- */
+        #travel-device { width: 100% !important; max-width: 1240px !important; height: 800px !important; background: #E9ECF0; }
+        .tv { --tv-primary: #1E3A8A; --tv-primary-2: #274BAE; --tv-accent: #C2410C; --tv-accent-h: #A8380A; --tv-accent-soft: #FFF1E8;
+              --tv-bg: #F2F5FA; --tv-line: #DCE3EE; --tv-text: #0E1A33; --tv-muted: #55627A; --tv-soft: #E8EEF8; --tv-ok: #0F7B4F; --tv-ok-soft: #E7F4EC; --tv-bad: #B42318; --tv-bad-soft: #FDECEA;
+              position: relative; display: flex; flex-direction: column; height: 100%; max-width: 420px; margin: 0 auto; overflow: hidden;
+              font-family: var(--font-sans); color: var(--tv-text); background: var(--tv-bg); box-shadow: 0 0 0 1px #D5DBE3, 0 20px 40px -20px rgba(15,27,45,.35); }
+        .tv * { box-sizing: border-box; }
+        .tv button, .tv input, .tv select { font-family: inherit; }
+        .tv :focus-visible { outline: 2px solid var(--tv-primary); outline-offset: 2px; }
+        .tv-screen { position: relative; flex: 1; min-height: 0; overflow: clip; }
+        .tv-view { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--tv-bg); }
+        .tv-view.active { display: flex; animation: fadeIn .2s var(--ease); }
+        .tv-head { flex: none; display: flex; align-items: center; gap: 4px; min-height: 60px; padding: 8px 12px 8px 4px; background: #fff; border-bottom: 1px solid var(--tv-line); }
+        .tv-head h2 { margin: 0; flex: 1; min-width: 0; font-size: 17px; font-weight: 600; line-height: 1.25; }
+        .tv-head h2 small { display: block; font-size: 13px; font-weight: 400; color: var(--tv-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tv-head.tv-head-plain { padding-left: 16px; }
+        .tv-back { flex: none; width: 44px; height: 44px; border: 0; border-radius: 10px; background: none; color: var(--tv-text); font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .tv-back:hover { background: var(--tv-soft); }
+        .tv-body { flex: 1; min-height: 0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; scrollbar-width: thin; }
+        .tv-body.has-nav { padding-bottom: 100px; }
+        .tv-foot { flex: none; display: flex; align-items: center; gap: 12px; padding: 12px 16px 16px; background: #fff; border-top: 1px solid var(--tv-line); }
+        .tv-foot-sum { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .tv-foot-sum small { font-size: 12px; color: var(--tv-muted); }
+        .tv-foot-sum b { font: 600 19px/1.2 var(--font-mono); font-variant-numeric: tabular-nums; color: var(--tv-text); }
+        .tv-foot .tv-btn { width: auto; min-width: 160px; }
+
+        .tv-steps { display: flex; align-items: center; gap: 8px; font: 600 12px var(--font-mono); letter-spacing: .04em; color: #8A96AB; text-transform: uppercase; }
+        .tv-steps .on { color: var(--tv-primary); }
+        .tv-steps .done { color: var(--tv-ok); }
+        .tv-steps i.sep { width: 16px; height: 1px; background: var(--tv-line); }
+
+        .tv-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid transparent; font: 600 15px/1.2 var(--font-sans); cursor: pointer; transition: background-color .18s var(--ease), transform .1s; }
+        .tv-btn:active:not(:disabled) { transform: translateY(1px); }
+        .tv-btn-accent { background: var(--tv-accent); color: #fff; }
+        .tv-btn-accent:hover { background: var(--tv-accent-h); }
+        .tv-btn-primary { background: var(--tv-primary); color: #fff; }
+        .tv-btn-primary:hover { background: var(--tv-primary-2); }
+        .tv-btn-ghost { background: #fff; color: var(--tv-primary); border-color: var(--tv-line); }
+        .tv-btn-ghost:hover { background: var(--tv-soft); }
+        .tv-btn-danger { background: #fff; color: var(--tv-bad); border-color: #F3C7C2; }
+        .tv-btn-danger:hover { background: var(--tv-bad-soft); }
+        .tv-btn:disabled { background: #E1E6EE; color: #7A869A; border-color: transparent; cursor: not-allowed; }
+        .tv-link { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--tv-primary); font: 600 14px var(--font-sans); cursor: pointer; }
+        .tv-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+        /* Beranda */
+        .tv-hero { flex: none; background-color: var(--tv-primary); color: #fff; padding: 18px 16px 56px; display: flex; flex-direction: column; gap: 14px;
+                   background-image: radial-gradient(circle at 100% 0, rgba(255,255,255,.08) 0 30%, transparent 30.5%), radial-gradient(circle at 100% 0, rgba(255,255,255,.05) 0 48%, transparent 48.5%); }
+        .tv-hero-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .tv-brand { margin: 0; font: 700 24px/1 var(--font-sans); letter-spacing: -.03em; }
+        .tv-brand span { color: #FDBA74; }
+        .tv-hero-hello { margin: 0; font-size: 15px; color: rgba(255,255,255,.85); }
+        .tv-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tv-pill { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.1); color: #fff; font: 600 13px var(--font-sans); cursor: pointer; }
+        .tv-pill:hover { background: rgba(255,255,255,.18); }
+        .tv-pill b { font-family: var(--font-mono); font-weight: 600; }
+        .tv-products { position: relative; margin: -40px 16px 0; padding: 10px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: #fff; border-radius: 16px; box-shadow: 0 10px 24px -14px rgba(14,26,51,.35); border: 1px solid var(--tv-line); }
+        .tv-prod { display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 86px; padding: 10px 4px; border: 0; border-radius: 12px; background: none; color: var(--tv-text); font: 600 13px var(--font-sans); cursor: pointer; }
+        .tv-prod:hover { background: #F5F7FB; }
+        .tv-prod i { width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: var(--tv-soft); color: var(--tv-primary); }
+        .tv-sec { display: flex; flex-direction: column; gap: 10px; }
+        .tv-sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+        .tv-sec-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
+        .tv-hscroll { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; margin: 0 -16px; padding-inline: 16px; scrollbar-width: none; }
+        .tv-hscroll::-webkit-scrollbar { display: none; }
+        .tv-promo { flex: none; width: 272px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 6px; padding: 14px; border: 0; border-radius: 14px; color: #fff; text-align: left; cursor: pointer; }
+        .tv-promo b { font-size: 16px; line-height: 1.3; }
+        .tv-promo span { font-size: 13px; color: rgba(255,255,255,.85); }
+        .tv-promo code { align-self: flex-start; margin-top: 6px; padding: 4px 8px; border: 1px dashed rgba(255,255,255,.6); border-radius: 6px; font: 600 12px var(--font-mono); letter-spacing: .06em; }
+        .tv-dest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .tv-dest { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; min-height: 108px; padding: 12px; border: 0; border-radius: 14px; color: #fff; text-align: left; cursor: pointer; }
+        .tv-dest::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-30deg, rgba(255,255,255,.06) 0 2px, transparent 2px 14px); }
+        .tv-dest > * { position: relative; }
+        .tv-dest b { font-size: 16px; }
+        .tv-dest small { font-size: 12px; color: rgba(255,255,255,.88); }
+        .tv-dest i { position: absolute; top: 12px; right: 12px; font-size: 22px; opacity: .8; }
+
+        /* Kartu & form */
+        .tv-card { background: #fff; border: 1px solid var(--tv-line); border-radius: 14px; }
+        .tv-pad { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+        .tv-card h3 { margin: 0; font-size: 15px; font-weight: 600; }
+        .tv-field { display: flex; flex-direction: column; gap: 6px; }
+        .tv-field label, .tv-label { font-size: 13px; font-weight: 600; color: var(--tv-muted); }
+        .tv-input { width: 100%; height: 48px; padding: 0 12px; border: 1px solid #C7D1E0; border-radius: 10px; background: #fff; color: var(--tv-text); font-size: 16px; font-weight: 500; }
+        .tv-input:focus { outline: none; border-color: var(--tv-primary); box-shadow: 0 0 0 3px rgba(30,58,138,.15); }
+        .tv-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .tv-route { position: relative; display: flex; flex-direction: column; gap: 10px; }
+        .tv-swap { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--tv-line); background: #fff; color: var(--tv-primary); font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(14,26,51,.12); }
+        .tv-route .tv-input { padding-right: 64px; }
+        .tv-stepper { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; }
+        .tv-stepper-ctl { display: flex; align-items: center; gap: 10px; }
+        .tv-stepper button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--tv-line); background: #fff; color: var(--tv-primary); font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .tv-stepper button:disabled { color: #A9B4C5; cursor: not-allowed; }
+        .tv-stepper output { min-width: 28px; text-align: center; font: 600 17px var(--font-mono); }
+        .tv-stepper .tv-stepper-text { display: flex; flex-direction: column; font-size: 15px; font-weight: 600; }
+        .tv-stepper .tv-stepper-text small { font-size: 12px; font-weight: 400; color: var(--tv-muted); }
+        .tv-seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 4px; background: var(--tv-soft); border-radius: 12px; }
+        .tv-seg button { min-height: 40px; border: 0; border-radius: 9px; background: none; color: var(--tv-muted); font: 600 14px var(--font-sans); cursor: pointer; }
+        .tv-seg button[aria-pressed="true"] { background: #fff; color: var(--tv-primary); box-shadow: 0 1px 2px rgba(14,26,51,.14); }
+
+        /* Hasil pencarian */
+        .tv-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; flex: none; }
+        .tv-chip { flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--tv-line); background: #fff; color: var(--tv-text); font: 600 13px var(--font-sans); cursor: pointer; }
+        .tv-chip[aria-pressed="true"] { background: var(--tv-primary); border-color: var(--tv-primary); color: #fff; }
+        .tv-result { display: flex; flex-direction: column; gap: 12px; width: 100%; padding: 14px; text-align: left; background: #fff; border: 1px solid var(--tv-line); border-radius: 14px; cursor: pointer; color: var(--tv-text); transition: border-color .18s var(--ease), box-shadow .18s var(--ease); }
+        .tv-result:hover { border-color: #B9C6DA; box-shadow: 0 4px 14px -8px rgba(14,26,51,.3); }
+        .tv-result-top { display: flex; align-items: center; gap: 10px; }
+        .tv-result-top b { font-size: 14px; }
+        .tv-result-top small { display: block; font-size: 12px; color: var(--tv-muted); font-weight: 400; }
+        .tv-logo { flex: none; width: 34px; height: 34px; border-radius: 9px; color: #fff; display: flex; align-items: center; justify-content: center; font: 700 11px var(--font-mono); }
+        .tv-times { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
+        .tv-times b { font: 600 18px var(--font-mono); }
+        .tv-times small { display: block; font-size: 12px; color: var(--tv-muted); font-family: var(--font-sans); font-weight: 500; }
+        .tv-times .tv-mid { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: var(--tv-muted); }
+        .tv-times .tv-mid::after { content: ''; width: 100%; height: 1px; background: repeating-linear-gradient(90deg, #B9C6DA 0 4px, transparent 4px 8px); order: 1; }
+        .tv-times .tv-mid span:last-child { order: 2; }
+        .tv-result-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-top: 10px; border-top: 1px solid var(--tv-line); }
+        .tv-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .tv-tag { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 8px; border-radius: 6px; background: var(--tv-soft); color: var(--tv-primary); font-size: 12px; font-weight: 600; }
+        .tv-tag.ok { background: var(--tv-ok-soft); color: var(--tv-ok); }
+        .tv-tag.warn { background: var(--tv-accent-soft); color: var(--tv-accent-h); }
+        .tv-price { text-align: right; white-space: nowrap; }
+        .tv-price b { display: block; font: 600 17px var(--font-mono); color: var(--tv-accent); font-variant-numeric: tabular-nums; }
+        .tv-price small { font-size: 12px; color: var(--tv-muted); }
+        .tv-stars { color: #D97706; font-size: 13px; letter-spacing: 1px; }
+        .tv-hotel-thumb { flex: none; width: 64px; height: 64px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 26px; }
+
+        /* Checkout & bayar */
+        .tv-summary { display: flex; gap: 12px; align-items: flex-start; }
+        .tv-summary .tv-logo, .tv-summary .tv-hotel-thumb { width: 44px; height: 44px; font-size: 20px; }
+        .tv-summary b { display: block; font-size: 15px; }
+        .tv-summary small { display: block; font-size: 13px; color: var(--tv-muted); line-height: 1.45; }
+        .tv-option { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 12px 14px; border: 1px solid var(--tv-line); border-radius: 12px; background: #fff; cursor: pointer; }
+        .tv-option:has(input:checked) { border-color: var(--tv-primary); background: #F6F8FD; }
+        .tv-option:has(input:disabled) { opacity: .6; cursor: not-allowed; }
+        .tv-option input { flex: none; width: 20px; height: 20px; accent-color: var(--tv-primary); margin: 0; }
+        .tv-option .tv-opt-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .tv-option .tv-opt-text b { font-size: 15px; }
+        .tv-option .tv-opt-text small { font-size: 13px; color: var(--tv-muted); }
+        .tv-option .tv-opt-price { font: 600 14px var(--font-mono); white-space: nowrap; }
+        .tv-option > i { flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--tv-soft); color: var(--tv-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .tv-lines { display: flex; flex-direction: column; gap: 8px; }
+        .tv-line { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--tv-muted); }
+        .tv-line span:last-child { font-family: var(--font-mono); color: var(--tv-text); font-variant-numeric: tabular-nums; text-align: right; }
+        .tv-line.discount span:last-child { color: var(--tv-ok); }
+        .tv-line.total { padding-top: 10px; border-top: 1px solid var(--tv-line); font-size: 15px; font-weight: 600; color: var(--tv-text); }
+        .tv-line.total span:last-child { font-size: 18px; font-weight: 600; }
+        .tv-promo-row { display: flex; gap: 8px; }
+        .tv-promo-row .tv-input { text-transform: uppercase; font-family: var(--font-mono); letter-spacing: .04em; }
+        .tv-promo-row .tv-btn { width: auto; flex: none; }
+        .tv-msg { margin: 0; font-size: 13px; font-weight: 500; }
+        .tv-msg.ok { color: var(--tv-ok); } .tv-msg.bad { color: var(--tv-bad); }
+        .tv-timer { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--tv-accent-soft); color: var(--tv-accent-h); font-size: 14px; font-weight: 500; }
+        .tv-timer b { font-family: var(--font-mono); }
+        .tv-va { font: 600 22px var(--font-mono); letter-spacing: .08em; color: var(--tv-text); }
+
+        /* E-tiket */
+        .tv-ticket { background: #fff; border: 1px solid var(--tv-line); border-radius: 16px; overflow: hidden; }
+        .tv-ticket-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--tv-primary); color: #fff; font: 600 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+        .tv-ticket-sec { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .tv-code { font: 600 26px var(--font-mono); letter-spacing: .14em; color: var(--tv-text); }
+        .tv-perf { position: relative; height: 0; margin: 0 16px; border-top: 2px dashed #C7D1E0; }
+        .tv-perf::before, .tv-perf::after { content: ''; position: absolute; top: -11px; width: 20px; height: 20px; border-radius: 50%; background: var(--tv-bg); border: 1px solid var(--tv-line); }
+        .tv-perf::before { left: -27px; clip-path: inset(0 0 0 50%); }
+        .tv-perf::after { right: -27px; clip-path: inset(0 50% 0 0); }
+        .tv-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .tv-kv div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .tv-kv small { font: 600 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: #7A869A; }
+        .tv-kv b { font-size: 14px; overflow-wrap: anywhere; }
+        .tv-ticket canvas { align-self: center; width: 150px; height: 150px; }
+        .tv-banner-ok { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px; background: var(--tv-ok-soft); color: var(--tv-ok); }
+        .tv-banner-ok i { font-size: 28px; }
+        .tv-banner-ok b { display: block; font-size: 15px; color: #0B5C3B; }
+        .tv-banner-ok small { font-size: 13px; color: var(--tv-ok); }
+        .tv-status { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .tv-status.aktif { background: var(--tv-ok-soft); color: var(--tv-ok); }
+        .tv-status.batal { background: var(--tv-bad-soft); color: var(--tv-bad); }
+        .tv-status.selesai { background: #EDF0F5; color: var(--tv-muted); }
+
+        /* Akun */
+        .tv-wallet { display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 16px; background: var(--tv-primary); color: #fff; }
+        .tv-wallet small { font-size: 13px; color: rgba(255,255,255,.8); }
+        .tv-wallet b { font: 600 28px/1.1 var(--font-mono); letter-spacing: -.02em; }
+        .tv-wallet .tv-wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .tv-wallet .tv-btn-ghost { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.3); }
+        .tv-wallet .tv-btn-ghost:hover { background: rgba(255,255,255,.18); }
+        .tv-list { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--tv-line); border-radius: 14px; overflow: hidden; margin: 0; padding: 0; list-style: none; }
+        .tv-list > * + * { border-top: 1px solid var(--tv-line); }
+        .tv-li { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 12px 14px; background: #fff; border: 0; text-align: left; color: var(--tv-text); font: inherit; }
+        button.tv-li { cursor: pointer; }
+        button.tv-li:hover { background: #F7F9FC; }
+        .tv-li > i { flex: none; width: 38px; height: 38px; border-radius: 10px; background: var(--tv-soft); color: var(--tv-primary); display: flex; align-items: center; justify-content: center; font-size: 19px; }
+        .tv-li .tv-li-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .tv-li .tv-li-main b { font-size: 14px; font-weight: 600; }
+        .tv-li .tv-li-main small { font-size: 12px; color: var(--tv-muted); }
+        .tv-li .tv-amt { font: 600 14px var(--font-mono); white-space: nowrap; text-align: right; }
+        .tv-li .tv-amt.pos { color: var(--tv-ok); }
+        .tv-switch { position: relative; flex: none; width: 46px; height: 28px; border-radius: 999px; background: #B8C2D2; transition: background-color .2s var(--ease); }
+        .tv-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .2s var(--ease); }
+        [aria-checked="true"] > .tv-switch { background: var(--tv-ok); }
+        [aria-checked="true"] > .tv-switch::after { transform: translateX(18px); }
+        .tv-empty { margin: 0; padding: 28px 16px; text-align: center; font-size: 14px; color: var(--tv-muted); background: #fff; border: 1px dashed #C7D1E0; border-radius: 14px; }
+        .tv-avatar { flex: none; width: 52px; height: 52px; border-radius: 50%; background: var(--tv-accent-soft); color: var(--tv-accent-h); display: flex; align-items: center; justify-content: center; font: 600 16px var(--font-mono); }
+
+        /* Navigasi bawah */
+        .tv-bottom { position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; height: 76px; padding: 0 4px 8px; background: #fff; border-top: 1px solid var(--tv-line); }
+        .tv.no-nav .tv-bottom { display: none; }
+        .tv-nav { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 56px; border: 0; background: none; color: var(--tv-muted); font: 500 12px var(--font-sans); cursor: pointer; border-radius: 10px; }
+        .tv-nav i { font-size: 23px; }
+        .tv-nav[aria-current="page"] { color: var(--tv-primary); font-weight: 600; }
+        .tv-nav-bio { position: relative; top: -12px; color: var(--tv-accent); font-weight: 600; }
+        .tv-fab { width: 56px; height: 56px; border-radius: 50%; border: 4px solid #fff; background: var(--tv-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 6px 16px -6px rgba(194,65,12,.6); }
+        .tv-nav-bio:hover .tv-fab { background: var(--tv-accent-h); }
+
+        /* Sheet */
+        .tv-modal { position: absolute; inset: 0; z-index: 55; background: rgba(14, 26, 51, .5); align-items: flex-end; }
+        .tv-modal:not(.hidden) { display: flex; }
+        .tv-sheet-panel { width: 100%; max-height: 92%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 20px 16px; background: #fff; border-radius: 20px 20px 0 0; animation: slideUpModal .25s var(--ease); }
+        .tv-sheet-panel h3 { margin: 0; font-size: 18px; font-weight: 600; }
+        .tv-sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .tv-sheet-panel .bp-vf { align-self: center; }
+        .tv-bio-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .tv-bio-steps span { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; border-radius: 8px; background: var(--tv-soft); color: var(--tv-muted); font-size: 13px; font-weight: 600; }
+        .tv-bio-steps span.on { background: var(--tv-primary); color: #fff; }
+        .tv-bio-steps span.done { background: var(--tv-ok-soft); color: var(--tv-ok); }
+        #biopay-wrapper-p3 { width: 100% !important; height: 100% !important; background: var(--paper) !important; color: var(--text) !important; }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
             .scanner-line { top: 50% !important; }
@@ -335,7 +564,7 @@
         @media (max-width: 640px) {
             body { padding: 1rem 0.5rem; }
             .devices-wrapper { gap: 2rem; }
-            .device, .app-container, #ewallet-device { border-width: 6px !important; height: 760px !important; border-radius: 16px; }
+            .device, .app-container, #ewallet-device, #travel-device { border-width: 6px !important; height: 760px !important; border-radius: 16px; }
             .screen { padding: 56px 16px 20px; }
             .bp-main { padding: 16px 16px 32px; }
         }
@@ -1086,7 +1315,7 @@
                         <div class="flex flex-col items-center text-gray-400 cursor-pointer w-12"><i class="ph-regular ph-receipt text-[22px]"></i><span class="text-[11px] font-medium mt-1">Aktivitas</span></div>
                         
                         <!-- Floating Center BioPay button -->
-                        <div class="relative -top-5 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform" onclick="document.getElementById('modal-biopay-options').classList.remove('hidden')">
+                        <div class="relative -top-5 flex flex-col items-center cursor-pointer hover:scale-105 transition-transform" onclick="showBioPayOptions()">
                             <div class="w-14 h-14 bg-[#118EEA] rounded-full border-4 border-[#f5f5f5] flex flex-col items-center justify-center shadow-lg shadow-blue-500/30 text-white">
                                 <i class="ph-bold ph-fingerprint text-[26px]"></i>
                             </div>
@@ -1123,27 +1352,6 @@
                         </div>
                     </div>
 
-                    <!-- BioPay Options Modal (Pedagang) -->
-                    <div id="modal-biopay-options" class="hidden absolute inset-0 bg-black/80 z-[60] flex flex-col justify-end">
-                        <div class="bg-white w-full rounded-t-3xl p-5 flex flex-col animation-slide-up relative">
-                            <button onclick="closeEwalletModal('modal-biopay-options')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="ph-bold ph-x text-lg"></i></button>
-                            <div class="w-12 h-12 bg-[#118EEA]/10 rounded-full flex items-center justify-center text-[#118EEA] mb-3 mx-auto shadow-inner"><i class="ph-fill ph-fingerprint text-2xl"></i></div>
-                            <h3 class="text-slate-800 font-bold text-center mb-5 text-sm">Pilih Layanan BioPay</h3>
-                            
-                            <div class="flex flex-col gap-3">
-                                <button onclick="openTagihInput()" class="w-full bg-gradient-to-r from-[#118EEA] to-blue-500 hover:from-blue-600 hover:to-blue-500 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition-transform active:scale-95 text-sm">
-                                    <i class="ph-bold ph-scan"></i> Tagih Pelanggan (BioPay)
-                                </button>
-                                <button onclick="closeEwalletModal('modal-biopay-options'); showEwalletMinta();" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 transition-colors text-sm">
-                                    <i class="ph-bold ph-qr-code"></i> Tampilkan QRIS Saya
-                                </button>
-                                <button onclick="openBioPayInPOV2()" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 transition-colors text-sm">
-                                    <i class="ph-bold ph-app-window"></i> Masuk ke BioPay
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- E-Wallet Top Up Modal -->
                     <div id="modal-ewallet-topup" class="hidden absolute inset-0 bg-black/80 z-[60] flex items-end justify-center">
                         <div class="bg-white w-full rounded-t-3xl p-5 flex flex-col shadow-2xl relative animation-slide-up">
@@ -1170,15 +1378,38 @@
                         </div>
                     </div>
 
+                    <!-- ===== KOMPONEN BIOPAY MERCHANT (dipakai ulang di POV 3 lewat createMerchantKit) ===== -->
+                    <div id="merchant-kit" class="merchant-kit">
+                    <!-- BioPay Options Modal (Pedagang) -->
+                    <div id="modal-biopay-options" class="hidden absolute inset-0 bg-black/80 z-[60] flex flex-col justify-end">
+                        <div class="bg-white w-full rounded-t-3xl p-5 flex flex-col animation-slide-up relative">
+                            <button onclick="closeEwalletModal('modal-biopay-options')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="ph-bold ph-x text-lg"></i></button>
+                            <div class="w-12 h-12 bg-[#118EEA]/10 rounded-full flex items-center justify-center text-[#118EEA] mb-3 mx-auto shadow-inner"><i class="ph-fill ph-fingerprint text-2xl"></i></div>
+                            <h3 class="text-slate-800 font-bold text-center mb-5 text-sm">Pilih Layanan BioPay</h3>
+                            
+                            <div class="flex flex-col gap-3">
+                                <button onclick="openTagihInput()" class="w-full bg-gradient-to-r from-[#118EEA] to-blue-500 hover:from-blue-600 hover:to-blue-500 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition-transform active:scale-95 text-sm">
+                                    <i class="ph-bold ph-scan"></i> Tagih Pelanggan (BioPay)
+                                </button>
+                                <button onclick="closeEwalletModal('modal-biopay-options'); showEwalletMinta();" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 transition-colors text-sm">
+                                    <i class="ph-bold ph-qr-code"></i> Tampilkan QRIS Saya
+                                </button>
+                                <button onclick="openBioPayInPOV2()" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 transition-colors text-sm">
+                                    <i class="ph-bold ph-app-window"></i> Masuk ke BioPay
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- E-Wallet Minta / QRIS Modal -->
                     <div id="modal-ewallet-minta" class="hidden absolute inset-0 bg-black/80 z-[60] flex items-center justify-center p-4">
                         <div class="bg-white w-full max-w-[280px] rounded-2xl p-5 flex flex-col items-center text-center animation-slide-up shadow-2xl">
                             <h3 class="text-slate-800 font-bold text-sm mb-1">Minta Dana / QRIS Saya</h3>
                             <p class="text-slate-500 text-xs mb-4">Tunjukkan kode ini ke pengirim</p>
                             <canvas class="bp-qr mb-3" width="180" height="180" aria-label="Kode QRIS e-wallet Ikbal Habibi"></canvas>
-                            <p class="text-slate-800 font-bold text-xs">Ikbal Habibi</p>
-                            <p class="text-slate-400 text-xs mb-4 font-mono">0812-3456-7890</p>
-                            <button onclick="copyToClipboard('081234567890', 'Nomor E-Wallet', 2)" class="w-full bg-blue-50 text-[#118EEA] py-2.5 rounded-xl font-bold text-xs mb-2 border border-blue-100">Salin Nomor</button>
+                            <p id="kit-qris-name" class="text-slate-800 font-bold text-xs">Ikbal Habibi</p>
+                            <p id="kit-qris-number" class="text-slate-400 text-xs mb-4 font-mono">0812-3456-7890</p>
+                            <button onclick="copyQrisNumber()" class="w-full bg-blue-50 text-[#118EEA] py-2.5 rounded-xl font-bold text-xs mb-2 border border-blue-100">Salin Nomor</button>
                             <button onclick="closeEwalletModal('modal-ewallet-minta')" class="w-full bg-[#118EEA] text-white py-2.5 rounded-xl font-bold text-xs">Tutup</button>
                         </div>
                     </div>
@@ -1235,7 +1466,7 @@
                     <div id="modal-tagih-success" class="hidden absolute inset-0 bg-emerald-500 z-[80] flex flex-col items-center justify-center p-6 text-center">
                         <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-emerald-500 text-4xl mb-6 shadow-lg"><i class="ph-bold ph-check"></i></div>
                         <h2 class="text-white font-bold text-2xl mb-2">Pembayaran Berhasil!</h2>
-                        <p class="text-emerald-100 text-xs mb-8">Dana dari pelanggan telah masuk ke saldo Anda.</p>
+                        <p id="kit-success-note" class="text-emerald-100 text-xs mb-8">Dana dari pelanggan telah masuk ke saldo Anda.</p>
                         
                         <div class="bg-white/20 rounded-2xl p-5 w-full mb-8 border border-white/30 backdrop-blur-sm shadow-inner">
                             <p class="text-emerald-50 text-[11px] mb-1 font-medium">Total Diterima</p>
@@ -1243,6 +1474,7 @@
                         </div>
                         
                         <button onclick="finishTagihFlow()" class="w-full bg-white hover:bg-emerald-50 text-emerald-600 py-3.5 rounded-xl font-bold text-sm shadow-xl transition-transform active:scale-95">Selesai</button>
+                    </div>
                     </div>
                 </div>
 
@@ -1261,13 +1493,60 @@
             </div> <!-- /end ewallet-device app-container -->
         </div> <!-- /end pov2 wrapper -->
 
+
+        <!-- ========================================== -->
+        <!-- POV 3: APLIKASI TRAVEL "LINTAS"            -->
+        <!-- ========================================== -->
+        <div class="pov">
+            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span>POV 3 · Aplikasi travel Lintas</p>
+
+            <div class="app-container" id="travel-device">
+                <div class="toast-container" id="toast-container-3" role="status" aria-live="polite"></div>
+
+                <div id="travel-wrapper" class="tv">
+                    <div class="tv-screen">
+                        <section id="tv-view-home" class="tv-view active" aria-label="Beranda"></section>
+                        <section id="tv-view-orders" class="tv-view" aria-label="Pesanan"></section>
+                        <section id="tv-view-promo" class="tv-view" aria-label="Promo"></section>
+                        <section id="tv-view-account" class="tv-view" aria-label="Akun"></section>
+                        <section id="tv-view-search" class="tv-view" aria-label="Cari"></section>
+                        <section id="tv-view-results" class="tv-view" aria-label="Hasil pencarian"></section>
+                        <section id="tv-view-checkout" class="tv-view" aria-label="Isi data"></section>
+                        <section id="tv-view-pay" class="tv-view" aria-label="Pembayaran"></section>
+                        <section id="tv-view-ticket" class="tv-view" aria-label="E-tiket"></section>
+                    </div>
+
+                    <nav class="tv-bottom" aria-label="Navigasi Lintas">
+                        <button type="button" class="tv-nav" data-tab="home" aria-current="page" onclick="TV.tab('home')"><i class="ph ph-house" aria-hidden="true"></i>Beranda</button>
+                        <button type="button" class="tv-nav" data-tab="orders" onclick="TV.tab('orders')"><i class="ph ph-receipt" aria-hidden="true"></i>Pesanan</button>
+                        <button type="button" class="tv-nav tv-nav-bio" onclick="MK3.showBioPayOptions()" aria-label="BioPay"><span class="tv-fab" aria-hidden="true"><i class="ph-bold ph-fingerprint"></i></span>BioPay</button>
+                        <button type="button" class="tv-nav" data-tab="promo" onclick="TV.tab('promo')"><i class="ph ph-seal-percent" aria-hidden="true"></i>Promo</button>
+                        <button type="button" class="tv-nav" data-tab="account" onclick="TV.tab('account')"><i class="ph ph-user-circle" aria-hidden="true"></i>Akun</button>
+                    </nav>
+
+                    <!-- Sheet serbaguna Lintas (top up, VA, BioPay checkout, batal pesanan) -->
+                    <div id="tv-sheet" class="tv-modal hidden" role="dialog" aria-modal="true" aria-label="Lintas" onclick="if (event.target === this) TV.closeSheet()">
+                        <div class="tv-sheet-panel" id="tv-sheet-panel"></div>
+                    </div>
+
+                    <!-- Komponen BioPay merchant: disalin otomatis dari POV 2 -->
+                    <div id="merchant-kit-p3" class="merchant-kit"></div>
+                </div>
+
+                <!-- BioPay di dalam POV 3: disalin otomatis dari POV 1 -->
+                <div id="biopay-wrapper-p3" class="hidden w-full h-full flex-col relative z-[100]">
+                    <button type="button" onclick="MK3.closeBioPayInPOV2()" class="bp-p2-close" aria-label="Tutup BioPay, kembali ke Lintas"><i class="ph-bold ph-x" aria-hidden="true"></i></button>
+                    <div id="biopay-p3-root" class="absolute inset-0"></div>
+                </div>
+            </div> <!-- /end travel-device -->
+        </div> <!-- /end pov3 wrapper -->
+
     </div> <!-- /end devices-wrapper -->
 
     <script>
         // ==========================================
         // CORE VARIABLES: KAMERA & STATE
         // ==========================================
-        let ewalletTagihCamera = null;
 
         async function requestCameraAccess(videoId, facing = 'user') {
             try {
@@ -1322,7 +1601,6 @@
         let ewalletBalance = 1000000000;
         let activeEwalletCost = 0;
         let activeEwalletService = "";
-        let currentTagihAmount = 0;
 
         let isEwalletBalanceHidden = false;
 
@@ -1331,7 +1609,7 @@
         };
 
         function showToast(message, iconClass, iconColorClass, targetPOV = 1) {
-            const containerId = targetPOV === 1 ? 'toast-container-1' : 'toast-container-2';
+            const containerId = 'toast-container-' + targetPOV;
             const container = document.getElementById(containerId);
             const toast = document.createElement('div');
             toast.className = 'toast';
@@ -1880,90 +2158,6 @@
         }
 
         // ==========================================
-        // FLOW PENJUAL MENAGIH VIA BIOPAY (POV 2)
-        // ==========================================
-
-        function openTagihInput() {
-            closeEwalletModal('modal-biopay-options');
-            document.getElementById('input-tagih-amount').value = '';
-            document.getElementById('modal-tagih-input').classList.remove('hidden');
-        }
-
-        async function startTagihFaceScan() {
-            const amount = parseInt(document.getElementById('input-tagih-amount').value);
-            if (!amount || amount <= 0) {
-                showToast('Masukkan nominal tagihan yang valid!', 'ph-warning', 'text-red-500', 2);
-                return;
-            }
-            currentTagihAmount = amount;
-            closeEwalletModal('modal-tagih-input');
-            
-            document.getElementById('tagih-confirm-box').classList.add('hidden');
-            document.getElementById('tagih-confirm-box').classList.remove('flex');
-            const statusTxt = document.getElementById('tagih-scan-status');
-            statusTxt.innerText = 'Mencari Identitas BioPay...';
-            statusTxt.className = 'text-[#118EEA] text-[10px] font-bold mb-4 animate-pulse bg-[#118EEA]/10 px-4 py-1.5 rounded-full border border-[#118EEA]/30';
-            
-            document.getElementById('modal-tagih-face').classList.remove('hidden');
-            const token = ++tagihToken;
-
-            setTimeout(() => {
-                if (token !== tagihToken || document.getElementById('modal-tagih-face').classList.contains('hidden')) return;
-                
-                statusTxt.innerHTML = '<i class="ph-bold ph-check"></i> Wajah Teridentifikasi!';
-                statusTxt.className = 'text-emerald-500 text-[10px] font-bold mb-4 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200';
-                
-                document.getElementById('tagih-confirm-amount').innerText = 'Rp ' + currentTagihAmount.toLocaleString('id-ID');
-                document.getElementById('tagih-confirm-box').classList.remove('hidden');
-                document.getElementById('tagih-confirm-box').classList.add('flex');
-            }, 2500);
-            await openTagihCamera('video-tagih-face', token);
-        }
-
-        let tagihToken = 0;
-        async function openTagihCamera(videoId, token) {
-            let cam = await requestCameraAccess(videoId, 'environment');
-            if (!cam) cam = await requestCameraAccess(videoId, 'user');
-            if (token !== tagihToken) { stopSpecificCamera(cam); return; }
-            ewalletTagihCamera = stopSpecificCamera(ewalletTagihCamera);
-            ewalletTagihCamera = cam;
-        }
-
-        async function startTagihHandScan() {
-            ewalletTagihCamera = stopSpecificCamera(ewalletTagihCamera);
-            document.getElementById('modal-tagih-face').classList.add('hidden');
-            document.getElementById('modal-tagih-hand').classList.remove('hidden');
-            const token = ++tagihToken;
-
-            setTimeout(() => {
-                if (token !== tagihToken || document.getElementById('modal-tagih-hand').classList.contains('hidden')) return;
-                tagihToken++;
-                
-                ewalletBalance += currentTagihAmount;
-                addEwalletHistory('Menerima Pembayaran', 'Dari Pelanggan (BioPay)', currentTagihAmount.toLocaleString('id-ID'), false);
-                updateEwalletStandaloneDisplay();
-
-                ewalletTagihCamera = stopSpecificCamera(ewalletTagihCamera);
-                document.getElementById('modal-tagih-hand').classList.add('hidden');
-                
-                document.getElementById('tagih-success-amount').innerText = 'Rp ' + currentTagihAmount.toLocaleString('id-ID');
-                document.getElementById('modal-tagih-success').classList.remove('hidden');
-            }, 2500);
-            await openTagihCamera('video-tagih-hand', token);
-        }
-
-        function closeTagihFlow() {
-            tagihToken++;
-            ewalletTagihCamera = stopSpecificCamera(ewalletTagihCamera);
-            document.getElementById('modal-tagih-face').classList.add('hidden');
-            document.getElementById('modal-tagih-hand').classList.add('hidden');
-        }
-
-        function finishTagihFlow() {
-            document.getElementById('modal-tagih-success').classList.add('hidden');
-        }
-
-        // ==========================================
         // FUNGSI OPERASIONAL E-WALLET (TOP UP, KIRIM, MINTA)
         // ==========================================
 
@@ -2011,10 +2205,6 @@
             }
         }
 
-        function showEwalletMinta() {
-            document.getElementById('modal-ewallet-minta').classList.remove('hidden');
-        }
-
         // ==========================================
         // FITUR BIOPAY MINI-APP DI DALAM POV 2
         // ==========================================
@@ -2025,7 +2215,7 @@
         const BP1 = createBioPay('', 1, '');
         Object.assign(window, BP1); // handler onclick POV 1 memanggil fungsi global
 
-        function buildBioPayCloneHTML(template, suffix, ns, names) {
+        function buildBioPayCloneHTML(template, suffix, ns, names, pov = 2) {
             const box = document.createElement('div');
             box.innerHTML = template;
             box.querySelectorAll('.toast-container').forEach(el => el.remove());
@@ -2040,7 +2230,7 @@
                     let v = attr.value
                         .replace(/getElementById\('([\w-]+)'\)/g, (m, id) => `getElementById('${id}${suffix}')`)
                         .replace(/(^|[^\w.])showToast\(/g, `$1${ns}toast(`)
-                        .replace(/copyToClipboard\(([^)]*)\)/g, 'copyToClipboard($1, 2)')
+                        .replace(/copyToClipboard\(([^)]*)\)/g, `copyToClipboard($1, ${pov})`)
                         .replace(fnRe, `$1${ns}$2(`);
                     el.setAttribute(attr.name, v);
                 }
@@ -2051,6 +2241,106 @@
         const BP2_NAMES = Object.keys(BP1).filter(k => typeof BP1[k] === 'function' && k !== 'toast');
         document.getElementById('biopay-p2-root').innerHTML = buildBioPayCloneHTML(BIOPAY_TEMPLATE, '-p2', 'BP2.', BP2_NAMES);
         const BP2 = createBioPay('-p2', 2, 'BP2.');
+
+        // ==========================================
+        // KOMPONEN BIOPAY MERCHANT (Tagih pelanggan, QRIS saya, Masuk ke BioPay)
+        // Dipakai POV 2 (e-wallet) dan POV 3 (travel) dengan perilaku yang sama persis.
+        // ==========================================
+        function createMerchantKit({ suffix, pov, appWrapperId, bioWrapperId, bp, onReceive, receiveNote }) {
+            const $ = id => document.getElementById(id + suffix);
+            const toast = (m, i, c) => showToast(m, i, c, pov);
+            const statusInitial = $('tagih-scan-status').className;
+            const statusOk = 'text-emerald-600 text-xs font-bold mb-4 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200';
+            let tagihToken = 0, tagihCamera = null, tagihAmount = 0;
+            if (receiveNote) $('kit-success-note').textContent = receiveNote;
+
+            function closeEwalletModal(id) { $(id).classList.add('hidden'); }
+            function showBioPayOptions() { $('modal-biopay-options').classList.remove('hidden'); }
+            function openTagihInput() {
+                closeEwalletModal('modal-biopay-options');
+                $('input-tagih-amount').value = '';
+                $('modal-tagih-input').classList.remove('hidden');
+            }
+            async function openTagihCamera(videoId, token) {
+                let cam = await requestCameraAccess(videoId + suffix, 'environment');
+                if (!cam) cam = await requestCameraAccess(videoId + suffix, 'user');
+                if (token !== tagihToken) { stopSpecificCamera(cam); return; }
+                tagihCamera = stopSpecificCamera(tagihCamera);
+                tagihCamera = cam;
+            }
+            async function startTagihFaceScan() {
+                const amount = parseInt($('input-tagih-amount').value);
+                if (!amount || amount <= 0) { toast('Masukkan nominal tagihan yang valid!', 'ph-warning', 'text-red-500'); return; }
+                tagihAmount = amount;
+                closeEwalletModal('modal-tagih-input');
+                $('tagih-confirm-box').classList.add('hidden'); $('tagih-confirm-box').classList.remove('flex');
+                const statusTxt = $('tagih-scan-status');
+                statusTxt.textContent = 'Mencari Identitas BioPay...';
+                statusTxt.className = statusInitial;
+                $('modal-tagih-face').classList.remove('hidden');
+                const token = ++tagihToken;
+                setTimeout(() => {
+                    if (token !== tagihToken || $('modal-tagih-face').classList.contains('hidden')) return;
+                    statusTxt.innerHTML = '<i class="ph-bold ph-check" aria-hidden="true"></i> Wajah Teridentifikasi!';
+                    statusTxt.className = statusOk;
+                    $('tagih-confirm-amount').textContent = formatRp(tagihAmount);
+                    $('tagih-confirm-box').classList.remove('hidden'); $('tagih-confirm-box').classList.add('flex');
+                }, 2500);
+                await openTagihCamera('video-tagih-face', token);
+            }
+            async function startTagihHandScan() {
+                tagihCamera = stopSpecificCamera(tagihCamera);
+                $('modal-tagih-face').classList.add('hidden');
+                $('modal-tagih-hand').classList.remove('hidden');
+                const token = ++tagihToken;
+                setTimeout(() => {
+                    if (token !== tagihToken || $('modal-tagih-hand').classList.contains('hidden')) return;
+                    tagihToken++;
+                    onReceive(tagihAmount);
+                    tagihCamera = stopSpecificCamera(tagihCamera);
+                    $('modal-tagih-hand').classList.add('hidden');
+                    $('tagih-success-amount').textContent = formatRp(tagihAmount);
+                    $('modal-tagih-success').classList.remove('hidden');
+                }, 2500);
+                await openTagihCamera('video-tagih-hand', token);
+            }
+            function closeTagihFlow() {
+                tagihToken++;
+                tagihCamera = stopSpecificCamera(tagihCamera);
+                $('modal-tagih-face').classList.add('hidden');
+                $('modal-tagih-hand').classList.add('hidden');
+            }
+            function finishTagihFlow() { $('modal-tagih-success').classList.add('hidden'); }
+            function showEwalletMinta() { $('modal-ewallet-minta').classList.remove('hidden'); }
+            function copyQrisNumber() { copyToClipboard($('kit-qris-number').textContent.replace(/\D/g, ''), 'Nomor QRIS', pov); }
+            function openBioPayInPOV2() {
+                closeEwalletModal('modal-biopay-options');
+                document.getElementById(appWrapperId).classList.add('hidden');
+                document.getElementById(bioWrapperId).classList.remove('hidden');
+                document.getElementById(bioWrapperId).classList.add('flex');
+                bp.closeAllModals();
+                bp.goToScreen('screen-start');
+                toast('Membuka BioPay...', 'ph-app-window', 'text-sky-400');
+            }
+            function closeBioPayInPOV2() {
+                bp.stopCameras(); bp.closeAllModals(); bp.showScreen('screen-start');
+                document.getElementById(bioWrapperId).classList.add('hidden');
+                document.getElementById(bioWrapperId).classList.remove('flex');
+                document.getElementById(appWrapperId).classList.remove('hidden');
+            }
+            return { toast, closeEwalletModal, showBioPayOptions, openTagihInput, startTagihFaceScan, startTagihHandScan, closeTagihFlow, finishTagihFlow, showEwalletMinta, copyQrisNumber, openBioPayInPOV2, closeBioPayInPOV2 };
+        }
+
+        // Template komponen merchant diambil sebelum ada interaksi (untuk disalin ke POV 3)
+        const MERCHANT_KIT_TEMPLATE = document.getElementById('merchant-kit').innerHTML;
+
+        const MK2 = createMerchantKit({
+            suffix: '', pov: 2, appWrapperId: 'ewallet-wrapper', bioWrapperId: 'biopay-wrapper-p2', bp: BP2,
+            onReceive: amt => { ewalletBalance += amt; addEwalletHistory('Menerima Pembayaran', 'Dari Pelanggan (BioPay)', amt.toLocaleString('id-ID'), false); updateEwalletStandaloneDisplay(); }
+        });
+        // handler onclick POV 2 memanggil nama global (closeEwalletModal global tetap dipakai modal e-wallet lain)
+        const { toast: _mk2Toast, closeEwalletModal: _mk2Close, ...MK2_GLOBALS } = MK2;
+        Object.assign(window, MK2_GLOBALS);
 
         // QR dekoratif (pola tetap, bukan QR asli) untuk semua <canvas class="bp-qr">
         function drawFakeQR(canvas, seed = 7) {
@@ -2071,26 +2361,519 @@
         }
         tickClock(); setInterval(tickClock, 15000);
 
-        function openBioPayInPOV2() {
-            closeEwalletModal('modal-biopay-options');
-            document.getElementById('ewallet-wrapper').classList.add('hidden');
-            document.getElementById('ewallet-wrapper').classList.remove('flex');
-            document.getElementById('biopay-wrapper-p2').classList.remove('hidden');
-            document.getElementById('biopay-wrapper-p2').classList.add('flex');
-            BP2.closeAllModals();
-            BP2.goToScreen('screen-start');
-            showToast('Membuka BioPay...', 'ph-app-window', 'text-sky-400', 2);
-        }
+        // ==========================================
+        // POV 3: APLIKASI TRAVEL "LINTAS"
+        // Semua alur bisa dioperasikan: cari -> pilih -> isi data -> bayar -> e-tiket -> pesanan / batal & refund.
+        // ==========================================
+        const TV = (() => {
+            const $ = id => document.getElementById(id);
+            const esc = escapeHTML;
+            const toast = (m, i, c) => showToast(m, i, c, 3);
+            const rp = n => formatRp(n);
+            const rpShort = n => n >= 1e6 ? 'Rp ' + (n / 1e6).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt' : 'Rp ' + Math.round(n / 1000) + ' rb';
+            const iso = d => d.toISOString().slice(0, 10);
+            const addDays = (n, from = new Date()) => { const d = new Date(from); d.setDate(d.getDate() + n); return d; };
+            const fmtDate = s => new Date(s + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+            const fmtShort = s => new Date(s + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+            const hm = mins => `${String(Math.floor(mins / 60) % 24).padStart(2, '0')}.${String(mins % 60).padStart(2, '0')}`;
+            const dur = mins => `${Math.floor(mins / 60)}j ${mins % 60}m`;
+            const seeded = str => { let h = 2166136261; for (const c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return () => ((h = Math.imul(h ^ (h >>> 15), 2246822507) ^ Math.imul(h ^ (h >>> 13), 3266489909)) >>> 0) / 4294967296; };
 
-        function closeBioPayInPOV2() {
-            BP2.stopCameras();
-            BP2.closeAllModals();
-            BP2.showScreen('screen-start');
-            document.getElementById('biopay-wrapper-p2').classList.add('hidden');
-            document.getElementById('biopay-wrapper-p2').classList.remove('flex');
-            document.getElementById('ewallet-wrapper').classList.remove('hidden');
-            document.getElementById('ewallet-wrapper').classList.add('flex');
-        }
+            const PRODUCTS = {
+                flight: { label: 'Pesawat', icon: 'ph-airplane-tilt', unit: 'penumpang' },
+                hotel: { label: 'Hotel', icon: 'ph-buildings', unit: 'malam' },
+                train: { label: 'Kereta', icon: 'ph-train', unit: 'penumpang' },
+                attraction: { label: 'Atraksi', icon: 'ph-ticket', unit: 'tiket' }
+            };
+            const AIRPORTS = [['CGK', 'Jakarta'], ['DPS', 'Denpasar, Bali'], ['YIA', 'Yogyakarta'], ['SUB', 'Surabaya'], ['KNO', 'Medan'], ['UPG', 'Makassar'], ['LBJ', 'Labuan Bajo'], ['SIN', 'Singapura']];
+            const STATIONS = [['GMR', 'Gambir, Jakarta'], ['BD', 'Bandung'], ['YK', 'Yogyakarta'], ['SLO', 'Solo Balapan'], ['SBI', 'Surabaya Pasarturi'], ['ML', 'Malang']];
+            const CITIES = ['Bali', 'Yogyakarta', 'Bandung', 'Jakarta', 'Labuan Bajo', 'Singapura'];
+            const AIRLINES = [['Nusantara Air', 'NA', '#1E3A8A'], ['Selat Airways', 'SL', '#0F766E'], ['Kirana Jet', 'KJ', '#B91C1C'], ['Bayu Air', 'BY', '#7C3AED']];
+            const TRAINS = ['Lintas Selatan', 'Parahyang Ekspres', 'Mataram Raya', 'Bromo Malam', 'Senja Utama'];
+            const HOTEL_NAMES = ['Griya Laut', 'Rumah Kayu', 'Sora Suites', 'Kampung Senja', 'Pelangi Inn', 'The Arcade', 'Omah Tenang'];
+            const HOTEL_AREAS = { Bali: ['Seminyak', 'Ubud', 'Sanur', 'Canggu'], Yogyakarta: ['Malioboro', 'Prawirotaman', 'Kaliurang'], Bandung: ['Dago', 'Braga', 'Lembang'], Jakarta: ['Menteng', 'Kemang', 'Sudirman'], 'Labuan Bajo': ['Pantai Pede', 'Kampung Ujung'], Singapura: ['Bugis', 'Tanjong Pagar', 'Orchard'] };
+            const ATTRACTIONS = ['Tur Kuliner Malam', 'Kelas Membatik', 'Snorkeling Setengah Hari', 'Taman Air Keluarga', 'Museum Pass 3 Lokasi', 'Tur Sepeda Pagi', 'Kelas Memasak Lokal'];
+            const DEST_COLORS = { Bali: '#0F766E', Yogyakarta: '#9A3412', Bandung: '#1E3A8A', Jakarta: '#334155', 'Labuan Bajo': '#0E7490', Singapura: '#7C2D12' };
+            const PROMOS = [
+                { code: 'LINTASHEMAT', title: 'Diskon 10% semua produk', desc: 'Min. transaksi Rp 500.000, maks. potongan Rp 150.000', color: '#1E3A8A', check: (p, sub) => sub >= 500000 ? Math.min(150000, Math.round(sub * 0.1)) : 'Minimal transaksi Rp 500.000' },
+                { code: 'BIOPAY25', title: 'Potongan Rp 25.000', desc: 'Khusus bayar pakai BioPay, tanpa minimum', color: '#C2410C', check: (p, sub, m) => m === 'biopay' ? 25000 : 0, needsBio: true },
+                { code: 'INAPHEMAT', title: 'Hotel 15% lebih hemat', desc: 'Khusus hotel, maks. potongan Rp 300.000', color: '#0F766E', check: (p, sub) => p === 'hotel' ? Math.min(300000, Math.round(sub * 0.15)) : 'Kode ini hanya untuk hotel' }
+            ];
+
+            const today = new Date();
+            const state = {
+                balance: 2500000, points: 1240, notif: true,
+                search: {
+                    flight: { from: 'CGK', to: 'DPS', date: iso(addDays(7)), pax: 1, cls: 'Ekonomi' },
+                    train: { from: 'GMR', to: 'YK', date: iso(addDays(5)), pax: 1 },
+                    hotel: { city: 'Bali', date: iso(addDays(7)), nights: 2, rooms: 1 },
+                    attraction: { city: 'Bali', date: iso(addDays(8)), qty: 2 }
+                },
+                product: 'flight', results: [], sort: 'cheap', selected: null,
+                form: { name: 'Ikbal Habibi', email: 'ikbal@biopay.id', phone: '081234567890', travelers: ['Ikbal Habibi'], addons: {} },
+                promo: null, promoMsg: '', payMethod: 'wallet', payDeadline: 0,
+                bookings: [], history: [], stack: [], currentTab: 'home', ticket: null
+            };
+
+            // ---------- Navigasi ----------
+            const TABS = ['home', 'orders', 'promo', 'account'];
+            function show(view, push = true) {
+                const cur = document.querySelector('#travel-wrapper .tv-view.active');
+                if (push && cur && cur.id !== 'tv-view-' + view) state.stack.push(cur.id.replace('tv-view-', ''));
+                document.querySelectorAll('#travel-wrapper .tv-view').forEach(v => v.classList.toggle('active', v.id === 'tv-view-' + view));
+                $('travel-wrapper').classList.toggle('no-nav', !TABS.includes(view));
+                document.querySelectorAll('#travel-wrapper .tv-nav[data-tab]').forEach(b => { if (b.dataset.tab === view) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+                const body = $('tv-view-' + view).querySelector('.tv-body'); if (body) body.scrollTop = 0;
+                if (view !== 'pay') stopTimer();
+            }
+            function back() { const prev = state.stack.pop() || 'home'; if (TABS.includes(prev)) { tab(prev); return; } show(prev, false); }
+            function tab(name) { state.stack = []; state.currentTab = name; ({ home: renderHome, orders: renderOrders, promo: renderPromo, account: renderAccount })[name](); show(name, false); }
+            const head = (title, sub = '', backBtn = true) => `<header class="tv-head ${backBtn ? '' : 'tv-head-plain'}">${backBtn ? '<button type="button" class="tv-back" aria-label="Kembali" onclick="TV.back()"><i class="ph-bold ph-arrow-left" aria-hidden="true"></i></button>' : ''}<h2>${title}${sub ? `<small>${sub}</small>` : ''}</h2></header>`;
+            const steps = n => `<div class="tv-steps" aria-label="Langkah ${n} dari 3">${['Pilih', 'Isi data', 'Bayar'].map((t, i) => `<span class="${i + 1 < n ? 'done' : i + 1 === n ? 'on' : ''}">${i + 1 < n ? '✓ ' : (i + 1) + '. '}${t}</span>`).join('<i class="sep"></i>')}</div>`;
+
+            // ---------- Beranda ----------
+            function renderHome() {
+                $('tv-view-home').innerHTML = `
+                    <div class="tv-body has-nav" style="padding:0;gap:0">
+                        <div class="tv-hero">
+                            <div class="tv-hero-top"><p class="tv-brand">lintas<span>.</span></p>
+                                <button type="button" class="tv-pill" onclick="TV.tab('account')" aria-label="Akun Lintas"><i class="ph-bold ph-user-circle" aria-hidden="true"></i> Ikbal</button></div>
+                            <p class="tv-hero-hello">Mau ke mana minggu ini, Ikbal?</p>
+                            <div class="tv-pills">
+                                <button type="button" class="tv-pill" onclick="TV.tab('account')"><i class="ph-bold ph-wallet" aria-hidden="true"></i> Lintas Pay <b>${rp(state.balance)}</b></button>
+                                <button type="button" class="tv-pill" onclick="TV.tab('account')"><i class="ph-bold ph-coins" aria-hidden="true"></i> <b>${state.points.toLocaleString('id-ID')}</b> poin</button>
+                            </div>
+                        </div>
+                        <div class="tv-products">
+                            ${Object.entries(PRODUCTS).map(([k, p]) => `<button type="button" class="tv-prod" onclick="TV.openSearch('${k}')"><i class="ph ${p.icon}" aria-hidden="true"></i>${p.label}</button>`).join('')}
+                        </div>
+                        <div style="padding:20px 16px 100px;display:flex;flex-direction:column;gap:22px">
+                            ${state.bookings.find(b => b.status === 'aktif') ? (() => { const b = state.bookings.find(x => x.status === 'aktif'); return `
+                            <section class="tv-sec"><div class="tv-sec-head"><h3>Perjalanan berikutnya</h3><button type="button" class="tv-link" onclick="TV.tab('orders')">Semua pesanan</button></div>
+                                <button type="button" class="tv-result" onclick="TV.openTicket('${b.code}')">${bookingRow(b)}</button></section>`; })() : ''}
+                            <section class="tv-sec"><div class="tv-sec-head"><h3>Promo untukmu</h3><button type="button" class="tv-link" onclick="TV.tab('promo')">Lihat semua</button></div>
+                                <div class="tv-hscroll">${PROMOS.map(p => `<button type="button" class="tv-promo" style="background:${p.color}" onclick="TV.copyPromo('${p.code}')"><b>${p.title}</b><span>${p.desc}</span><code>${p.code}</code></button>`).join('')}</div>
+                            </section>
+                            <section class="tv-sec"><div class="tv-sec-head"><h3>Destinasi populer</h3></div>
+                                <div class="tv-dest-grid">${CITIES.map(c => `<button type="button" class="tv-dest" style="background:${DEST_COLORS[c]}" onclick="TV.quickHotel('${c}')"><i class="ph ph-buildings" aria-hidden="true"></i><b>${c}</b><small>Hotel mulai ${rpShort(minHotel(c))}/malam</small></button>`).join('')}</div>
+                            </section>
+                        </div>
+                    </div>`;
+            }
+            function minHotel(city) { const r = seeded('min' + city); return Math.round((320000 + r() * 260000) / 1000) * 1000; }
+            function quickHotel(city) { state.search.hotel.city = city; openSearch('hotel'); }
+
+            // ---------- Form pencarian ----------
+            const opts = (list, val) => list.map(([c, n]) => `<option value="${c}" ${c === val ? 'selected' : ''}>${n} (${c})</option>`).join('');
+            const stepper = (key, label, sub, val, min, max) => `<div class="tv-stepper"><span class="tv-stepper-text">${label}<small>${sub}</small></span><span class="tv-stepper-ctl"><button type="button" aria-label="Kurangi ${label}" onclick="TV.step('${key}',-1)" ${val <= min ? 'disabled' : ''}><i class="ph-bold ph-minus" aria-hidden="true"></i></button><output aria-live="polite">${val}</output><button type="button" aria-label="Tambah ${label}" onclick="TV.step('${key}',1)" ${val >= max ? 'disabled' : ''}><i class="ph-bold ph-plus" aria-hidden="true"></i></button></span></div>`;
+            function openSearch(product) { state.product = product; renderSearch(); show('search'); }
+            function renderSearch() {
+                const p = state.product, s = state.search[p], P = PRODUCTS[p], min = iso(today);
+                let fields = '';
+                if (p === 'flight' || p === 'train') {
+                    const list = p === 'flight' ? AIRPORTS : STATIONS;
+                    fields = `
+                        <div class="tv-route">
+                            <div class="tv-field"><label for="tv-from">Dari</label><select id="tv-from" class="tv-input" onchange="TV.setField('from', this.value)">${opts(list, s.from)}</select></div>
+                            <div class="tv-field"><label for="tv-to">Ke</label><select id="tv-to" class="tv-input" onchange="TV.setField('to', this.value)">${opts(list, s.to)}</select></div>
+                            <button type="button" class="tv-swap" aria-label="Tukar asal dan tujuan" onclick="TV.swap()"><i class="ph-bold ph-arrows-down-up" aria-hidden="true"></i></button>
+                        </div>
+                        <div class="tv-field"><label for="tv-date">Tanggal berangkat</label><input type="date" id="tv-date" class="tv-input" min="${min}" value="${s.date}" onchange="TV.setField('date', this.value)"></div>
+                        ${stepper('pax', 'Penumpang', 'Dewasa, 12 tahun ke atas', s.pax, 1, 6)}
+                        ${p === 'flight' ? `<div class="tv-field"><span class="tv-label">Kelas kabin</span><div class="tv-seg">${['Ekonomi', 'Bisnis'].map(c => `<button type="button" aria-pressed="${s.cls === c}" onclick="TV.setField('cls','${c}')">${c}</button>`).join('')}</div></div>` : ''}`;
+                } else {
+                    fields = `
+                        <div class="tv-field"><label for="tv-city">${p === 'hotel' ? 'Kota atau area' : 'Kota'}</label><select id="tv-city" class="tv-input" onchange="TV.setField('city', this.value)">${CITIES.map(c => `<option ${c === s.city ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+                        <div class="tv-field"><label for="tv-date">${p === 'hotel' ? 'Check-in' : 'Tanggal kunjungan'}</label><input type="date" id="tv-date" class="tv-input" min="${min}" value="${s.date}" onchange="TV.setField('date', this.value)"></div>
+                        ${p === 'hotel' ? stepper('nights', 'Durasi', `Check-out ${fmtShort(iso(addDays(s.nights, new Date(s.date + 'T00:00:00'))))}`, s.nights, 1, 14) + stepper('rooms', 'Kamar', '2 tamu per kamar', s.rooms, 1, 5) : stepper('qty', 'Tiket', 'Dewasa & anak', s.qty, 1, 10)}`;
+                }
+                $('tv-view-search').innerHTML = `${head('Cari ' + P.label.toLowerCase())}
+                    <div class="tv-body"><div class="tv-card tv-pad">${fields}</div>
+                    <p class="tv-msg" style="color:var(--tv-muted)"><i class="ph ph-info" aria-hidden="true"></i> Harga sudah termasuk pajak. Tidak ada biaya layanan tambahan.</p></div>
+                    <div class="tv-foot"><button type="button" class="tv-btn tv-btn-accent" style="width:100%" onclick="TV.doSearch()"><i class="ph-bold ph-magnifying-glass" aria-hidden="true"></i> Cari ${P.label.toLowerCase()}</button></div>`;
+            }
+            function setField(k, v) { state.search[state.product][k] = v; if (k === 'cls' || k === 'nights') renderSearch(); }
+            function step(k, d) { const s = state.search[state.product]; s[k] = Math.max(1, s[k] + d); renderSearch(); }
+            function swap() { const s = state.search[state.product]; [s.from, s.to] = [s.to, s.from]; renderSearch(); }
+
+            // ---------- Hasil ----------
+            function doSearch() {
+                const p = state.product, s = state.search[p];
+                if ((p === 'flight' || p === 'train') && s.from === s.to) { toast('Asal dan tujuan tidak boleh sama', 'ph-warning', 'text-red-500'); return; }
+                if (!s.date || s.date < iso(today)) { toast('Pilih tanggal mulai hari ini', 'ph-warning', 'text-red-500'); return; }
+                state.results = generate(p, s); state.sort = p === 'hotel' || p === 'attraction' ? 'rating' : 'cheap';
+                renderResults(); show('results');
+            }
+            function generate(p, s) {
+                const r = seeded(p + JSON.stringify(s)); const out = [];
+                if (p === 'flight' || p === 'train') {
+                    const list = p === 'flight' ? AIRPORTS : STATIONS;
+                    const dist = Math.abs(list.findIndex(x => x[0] === s.from) - list.findIndex(x => x[0] === s.to)) + 1;
+                    for (let i = 0; i < 8; i++) {
+                        const dep = 300 + Math.floor(r() * 64) * 15, transit = p === 'flight' && r() > .72 ? 1 : 0;
+                        const d = p === 'flight' ? 75 + dist * 30 + Math.floor(r() * 6) * 5 + transit * 95 : 150 + dist * 70 + Math.floor(r() * 8) * 10;
+                        let price = p === 'flight' ? (520000 + dist * 260000) * (0.82 + r() * 0.55) * (transit ? 0.85 : 1) * (s.cls === 'Bisnis' ? 2.7 : 1) : (110000 + dist * 85000) * (0.8 + r() * 0.9);
+                        if (p === 'flight') { const a = AIRLINES[Math.floor(r() * AIRLINES.length)]; out.push({ id: 'r' + i, kind: p, name: a[0], logo: a[1], color: a[2], no: `${a[1]}-${100 + Math.floor(r() * 899)}`, dep, dur: d, transit, cls: s.cls, price: Math.round(price / 1000) * 1000, unitLabel: '/pax', units: s.pax, refundable: r() > .4 }); }
+                        else { const cls = ['Ekonomi', 'Bisnis', 'Eksekutif'][Math.floor(r() * 3)]; out.push({ id: 'r' + i, kind: p, name: 'KA ' + TRAINS[Math.floor(r() * TRAINS.length)], logo: 'KA', color: '#334155', no: `${cls} · ${['A', 'B', 'C'][Math.floor(r() * 3)]}${1 + Math.floor(r() * 9)}`, dep, dur: d, transit: 0, cls, price: Math.round(price * (cls === 'Eksekutif' ? 1.6 : cls === 'Bisnis' ? 1.2 : 0.8) / 1000) * 1000, unitLabel: '/pax', units: s.pax, refundable: true }); }
+                    }
+                } else if (p === 'hotel') {
+                    const areas = HOTEL_AREAS[s.city];
+                    HOTEL_NAMES.forEach((n, i) => { const stars = 3 + Math.floor(r() * 3); out.push({ id: 'r' + i, kind: p, name: `${n} ${areas[i % areas.length]}`, area: `${areas[i % areas.length]}, ${s.city}`, stars, rating: (7.6 + r() * 1.9).toFixed(1), reviews: 80 + Math.floor(r() * 2400), price: Math.round((minHotel(s.city) + (stars - 3) * 280000 + r() * 420000) / 1000) * 1000, unitLabel: '/malam', units: s.nights * s.rooms, breakfast: r() > .5, pool: r() > .45, refundable: r() > .35, color: DEST_COLORS[s.city] }); });
+                } else {
+                    ATTRACTIONS.forEach((n, i) => out.push({ id: 'r' + i, kind: p, name: `${n} ${s.city}`, area: s.city, rating: (8 + r() * 1.8).toFixed(1), reviews: 40 + Math.floor(r() * 900), durH: 2 + Math.floor(r() * 5), price: Math.round((70000 + r() * 520000) / 1000) * 1000, unitLabel: '/tiket', units: s.qty, instant: r() > .3, refundable: r() > .5, color: DEST_COLORS[s.city] }));
+                }
+                return out;
+            }
+            function sorted() {
+                const a = [...state.results];
+                const by = { cheap: (x, y) => x.price - y.price, fast: (x, y) => x.dur - y.dur, early: (x, y) => x.dep - y.dep, rating: (x, y) => y.rating - x.rating };
+                return a.sort(by[state.sort]);
+            }
+            function resultCard(x) {
+                if (x.kind === 'flight' || x.kind === 'train') {
+                    const s = state.search[x.kind];
+                    return `<div class="tv-result-top"><span class="tv-logo" style="background:${x.color}">${x.logo}</span><span><b>${esc(x.name)}</b><small>${x.no}${x.kind === 'flight' ? ' · ' + x.cls : ''}</small></span></div>
+                        <div class="tv-times"><span><b>${hm(x.dep)}</b><small>${s.from}</small></span><span class="tv-mid"><span>${dur(x.dur)}</span><span>${x.transit ? '1 transit' : 'Langsung'}</span></span><span style="text-align:right"><b>${hm(x.dep + x.dur)}</b><small>${s.to}${x.dep + x.dur >= 1440 ? ' (+1)' : ''}</small></span></div>
+                        <div class="tv-result-bottom"><span class="tv-tags">${x.kind === 'flight' ? '<span class="tv-tag"><i class="ph ph-suitcase-rolling" aria-hidden="true"></i> 20 kg</span>' : ''}${x.refundable ? '<span class="tv-tag ok">Bisa refund</span>' : ''}</span><span class="tv-price"><b>${rp(x.price)}</b><small>${x.unitLabel}</small></span></div>`;
+                }
+                if (x.kind === 'hotel') return `<div class="tv-result-top" style="align-items:flex-start"><span class="tv-hotel-thumb" style="background:${x.color}"><i class="ph-fill ph-buildings" aria-hidden="true"></i></span><span style="flex:1;min-width:0"><b>${esc(x.name)}</b><small><span class="tv-stars" aria-label="${x.stars} bintang">${'★'.repeat(x.stars)}</span> · ${x.area}</small><small><b class="tv-tag">${x.rating}</b> ${x.reviews.toLocaleString('id-ID')} ulasan</small></span></div>
+                        <div class="tv-result-bottom"><span class="tv-tags">${x.breakfast ? '<span class="tv-tag"><i class="ph ph-coffee" aria-hidden="true"></i> Sarapan</span>' : ''}${x.pool ? '<span class="tv-tag"><i class="ph ph-swimming-pool" aria-hidden="true"></i> Kolam</span>' : ''}${x.refundable ? '<span class="tv-tag ok">Bebas batal</span>' : ''}</span><span class="tv-price"><b>${rp(x.price)}</b><small>${x.unitLabel}</small></span></div>`;
+                return `<div class="tv-result-top" style="align-items:flex-start"><span class="tv-hotel-thumb" style="background:${x.color}"><i class="ph-fill ph-ticket" aria-hidden="true"></i></span><span style="flex:1;min-width:0"><b>${esc(x.name)}</b><small>Durasi ± ${x.durH} jam · ${x.area}</small><small><b class="tv-tag">${x.rating}</b> ${x.reviews.toLocaleString('id-ID')} ulasan</small></span></div>
+                        <div class="tv-result-bottom"><span class="tv-tags">${x.instant ? '<span class="tv-tag"><i class="ph ph-lightning" aria-hidden="true"></i> Konfirmasi instan</span>' : ''}${x.refundable ? '<span class="tv-tag ok">Bisa refund</span>' : ''}</span><span class="tv-price"><b>${rp(x.price)}</b><small>${x.unitLabel}</small></span></div>`;
+            }
+            function searchSummary(p = state.product, s = state.search[p]) {
+                if (p === 'flight' || p === 'train') return `${s.from} → ${s.to} · ${fmtShort(s.date)} · ${s.pax} pax`;
+                if (p === 'hotel') return `${s.city} · ${fmtShort(s.date)} · ${s.nights} malam · ${s.rooms} kamar`;
+                return `${s.city} · ${fmtShort(s.date)} · ${s.qty} tiket`;
+            }
+            function renderResults() {
+                const p = state.product, isTrans = p === 'flight' || p === 'train';
+                const chips = isTrans ? [['cheap', 'Termurah'], ['fast', 'Tercepat'], ['early', 'Paling pagi']] : [['rating', 'Ulasan terbaik'], ['cheap', 'Termurah']];
+                const title = isTrans ? `${state.search[p].from} → ${state.search[p].to}` : `${PRODUCTS[p].label} di ${state.search[p].city}`;
+                $('tv-view-results').innerHTML = `${head(title, searchSummary())}
+                    <div class="tv-body">
+                        ${steps(1)}
+                        <div class="tv-chips" role="group" aria-label="Urutkan">${chips.map(([k, l]) => `<button type="button" class="tv-chip" aria-pressed="${state.sort === k}" onclick="TV.sortBy('${k}')">${l}</button>`).join('')}</div>
+                        <p class="tv-msg" style="color:var(--tv-muted)">${state.results.length} pilihan ditemukan</p>
+                        ${sorted().map(x => `<button type="button" class="tv-result" onclick="TV.pick('${x.id}')">${resultCard(x)}</button>`).join('')}
+                    </div>`;
+            }
+            function sortBy(k) { state.sort = k; renderResults(); }
+
+            // ---------- Isi data (checkout) ----------
+            const ADDONS = {
+                flight: [['bagasi', 'Tambah bagasi 15 kg', 'ph-suitcase-rolling', 155000, 'pax'], ['asuransi', 'Asuransi perjalanan', 'ph-umbrella', 45000, 'pax']],
+                train: [['asuransi', 'Asuransi perjalanan', 'ph-umbrella', 15000, 'pax']],
+                hotel: [['sarapan', 'Tambah sarapan', 'ph-coffee', 85000, 'unit'], ['batal', 'Proteksi bebas batal', 'ph-shield-check', 120000, 'flat']],
+                attraction: [['asuransi', 'Asuransi aktivitas', 'ph-umbrella', 12000, 'unit']]
+            };
+            function pick(id) {
+                state.selected = state.results.find(x => x.id === id);
+                const s = state.search[state.product], n = state.product === 'flight' || state.product === 'train' ? s.pax : 1;
+                state.form.travelers = Array.from({ length: n }, (_, i) => state.form.travelers[i] || (i === 0 ? state.form.name : ''));
+                state.form.addons = {}; state.promoMsg = '';
+                renderCheckout(); show('checkout');
+            }
+            function addonQty(kind) { const s = state.search[state.product]; return kind === 'pax' ? (s.pax || 1) : kind === 'unit' ? state.selected.units : 1; }
+            function calc() {
+                const x = state.selected, base = x.price * x.units;
+                const addons = (ADDONS[x.kind] || []).filter(a => state.form.addons[a[0]]).map(a => ({ label: a[1], amount: a[3] * addonQty(a[4]) }));
+                const sub = base + addons.reduce((t, a) => t + a.amount, 0);
+                let discount = 0;
+                if (state.promo) { const res = state.promo.check(x.kind, sub, state.payMethod); discount = typeof res === 'number' ? res : 0; }
+                return { base, addons, sub, discount, total: Math.max(0, sub - discount) };
+            }
+            function itemSummary(x, s = state.search[x.kind]) {
+                if (x.kind === 'flight' || x.kind === 'train') return `<span class="tv-logo" style="background:${x.color}">${x.logo}</span><span><b>${esc(x.name)} · ${x.no}</b><small>${s.from} ${hm(x.dep)} → ${s.to} ${hm(x.dep + x.dur)} · ${fmtDate(s.date)}</small><small>${s.pax} penumpang${x.kind === 'flight' ? ' · ' + x.cls : ''}</small></span>`;
+                if (x.kind === 'hotel') return `<span class="tv-hotel-thumb" style="background:${x.color}"><i class="ph-fill ph-buildings" aria-hidden="true"></i></span><span><b>${esc(x.name)}</b><small>Check-in ${fmtDate(s.date)}, ${s.nights} malam</small><small>${s.rooms} kamar · ${x.area}</small></span>`;
+                return `<span class="tv-hotel-thumb" style="background:${x.color}"><i class="ph-fill ph-ticket" aria-hidden="true"></i></span><span><b>${esc(x.name)}</b><small>${fmtDate(s.date)} · ${s.qty} tiket</small></span>`;
+            }
+            function priceLines(c) {
+                const x = state.selected;
+                return `<div class="tv-lines">
+                    <div class="tv-line"><span>${PRODUCTS[x.kind].label} (${rp(x.price)} × ${x.units})</span><span>${rp(c.base)}</span></div>
+                    ${c.addons.map(a => `<div class="tv-line"><span>${a.label}</span><span>${rp(a.amount)}</span></div>`).join('')}
+                    ${c.discount ? `<div class="tv-line discount"><span>Promo ${state.promo.code}</span><span>-${rp(c.discount)}</span></div>` : ''}
+                    <div class="tv-line total"><span>Total bayar</span><span>${rp(c.total)}</span></div></div>`;
+            }
+            function renderCheckout() {
+                const x = state.selected, c = calc(), isTrans = x.kind === 'flight' || x.kind === 'train';
+                $('tv-view-checkout').innerHTML = `${head('Isi data pemesanan', searchSummary())}
+                    <div class="tv-body">
+                        ${steps(2)}
+                        <div class="tv-card tv-pad"><div class="tv-summary">${itemSummary(x)}</div></div>
+                        <div class="tv-card tv-pad"><h3>Data pemesan</h3>
+                            <div class="tv-field"><label for="tv-f-name">Nama lengkap (sesuai KTP/paspor)</label><input id="tv-f-name" class="tv-input" autocomplete="name" value="${esc(state.form.name)}" oninput="TV.form('name', this.value)"></div>
+                            <div class="tv-row2"><div class="tv-field"><label for="tv-f-phone">No. HP</label><input id="tv-f-phone" class="tv-input" inputmode="tel" autocomplete="tel" value="${esc(state.form.phone)}" oninput="TV.form('phone', this.value)"></div>
+                            <div class="tv-field"><label for="tv-f-email">Email</label><input id="tv-f-email" type="email" class="tv-input" autocomplete="email" value="${esc(state.form.email)}" oninput="TV.form('email', this.value)"></div></div>
+                            <p class="tv-msg" style="color:var(--tv-muted)">E-tiket dikirim ke email dan nomor HP ini.</p>
+                        </div>
+                        ${isTrans ? `<div class="tv-card tv-pad"><h3>Data penumpang</h3>${state.form.travelers.map((t, i) => `<div class="tv-field"><label for="tv-t-${i}">Penumpang ${i + 1} · Dewasa</label><input id="tv-t-${i}" class="tv-input" placeholder="Nama sesuai identitas" value="${esc(t)}" oninput="TV.traveler(${i}, this.value)"></div>`).join('')}</div>` : ''}
+                        ${(ADDONS[x.kind] || []).length ? `<div class="tv-card tv-pad"><h3>Tambahan</h3>${ADDONS[x.kind].map(a => `<label class="tv-option"><input type="checkbox" ${state.form.addons[a[0]] ? 'checked' : ''} onchange="TV.addon('${a[0]}', this.checked)"><i class="ph ${a[2]}" aria-hidden="true"></i><span class="tv-opt-text"><b>${a[1]}</b><small>${rp(a[3])} ${a[4] === 'pax' ? '/penumpang' : a[4] === 'unit' ? (x.kind === 'hotel' ? '/kamar/malam' : '/tiket') : 'sekali bayar'}</small></span><span class="tv-opt-price">+${rp(a[3] * addonQty(a[4]))}</span></label>`).join('')}</div>` : ''}
+                        <div class="tv-card tv-pad"><h3>Kode promo</h3>
+                            <div class="tv-promo-row"><label for="tv-promo-code" class="sr-only" style="position:absolute;left:-9999px">Kode promo</label><input id="tv-promo-code" class="tv-input" placeholder="Contoh: LINTASHEMAT" value="${state.promo ? state.promo.code : ''}" autocomplete="off"><button type="button" class="tv-btn tv-btn-ghost" onclick="TV.applyPromo(document.getElementById('tv-promo-code').value)">${state.promo ? 'Ganti' : 'Pakai'}</button></div>
+                            ${state.promoMsg ? `<p class="tv-msg ${state.promo ? 'ok' : 'bad'}">${esc(state.promoMsg)}</p>` : ''}
+                        </div>
+                        <div class="tv-card tv-pad"><h3>Rincian harga</h3>${priceLines(c)}</div>
+                    </div>
+                    <div class="tv-foot"><span class="tv-foot-sum"><small>Total</small><b>${rp(c.total)}</b></span><button type="button" class="tv-btn tv-btn-accent" onclick="TV.toPay()">Lanjut bayar</button></div>`;
+            }
+            function form(k, v) { state.form[k] = v; if (k === 'name' && state.form.travelers.length) { state.form.travelers[0] = v; const t = $('tv-t-0'); if (t) t.value = v; } }
+            function traveler(i, v) { state.form.travelers[i] = v; }
+            function addon(k, on) { state.form.addons[k] = on; renderCheckout(); }
+            function applyPromo(code, silent) {
+                code = (code || '').trim().toUpperCase();
+                const p = PROMOS.find(x => x.code === code);
+                if (!code) { state.promo = null; state.promoMsg = ''; }
+                else if (!p) { state.promo = null; state.promoMsg = `Kode ${code} tidak ditemukan.`; }
+                else {
+                    const res = state.selected ? p.check(state.selected.kind, calc().sub, 'biopay') : 0;
+                    if (typeof res === 'string') { state.promo = null; state.promoMsg = res; }
+                    else { state.promo = p; state.promoMsg = p.needsBio ? 'Promo dipakai. Pilih BioPay di langkah pembayaran agar potongan berlaku.' : `Hemat ${rp(res)} dengan ${code}.`; }
+                }
+                if (!silent) renderCheckout();
+            }
+            function toPay() {
+                const f = state.form;
+                if (f.name.trim().length < 3) { toast('Isi nama lengkap pemesan', 'ph-warning', 'text-red-500'); $('tv-f-name').focus(); return; }
+                if (!/^0\d{8,13}$/.test(f.phone.replace(/\D/g, ''))) { toast('Nomor HP belum benar (contoh 0812…)', 'ph-warning', 'text-red-500'); $('tv-f-phone').focus(); return; }
+                if (!/^\S+@\S+\.\S+$/.test(f.email)) { toast('Format email belum benar', 'ph-warning', 'text-red-500'); $('tv-f-email').focus(); return; }
+                const empty = f.travelers.findIndex(t => t.trim().length < 3);
+                if (empty >= 0) { toast(`Isi nama penumpang ${empty + 1}`, 'ph-warning', 'text-red-500'); $('tv-t-' + empty).focus(); return; }
+                state.payDeadline = Date.now() + 60 * 60 * 1000;
+                renderPay(); show('pay'); startTimer();
+            }
+
+            // ---------- Pembayaran ----------
+            let timer = null;
+            function startTimer() { stopTimer(); const tick = () => { const el = $('tv-countdown'); if (!el) return; const left = Math.max(0, state.payDeadline - Date.now()); el.textContent = `${String(Math.floor(left / 60000)).padStart(2, '0')}:${String(Math.floor(left / 1000) % 60).padStart(2, '0')}`; }; tick(); timer = setInterval(tick, 1000); }
+            function stopTimer() { if (timer) clearInterval(timer); timer = null; }
+            function renderPay() {
+                const c = calc(), enough = state.balance >= c.total;
+                const methods = [
+                    ['wallet', 'ph-wallet', 'Lintas Pay', enough ? `Saldo ${rp(state.balance)}` : `Saldo ${rp(state.balance)}, kurang ${rp(c.total - state.balance)}`, !enough],
+                    ['biopay', 'ph-fingerprint', 'BioPay · wajah + telapak', 'Tanpa kartu, verifikasi 2 langkah', false],
+                    ['va', 'ph-bank', 'Transfer bank (virtual account)', 'Dicek otomatis setelah transfer', false]
+                ];
+                if (state.payMethod === 'wallet' && !enough) state.payMethod = 'biopay';
+                $('tv-view-pay').innerHTML = `${head('Pembayaran', searchSummary())}
+                    <div class="tv-body">
+                        ${steps(3)}
+                        <div class="tv-timer"><i class="ph-bold ph-clock" aria-hidden="true"></i> Selesaikan pembayaran dalam <b id="tv-countdown">60:00</b></div>
+                        <div class="tv-card tv-pad"><h3>Metode pembayaran</h3>
+                            ${methods.map(([k, ic, t, d, dis]) => `<label class="tv-option"><input type="radio" name="tv-pay" value="${k}" ${state.payMethod === k ? 'checked' : ''} ${dis ? 'disabled' : ''} onchange="TV.method('${k}')"><i class="ph ${ic}" aria-hidden="true"></i><span class="tv-opt-text"><b>${t}</b><small>${d}</small></span></label>`).join('')}
+                            ${!enough ? `<button type="button" class="tv-link" onclick="TV.topupSheet()"><i class="ph-bold ph-plus" aria-hidden="true"></i> Top up Lintas Pay</button>` : ''}
+                        </div>
+                        ${state.promo && state.promo.needsBio && state.payMethod !== 'biopay' ? `<p class="tv-msg bad">Promo ${state.promo.code} hanya berlaku dengan BioPay.</p>` : ''}
+                        <div class="tv-card tv-pad"><h3>Rincian</h3><div class="tv-summary">${itemSummary(state.selected)}</div>${priceLines(c)}</div>
+                    </div>
+                    <div class="tv-foot"><span class="tv-foot-sum"><small>Total</small><b>${rp(c.total)}</b></span><button type="button" class="tv-btn tv-btn-accent" onclick="TV.payNow()">Bayar sekarang</button></div>`;
+            }
+            function method(k) {
+                state.payMethod = k;
+                renderPay(); startTimer();
+            }
+            function payNow() {
+                const c = calc();
+                if (state.payMethod === 'wallet') {
+                    if (state.balance < c.total) { toast('Saldo Lintas Pay tidak cukup', 'ph-warning', 'text-red-500'); return; }
+                    state.balance -= c.total; log('Bayar ' + PRODUCTS[state.selected.kind].label.toLowerCase(), c.total, false);
+                    complete('Lintas Pay', c);
+                } else if (state.payMethod === 'biopay') bioSheet(c);
+                else vaSheet(c);
+            }
+
+            // Sheet umum
+            function openSheet(html) { $('tv-sheet-panel').innerHTML = html; $('tv-sheet').classList.remove('hidden'); const f = $('tv-sheet-panel').querySelector('input,button'); if (f) f.focus(); }
+            function closeSheet() { bioToken++; bioCam = stopSpecificCamera(bioCam); $('tv-sheet').classList.add('hidden'); }
+            const sheetHead = t => `<div class="tv-sheet-head"><h3>${t}</h3><button type="button" class="tv-back" aria-label="Tutup" onclick="TV.closeSheet()"><i class="ph-bold ph-x" aria-hidden="true"></i></button></div>`;
+
+            // BioPay checkout: wajah lalu telapak, kamera asli bila diizinkan
+            let bioToken = 0, bioCam = null;
+            async function bioSheet(c) {
+                const token = ++bioToken;
+                const render = (stage, text) => {
+                    $('tv-bio-steps').innerHTML = `<span class="${stage === 'face' ? 'on' : 'done'}"><i class="ph-bold ${stage === 'face' ? 'ph-user-focus' : 'ph-check'}" aria-hidden="true"></i> Wajah</span><span class="${stage === 'palm' ? 'on' : stage === 'done' ? 'done' : ''}"><i class="ph-bold ${stage === 'done' ? 'ph-check' : 'ph-hand-palm'}" aria-hidden="true"></i> Telapak</span>`;
+                    $('tv-bio-status').textContent = text;
+                };
+                openSheet(`${sheetHead('Bayar dengan BioPay')}
+                    <p class="tv-msg" style="color:var(--tv-muted)">Total <b class="bp-num" style="color:var(--tv-text)">${rp(c.total)}</b> ditagihkan ke wallet utama BioPay Anda.</p>
+                    <div class="tv-bio-steps" id="tv-bio-steps"></div>
+                    <div class="bp-vf bp-vf-sq"><span class="bp-vf-ghost" aria-hidden="true"><i class="ph ph-user-focus"></i></span><video id="tv-bio-video" autoplay muted playsinline></video><span class="bp-corners" aria-hidden="true"></span><div class="scanner-line"></div><p class="bp-vf-status" id="tv-bio-status">Tatap kamera…</p></div>
+                    <button type="button" class="tv-btn tv-btn-ghost" onclick="TV.closeSheet()">Batal</button>`);
+                render('face', 'Tatap kamera…');
+                const cam = await requestCameraAccess('tv-bio-video', 'user');
+                if (token !== bioToken) { stopSpecificCamera(cam); return; }
+                bioCam = cam;
+                setTimeout(() => {
+                    if (token !== bioToken) return;
+                    render('palm', 'Wajah cocok. Tunjukkan telapak tangan…');
+                    setTimeout(() => {
+                        if (token !== bioToken) return;
+                        render('done', 'Terverifikasi');
+                        setTimeout(() => { if (token !== bioToken) return; closeSheet(); log('Bayar via BioPay', c.total, false, true); complete('BioPay', c); }, 600);
+                    }, 2200);
+                }, 2200);
+            }
+
+            function vaSheet(c) {
+                const va = '8808 ' + String(Math.floor(1e11 + Math.random() * 9e11)).replace(/(\d{4})(?=\d)/g, '$1 ');
+                openSheet(`${sheetHead('Transfer ke virtual account')}
+                    <div class="tv-card tv-pad"><span class="tv-label">Nomor virtual account</span><span class="tv-va" id="tv-va-no">${va}</span>
+                        <button type="button" class="tv-link" onclick="copyToClipboard('${va.replace(/\s/g, '')}', 'Nomor VA', 3)"><i class="ph-bold ph-copy" aria-hidden="true"></i> Salin nomor</button>
+                        <div class="tv-line total" style="border-top:0;padding-top:0"><span>Jumlah transfer</span><span>${rp(c.total)}</span></div></div>
+                    <p class="tv-msg" style="color:var(--tv-muted)">Transfer persis sesuai jumlah di atas dari m-banking atau ATM mana pun. Status diperbarui otomatis.</p>
+                    <button type="button" class="tv-btn tv-btn-primary" id="tv-va-check" onclick="TV.vaCheck()">Saya sudah transfer</button>`);
+                state.vaPending = c;
+            }
+            function vaCheck() {
+                const btn = $('tv-va-check'); btn.disabled = true; btn.innerHTML = '<i class="ph-bold ph-spinner-gap" aria-hidden="true"></i> Mengecek pembayaran…';
+                setTimeout(() => { closeSheet(); complete('Virtual account', state.vaPending); }, 1400);
+            }
+
+            function complete(methodLabel, c) {
+                const x = state.selected, s = { ...state.search[x.kind] };
+                const code = 'LT' + Math.random().toString(36).slice(2, 7).toUpperCase();
+                const pts = Math.floor(c.total / 10000);
+                state.points += pts;
+                const booking = { code, item: x, search: s, travelers: [...state.form.travelers], contact: { ...state.form }, total: c.total, method: methodLabel, status: 'aktif', created: new Date(), points: pts };
+                state.bookings.unshift(booking);
+                state.promo = null; state.promoMsg = ''; state.stack = [];
+                stopTimer();
+                openTicket(code, true);
+                toast(`Pembayaran berhasil · ${code}`, 'ph-check-circle', 'text-emerald-400');
+            }
+
+            // ---------- E-tiket & pesanan ----------
+            function bookingTitle(b) { const x = b.item, s = b.search; return x.kind === 'flight' || x.kind === 'train' ? `${s.from} → ${s.to}` : x.name; }
+            function bookingRow(b) {
+                const x = b.item;
+                return `<div class="tv-result-top"><span class="tv-logo" style="background:${x.color}"><i class="ph-bold ${PRODUCTS[x.kind].icon}" aria-hidden="true"></i></span><span style="flex:1;min-width:0"><b>${esc(bookingTitle(b))}</b><small>${PRODUCTS[x.kind].label} · ${fmtDate(b.search.date)}</small></span><span class="tv-status ${b.status}">${{ aktif: 'Aktif', batal: 'Dibatalkan', selesai: 'Selesai' }[b.status]}</span></div>
+                    <div class="tv-result-bottom"><span class="tv-tags"><span class="tv-tag bp-num">${b.code}</span></span><span class="tv-price"><b style="color:var(--tv-text)">${rp(b.total)}</b><small>${b.method}</small></span></div>`;
+            }
+            function openTicket(code, fresh = false) {
+                const b = state.bookings.find(x => x.code === code); if (!b) return;
+                state.ticket = code;
+                const x = b.item, s = b.search, isTrans = x.kind === 'flight' || x.kind === 'train';
+                const kv = isTrans
+                    ? [['Berangkat', `${s.from} ${hm(x.dep)}`], ['Tiba', `${s.to} ${hm(x.dep + x.dur)}`], ['Tanggal', fmtDate(s.date)], [x.kind === 'flight' ? 'Penerbangan' : 'Kereta', `${x.no}`], ['Penumpang', b.travelers.map(esc).join(', ')], ['Durasi', dur(x.dur) + (x.transit ? ' · 1 transit' : '')]]
+                    : x.kind === 'hotel'
+                        ? [['Check-in', fmtDate(s.date) + ', 14.00'], ['Check-out', fmtDate(iso(addDays(s.nights, new Date(s.date + 'T00:00:00')))) + ', 12.00'], ['Kamar', `${s.rooms} kamar · ${s.nights} malam`], ['Tamu utama', esc(b.contact.name)], ['Alamat', x.area], ['Bintang', '★'.repeat(x.stars)]]
+                        : [['Tanggal', fmtDate(s.date)], ['Tiket', `${s.qty} orang`], ['Pemesan', esc(b.contact.name)], ['Lokasi', x.area]];
+                $('tv-view-ticket').innerHTML = `${head('E-tiket', esc(bookingTitle(b)), !fresh)}
+                    <div class="tv-body">
+                        ${fresh ? `<div class="tv-banner-ok"><i class="ph-fill ph-check-circle" aria-hidden="true"></i><span><b>Pembayaran berhasil</b><small>E-tiket dikirim ke ${esc(b.contact.email)}. Kamu dapat ${b.points} poin.</small></span></div>` : ''}
+                        <div class="tv-ticket">
+                            <div class="tv-ticket-top"><span>${PRODUCTS[x.kind].label} · Lintas</span><span class="tv-status ${b.status}" style="background:#fff">${{ aktif: 'Aktif', batal: 'Dibatalkan', selesai: 'Selesai' }[b.status]}</span></div>
+                            <div class="tv-ticket-sec"><div class="tv-summary">${itemSummary(x, s)}</div></div>
+                            <div class="tv-perf" aria-hidden="true"></div>
+                            <div class="tv-ticket-sec"><div class="tv-kv">${kv.map(([k, v]) => `<div><small>${k}</small><b>${v}</b></div>`).join('')}</div></div>
+                            <div class="tv-perf" aria-hidden="true"></div>
+                            <div class="tv-ticket-sec" style="align-items:center;text-align:center">
+                                <span class="tv-label">Kode booking</span><span class="tv-code">${b.code}</span>
+                                <canvas class="tv-qr" width="150" height="150" aria-label="QR e-tiket ${b.code}"></canvas>
+                                <span class="tv-msg" style="color:var(--tv-muted)">Tunjukkan kode ini saat ${isTrans ? 'boarding' : x.kind === 'hotel' ? 'check-in' : 'masuk lokasi'}.</span>
+                            </div>
+                        </div>
+                        <div class="tv-card tv-pad"><div class="tv-lines"><div class="tv-line"><span>Dibayar dengan</span><span>${b.method}</span></div><div class="tv-line total"><span>Total</span><span>${rp(b.total)}</span></div></div></div>
+                        ${b.status === 'aktif' ? `<button type="button" class="tv-btn tv-btn-danger" onclick="TV.cancelSheet('${b.code}')">Batalkan pesanan</button>` : ''}
+                        ${fresh ? `<button type="button" class="tv-btn tv-btn-primary" onclick="TV.tab('orders')">Lihat pesanan saya</button><button type="button" class="tv-btn tv-btn-ghost" onclick="TV.tab('home')">Kembali ke beranda</button>` : ''}
+                    </div>`;
+                drawFakeQR($('tv-view-ticket').querySelector('canvas.tv-qr'), b.code.charCodeAt(2) * 31 + b.code.charCodeAt(4));
+                show('ticket', !fresh);
+            }
+            function cancelSheet(code) {
+                const b = state.bookings.find(x => x.code === code); const refund = b.item.refundable ? Math.round(b.total * 0.9) : 0;
+                openSheet(`${sheetHead('Batalkan pesanan?')}
+                    <p class="tv-msg" style="color:var(--tv-muted)">${esc(bookingTitle(b))} · ${b.code}</p>
+                    <div class="tv-card tv-pad"><div class="tv-lines"><div class="tv-line"><span>Total dibayar</span><span>${rp(b.total)}</span></div><div class="tv-line"><span>Biaya pembatalan</span><span>${b.item.refundable ? rp(b.total - refund) : 'Tidak bisa refund'}</span></div><div class="tv-line total"><span>Refund ke Lintas Pay</span><span>${rp(refund)}</span></div></div></div>
+                    <button type="button" class="tv-btn tv-btn-danger" onclick="TV.cancelBooking('${code}')">Ya, batalkan</button>
+                    <button type="button" class="tv-btn tv-btn-ghost" onclick="TV.closeSheet()">Tidak jadi</button>`);
+            }
+            function cancelBooking(code) {
+                const b = state.bookings.find(x => x.code === code); const refund = b.item.refundable ? Math.round(b.total * 0.9) : 0;
+                b.status = 'batal'; if (refund) { state.balance += refund; log('Refund ' + b.code, refund, true); }
+                closeSheet(); openTicket(code, false); state.stack = ['orders'];
+                toast(refund ? `Dibatalkan. Refund ${rp(refund)} masuk ke Lintas Pay` : 'Pesanan dibatalkan', 'ph-arrow-counter-clockwise', 'text-sky-400');
+            }
+            function renderOrders() {
+                const list = state.bookings;
+                $('tv-view-orders').innerHTML = `${head('Pesanan saya', `${list.filter(b => b.status === 'aktif').length} aktif`, false)}
+                    <div class="tv-body has-nav">${list.length ? list.map(b => `<button type="button" class="tv-result" onclick="TV.openTicket('${b.code}')">${bookingRow(b)}</button>`).join('') : `<p class="tv-empty">Belum ada pesanan. Cari tiket atau hotel dari beranda.</p><button type="button" class="tv-btn tv-btn-accent" onclick="TV.openSearch('flight')">Cari tiket pesawat</button>`}</div>`;
+            }
+
+            // ---------- Promo ----------
+            function renderPromo() {
+                $('tv-view-promo').innerHTML = `${head('Promo', 'Salin kode, lalu pakai saat isi data', false)}
+                    <div class="tv-body has-nav">${PROMOS.map(p => `<div class="tv-card tv-pad"><div class="tv-summary"><span class="tv-logo" style="background:${p.color}"><i class="ph-bold ph-seal-percent" aria-hidden="true"></i></span><span><b>${p.title}</b><small>${p.desc}</small></span></div>
+                        <div class="tv-promo-row" style="align-items:center"><span class="tv-va" style="font-size:16px;flex:1">${p.code}</span><button type="button" class="tv-btn tv-btn-ghost" onclick="TV.copyPromo('${p.code}')"><i class="ph-bold ph-copy" aria-hidden="true"></i> Salin</button></div></div>`).join('')}</div>`;
+            }
+            function copyPromo(code) { state.lastPromo = code; copyToClipboard(code, 'Kode ' + code, 3); }
+
+            // ---------- Akun & Lintas Pay ----------
+            function log(title, amount, incoming, bio = false) { state.history.unshift({ title, amount, incoming, bio, at: new Date() }); }
+            function receive(amount) { state.balance += amount; log('Terima pembayaran BioPay', amount, true, true); refresh(); }
+            function refresh() { const v = document.querySelector('#travel-wrapper .tv-view.active'); if (!v) return; const name = v.id.replace('tv-view-', ''); if (name === 'home') renderHome(); if (name === 'account') renderAccount(); if (name === 'pay') { renderPay(); startTimer(); } }
+            function renderAccount() {
+                $('tv-view-account').innerHTML = `${head('Akun', 'ikbal@biopay.id', false)}
+                    <div class="tv-body has-nav">
+                        <div class="tv-card tv-pad" style="flex-direction:row;align-items:center"><span class="tv-avatar" aria-hidden="true">IH</span><span class="tv-summary"><span><b>Ikbal Habibi</b><small>Member Lintas sejak 2023 · ${state.points.toLocaleString('id-ID')} poin</small></span></span></div>
+                        <div class="tv-wallet"><small>Saldo Lintas Pay</small><b>${rp(state.balance)}</b>
+                            <div class="tv-wallet-actions"><button type="button" class="tv-btn tv-btn-accent" onclick="TV.topupSheet()"><i class="ph-bold ph-plus" aria-hidden="true"></i> Top up</button><button type="button" class="tv-btn tv-btn-ghost" onclick="MK3.showEwalletMinta()"><i class="ph-bold ph-qr-code" aria-hidden="true"></i> QRIS saya</button></div></div>
+                        <section class="tv-sec"><div class="tv-sec-head"><h3>Riwayat Lintas Pay</h3></div>
+                            ${state.history.length ? `<ul class="tv-list">${state.history.slice(0, 12).map(h => `<li class="tv-li"><i class="ph ${h.bio ? 'ph-fingerprint' : h.incoming ? 'ph-arrow-down-left' : 'ph-arrow-up-right'}" aria-hidden="true"></i><span class="tv-li-main"><b>${esc(h.title)}</b><small>${h.at.toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</small></span><span class="tv-amt ${h.incoming ? 'pos' : ''}">${h.incoming ? '+' : '-'}${rp(h.amount)}</span></li>`).join('')}</ul>` : '<p class="tv-empty">Belum ada transaksi Lintas Pay.</p>'}
+                        </section>
+                        <section class="tv-sec"><div class="tv-sec-head"><h3>Pengaturan</h3></div>
+                            <div class="tv-list">
+                                <button type="button" class="tv-li" role="switch" aria-checked="${state.notif}" onclick="TV.toggleNotif(this)"><i class="ph ph-bell" aria-hidden="true"></i><span class="tv-li-main"><b>Notifikasi harga turun</b><small>Kabari saat rute favorit lebih murah</small></span><span class="tv-switch" aria-hidden="true"></span></button>
+                                <button type="button" class="tv-li" onclick="MK3.openBioPayInPOV2()"><i class="ph ph-fingerprint" aria-hidden="true"></i><span class="tv-li-main"><b>Kelola BioPay</b><small>Wallet, Bio-Pass, anggota keluarga</small></span><i class="ph-bold ph-caret-right" style="background:none;width:auto" aria-hidden="true"></i></button>
+                            </div>
+                        </section>
+                    </div>`;
+            }
+            function toggleNotif(el) { state.notif = !state.notif; el.setAttribute('aria-checked', String(state.notif)); toast(state.notif ? 'Notifikasi harga aktif' : 'Notifikasi harga dimatikan', state.notif ? 'ph-bell' : 'ph-bell-slash', 'text-sky-400'); }
+            function topupSheet() {
+                openSheet(`${sheetHead('Top up Lintas Pay')}
+                    <div class="tv-field"><label for="tv-topup">Nominal (min. Rp 10.000)</label><input id="tv-topup" type="number" inputmode="numeric" min="10000" class="tv-input" placeholder="Contoh: 500000"></div>
+                    <div class="tv-seg">${[100000, 500000, 1000000].map(v => `<button type="button" onclick="document.getElementById('tv-topup').value=${v}">${rpShort(v)}</button>`).join('')}</div>
+                    <button type="button" class="tv-btn tv-btn-accent" onclick="TV.doTopup()">Top up sekarang</button>`);
+            }
+            function doTopup() {
+                const v = parseInt($('tv-topup').value);
+                if (!(v >= 10000)) { toast('Nominal minimal Rp 10.000', 'ph-warning', 'text-red-500'); return; }
+                state.balance += v; log('Top up Lintas Pay', v, true); closeSheet(); refresh();
+                toast(`Top up ${rp(v)} berhasil`, 'ph-check-circle', 'text-emerald-400');
+            }
+
+            // Data contoh: satu pesanan aktif agar tab Pesanan tidak kosong saat pertama dibuka
+            (function seed() {
+                const s = { from: 'CGK', to: 'YIA', date: iso(addDays(12)), pax: 1, cls: 'Ekonomi' };
+                const item = { id: 'seed', kind: 'flight', name: 'Selat Airways', logo: 'SL', color: '#0F766E', no: 'SL-218', dep: 6 * 60 + 40, dur: 70, transit: 0, cls: 'Ekonomi', price: 845000, unitLabel: '/pax', units: 1, refundable: true };
+                state.bookings.push({ code: 'LT7QK2M', item, search: s, travelers: ['Ikbal Habibi'], contact: { ...state.form }, total: 890000, method: 'Lintas Pay', status: 'aktif', created: addDays(-3), points: 89 });
+                state.history.push({ title: 'Bayar pesawat', amount: 890000, incoming: false, at: addDays(-3) });
+            })();
+            renderHome();
+
+            return { tab, back, openSearch, quickHotel, setField, step, swap, doSearch, sortBy, pick, form, traveler, addon, applyPromo, toPay, method, payNow, closeSheet, vaCheck, openTicket, cancelSheet, cancelBooking, copyPromo, receive, toggleNotif, topupSheet, doTopup, get state() { return state; } };
+        })();
+
+        // BioPay & komponen merchant di POV 3: disalin dari POV 1 dan POV 2 (bukan ditulis ulang)
+        document.getElementById('biopay-p3-root').innerHTML = buildBioPayCloneHTML(BIOPAY_TEMPLATE, '-p3', 'BP3.', BP2_NAMES, 3);
+        const BP3 = createBioPay('-p3', 3, 'BP3.');
+        const LINTAS_KIT_TEMPLATE = MERCHANT_KIT_TEMPLATE
+            .replaceAll('from-[#118EEA] to-blue-500 hover:from-blue-600 hover:to-blue-500', 'from-[#C2410C] to-[#C2410C] hover:from-[#A8380A] hover:to-[#A8380A]')
+            .replaceAll('shadow-blue-500', 'shadow-orange-700').replaceAll('hover:bg-blue-600', 'hover:bg-[#A8380A]')
+            .replaceAll('bg-blue-50', 'bg-orange-50').replaceAll('border-blue-100', 'border-orange-100')
+            .replaceAll('rgba(17,142,234', 'rgba(194,65,12').replaceAll('#118EEA', '#C2410C');
+        const MK_NAMES = Object.keys(MK2).filter(k => typeof MK2[k] === 'function' && k !== 'toast');
+        document.getElementById('merchant-kit-p3').innerHTML = buildBioPayCloneHTML(LINTAS_KIT_TEMPLATE, '-p3', 'MK3.', MK_NAMES, 3);
+        document.getElementById('kit-qris-name-p3').textContent = 'Ikbal Habibi · Lintas Pay';
+        document.getElementById('kit-qris-number-p3').textContent = '9360-0812-3456-7890';
+        const MK3 = createMerchantKit({
+            suffix: '-p3', pov: 3, appWrapperId: 'travel-wrapper', bioWrapperId: 'biopay-wrapper-p3', bp: BP3,
+            onReceive: amt => TV.receive(amt), receiveNote: 'Dana dari pelanggan telah masuk ke saldo Lintas Pay Anda.'
+        });
+        document.querySelectorAll('#travel-device canvas.bp-qr').forEach((c, i) => drawFakeQR(c, 40 + i));
 
     </script>
 </body>
