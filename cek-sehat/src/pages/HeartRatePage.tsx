@@ -26,7 +26,16 @@ interface Live {
   running: boolean;
 }
 
-export default function HeartRatePage() {
+interface Props {
+  /** Research mode: receives the raw signal and analysis after every measurement. */
+  onMeasured?: (samples: Sample[], result: PpgResult) => void;
+  /** Hide the page title and the "save to history" button. */
+  embedded?: boolean;
+}
+
+export default function HeartRatePage({ onMeasured, embedded = false }: Props = {}) {
+  const onMeasuredRef = useRef(onMeasured);
+  onMeasuredRef.current = onMeasured;
   const [phase, setPhase] = useState<Phase>('intro');
   const [error, setError] = useState('');
   const [torch, setTorch] = useState(true);
@@ -119,6 +128,7 @@ export default function HeartRatePage() {
     const finish = () => {
       const res = analyzePpg(samples);
       stop();
+      onMeasuredRef.current?.(samples, res);
       setResult(res);
       setPhase('result');
     };
@@ -207,7 +217,9 @@ export default function HeartRatePage() {
 
   return (
     <div>
-      <PageHeader title="Detak Jantung" subtitle="Perkirakan detak jantung dengan kamera dan lampu flash HP." />
+      {!embedded && (
+        <PageHeader title="Detak Jantung" subtitle="Perkirakan detak jantung dengan kamera dan lampu flash HP." />
+      )}
 
       {phase === 'intro' && (
         <div className="space-y-4">
@@ -322,7 +334,7 @@ export default function HeartRatePage() {
               value={String(result.bpm)}
               unit="bpm"
               saveKey={String(result.bpm)}
-              onSave={() => addEntry({ type: 'detak', bpm: result.bpm!, source: 'kamera' }, assessment.label, assessment.level)}
+              onSave={embedded ? undefined : () => addEntry({ type: 'detak', bpm: result.bpm!, source: 'kamera' }, assessment.label, assessment.level)}
               extraNote={`Hasil ini perkiraan dari kamera HP dan tidak seakurat alat medis seperti oksimeter atau EKG. Kualitas sinyal: ${
                 result.quality >= 0.8 ? 'baik' : 'cukup'
               }. Angka di atas berlaku untuk kondisi istirahat.`}

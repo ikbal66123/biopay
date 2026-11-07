@@ -7,6 +7,8 @@ Aplikasi web (PWA) untuk membantu memahami kondisi kesehatan dari rumah dan tahu
 - **Cek Angka**: IMT (Kemenkes RI), tekanan darah (AHA), gula darah, suhu tubuh, nadi manual
 - **Cek Gejala**: triase tanda bahaya → IGD, keluhan sedang → dokter dalam 24 jam, keluhan ringan → rawat di rumah
 - **Riwayat**: grafik tren 7/30 hari, hapus per entri atau semua, ekspor CSV untuk dokter
+- **Mode Riset** (dari Riwayat, atau `#riset`): uji akurasi detak jantung kamera terhadap oksimeter, dengan
+  analisis Bland-Altman dan ekspor sinyal mentah. Rencana risetnya ada di [`riset/PROPOSAL.md`](riset/PROPOSAL.md)
 
 Semua data disimpan di `localStorage` perangkat. Tidak ada server, tidak ada login, dan tidak ada data yang dikirim
 keluar dari perangkat. Setelah dibuka sekali, aplikasi berjalan offline (service worker).

@@ -186,6 +186,13 @@ export default function HistoryPage() {
       </section>
 
       <Disclaimer>Riwayat ini membantu dokter melihat pola, bukan untuk mendiagnosis sendiri.</Disclaimer>
+
+      <a href="#riset" className="block rounded-2xl border border-dashed border-slate-300 p-4 text-[15px] dark:border-slate-700">
+        <span className="font-semibold">Mode Riset: uji akurasi detak jantung</span>
+        <span className="block text-sm text-slate-600 dark:text-slate-400">
+          Bandingkan hasil kamera dengan oksimeter atau alat lain, untuk tim peneliti.
+        </span>
+      </a>
     </div>
   );
 }

@@ -6,9 +6,10 @@ import HeartRatePage from './pages/HeartRatePage';
 import CheckNumbersPage from './pages/CheckNumbersPage';
 import SymptomsPage from './pages/SymptomsPage';
 import HistoryPage from './pages/HistoryPage';
+import ResearchPage from './pages/ResearchPage';
 import { readPref, writePref } from './lib/prefs';
 
-type Tab = 'jantung' | 'angka' | 'gejala' | 'riwayat';
+type Tab = 'jantung' | 'angka' | 'gejala' | 'riwayat' | 'riset';
 
 const TABS: { id: Tab; label: string; Icon: typeof IconHeart }[] = [
   { id: 'jantung', label: 'Detak Jantung', Icon: IconHeart },
@@ -19,7 +20,8 @@ const TABS: { id: Tab; label: string; Icon: typeof IconHeart }[] = [
 
 function tabFromHash(): Tab {
   const h = window.location.hash.replace('#', '') as Tab;
-  return TABS.some((t) => t.id === h) ? h : 'jantung';
+  // "riset" (research mode) is reached from the Riwayat page, not from the tab bar
+  return h === 'riset' || TABS.some((t) => t.id === h) ? h : 'jantung';
 }
 
 export default function App() {
@@ -55,6 +57,7 @@ export default function App() {
             {tab === 'angka' && <CheckNumbersPage />}
             {tab === 'gejala' && <SymptomsPage />}
             {tab === 'riwayat' && <HistoryPage />}
+            {tab === 'riset' && <ResearchPage />}
           </main>
           <nav
             className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95"
