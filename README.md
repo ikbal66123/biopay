@@ -24,14 +24,20 @@ Jika izin kamera ditolak, alur tetap berjalan (scan disimulasikan).
 
 ## TAO Group OS
 
-`tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah** (portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, Mini Games). Isi, teks, data, dan semua fungsinya disalin persis dari file aslinya tanpa perubahan.
+`tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah**: portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, dan Mini Games. Buka langsung di browser (butuh internet untuk Tailwind, ikon, font, dan foto).
 
-Di atasnya ditambahkan satu lapisan visual terpisah (`<style id="lux-layer">` dan `<script id="lux-layer-js">`), mengikuti panduan skill `ui-ux-pro-max`:
+### Fitur
 
-- butiran film halus dan cahaya hangat yang mengikuti kursor, supaya latar hitam tidak terlihat datar;
-- garis emas berkilau di bawah header, panel kaca dengan pantulan di tepi atas, tab aktif dan tombol emas bernuansa logam;
-- animasi masuk saat ganti tab, membuka modal, dropdown notifikasi, dan saat gambar dimuat;
-- efek tekan pada tombol dan kartu, kursor tangan pada semua elemen yang bisa diklik;
-- fokus keyboard yang terlihat, label untuk tombol ikon, dan semua animasi mati jika sistem meminta *reduce motion*.
+- **Menu F&B & keranjang**: tambah item, atur jumlah, catatan untuk host, service charge 10%, kirim pesanan ke meja, lalu status pesanan diperbarui otomatis (Diterima → Disiapkan → Dalam Perjalanan → Diantar). Tombol keranjang mengambang muncul saat ada isi.
+- **Tagihan meja**: rincian pesanan, kekurangan minimum spend, tip 0/10/15/20%, split bill 1–10 orang, bayar dengan T-Gold (1 T-Gold = $1), lalu dapat cashback 3%.
+- **Tiket event**: 6 event, 3 kelas tiket, 1–6 tiket, bayar T-Gold, tiket dengan kode & QR, dan halaman *Tiket Saya*.
+- **Mini games yang bisa dimainkan**: Live Club Trivia (5 soal berwaktu), The Kinetic Pulse (game ritme, ketuk atau Spasi), dan Truth or Dare dengan voting. Hadiah T-Gold sesuai skor.
+- **Cabang dengan indikator keramaian** (Santai / Ramai / Sangat Ramai) dan bar kapasitas.
+- **Pencarian cepat**: tekan `Ctrl/⌘ + K` atau `/` (atau tombol *Cari*) untuk lompat ke halaman, cabang, item menu, atau aksi.
+- **Tersimpan otomatis**: saldo T-Gold, keranjang, dan tiket tetap ada setelah halaman di-refresh (disimpan di browser).
+- **Chat yang lebih hidup & aman**: T-Community membalas pesan, dan teks pengguna di chat, DM, dan request lagu tidak lagi dibaca sebagai HTML.
+- **Tampilan HP**: header muat di layar 375px, dengan saldo T-Gold ringkas.
 
-Hapus kedua blok tersebut untuk kembali ke tampilan asli 100%.
+### Lapisan visual
+
+Mengikuti panduan skill `ui-ux-pro-max` (`<style id="lux-layer">`): butiran film halus, cahaya hangat yang mengikuti kursor, garis emas di header, panel kaca, tombol emas bernuansa logam, animasi pindah tab dan modal, efek tekan, fokus keyboard yang jelas, dan semua animasi mati jika sistem meminta *reduce motion*.

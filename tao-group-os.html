@@ -122,6 +122,7 @@
         main { position: relative; z-index: 1; }
 
         /* Garis emas tipis di bawah header, berkilau pelan */
+        nav.sticky { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
         header.glass-panel { box-shadow: 0 10px 40px -20px rgba(0,0,0,0.9); }
         header.glass-panel::after {
             content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; pointer-events: none;
@@ -247,7 +248,7 @@
     </div>
 
     <!-- Header -->
-    <header class="sticky top-0 z-40 glass-panel border-b border-taoGold/20 px-4 py-3">
+    <header class="sticky top-0 z-40 glass-panel border-b border-taoGold/20 px-3 sm:px-4 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             
             <div class="flex items-center gap-2 sm:gap-4">
@@ -256,7 +257,7 @@
                 </button>
                 <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('mapTab')">
                     <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-taoGold to-yellow-200 text-black flex items-center justify-center font-display font-black text-sm shadow-lg glow-gold">TAO</div>
-                    <div>
+                    <div class="hidden sm:block">
                         <h1 class="font-display text-lg font-bold tracking-wider bg-gradient-to-r from-yellow-200 via-taoGold to-amber-600 bg-clip-text text-transparent">TAO GROUP OS</h1>
                         <p class="text-[10px] text-gray-400 font-medium tracking-widest uppercase">Hospitalitas Mewah</p>
                     </div>
@@ -271,7 +272,8 @@
                 <i class="fa-solid fa-chevron-down text-gray-400 text-[10px] ml-1"></i>
             </div>
 
-            <div class="flex items-center gap-2 sm:gap-3">
+            <div class="flex items-center gap-1.5 sm:gap-3">
+                <button onclick="showTopUpModal()" aria-label="Saldo T-Gold, ketuk untuk isi ulang" class="sm:hidden flex items-center gap-1.5 px-2.5 h-9 rounded-xl bg-neutral-900 border border-yellow-500/40 text-yellow-400 text-xs font-bold font-display"><i class="fa-solid fa-coins text-[11px]"></i><span id="mobileTGold">15,000</span></button>
                 <div class="hidden sm:flex items-center gap-2 bg-neutral-900 border border-yellow-500/40 px-3 py-1 rounded-lg text-xs cursor-pointer hover:bg-neutral-800 transition" onclick="showTopUpModal()">
                     <i class="fa-solid fa-coins text-yellow-400 animate-pulse"></i>
                     <div>
@@ -286,16 +288,16 @@
                         <span class="font-bold text-taoGold">Black Card VIP</span>
                     </div>
                 </div>
-                <button onclick="openFriendList()" class="p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-gray-300 hover:text-white hover:border-taoGold transition relative" title="Teman VIP"><i class="fa-solid fa-user-group"></i></button>
-                <button onclick="openInbox()" class="p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-gray-300 hover:text-white hover:border-taoGold transition relative" title="Inbox Pesan">
+                <button onclick="openFriendList()" class="p-2 sm:p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-gray-300 hover:text-white hover:border-taoGold transition relative" title="Teman VIP"><i class="fa-solid fa-user-group"></i></button>
+                <button onclick="openInbox()" class="p-2 sm:p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-gray-300 hover:text-white hover:border-taoGold transition relative" title="Inbox Pesan">
                     <i class="fa-solid fa-envelope"></i><span id="inboxNotifBadge" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
                 </button>
-                <button id="shieldToggleBtn" onclick="toggleShield()" title="Perisai Privasi" class="p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-taoGold hover:border-taoGold transition relative group">
+                <button id="shieldToggleBtn" onclick="toggleShield()" title="Perisai Privasi" class="hidden sm:inline-block p-2 sm:p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-taoGold hover:border-taoGold transition relative group">
                     <i id="shieldIcon" class="fa-solid fa-user-secret"></i><span id="shieldIndicator" class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
                 </button>
                 
                 <div class="relative">
-                    <button onclick="toggleNotifications()" class="p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-gray-300 hover:text-white hover:border-taoGold transition relative group">
+                    <button onclick="toggleNotifications()" class="p-2 sm:p-2.5 rounded-xl bg-neutral-800 border border-neutral-700 text-gray-300 hover:text-white hover:border-taoGold transition relative group">
                         <i id="bellIcon" class="fa-solid fa-bell transform origin-top"></i>
                         <span id="notifBadge" class="hidden absolute -top-1 -right-1 w-3.5 h-3.5 bg-taoRed text-white text-[8px] font-bold rounded-full flex items-center justify-center border border-[#050505]">0</span>
                     </button>
@@ -308,8 +310,8 @@
                     </div>
                 </div>
 
-                <button onclick="triggerSOSModal()" class="px-3 py-2 rounded-xl bg-neutral-800 border border-neutral-700 text-gray-300 hover:bg-neutral-700 hover:text-white hover:border-taoGold transition text-xs font-bold flex items-center gap-1.5 shadow-md group">
-                    <i class="fa-solid fa-concierge-bell group-hover:text-taoGold transition-colors"></i><span class="group-hover:text-taoGold transition-colors">Layanan</span>
+                <button onclick="triggerSOSModal()" aria-label="Layanan VIP" class="px-2.5 sm:px-3 py-2 rounded-xl bg-neutral-800 border border-neutral-700 text-gray-300 hover:bg-neutral-700 hover:text-white hover:border-taoGold transition text-xs font-bold flex items-center gap-1.5 shadow-md group">
+                    <i class="fa-solid fa-concierge-bell group-hover:text-taoGold transition-colors"></i><span class="hidden sm:inline group-hover:text-taoGold transition-colors">Layanan</span>
                 </button>
             </div>
         </div>
@@ -325,7 +327,7 @@
                 <div class="absolute inset-0 bg-gradient-to-r from-taoGold/0 via-taoGold/10 to-taoGold/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
                 <i class="fa-solid fa-trophy text-yellow-400"></i> <span class="text-yellow-400 group-hover:text-yellow-300">Leaderboard</span>
             </button>
-            <button id="tab-communityTab" onclick="switchTab('communityTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-messages text-emerald-400"></i> <span>T-Community</span></button>
+            <button id="tab-communityTab" onclick="switchTab('communityTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-comments text-emerald-400"></i> <span>T-Community</span></button>
             <button id="tab-eventTab" onclick="switchTab('eventTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-calendar-days text-purple-400"></i> <span>Event</span></button>
 
             <!-- TABS AVAILABLE (Restictions handled in JS actions) -->
@@ -333,6 +335,7 @@
             <button id="tab-djTab" onclick="switchTab('djTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-compact-disc"></i> <span>DJ Request</span></button>
             <button id="tab-menuTab" onclick="switchTab('menuTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-bell-concierge text-taoGold"></i> <span>Menu F&B</span><span id="cartCountBadge" class="hidden ml-1 px-1.5 py-0.2 bg-taoRed text-white text-[9px] rounded-full font-bold">0</span></button>
             <button id="tab-otherFeaturesTab" onclick="switchTab('otherFeaturesTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-gamepad text-cyan-400"></i> <span>Mini Games</span></button>
+            <button onclick="openCmdk()" class="ml-2 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white border border-neutral-800 hover:border-taoGold/50 transition" aria-label="Cari cepat"><i class="fa-solid fa-magnifying-glass"></i> <span>Cari</span><kbd class="hidden md:inline text-[9px] text-gray-500 border border-neutral-700 rounded px-1 py-0.5 font-sans">Ctrl K</kbd></button>
         </div>
     </nav>
 
@@ -552,6 +555,7 @@
                                 <span class="text-[10px] text-gray-400 block uppercase">Total Tagihan</span>
                                 <span id="tableRunningBill" class="text-sm font-bold font-display text-emerald-400">$0 / $0</span>
                             </div>
+                            <button onclick="openBillModal()" class="px-3 py-2 rounded-xl bg-neutral-900 border border-taoGold/40 text-taoGold text-[10px] font-bold uppercase hover:border-taoGold transition whitespace-nowrap flex items-center gap-1.5"><i class="fa-solid fa-receipt"></i> Tagihan</button>
                         </div>
                     </div>
                 </div>
@@ -1011,7 +1015,7 @@
                     <div class="p-4 border-b border-white/10 flex justify-between items-center bg-neutral-900/80">
                         <div>
                             <h3 class="font-bold text-white text-sm">Grup Global</h3>
-                            <p class="text-[9px] text-emerald-400 flex items-center gap-1 mt-1"><i class="fa-solid fa-shield-check"></i> Enkripsi End-to-End.</p>
+                            <p class="text-[9px] text-emerald-400 flex items-center gap-1 mt-1"><i class="fa-solid fa-shield-halved"></i> Enkripsi End-to-End.</p>
                         </div>
                     </div>
                     <div id="communityChatBox" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
@@ -1033,15 +1037,15 @@
         <!-- Event Calendar Tab -->
         <section id="eventTab" class="tab-content hidden space-y-6">
             <div class="glass-panel rounded-2xl p-6 border border-neutral-800">
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex justify-between items-center gap-3 mb-6">
                     <div>
                         <h2 class="text-2xl font-bold font-display text-white">Kalender Event Global</h2>
                         <p class="text-xs text-gray-400 mt-1">Jadwal DJ dan acara eksklusif di seluruh dunia.</p>
                     </div>
-                    <div class="hidden sm:block"><span class="bg-purple-900/30 border border-purple-500/50 text-purple-400 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-widest"><i class="fa-solid fa-ticket"></i> Dapatkan Akses VIP</span></div>
+                    <button onclick="openMyTickets()" class="shrink-0 bg-purple-900/30 border border-purple-500/50 hover:border-purple-400 text-purple-300 text-[10px] px-3 py-2 rounded-full font-bold uppercase tracking-widest transition"><i class="fa-solid fa-ticket mr-1"></i> Tiket Saya</button>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div id="eventGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     <div class="bg-neutral-900 border border-neutral-700 rounded-xl overflow-hidden group hover:border-taoGold transition cursor-pointer">
                         <div class="h-40 bg-[url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600')] bg-cover bg-center relative group-hover:scale-105 transition duration-500">
                             <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent"></div>
@@ -1049,7 +1053,7 @@
                         </div>
                         <div class="p-4 relative z-10 bg-neutral-900">
                             <h4 class="font-bold text-white text-lg">Calvin Harris</h4><p class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-location-dot text-taoGold mr-1"></i> OMNIA Las Vegas</p>
-                            <button onclick="showToast('Sistem Ticketing Sedang Dialihkan...')" class="mt-4 w-full py-2 bg-neutral-800 hover:bg-taoGold hover:text-black text-gray-300 text-xs font-bold rounded-lg transition border border-neutral-700 group-hover:border-taoGold">Beli Tiket VIP</button>
+                            <button onclick="openEventTicket(this)" class="mt-4 w-full py-2 bg-neutral-800 hover:bg-taoGold hover:text-black text-gray-300 text-xs font-bold rounded-lg transition border border-neutral-700 group-hover:border-taoGold">Beli Tiket VIP</button>
                         </div>
                     </div>
                     <div class="bg-neutral-900 border border-neutral-700 rounded-xl overflow-hidden group hover:border-purple-400 transition cursor-pointer">
@@ -1060,7 +1064,7 @@
                         </div>
                         <div class="p-4 relative z-10 bg-neutral-900">
                             <h4 class="font-bold text-white text-lg">Halloween: Tiësto</h4><p class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-location-dot text-purple-400 mr-1"></i> TAO Nightclub</p>
-                            <button onclick="showToast('Sistem Ticketing Sedang Dialihkan...')" class="mt-4 w-full py-2 bg-neutral-800 hover:bg-purple-500 hover:text-white text-gray-300 text-xs font-bold rounded-lg transition border border-neutral-700 group-hover:border-purple-500">Beli Tiket VIP</button>
+                            <button onclick="openEventTicket(this)" class="mt-4 w-full py-2 bg-neutral-800 hover:bg-purple-500 hover:text-white text-gray-300 text-xs font-bold rounded-lg transition border border-neutral-700 group-hover:border-purple-500">Beli Tiket VIP</button>
                         </div>
                     </div>
                 </div>
@@ -1108,6 +1112,24 @@
         </section>
 
     </main>
+
+    <!-- Keranjang mengambang -->
+    <button id="floatingCartBar" onclick="openCartModal()" class="hidden fixed bottom-5 inset-x-0 mx-auto w-max z-40 items-center gap-3 pl-4 pr-2 py-2 rounded-full bg-neutral-900/95 backdrop-blur-xl border border-taoGold/50 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.9)] text-xs text-white">
+        <i class="fa-solid fa-cart-shopping text-taoGold"></i><span id="floatingCartText" class="font-bold">0 item · $0</span>
+        <span class="px-3 py-1.5 rounded-full bg-taoGold text-black font-extrabold text-[10px] uppercase">Lihat</span>
+    </button>
+
+    <!-- Pencarian cepat (Ctrl/⌘ + K) -->
+    <div id="cmdk" onclick="if(event.target.id==='cmdk') closeCmdk()" class="hidden fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm items-start justify-center p-4 pt-[12vh]" role="dialog" aria-modal="true" aria-label="Pencarian cepat">
+        <div class="w-full max-w-lg glass-panel rounded-2xl border border-taoGold/30 overflow-hidden shadow-2xl">
+            <div class="flex items-center gap-3 px-4 border-b border-white/10">
+                <i class="fa-solid fa-magnifying-glass text-taoGold"></i>
+                <input id="cmdkInput" oninput="filterCmdk()" type="text" autocomplete="off" placeholder="Cari halaman, cabang, menu, atau aksi…" aria-label="Kata kunci pencarian" class="flex-1 bg-transparent py-4 text-sm text-white placeholder-gray-500 outline-none border-0 focus:shadow-none">
+                <kbd class="text-[9px] text-gray-500 border border-neutral-700 rounded px-1.5 py-0.5">Esc</kbd>
+            </div>
+            <div id="cmdkList" role="listbox" class="max-h-[50vh] overflow-y-auto p-2"></div>
+        </div>
+    </div>
 
     <!-- Modal Component (Universal) -->
     <div id="genericModal" onclick="handleBackdropClick(event)" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -1466,24 +1488,6 @@
             }
         }
 
-        function renderOutletCards(data = taoOutletsData) {
-            const grid = document.getElementById('outletCardsGrid');
-            const countText = document.getElementById('filteredCountText');
-            if(countText) countText.innerText = `Menampilkan ${data.length} Cabang`;
-            if(!grid) return;
-            grid.innerHTML = data.map(item => `
-                <div onclick="selectOutlet('${item.id}')" class="bg-neutral-900 border border-neutral-800 hover:border-taoGold rounded-xl overflow-hidden cursor-pointer transition group">
-                    <div class="h-32 bg-cover bg-center relative" style="background-image: url('${item.image}')">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                        <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/20 text-[9px] font-bold text-white uppercase">${item.mainCategory}</span>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="text-sm font-bold text-white group-hover:text-taoGold transition">${item.name}</h4>
-                        <p class="text-[10px] text-gray-400 mt-1"><i class="fa-solid fa-location-dot"></i> ${item.city}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
 
         function filterOutlets() {
             const query = (document.getElementById('mapSearchInput')?.value || '').toLowerCase();
@@ -1838,15 +1842,7 @@
             area.className = "flex-1 flex flex-col bg-neutral-950";
             area.innerHTML = `<div id="clubChatBox" class="flex-1 p-4 overflow-y-auto text-xs space-y-3"><div class="text-center text-red-400 text-[9px] bg-red-900/50 py-1 rounded">Diawasi Keamanan</div></div><div class="p-3 bg-neutral-900"><div class="relative"><input type="text" id="clubChatInput" onkeypress="if(event.key==='Enter') sendLiveClubChat(event)" class="w-full bg-black rounded-full px-4 py-2 text-xs text-white" placeholder="Pesan publik..."><button onclick="sendLiveClubChat(event)" class="absolute right-4 top-2 text-taoGold"><i class="fa-solid fa-paper-plane"></i></button></div></div>`;
         }
-        function sendLiveClubChat(e) {
-            if(e && e.preventDefault) e.preventDefault(); const i=document.getElementById('clubChatInput'); if(!i||!i.value)return;
-            const b=document.getElementById('clubChatBox'); b.innerHTML+=`<div class="flex flex-col items-end mt-2"><span class="text-[9px] text-gray-500">Anda</span><div class="bg-taoGold/20 border border-taoGold/50 text-white p-2 rounded-lg text-xs">${i.value}</div></div>`; i.value=''; b.scrollTop=b.scrollHeight;
-        }
 
-        function sendCommunityChat(e) {
-            if(e) e.preventDefault(); const i=document.getElementById('communityInput'); if(!i||!i.value)return;
-            const b=document.getElementById('communityChatBox'); b.innerHTML+=`<div class="flex flex-col items-end mt-2"><span class="text-[9px] text-gray-500">Anda</span><div class="bg-emerald-700 text-white p-2.5 rounded-lg text-xs">${i.value}</div></div>`; i.value=''; b.scrollTop=b.scrollHeight;
-        }
 
         function submitSongVote(id) { 
             if(!userHasTable){showToast("Pesan meja dulu!","error");return;} 
@@ -1906,19 +1902,8 @@
             showModal(`<div class="flex flex-col h-[60vh]"><div class="p-3 bg-neutral-900 border-b border-white/10"><h3 class="text-white font-bold text-sm">${f.name}</h3></div><div id="dmChatBox" class="flex-1 p-3 overflow-y-auto no-scrollbar space-y-2">${mHtml}</div><div class="p-3 bg-neutral-900"><form onsubmit="submitDirectMessage(event, '${id}')" class="flex"><input type="text" id="dmInp-${id}" class="w-full bg-black rounded-l-lg px-3 py-2 text-xs text-white focus:outline-none"><button type="submit" class="bg-emerald-600 px-3 py-2 rounded-r-lg text-white"><i class="fa-solid fa-paper-plane"></i></button></form></div></div>`);
             setTimeout(()=>{const bx=document.getElementById('dmChatBox'); if(bx)bx.scrollTop=bx.scrollHeight;},50);
         }
-        function submitDirectMessage(e, id) {
-            e.preventDefault(); const i=document.getElementById(`dmInp-${id}`); if(!i||!i.value)return;
-            dmHistory[id].push({sender:'me', text:i.value, isHtml:false}); i.value=''; openDirectMessage(id);
-            setTimeout(()=>{ dmHistory[id].push({sender:'them', text:"Hahaha asik!", isHtml:false}); if(document.getElementById(`dmInp-${id}`)) openDirectMessage(id); else addNotification("Pesan Baru", "Pesan dari teman"); }, 2000);
-        }
 
         // --- STREAMING_CHUNK: Menu F&B & Cart ---
-        function renderMenuGrid() {
-            const dCont = document.getElementById('drinksGrid'), sCont = document.getElementById('shotsGrid'), fCont = document.getElementById('foodGrid');
-            if(dCont) dCont.innerHTML = menuProducts.filter(p=>p.type==='drinks').map(i=>`<div class="bg-neutral-900/60 border border-neutral-800 rounded-xl overflow-hidden hover:border-taoGold transition group flex flex-col justify-between"><div class="h-32 bg-cover bg-center group-hover:scale-105 transition duration-500" style="background-image: url('${i.img}')"></div><div class="p-4 space-y-2 relative z-10 bg-neutral-900"><h4 class="text-sm font-bold text-white">${i.name}</h4><div class="flex justify-between pt-2"><span class="text-sm font-bold text-taoGold">$${i.price.toLocaleString()}</span><button onclick="addToCartItem('${i.id}')" class="px-3 py-1 bg-neutral-800 text-white text-xs rounded hover:border-taoGold transition">Tambah</button></div></div></div>`).join('');
-            if(sCont) sCont.innerHTML = menuProducts.filter(p=>p.type==='shots').map(i=>`<div class="bg-neutral-900/60 border border-neutral-800 rounded-xl overflow-hidden hover:border-orange-400 transition group flex flex-col justify-between"><div class="h-32 bg-cover bg-center group-hover:scale-105 transition duration-500" style="background-image: url('${i.img}')"></div><div class="p-4 space-y-2 relative z-10 bg-neutral-900"><h4 class="text-sm font-bold text-white">${i.name}</h4><div class="flex justify-between pt-2"><span class="text-sm font-bold text-orange-400">$${i.price.toLocaleString()}</span><button onclick="addToCartItem('${i.id}')" class="px-3 py-1 bg-neutral-800 text-white text-xs rounded hover:border-orange-500 transition">Tambah</button></div></div></div>`).join('');
-            if(fCont) fCont.innerHTML = menuProducts.filter(p=>p.type==='food').map(i=>`<div class="bg-neutral-900/60 border border-neutral-800 rounded-xl overflow-hidden hover:border-emerald-400 transition group flex flex-col justify-between"><div class="h-32 bg-cover bg-center group-hover:scale-105 transition duration-500" style="background-image: url('${i.img}')"></div><div class="p-4 space-y-2 relative z-10 bg-neutral-900"><h4 class="text-sm font-bold text-white">${i.name}</h4><div class="flex justify-between pt-2"><span class="text-sm font-bold text-emerald-400">$${i.price.toLocaleString()}</span><button onclick="addToCartItem('${i.id}')" class="px-3 py-1 bg-neutral-800 text-white text-xs rounded hover:border-emerald-500 transition">Tambah</button></div></div></div>`).join('');
-        }
         function addToCartItem(id) { const p = menuProducts.find(x=>x.id===id); if(!p)return; if(cart[id]) cart[id].qty++; else cart[id]={...p, qty:1}; updateCartDisplays(); showToast(`${p.name} ditambah!`); }
 
         function addToCartPromo(productId, customPrice) {
@@ -1985,29 +1970,6 @@
             }
         }
 
-        function changeCartQty(id, d) { if(!cart[id])return; cart[id].qty+=d; if(cart[id].qty<=0) delete cart[id]; updateCartDisplays(); openCartModal(); }
-        function renderMenuGrid() {
-            const dCont = document.getElementById('drinksGrid'), sCont = document.getElementById('shotsGrid'), fCont = document.getElementById('foodGrid');
-            if(dCont) dCont.innerHTML = menuProducts.filter(p=>p.type==='drinks').map(i=>`<div class="bg-neutral-900/60 border border-neutral-800 rounded-xl overflow-hidden hover:border-taoGold transition group flex flex-col justify-between"><div class="h-32 bg-cover bg-center group-hover:scale-105 transition duration-500" style="background-image: url('${i.img}')"></div><div class="p-4 space-y-2 relative z-10 bg-neutral-900"><h4 class="text-sm font-bold text-white">${i.name}</h4><div class="flex justify-between pt-2"><span class="text-sm font-bold text-taoGold">$${i.price.toLocaleString()}</span><button onclick="addToCartItem('${i.id}')" class="px-3 py-1 bg-neutral-800 text-white text-xs rounded hover:border-taoGold transition">Tambah</button></div></div></div>`).join('');
-            
-            if(sCont) {
-                sCont.innerHTML = menuProducts.filter(p=>p.type==='shots').map(i=>{
-                    let displayPrice = i.price;
-                    let priceHtml = `<span class="text-sm font-bold text-orange-400">$${displayPrice.toLocaleString()}</span>`;
-                    let badgeHtml = '';
-                    
-                    if (activeShotFilter === 'promo') {
-                        displayPrice = Math.round(i.price * 0.9);
-                        priceHtml = `<div class="flex items-center gap-1.5"><span class="text-[10px] text-gray-500 line-through">$${i.price.toLocaleString()}</span><span class="text-sm font-bold text-red-400">$${displayPrice.toLocaleString()}</span></div>`;
-                        badgeHtml = `<div class="absolute top-2 right-2 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[8px] font-bold px-2 py-0.5 rounded shadow-lg z-20 animate-pulse">-10% FLASH</div>`;
-                    }
-                    
-                    return `<div class="bg-neutral-900/60 border border-neutral-800 rounded-xl overflow-hidden hover:border-orange-400 transition group flex flex-col justify-between relative">${badgeHtml}<div class="h-32 bg-cover bg-center group-hover:scale-105 transition duration-500" style="background-image: url('${i.img}')"></div><div class="p-4 space-y-2 relative z-10 bg-neutral-900"><h4 class="text-sm font-bold text-white">${i.name}</h4><div class="flex justify-between pt-2 items-center">${priceHtml}<button onclick="addToCartPromo('${i.id}', ${displayPrice})" class="px-3 py-1 bg-neutral-800 text-white text-xs rounded hover:border-orange-500 transition shadow">Tambah</button></div></div></div>`;
-                }).join('');
-            }
-
-            if(fCont) fCont.innerHTML = menuProducts.filter(p=>p.type==='food').map(i=>`<div class="bg-neutral-900/60 border border-neutral-800 rounded-xl overflow-hidden hover:border-emerald-400 transition group flex flex-col justify-between"><div class="h-32 bg-cover bg-center group-hover:scale-105 transition duration-500" style="background-image: url('${i.img}')"></div><div class="p-4 space-y-2 relative z-10 bg-neutral-900"><h4 class="text-sm font-bold text-white">${i.name}</h4><div class="flex justify-between pt-2"><span class="text-sm font-bold text-emerald-400">$${i.price.toLocaleString()}</span><button onclick="addToCartItem('${i.id}')" class="px-3 py-1 bg-neutral-800 text-white text-xs rounded hover:border-emerald-500 transition">Tambah</button></div></div></div>`).join('');
-        }
         function submitOrder(amt) { if(!userHasTable){showToast("Pesan meja dulu!","error");closeModal();return;} closeModal(); cart={}; updateCartDisplays(); currentRunningSpend+=amt; const t=document.getElementById('tableRunningBill'), p=document.getElementById('minSpendProgressBar'); if(t)t.innerText=`$${currentRunningSpend} / $${minimumSpendTarget}`; if(p)p.style.width=Math.min(100, Math.round((currentRunningSpend/minimumSpendTarget)*100))+'%'; showToast("Pesanan dikirim!","success"); }
         function filterMenu(cat) { activeCategoryFilter=cat; ['all','drinks','shots','food'].forEach(c=>{const b=document.getElementById(`btn-menu-${c}`); if(b) b.className=c===cat?'px-4 py-2 rounded-full text-xs font-bold bg-taoGold text-black':'px-4 py-2 rounded-full text-xs font-bold bg-neutral-800 text-gray-300 hover:text-white';}); const d=document.getElementById('section-drinks'), s=document.getElementById('section-shots'), f=document.getElementById('section-food'); if(d&&s&&f){d.style.display=(cat==='all'||cat==='drinks')?'block':'none'; s.style.display=(cat==='all'||cat==='shots')?'block':'none'; f.style.display=(cat==='all'||cat==='food')?'block':'none';} }
 
@@ -2062,18 +2024,11 @@
         function orderBottleDirect(nm, pr, tbl) { if(!userHasTable){showToast("Pesan meja dulu!","error");return;} closeModal(); currentRunningSpend+=pr; const tr=document.getElementById('tableRunningBill'); if(tr)tr.innerText=`$${currentRunningSpend} / $${minimumSpendTarget}`; showToast(`${nm} terkirim ke ${tbl}!`); }
         function handleSendDrink(e) { e.preventDefault(); if(!userHasTable){showToast("Pesan meja dulu!","error");return;} const tgt=document.getElementById('targetTableSelect').value; showToast(`Memproses hadiah ke ${tgt}...`); setTimeout(()=>addNotification("Escrow Sukses",`Hadiah tiba di ${tgt}`,"gift"), 4000); }
         
-        function handleSongRequest(e) {
-            e.preventDefault(); if(!userHasTable){showToast("Pesan meja dulu!","error");return;}
-            const val = document.getElementById('songTitleInput').value; document.getElementById('djQueueList').innerHTML += `<div class="p-2 border border-neutral-800 bg-neutral-900 rounded text-white text-xs">${val} <span class="float-right text-taoGold">Terkirim</span></div>`; document.getElementById('songTitleInput').value=''; showToast("Request masuk antrean!");
-        }
         function askGeminiAIVibe() { showModal(`<div class="space-y-3"><h3 class="text-white font-bold"><i class="fa-solid fa-robot text-taoGold"></i> Rekomendasi AI DJ</h3><button onclick="requestFromAI('Fred Again.. - Rumble')" class="w-full text-left p-2 bg-neutral-900 border border-neutral-700 text-xs text-white rounded">Fred Again.. - Rumble</button></div>`); }
         function requestFromAI(trk) { closeModal(); switchTab('djTab'); const i=document.getElementById('songTitleInput'); if(i){i.value=trk;i.focus();} }
 
         // --- STREAMING_CHUNK: Mini Games ---
-        function startLiveTrivia() { showModal(`<div class="space-y-4 text-center"><i class="fa-solid fa-music text-indigo-400 text-3xl"></i><h3 class="text-white font-bold">Tebak Intro Lagu!</h3><button onclick="closeModal();showToast('Tebakan benar! +Poin','success')" class="w-full p-3 bg-neutral-900 text-white text-xs rounded-xl">Swedish House Mafia - Don't You Worry Child</button></div>`); }
-        function startDomPerignonPulse() { showModal(`<div class="text-center space-y-4"><h3 class="text-white font-bold tracking-widest uppercase">The Pulse</h3><div class="w-32 h-32 mx-auto rounded-full bg-black border-2 border-white flex items-center justify-center cursor-pointer active:scale-95" onclick="showToast('Perfect Hit!','success')"><span class="text-white font-bold text-xs">TAP BEAT</span></div></div>`); }
         function startMidnightToast() { showModal(`<div class="text-center space-y-4"><i class="fa-solid fa-champagne-glasses text-taoGold text-4xl"></i><h3 class="text-white font-bold">Midnight Toast</h3><p class="text-xs text-gray-400">Meja Anda dipasangkan dengan Mezzanine 04</p><button onclick="closeModal();showToast('Cheers!','success')" class="w-full py-3 bg-taoGold text-black font-bold rounded-xl text-lg">CHEERS!</button></div>`); }
-        function startTableSuperlative() { showModal(`<div class="space-y-4 text-center"><h3 class="text-white font-bold">Truth or Dare</h3><p class="text-xs text-gray-400 italic">"Siapa paling sering ngaret?"</p><button onclick="closeModal();showToast('Voted!','info')" class="w-full p-2 bg-neutral-900 text-white rounded">Michael S.</button></div>`); }
         function startBarSpark() { showModal(`<div class="text-center space-y-4"><i class="fa-solid fa-martini-glass-citrus text-cyan-400 text-3xl"></i><h3 class="text-white font-bold">Bar Spark</h3><button onclick="closeModal();showToast('Kembaran ditemukan! Cek bar utama.','success')" class="px-4 py-2 bg-neutral-900 text-white rounded-xl text-xs">Mulai Scan Radar</button></div>`); }
         function openDynamicAuction() { showModal(`<div class="space-y-4 text-center"><h3 class="text-white font-bold">Lelang Meja No-Show (Dragon 04)</h3><p class="text-taoGold font-bold text-lg">$${auctionHighestBid}</p><button onclick="placeBidAuction()" class="w-full py-3 bg-taoGold text-black font-bold rounded-xl text-xs">Tawar +$50</button></div>`); }
         function placeBidAuction() { auctionHighestBid+=50; showToast("Tawaran diterima!"); closeModal(); openDynamicAuction(); }
@@ -2244,6 +2199,696 @@
             setTimeout(() => { triggerTopSpenderAnimation("Dragon 01", "Clase Azul", 10, 12000); }, 1000);
         };
     </script>
+    <!-- ===== TAO OS: perbaikan & fitur tambahan ===== -->
+    <script id="tao-extensions">
+        /* ---------- Penyimpanan lokal (saldo, keranjang, dan tiket tetap ada setelah refresh) ---------- */
+        const TAO_STORE = 'taoos:v1';
+        const SERVICE_RATE = 0.10;
+        let orderHistory = [];
+        let myTickets = [];
+        let billTipPct = 10;
+        let billSplit = 1;
+        const money = n => '$' + Math.round(n).toLocaleString();
+        const esc = s => escapeHtml(String(s == null ? '' : s));
+
+        function taoSave() {
+            try { localStorage.setItem(TAO_STORE, JSON.stringify({ tGoldBalance, cart, myTickets })); } catch (e) {}
+        }
+        function taoLoad() {
+            try {
+                const s = JSON.parse(localStorage.getItem(TAO_STORE) || 'null');
+                if (!s) return;
+                if (typeof s.tGoldBalance === 'number' && isFinite(s.tGoldBalance)) tGoldBalance = s.tGoldBalance;
+                if (s.cart && typeof s.cart === 'object') cart = s.cart;
+                if (Array.isArray(s.myTickets)) myTickets = s.myTickets;
+            } catch (e) {}
+        }
+        function refreshBalance() {
+            const bd = document.getElementById('tGoldBalanceDisplay');
+            if (bd) bd.innerText = tGoldBalance.toLocaleString();
+            taoSave();
+        }
+        function spendTGold(amount) {
+            if (tGoldBalance < amount) {
+                showToast('Saldo T-Gold tidak cukup. Silakan Top Up.', 'error');
+                setTimeout(showTopUpModal, 350);
+                return false;
+            }
+            tGoldBalance -= amount;
+            refreshBalance();
+            return true;
+        }
+        function rewardTGold(amount, reason) {
+            if (amount <= 0) return;
+            tGoldBalance += amount;
+            refreshBalance();
+            addNotification('Hadiah T-Gold', `+${amount.toLocaleString()} T-Gold dari ${reason}.`, 'success');
+        }
+        function syncRunningBill() {
+            const t = document.getElementById('tableRunningBill'), p = document.getElementById('minSpendProgressBar');
+            if (t) t.innerText = `$${currentRunningSpend.toLocaleString()} / $${minimumSpendTarget.toLocaleString()}`;
+            if (p) p.style.width = (minimumSpendTarget > 0 ? Math.min(100, Math.round((currentRunningSpend / minimumSpendTarget) * 100)) : (currentRunningSpend > 0 ? 100 : 0)) + '%';
+        }
+
+        /* ---------- Menu F&B ---------- */
+        function menuCard(i, opts) {
+            const inCart = cart[opts.cartId];
+            return `<div class="bg-neutral-900/60 border border-neutral-800 rounded-xl overflow-hidden ${opts.hover} transition group flex flex-col relative">
+                ${opts.badge || ''}
+                <div class="h-32 relative overflow-hidden bg-neutral-800 flex items-center justify-center">
+                    <i class="fa-solid ${opts.icon} text-3xl text-neutral-700"></i>
+                    <div class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition duration-500" style="background-image: url('${i.img}')"></div>
+                    ${inCart ? `<span class="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-black/70 backdrop-blur border border-white/20 text-[10px] font-bold text-white"><i class="fa-solid fa-cart-shopping text-[9px] mr-1 ${opts.text}"></i>${inCart.qty} di keranjang</span>` : ''}
+                </div>
+                <div class="p-4 flex flex-col gap-1.5 flex-1 bg-neutral-900">
+                    <h4 class="text-sm font-bold text-white leading-snug">${i.name}</h4>
+                    <p class="text-[11px] text-gray-400 leading-relaxed flex-1">${i.desc || ''}</p>
+                    <div class="flex justify-between items-center pt-2">${opts.priceHtml}
+                        <button onclick="${opts.onclick}" aria-label="Tambah ${esc(i.name)} ke keranjang" class="px-3 py-1.5 bg-neutral-800 border border-neutral-700 text-white text-xs font-bold rounded-lg ${opts.btnHover} transition flex items-center gap-1.5"><i class="fa-solid fa-plus text-[10px]"></i> Tambah</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+        function renderMenuGrid() {
+            const dCont = document.getElementById('drinksGrid'), sCont = document.getElementById('shotsGrid'), fCont = document.getElementById('foodGrid');
+            if (dCont) dCont.innerHTML = menuProducts.filter(p => p.type === 'drinks').map(i => menuCard(i, {
+                cartId: i.id, hover: 'hover:border-taoGold', btnHover: 'hover:border-taoGold', text: 'text-taoGold', icon: 'fa-wine-bottle',
+                priceHtml: `<span class="text-sm font-bold text-taoGold">$${i.price.toLocaleString()}</span>`, onclick: `addToCartItem('${i.id}')`
+            })).join('');
+            if (sCont) sCont.innerHTML = menuProducts.filter(p => p.type === 'shots').map(i => {
+                const promo = activeShotFilter === 'promo';
+                const price = promo ? Math.round(i.price * 0.9) : i.price;
+                return menuCard(i, {
+                    cartId: promo ? i.id + '-promo' : i.id, hover: 'hover:border-orange-400', btnHover: 'hover:border-orange-500', text: 'text-orange-400', icon: 'fa-glass-water',
+                    badge: promo ? `<div class="absolute top-2 right-2 bg-gradient-to-r from-red-600 to-orange-500 text-white text-[8px] font-bold px-2 py-0.5 rounded shadow-lg z-20 animate-pulse">-10% FLASH</div>` : '',
+                    priceHtml: promo ? `<div class="flex items-center gap-1.5"><span class="text-[10px] text-gray-500 line-through">$${i.price.toLocaleString()}</span><span class="text-sm font-bold text-red-400">$${price.toLocaleString()}</span></div>` : `<span class="text-sm font-bold text-orange-400">$${price.toLocaleString()}</span>`,
+                    onclick: `addToCartPromo('${i.id}', ${price})`
+                });
+            }).join('');
+            if (fCont) fCont.innerHTML = menuProducts.filter(p => p.type === 'food').map(i => menuCard(i, {
+                cartId: i.id, hover: 'hover:border-emerald-400', btnHover: 'hover:border-emerald-500', text: 'text-emerald-400', icon: 'fa-utensils',
+                priceHtml: `<span class="text-sm font-bold text-emerald-400">$${i.price.toLocaleString()}</span>`, onclick: `addToCartItem('${i.id}')`
+            })).join('');
+        }
+
+        /* ---------- Keranjang ---------- */
+        const cartItems = () => Object.values(cart);
+        const cartCount = () => cartItems().reduce((s, i) => s + i.qty, 0);
+        const cartSubtotal = () => cartItems().reduce((s, i) => s + i.price * i.qty, 0);
+
+        function updateCartDisplays() {
+            const n = cartCount(), sub = cartSubtotal();
+            const total = document.getElementById('cartTotalDisplay'); if (total) total.innerText = money(sub);
+            const btnCount = document.getElementById('cartBtnCount'); if (btnCount) btnCount.innerText = n;
+            const badge = document.getElementById('cartCountBadge');
+            if (badge) { badge.innerText = n; badge.classList.toggle('hidden', n === 0); }
+            const bar = document.getElementById('floatingCartBar');
+            if (bar) {
+                bar.classList.toggle('hidden', n === 0);
+                bar.classList.toggle('flex', n > 0);
+                const t = document.getElementById('floatingCartText');
+                if (t) t.innerText = `${n} item · ${money(sub)}`;
+            }
+            renderMenuGrid();
+            taoSave();
+        }
+
+        function cartModalHtml() {
+            const items = cartItems();
+            if (!items.length) {
+                return `<div id="cartModalRoot" class="space-y-4 text-center py-4">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center"><i class="fa-solid fa-cart-shopping text-2xl text-neutral-500"></i></div>
+                    <h3 class="font-bold text-white text-lg font-display">Keranjang Kosong</h3>
+                    <p class="text-xs text-gray-400">Pilih botol, shot, atau tapas dari menu digital.</p>
+                    <div class="grid ${orderHistory.length ? 'grid-cols-2' : 'grid-cols-1'} gap-2">
+                        <button onclick="closeModal(); switchTab('menuTab')" class="py-3 rounded-xl bg-taoGold text-black font-bold text-xs">Lihat Menu</button>
+                        ${orderHistory.length ? `<button onclick="openBillModal()" class="py-3 rounded-xl bg-neutral-800 border border-neutral-700 text-white font-bold text-xs"><i class="fa-solid fa-receipt mr-1"></i> Tagihan Meja</button>` : ''}
+                    </div>
+                </div>`;
+            }
+            const sub = cartSubtotal(), svc = Math.round(sub * SERVICE_RATE);
+            const rows = items.map(i => `
+                <div class="flex items-center gap-3 p-2.5 bg-neutral-900 border border-neutral-800 rounded-xl">
+                    <div class="w-12 h-12 rounded-lg bg-neutral-800 bg-cover bg-center shrink-0" style="background-image:url('${i.img}')"></div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-xs font-bold text-white truncate">${i.name}</h4>
+                        <p class="text-[10px] text-gray-500">${money(i.price)} / item</p>
+                    </div>
+                    <div class="flex items-center gap-1 bg-black/40 border border-neutral-700 rounded-lg">
+                        <button onclick="changeCartQty('${i.id}', -1)" aria-label="Kurangi" class="w-8 h-8 text-gray-300 hover:text-white"><i class="fa-solid ${i.qty === 1 ? 'fa-trash-can text-red-400' : 'fa-minus'} text-[10px]"></i></button>
+                        <span class="w-5 text-center text-xs font-bold text-white font-display">${i.qty}</span>
+                        <button onclick="changeCartQty('${i.id}', 1)" aria-label="Tambah" class="w-8 h-8 text-gray-300 hover:text-white"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                    </div>
+                    <span class="w-16 text-right text-xs font-bold text-taoGold font-display">${money(i.price * i.qty)}</span>
+                </div>`).join('');
+            const tableLine = userHasTable
+                ? `<div class="flex items-center gap-2 text-[11px] text-emerald-400 bg-emerald-950/30 border border-emerald-500/30 rounded-xl px-3 py-2"><i class="fa-solid fa-location-crosshairs"></i> Diantar ke meja <b class="text-white">${esc(myAssignedTable)}</b> oleh VIP Host Anda</div>`
+                : `<div class="flex items-center justify-between gap-2 text-[11px] text-orange-300 bg-orange-950/30 border border-orange-500/30 rounded-xl px-3 py-2"><span><i class="fa-solid fa-triangle-exclamation mr-1"></i> Reservasi meja dulu sebelum memesan.</span><button onclick="closeModal(); switchTab('mapTab')" class="text-white font-bold underline underline-offset-2 whitespace-nowrap">Pilih Cabang</button></div>`;
+            return `<div id="cartModalRoot" class="space-y-4 text-left">
+                <div class="border-b border-white/10 pb-3 flex items-center gap-3"><i class="fa-solid fa-cart-shopping text-taoGold text-xl"></i><div><h3 class="font-bold text-white text-lg font-display">Keranjang Pesanan</h3><p class="text-[10px] text-gray-400">${cartCount()} item · layanan white-glove ke meja</p></div></div>
+                <div class="space-y-2">${rows}</div>
+                <div>
+                    <label for="cartNote" class="text-[11px] font-bold text-gray-300 block mb-1.5">Catatan untuk host (opsional)</label>
+                    <textarea id="cartNote" rows="2" maxlength="140" placeholder="Contoh: es batu terpisah, tanpa kacang" class="w-full bg-neutral-950 border border-neutral-700 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-600 resize-none"></textarea>
+                </div>
+                <div class="bg-neutral-900 border border-neutral-800 rounded-xl p-3 space-y-1.5 text-xs">
+                    <div class="flex justify-between text-gray-400"><span>Subtotal</span><span>${money(sub)}</span></div>
+                    <div class="flex justify-between text-gray-400"><span>Service charge 10%</span><span>${money(svc)}</span></div>
+                    <div class="flex justify-between text-white font-bold pt-1.5 border-t border-neutral-800"><span>Total ke tagihan meja</span><span class="text-taoGold font-display">${money(sub + svc)}</span></div>
+                </div>
+                ${tableLine}
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="clearCart()" class="py-3 rounded-xl bg-neutral-800 text-gray-300 font-bold text-xs hover:text-white">Kosongkan</button>
+                    <button onclick="placeOrder()" class="col-span-2 py-3 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase tracking-wide ${userHasTable ? '' : 'opacity-60'}"><i class="fa-solid fa-paper-plane mr-1"></i> Kirim Pesanan</button>
+                </div>
+            </div>`;
+        }
+        function openCartModal() {
+            const modal = document.getElementById('genericModal');
+            const alreadyOpen = modal && !modal.classList.contains('hidden') && document.getElementById('cartModalRoot');
+            const note = document.getElementById('cartNote');
+            const keepNote = note ? note.value : '';
+            showModal(cartModalHtml(), !!alreadyOpen);
+            const n2 = document.getElementById('cartNote'); if (n2 && keepNote) n2.value = keepNote;
+        }
+        function changeCartQty(id, d) {
+            if (!cart[id]) return;
+            cart[id].qty += d;
+            if (cart[id].qty <= 0) delete cart[id];
+            updateCartDisplays();
+            openCartModal();
+        }
+        function clearCart() { cart = {}; updateCartDisplays(); openCartModal(); showToast('Keranjang dikosongkan'); }
+
+        const ORDER_STEPS = ['Diterima', 'Disiapkan', 'Dalam Perjalanan', 'Diantar'];
+        function placeOrder() {
+            if (!userHasTable) { showToast('Reservasi meja dulu untuk memesan.', 'error'); return; }
+            const items = cartItems();
+            if (!items.length) return;
+            const note = (document.getElementById('cartNote') || {}).value || '';
+            const sub = cartSubtotal(), svc = Math.round(sub * SERVICE_RATE);
+            const order = {
+                id: 'ORD-' + String(Date.now()).slice(-5), time: Date.now(), table: myAssignedTable,
+                items: items.map(i => ({ name: i.name, qty: i.qty, price: i.price })),
+                subtotal: sub, service: svc, total: sub + svc, note: note.trim(), status: ORDER_STEPS[0], paid: false
+            };
+            orderHistory.unshift(order);
+            submitOrder(order.total);
+            syncRunningBill();
+            addNotification('Pesanan Diterima', `${order.id} · ${order.items.length} jenis item menuju dapur & bar.`, 'success');
+            [[4000, 1], [9000, 2], [15000, 3]].forEach(([ms, step]) => setTimeout(() => {
+                order.status = ORDER_STEPS[step];
+                taoSave();
+                if (step === 3) addNotification('Pesanan Diantar', `${order.id} sudah tiba di meja ${esc(order.table)}. Selamat menikmati!`, 'gift');
+                else if (step === 2) showToast(`${order.id}: host sedang menuju meja Anda`);
+            }, ms));
+            taoSave();
+        }
+
+        /* ---------- Tagihan meja: tip, split bill, bayar dengan T-Gold ---------- */
+        function billModalHtml() {
+            const orders = orderHistory.filter(o => !o.paid);
+            const base = Math.max(currentRunningSpend, minimumSpendTarget);
+            const shortfall = Math.max(0, minimumSpendTarget - currentRunningSpend);
+            const tip = Math.round(base * billTipPct / 100);
+            const total = base + tip;
+            const per = Math.ceil(total / billSplit);
+            const statusChip = s => {
+                const c = s === 'Diantar' ? 'text-emerald-400 border-emerald-500/40 bg-emerald-950/40' : 'text-orange-300 border-orange-500/40 bg-orange-950/40';
+                return `<span class="px-2 py-0.5 rounded-full border text-[9px] font-bold uppercase ${c}">${s}</span>`;
+            };
+            const orderRows = orders.length ? orders.map(o => `
+                <div class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl space-y-1.5">
+                    <div class="flex justify-between items-center"><span class="text-[11px] font-bold text-white font-display">${o.id}</span>${statusChip(o.status)}</div>
+                    ${o.items.map(it => `<div class="flex justify-between text-[11px] text-gray-400"><span>${it.qty}× ${it.name}</span><span>${money(it.qty * it.price)}</span></div>`).join('')}
+                    ${o.note ? `<p class="text-[10px] text-gray-500 italic">“${esc(o.note)}”</p>` : ''}
+                </div>`).join('') : `<p class="text-[11px] text-gray-500 italic text-center py-2">Belum ada pesanan F&B malam ini.</p>`;
+            const chip = (v) => `<button onclick="setBillTip(${v})" class="py-2 rounded-lg text-xs font-bold border transition ${billTipPct === v ? 'bg-taoGold text-black border-taoGold' : 'bg-neutral-900 text-gray-300 border-neutral-700 hover:border-taoGold'}">${v === 0 ? 'Tanpa' : v + '%'}</button>`;
+            return `<div id="billModalRoot" class="space-y-4 text-left">
+                <div class="border-b border-white/10 pb-3 flex items-center gap-3"><i class="fa-solid fa-receipt text-taoGold text-xl"></i><div><h3 class="font-bold text-white text-lg font-display">Tagihan Meja ${esc(myAssignedTable || '')}</h3><p class="text-[10px] text-gray-400">${esc(currentOutletData ? currentOutletData.name : 'TAO Group')} · 1 T-Gold = $1</p></div></div>
+                <div class="space-y-2 max-h-48 overflow-y-auto pr-1">${orderRows}</div>
+                <div class="bg-neutral-900 border border-neutral-800 rounded-xl p-3 space-y-1.5 text-xs">
+                    <div class="flex justify-between text-gray-400"><span>Total belanja malam ini</span><span>${money(currentRunningSpend)}</span></div>
+                    ${shortfall > 0 ? `<div class="flex justify-between text-orange-300"><span>Kekurangan minimum spend</span><span>${money(shortfall)}</span></div>` : ''}
+                    <div class="flex justify-between text-gray-400"><span>Tip untuk host (${billTipPct}%)</span><span>${money(tip)}</span></div>
+                    <div class="flex justify-between text-white font-bold pt-1.5 border-t border-neutral-800"><span>Total tagihan</span><span class="font-display">${money(total)}</span></div>
+                </div>
+                <div><p class="text-[11px] font-bold text-gray-300 mb-1.5">Tip untuk host</p><div class="grid grid-cols-4 gap-2">${[0, 10, 15, 20].map(chip).join('')}</div></div>
+                <div class="flex items-center justify-between bg-neutral-900 border border-neutral-800 rounded-xl p-3">
+                    <div><p class="text-[11px] font-bold text-white">Split bill</p><p class="text-[10px] text-gray-500">Dibagi rata dengan teman semeja</p></div>
+                    <div class="flex items-center gap-1 bg-black/40 border border-neutral-700 rounded-lg">
+                        <button onclick="setBillSplit(-1)" aria-label="Kurangi orang" class="w-8 h-8 text-gray-300"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                        <span class="w-14 text-center text-xs font-bold text-white">${billSplit} orang</span>
+                        <button onclick="setBillSplit(1)" aria-label="Tambah orang" class="w-8 h-8 text-gray-300"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                    </div>
+                </div>
+                <div class="flex items-end justify-between px-1">
+                    <div><p class="text-[10px] text-gray-400 uppercase tracking-widest">Bagian Anda</p><p class="text-2xl font-black text-taoGold font-display">${per.toLocaleString()} <span class="text-xs">T-Gold</span></p></div>
+                    <p class="text-[10px] text-gray-500 text-right">Saldo: ${tGoldBalance.toLocaleString()} T-Gold<br>Cashback 3% setelah lunas</p>
+                </div>
+                <button onclick="payBill(${per}, ${total})" ${total <= 0 ? 'disabled' : ''} class="w-full py-3.5 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase tracking-wide disabled:opacity-40"><i class="fa-solid fa-lock mr-1"></i> Bayar dengan T-Gold</button>
+            </div>`;
+        }
+        function openBillModal() {
+            if (!userHasTable && !orderHistory.some(o => !o.paid)) { showToast('Belum ada tagihan. Reservasi meja dulu.', 'error'); return; }
+            const modal = document.getElementById('genericModal');
+            const alreadyOpen = modal && !modal.classList.contains('hidden') && document.getElementById('billModalRoot');
+            showModal(billModalHtml(), !!alreadyOpen);
+        }
+        function setBillTip(v) { billTipPct = v; openBillModal(); }
+        function setBillSplit(d) { billSplit = Math.max(1, Math.min(10, billSplit + d)); openBillModal(); }
+        function payBill(per, total) {
+            if (total <= 0) return;
+            if (!spendTGold(per)) return;
+            const cashback = Math.round(per * 0.03);
+            const receiptId = 'INV-' + String(Date.now()).slice(-6);
+            orderHistory.forEach(o => { o.paid = true; });
+            currentRunningSpend = 0; minimumSpendTarget = 0; syncRunningBill();
+            taoSave();
+            showModal(`<div class="space-y-4 text-center py-2">
+                <div class="w-16 h-16 mx-auto rounded-full bg-emerald-500/15 border border-emerald-500 flex items-center justify-center text-emerald-400 text-2xl"><i class="fa-solid fa-check"></i></div>
+                <h3 class="font-bold text-white text-xl font-display">Tagihan Lunas</h3>
+                <p class="text-xs text-gray-400">${receiptId} · ${new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+                <div class="bg-neutral-900 border border-neutral-800 rounded-xl p-3 text-xs space-y-1.5 text-left">
+                    <div class="flex justify-between text-gray-400"><span>Total tagihan</span><span>${money(total)}</span></div>
+                    <div class="flex justify-between text-gray-400"><span>Dibayar Anda</span><span>${per.toLocaleString()} T-Gold</span></div>
+                    ${billSplit > 1 ? `<div class="flex justify-between text-gray-400"><span>Ditagih ke ${billSplit - 1} teman</span><span>${(total - per).toLocaleString()} T-Gold</span></div>` : ''}
+                    <div class="flex justify-between text-emerald-400 font-bold pt-1.5 border-t border-neutral-800"><span>Cashback 3%</span><span>+${cashback.toLocaleString()} T-Gold</span></div>
+                </div>
+                <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-neutral-800 text-white font-bold text-xs">Selesai</button>
+            </div>`, true);
+            setTimeout(() => rewardTGold(cashback, 'cashback tagihan'), 600);
+            if (billSplit > 1) setTimeout(() => addNotification('Split Bill Selesai', `${billSplit - 1} teman sudah melunasi bagiannya.`, 'success'), 3500);
+            billSplit = 1;
+        }
+
+        /* ---------- Tiket event ---------- */
+        const extraEvents = [
+            { day: '14', mon: 'NOV', title: 'Neon Jungle Night', venue: 'Marquee Nightclub, Las Vegas', color: 'from-emerald-900 to-neutral-900', accent: 'text-emerald-400', hover: 'hover:border-emerald-400', tag: 'Hampir Habis', img: 'https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=600' },
+            { day: '22', mon: 'NOV', title: 'Sunset Dayclub Sessions', venue: 'TAO Beach Dayclub, Las Vegas', color: 'from-orange-900 to-neutral-900', accent: 'text-orange-400', hover: 'hover:border-orange-400', tag: '', img: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=600' },
+            { day: '06', mon: 'DES', title: 'Tokyo Takeover', venue: 'Hakkasan Nightclub, Las Vegas', color: 'from-rose-900 to-neutral-900', accent: 'text-rose-400', hover: 'hover:border-rose-400', tag: 'Baru', img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600' },
+            { day: '31', mon: 'DES', title: "New Year's Eve Gala", venue: 'OMNIA Nightclub, Las Vegas', color: 'from-yellow-900 to-neutral-900', accent: 'text-taoGold', hover: 'hover:border-taoGold', tag: 'Black Tie', img: 'https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=600' }
+        ];
+        const ticketTiers = [
+            { name: 'General Admission', price: 150, perks: 'Akses lantai utama' },
+            { name: 'VIP Mezzanine', price: 450, perks: 'Jalur masuk prioritas, lounge, 1 signature cocktail' },
+            { name: 'Backstage Experience', price: 1200, perks: 'Area DJ booth, meet & greet, bottle service' }
+        ];
+        let evtDraft = null;
+
+        function renderExtraEvents() {
+            const grid = document.getElementById('eventGrid');
+            if (!grid || grid.dataset.extended) return;
+            grid.dataset.extended = '1';
+            grid.insertAdjacentHTML('beforeend', extraEvents.map(e => `
+                <div class="bg-neutral-900 border border-neutral-700 rounded-xl overflow-hidden group ${e.hover} transition cursor-pointer">
+                    <div class="h-40 overflow-hidden relative bg-gradient-to-br ${e.color}">
+                        <div class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition duration-500" style="background-image:url('${e.img}')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent"></div>
+                        ${e.tag ? `<div class="absolute top-2 right-2 bg-black/70 border border-white/20 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase">${e.tag}</div>` : ''}
+                        <div class="absolute bottom-3 left-3 bg-black/80 backdrop-blur-sm border border-white/10 px-2 py-1 rounded text-center"><span class="block ${e.accent} font-bold text-lg leading-none">${e.day}</span><span class="block text-[8px] text-white uppercase tracking-widest mt-0.5">${e.mon}</span></div>
+                    </div>
+                    <div class="p-4 relative z-10 bg-neutral-900">
+                        <h4 class="font-bold text-white text-lg">${e.title}</h4><p class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-location-dot ${e.accent} mr-1"></i> ${e.venue}</p>
+                        <button onclick="openEventTicket(this)" class="mt-4 w-full py-2 bg-neutral-800 hover:bg-taoGold hover:text-black text-gray-300 text-xs font-bold rounded-lg transition border border-neutral-700">Beli Tiket VIP</button>
+                    </div>
+                </div>`).join(''));
+        }
+        function openEventTicket(btn) {
+            const card = btn.closest('.rounded-xl');
+            const spans = card.querySelectorAll('.text-center span');
+            evtDraft = {
+                title: card.querySelector('h4').textContent.trim(),
+                venue: card.querySelector('h4 + p').textContent.trim(),
+                day: spans[0] ? spans[0].textContent.trim() : '',
+                mon: spans[1] ? spans[1].textContent.trim() : '',
+                tier: 1, qty: 1
+            };
+            renderTicketModal(false);
+        }
+        function renderTicketModal(isBack) {
+            const d = evtDraft; if (!d) return;
+            const tier = ticketTiers[d.tier], total = tier.price * d.qty;
+            showModal(`<div id="ticketModalRoot" class="space-y-4 text-left">
+                <div class="border-b border-white/10 pb-3"><span class="text-[10px] bg-purple-500/20 border border-purple-500/50 text-purple-300 px-2 py-0.5 rounded font-bold uppercase tracking-widest">${esc(d.day)} ${esc(d.mon)}</span><h3 class="font-bold text-white text-xl font-display mt-2">${esc(d.title)}</h3><p class="text-[11px] text-gray-400"><i class="fa-solid fa-location-dot text-taoGold mr-1"></i>${esc(d.venue)}</p></div>
+                <div class="space-y-2" role="radiogroup" aria-label="Kelas tiket">${ticketTiers.map((t, i) => `
+                    <button role="radio" aria-checked="${i === d.tier}" onclick="evtDraft.tier=${i}; renderTicketModal(true)" class="w-full text-left p-3 rounded-xl border transition flex items-center gap-3 ${i === d.tier ? 'border-taoGold bg-taoGold/10' : 'border-neutral-700 bg-neutral-900 hover:border-neutral-500'}">
+                        <span class="w-4 h-4 rounded-full border-2 ${i === d.tier ? 'border-taoGold bg-taoGold' : 'border-neutral-600'} shrink-0"></span>
+                        <span class="flex-1"><span class="block text-xs font-bold text-white">${t.name}</span><span class="block text-[10px] text-gray-400">${t.perks}</span></span>
+                        <span class="text-sm font-bold text-taoGold font-display">$${t.price.toLocaleString()}</span>
+                    </button>`).join('')}</div>
+                <div class="flex items-center justify-between bg-neutral-900 border border-neutral-800 rounded-xl p-3">
+                    <p class="text-xs font-bold text-white">Jumlah tiket</p>
+                    <div class="flex items-center gap-1 bg-black/40 border border-neutral-700 rounded-lg">
+                        <button onclick="evtDraft.qty=Math.max(1,evtDraft.qty-1); renderTicketModal(true)" aria-label="Kurangi tiket" class="w-8 h-8 text-gray-300"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                        <span class="w-8 text-center text-xs font-bold text-white font-display">${d.qty}</span>
+                        <button onclick="evtDraft.qty=Math.min(6,evtDraft.qty+1); renderTicketModal(true)" aria-label="Tambah tiket" class="w-8 h-8 text-gray-300"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                    </div>
+                </div>
+                <div class="flex items-end justify-between px-1"><div><p class="text-[10px] text-gray-400 uppercase tracking-widest">Total</p><p class="text-2xl font-black text-taoGold font-display">${total.toLocaleString()} <span class="text-xs">T-Gold</span></p></div><p class="text-[10px] text-gray-500 text-right">Saldo: ${tGoldBalance.toLocaleString()} T-Gold</p></div>
+                <button onclick="buyEventTicket()" class="w-full py-3.5 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase tracking-wide"><i class="fa-solid fa-ticket mr-1"></i> Bayar & Terbitkan Tiket</button>
+            </div>`, isBack);
+        }
+        function buyEventTicket() {
+            const d = evtDraft; if (!d) return;
+            const tier = ticketTiers[d.tier], total = tier.price * d.qty;
+            if (!spendTGold(total)) return;
+            const ticket = { code: 'TAO-' + Math.random().toString(36).slice(2, 8).toUpperCase(), title: d.title, venue: d.venue, day: d.day, mon: d.mon, tier: tier.name, qty: d.qty, total, bought: Date.now() };
+            myTickets.unshift(ticket);
+            taoSave();
+            addNotification('Tiket Terbit', `${d.qty}× ${tier.name} · ${d.title}`, 'success');
+            showModal(ticketHtml(ticket) + `<div class="grid grid-cols-2 gap-2 mt-4"><button onclick="openMyTickets()" class="py-3 rounded-xl bg-neutral-800 text-white font-bold text-xs">Semua Tiket Saya</button><button onclick="closeModal()" class="py-3 rounded-xl bg-taoGold text-black font-bold text-xs">Selesai</button></div>`, true);
+        }
+        function ticketHtml(t) {
+            return `<div class="rounded-2xl overflow-hidden border border-taoGold/40 bg-gradient-to-br from-neutral-900 to-black">
+                <div class="p-4 flex justify-between items-start gap-3">
+                    <div class="min-w-0"><p class="text-[9px] text-taoGold font-bold uppercase tracking-[0.2em]">${esc(t.tier)} · ${t.qty} orang</p><h4 class="text-lg font-black text-white font-display leading-tight mt-1">${esc(t.title)}</h4><p class="text-[10px] text-gray-400 mt-1">${esc(t.venue)}</p></div>
+                    <div class="text-center bg-black/60 border border-white/10 rounded-lg px-2.5 py-1.5 shrink-0"><span class="block text-taoGold font-bold text-xl leading-none font-display">${esc(t.day)}</span><span class="block text-[8px] text-white uppercase tracking-widest mt-1">${esc(t.mon)}</span></div>
+                </div>
+                <div class="relative h-0 border-t border-dashed border-neutral-700"><span class="absolute -left-2.5 -top-2.5 w-5 h-5 rounded-full bg-[#121212]"></span><span class="absolute -right-2.5 -top-2.5 w-5 h-5 rounded-full bg-[#121212]"></span></div>
+                <div class="p-4 flex items-center gap-4">
+                    <div class="bg-white p-1.5 rounded-lg shrink-0"><img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(t.code)}" alt="QR tiket ${esc(t.code)}" class="w-20 h-20" onerror="this.outerHTML='<i class=&quot;fa-solid fa-qrcode text-black text-7xl block w-20 h-20 text-center leading-[5rem]&quot;></i>'"></div>
+                    <div><p class="text-[9px] text-gray-500 uppercase tracking-widest">Kode Tiket</p><p class="text-base font-bold text-white font-display tracking-widest">${esc(t.code)}</p><p class="text-[10px] text-gray-500 mt-1">Tunjukkan QR di pintu masuk VIP.</p></div>
+                </div>
+            </div>`;
+        }
+        function openMyTickets() {
+            showModal(`<div class="space-y-4 text-left">
+                <div class="border-b border-white/10 pb-3 flex items-center gap-3"><i class="fa-solid fa-ticket text-purple-400 text-xl"></i><div><h3 class="font-bold text-white text-lg font-display">Tiket Saya</h3><p class="text-[10px] text-gray-400">${myTickets.length} tiket aktif</p></div></div>
+                ${myTickets.length ? `<div class="space-y-3">${myTickets.map(ticketHtml).join('')}</div>` : `<p class="text-xs text-gray-500 text-center py-6">Belum ada tiket. Pilih event dan beli tiket VIP Anda.</p><button onclick="closeModal(); switchTab('eventTab')" class="w-full py-3 rounded-xl bg-taoGold text-black font-bold text-xs">Lihat Event</button>`}
+            </div>`);
+        }
+
+        /* ---------- Mini games yang benar-benar bisa dimainkan ---------- */
+        let gameTimer = null, gameRaf = null;
+        function stopGames() { if (gameTimer) clearInterval(gameTimer); if (gameRaf) cancelAnimationFrame(gameRaf); gameTimer = gameRaf = null; document.removeEventListener('keydown', pulseKey); }
+        const __origCloseModal = window.closeModal;
+        window.closeModal = function () { stopGames(); __origCloseModal(); };
+
+        // 1) Live Club Trivia
+        const triviaBank = [
+            { q: 'Siapa yang membawakan "Don\'t You Worry Child"?', a: ['Swedish House Mafia', 'Avicii', 'Calvin Harris', 'Tiësto'], c: 0 },
+            { q: 'Lagu "Levels" (2011) dipopulerkan oleh DJ…', a: ['David Guetta', 'Avicii', 'Zedd', 'Kygo'], c: 1 },
+            { q: 'Tempo khas musik house di kelab sekitar…', a: ['90 BPM', '174 BPM', '128 BPM', '60 BPM'], c: 2 },
+            { q: 'Swedish House Mafia berasal dari kota…', a: ['Oslo', 'Amsterdam', 'Berlin', 'Stockholm'], c: 3 },
+            { q: '"Titanium" adalah kolaborasi David Guetta dengan…', a: ['Sia', 'Rihanna', 'Dua Lipa', 'Bebe Rexha'], c: 0 },
+            { q: 'Alat DJ untuk mencampur dua lagu disebut…', a: ['Vocoder', 'Mixer', 'Sequencer', 'Theremin'], c: 1 },
+            { q: 'Teknik menyamakan tempo dua lagu disebut…', a: ['Beatmatching', 'Sampling', 'Looping', 'Scratching'], c: 0 }
+        ];
+        let trivia = null;
+        function startLiveTrivia() {
+            stopGames();
+            const qs = triviaBank.slice().sort(() => Math.random() - 0.5).slice(0, 5);
+            trivia = { qs, i: 0, score: 0, correct: 0, left: 12, locked: false };
+            renderTrivia(false);
+        }
+        function renderTrivia(isBack) {
+            const t = trivia, q = t.qs[t.i];
+            showModal(`<div class="space-y-4">
+                <div class="flex items-center justify-between"><span class="text-[10px] font-bold text-indigo-300 uppercase tracking-widest"><i class="fa-solid fa-music mr-1"></i> Soal ${t.i + 1}/${t.qs.length}</span><span class="text-xs font-bold text-white font-display">${t.score} poin</span></div>
+                <div class="h-1.5 bg-neutral-800 rounded-full overflow-hidden"><div id="triviaBar" class="h-full bg-indigo-400 transition-all duration-1000 ease-linear" style="width:${t.left / 12 * 100}%"></div></div>
+                <h3 class="text-white font-bold text-lg leading-snug">${q.q}</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${q.a.map((a, k) => `<button id="tAns${k}" onclick="answerTrivia(${k})" class="p-3 bg-neutral-900 border border-neutral-700 rounded-xl text-left text-xs text-white hover:border-indigo-400 transition">${a}</button>`).join('')}</div>
+                <p id="triviaTime" class="text-[10px] text-gray-500 text-center">${t.left} detik tersisa · jawab cepat = bonus poin</p>
+            </div>`, isBack);
+            clearInterval(gameTimer);
+            gameTimer = setInterval(() => {
+                t.left--;
+                const bar = document.getElementById('triviaBar'), tm = document.getElementById('triviaTime');
+                if (bar) bar.style.width = (t.left / 12 * 100) + '%';
+                if (tm) tm.textContent = `${t.left} detik tersisa · jawab cepat = bonus poin`;
+                if (t.left <= 0) answerTrivia(-1);
+            }, 1000);
+        }
+        function answerTrivia(k) {
+            const t = trivia; if (!t || t.locked) return;
+            t.locked = true; clearInterval(gameTimer);
+            const q = t.qs[t.i], ok = k === q.c;
+            if (ok) { t.correct++; t.score += 100 + t.left * 10; }
+            q.a.forEach((_, j) => {
+                const b = document.getElementById('tAns' + j); if (!b) return;
+                b.disabled = true;
+                if (j === q.c) b.className = 'p-3 rounded-xl text-left text-xs font-bold bg-emerald-500/20 border border-emerald-500 text-emerald-300';
+                else if (j === k) b.className = 'p-3 rounded-xl text-left text-xs bg-red-500/20 border border-red-500 text-red-300';
+            });
+            const tm = document.getElementById('triviaTime');
+            if (tm) tm.innerHTML = ok ? '<span class="text-emerald-400 font-bold">Benar!</span>' : (k === -1 ? '<span class="text-orange-300 font-bold">Waktu habis</span>' : '<span class="text-red-400 font-bold">Kurang tepat</span>');
+            setTimeout(() => {
+                if (!document.getElementById('triviaTime')) return;
+                t.i++; t.left = 12; t.locked = false;
+                if (t.i < t.qs.length) renderTrivia(true); else finishTrivia();
+            }, 1300);
+        }
+        function finishTrivia() {
+            const t = trivia, reward = t.correct * 25;
+            showModal(`<div class="space-y-4 text-center py-2">
+                <i class="fa-solid fa-trophy text-indigo-400 text-4xl"></i>
+                <h3 class="text-white font-bold text-xl font-display">${t.score} poin</h3>
+                <p class="text-xs text-gray-400">${t.correct} dari ${t.qs.length} jawaban benar${t.correct >= 4 ? ' · Meja Anda masuk 3 besar malam ini!' : ''}</p>
+                ${reward ? `<p class="text-sm font-bold text-taoGold">+${reward} T-Gold</p>` : ''}
+                <div class="grid grid-cols-2 gap-2"><button onclick="startLiveTrivia()" class="py-3 rounded-xl bg-neutral-800 text-white font-bold text-xs">Main Lagi</button><button onclick="closeModal()" class="py-3 rounded-xl bg-indigo-500 text-white font-bold text-xs">Selesai</button></div>
+            </div>`, true);
+            if (reward) rewardTGold(reward, 'Live Club Trivia');
+        }
+
+        // 2) The Kinetic Pulse: ketuk tepat saat cincin menyentuh lingkaran
+        const PULSE_BEATS = 8, PULSE_MS = 1150;
+        let pulse = null;
+        function startDomPerignonPulse() {
+            stopGames();
+            pulse = { start: 0, hits: {}, perfect: 0, good: 0, miss: 0, score: 0, combo: 0, lastBeat: -1, done: false };
+            showModal(`<div class="text-center space-y-4 select-none">
+                <h3 class="text-white font-bold tracking-widest uppercase font-display">The Kinetic Pulse</h3>
+                <p class="text-[11px] text-gray-400">Ketuk saat cincin menyentuh lingkaran emas. ${PULSE_BEATS} ketukan.</p>
+                <div class="flex justify-center gap-6 text-xs"><span class="text-gray-400">Skor <b id="pScore" class="text-white font-display">0</b></span><span class="text-gray-400">Combo <b id="pCombo" class="text-cyan-300 font-display">0</b></span><span class="text-gray-400">Ketukan <b id="pBeat" class="text-white font-display">0/${PULSE_BEATS}</b></span></div>
+                <button id="pulsePad" onpointerdown="pulseTap(event)" aria-label="Ketuk mengikuti irama" class="relative w-56 h-56 mx-auto rounded-full bg-black border border-neutral-800 flex items-center justify-center touch-manipulation">
+                    <span class="absolute w-32 h-32 rounded-full border-4 border-taoGold/80 shadow-[0_0_25px_rgba(212,175,55,0.35)]"></span>
+                    <span id="pulseRing" class="absolute w-32 h-32 rounded-full border-2 border-cyan-300" style="transform:scale(0)"></span>
+                    <span id="pulseJudge" class="relative text-white font-black text-sm tracking-widest">SIAP</span>
+                </button>
+                <p class="text-[10px] text-gray-500">Bisa juga tekan Spasi</p>
+            </div>`);
+            document.addEventListener('keydown', pulseKey);
+            setTimeout(() => {
+                if (!document.getElementById('pulsePad')) return;
+                pulse.start = performance.now();
+                const loop = now => {
+                    if (!pulse || pulse.done || !document.getElementById('pulseRing')) return;
+                    const el = now - pulse.start, beat = Math.floor(el / PULSE_MS), t = (el % PULSE_MS) / PULSE_MS;
+                    if (beat !== pulse.lastBeat) {
+                        if (pulse.lastBeat >= 0 && !pulse.hits[pulse.lastBeat]) judgePulse('MISS');
+                        pulse.lastBeat = beat;
+                        if (beat >= PULSE_BEATS) return finishPulse();
+                        const b = document.getElementById('pBeat'); if (b) b.textContent = `${beat + 1}/${PULSE_BEATS}`;
+                    }
+                    document.getElementById('pulseRing').style.transform = `scale(${(t * 1.5).toFixed(3)})`;
+                    gameRaf = requestAnimationFrame(loop);
+                };
+                gameRaf = requestAnimationFrame(loop);
+            }, 700);
+        }
+        function pulseKey(e) { if (e.code === 'Space' && document.getElementById('pulsePad')) { e.preventDefault(); pulseTap(); } }
+        function pulseTap(e) {
+            if (e) e.preventDefault();
+            if (!pulse || !pulse.start || pulse.done) return;
+            const el = performance.now() - pulse.start, beat = Math.floor(el / PULSE_MS);
+            if (beat >= PULSE_BEATS || pulse.hits[beat]) return;
+            pulse.hits[beat] = true;
+            const scale = ((el % PULSE_MS) / PULSE_MS) * 1.5, err = Math.abs(scale - 1);
+            judgePulse(err < 0.07 ? 'PERFECT' : err < 0.18 ? 'GOOD' : 'MISS');
+        }
+        function judgePulse(kind) {
+            const p = pulse;
+            if (kind === 'PERFECT') { p.perfect++; p.combo++; p.score += 100 + p.combo * 10; }
+            else if (kind === 'GOOD') { p.good++; p.combo++; p.score += 50; }
+            else { p.miss++; p.combo = 0; }
+            const j = document.getElementById('pulseJudge');
+            if (j) { j.textContent = kind; j.className = 'relative font-black text-sm tracking-widest ' + (kind === 'PERFECT' ? 'text-taoGold' : kind === 'GOOD' ? 'text-cyan-300' : 'text-red-400'); }
+            const s = document.getElementById('pScore'); if (s) s.textContent = p.score;
+            const c = document.getElementById('pCombo'); if (c) c.textContent = p.combo;
+        }
+        function finishPulse() {
+            const p = pulse; p.done = true; stopGames();
+            const reward = p.perfect * 20 + p.good * 10;
+            showModal(`<div class="space-y-4 text-center py-2">
+                <i class="fa-solid fa-bottle-water text-cyan-400 text-4xl"></i>
+                <h3 class="text-white font-bold text-xl font-display">${p.score} poin</h3>
+                <div class="grid grid-cols-3 gap-2 text-xs"><div class="p-2 bg-neutral-900 rounded-lg border border-neutral-800"><b class="block text-taoGold text-lg font-display">${p.perfect}</b>Perfect</div><div class="p-2 bg-neutral-900 rounded-lg border border-neutral-800"><b class="block text-cyan-300 text-lg font-display">${p.good}</b>Good</div><div class="p-2 bg-neutral-900 rounded-lg border border-neutral-800"><b class="block text-red-400 text-lg font-display">${p.miss}</b>Miss</div></div>
+                ${reward ? `<p class="text-sm font-bold text-taoGold">+${reward} T-Gold</p>` : '<p class="text-xs text-gray-400">Belum ada hadiah. Coba lagi!</p>'}
+                <div class="grid grid-cols-2 gap-2"><button onclick="startDomPerignonPulse()" class="py-3 rounded-xl bg-neutral-800 text-white font-bold text-xs">Main Lagi</button><button onclick="closeModal()" class="py-3 rounded-xl bg-cyan-500 text-black font-bold text-xs">Selesai</button></div>
+            </div>`, true);
+            if (reward) rewardTGold(reward, 'The Kinetic Pulse');
+        }
+
+        // 3) Club-Wide Truth or Dare: voting seluruh kelab
+        const todPrompts = ['Siapa yang paling sering ngaret?', 'Siapa yang paling mungkin jadi DJ dadakan malam ini?', 'Siapa yang paling dulu minta pulang?', 'Siapa yang paling heboh di lantai dansa?', 'Siapa yang paling sering lupa bayar patungan?'];
+        let tod = null;
+        function startTableSuperlative() { stopGames(); tod = { i: Math.floor(Math.random() * todPrompts.length), voted: null }; renderTod(false); }
+        function renderTod(isBack) {
+            const names = vipFriends.slice(0, 3).map(f => f.name).concat(['Saya sendiri']);
+            let body;
+            if (tod.voted === null) {
+                body = `<div class="grid grid-cols-1 gap-2">${names.map((n, k) => `<button onclick="voteTod(${k})" class="w-full p-3 bg-neutral-900 border border-neutral-700 rounded-xl text-left text-xs text-white hover:border-emerald-400 transition">${esc(n)}</button>`).join('')}</div>`;
+            } else {
+                const raw = names.map((_, k) => Math.floor(Math.random() * 30) + (k === tod.voted ? 25 : 5));
+                const sum = raw.reduce((a, b) => a + b, 0);
+                body = `<div class="space-y-2">${names.map((n, k) => { const pct = Math.round(raw[k] / sum * 100); return `<div class="p-2.5 bg-neutral-900 border ${k === tod.voted ? 'border-emerald-500' : 'border-neutral-800'} rounded-xl"><div class="flex justify-between text-xs mb-1.5"><span class="text-white">${esc(n)}${k === tod.voted ? ' <span class="text-emerald-400 text-[10px]">· pilihan Anda</span>' : ''}</span><span class="font-bold text-emerald-400 font-display">${pct}%</span></div><div class="h-1.5 bg-neutral-800 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 transition-all duration-700" style="width:${pct}%"></div></div></div>`; }).join('')}</div>
+                    <button onclick="tod={i:(tod.i+1)%todPrompts.length,voted:null}; renderTod(true)" class="w-full py-3 rounded-xl bg-emerald-600 text-white font-bold text-xs">Pertanyaan Berikutnya</button>`;
+            }
+            showModal(`<div class="space-y-4 text-center"><i class="fa-solid fa-masks-theater text-emerald-400 text-3xl"></i><h3 class="text-white font-bold">Truth or Dare · Voting Kelab</h3><p class="text-sm text-gray-200 italic">"${todPrompts[tod.i]}"</p>${body}</div>`, isBack);
+        }
+        function voteTod(k) { tod.voted = k; renderTod(true); showToast('Suara Anda masuk!', 'success'); }
+
+        /* ---------- Chat aman (teks pengguna tidak lagi dibaca sebagai HTML) + balasan hidup ---------- */
+        const communityReplies = [
+            ['VIP_Lena', 'Aku di Marquee jam 11, ketemu di sana?'], ['DJ_Rafi', 'Set malam ini bakal pecah, siap-siap!'], ['User_442', 'Ada yang tahu dress code event Tokyo Takeover?'],
+            ['Nadia.K', 'Meja Dragon 03 masih kosong lho 👀'], ['Marco_V', 'Barusan dapat Perfect combo di Kinetic Pulse 😎']
+        ];
+        function chatBubble(name, text, mine, color) {
+            return `<div class="flex flex-col gap-1 ${mine ? 'items-end' : 'items-start'} mt-2"><span class="text-[9px] text-gray-500 ${mine ? 'mr-1' : 'ml-1'}">${esc(name)}</span><div class="${color} p-2.5 rounded-xl ${mine ? 'rounded-tr-none' : 'rounded-tl-none'} max-w-[80%] text-xs break-words">${esc(text)}</div></div>`;
+        }
+        function sendCommunityChat(e) {
+            if (e) e.preventDefault();
+            const i = document.getElementById('communityInput'); if (!i || !i.value.trim()) return;
+            const b = document.getElementById('communityChatBox');
+            b.insertAdjacentHTML('beforeend', chatBubble('Anda', i.value.trim(), true, 'bg-emerald-700 text-white'));
+            i.value = ''; b.scrollTop = b.scrollHeight;
+            const [who, msg] = communityReplies[Math.floor(Math.random() * communityReplies.length)];
+            setTimeout(() => {
+                b.insertAdjacentHTML('beforeend', `<div id="typing" class="text-[10px] text-gray-500 italic ml-1 mt-2">${esc(who)} sedang mengetik…</div>`); b.scrollTop = b.scrollHeight;
+                setTimeout(() => { const ty = document.getElementById('typing'); if (ty) ty.remove(); b.insertAdjacentHTML('beforeend', chatBubble(who, msg, false, 'bg-neutral-800 text-gray-200')); b.scrollTop = b.scrollHeight; }, 1400);
+            }, 700);
+        }
+        function sendLiveClubChat(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const i = document.getElementById('clubChatInput'); if (!i || !i.value.trim()) return;
+            const b = document.getElementById('clubChatBox');
+            b.insertAdjacentHTML('beforeend', chatBubble('Anda', i.value.trim(), true, 'bg-taoGold/20 border border-taoGold/50 text-white'));
+            i.value = ''; b.scrollTop = b.scrollHeight;
+        }
+        function submitDirectMessage(e, id) {
+            e.preventDefault();
+            const i = document.getElementById(`dmInp-${id}`); if (!i || !i.value.trim()) return;
+            dmHistory[id].push({ sender: 'me', text: escapeHtml(i.value.trim()), isHtml: false }); i.value = ''; openDirectMessage(id);
+            const replies = ['Hahaha asik!', 'Otw ke mejamu ya!', 'Siap, nanti aku kabari', 'Wah seru banget 🔥'];
+            setTimeout(() => {
+                dmHistory[id].push({ sender: 'them', text: replies[Math.floor(Math.random() * replies.length)], isHtml: false });
+                if (document.getElementById(`dmInp-${id}`)) openDirectMessage(id);
+                else { addNotification('Pesan Baru', 'Pesan dari teman'); const nb = document.getElementById('inboxNotifBadge'); if (nb) nb.classList.remove('hidden'); }
+            }, 2000);
+        }
+        function handleSongRequest(e) {
+            e.preventDefault(); if (!userHasTable) { showToast('Pesan meja dulu!', 'error'); return; }
+            const inp = document.getElementById('songTitleInput'); const val = inp.value.trim(); if (!val) return;
+            document.getElementById('djQueueList').insertAdjacentHTML('beforeend', `<div class="p-2 border border-neutral-800 bg-neutral-900 rounded text-white text-xs">${esc(val)} <span class="float-right text-taoGold">Terkirim</span></div>`);
+            inp.value = ''; showToast('Request masuk antrean!');
+        }
+
+        /* ---------- Kartu cabang dengan indikator keramaian langsung ---------- */
+        function renderOutletCards(data = taoOutletsData) {
+            const grid = document.getElementById('outletCardsGrid');
+            const countText = document.getElementById('filteredCountText');
+            if (countText) countText.innerText = `Menampilkan ${data.length} Cabang`;
+            if (!grid) return;
+            if (!data.length) { grid.innerHTML = `<div class="col-span-full text-center py-10 text-xs text-gray-500"><i class="fa-solid fa-magnifying-glass text-2xl mb-2 block text-neutral-700"></i>Tidak ada cabang yang cocok.</div>`; return; }
+            grid.innerHTML = data.map(item => {
+                const pct = parseInt(item.capacity, 10) || 0;
+                const lvl = pct >= 90 ? ['Sangat Ramai', 'bg-taoRed', 'text-rose-300'] : pct >= 75 ? ['Ramai', 'bg-orange-400', 'text-orange-300'] : ['Santai', 'bg-emerald-400', 'text-emerald-300'];
+                return `<div onclick="selectOutlet('${item.id}')" class="bg-neutral-900 border border-neutral-800 hover:border-taoGold rounded-xl overflow-hidden cursor-pointer transition group">
+                    <div class="h-32 relative overflow-hidden bg-neutral-800">
+                        <div class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition duration-700" style="background-image: url('${item.image}')"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                        <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md border border-white/20 text-[9px] font-bold text-white uppercase">${item.mainCategory}</span>
+                        <span class="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[9px] font-bold ${lvl[2]} flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ${lvl[1]} animate-pulse"></span>${lvl[0]}</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="text-sm font-bold text-white group-hover:text-taoGold transition">${item.name}</h4>
+                        <p class="text-[10px] text-gray-400 mt-1"><i class="fa-solid fa-location-dot"></i> ${item.city}</p>
+                        <div class="mt-3 flex items-center gap-2"><div class="flex-1 h-1 bg-neutral-800 rounded-full overflow-hidden"><div class="h-full ${lvl[1]}" style="width:${pct}%"></div></div><span class="text-[9px] text-gray-500 font-display">${item.crowd}</span></div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        /* ---------- Pencarian cepat (Ctrl/⌘ + K) ---------- */
+        let cmdkItems = [], cmdkIndex = 0;
+        function cmdkSource() {
+            const tabs = [['mapTab', 'Portofolio Global', 'fa-list'], ['hubTab', 'Live Hub', 'fa-fire'], ['vipTab', 'VIP Ops', 'fa-crown'], ['leaderboardTab', 'Leaderboard', 'fa-trophy'], ['communityTab', 'T-Community', 'fa-comments'], ['eventTab', 'Event', 'fa-calendar-days'], ['socialTab', 'Escrow', 'fa-shield-heart'], ['djTab', 'DJ Request', 'fa-compact-disc'], ['menuTab', 'Menu F&B', 'fa-bell-concierge'], ['otherFeaturesTab', 'Mini Games', 'fa-gamepad']]
+                .filter(([id]) => { const b = document.getElementById('tab-' + id); return b && !b.classList.contains('hidden'); })
+                .map(([id, label, icon]) => ({ group: 'Halaman', label, icon, run: () => switchTab(id) }));
+            const actions = [
+                { group: 'Aksi', label: 'Isi Saldo T-Gold', icon: 'fa-coins', run: showTopUpModal },
+                { group: 'Aksi', label: 'Buka Keranjang', icon: 'fa-cart-shopping', run: openCartModal },
+                { group: 'Aksi', label: 'Tagihan Meja', icon: 'fa-receipt', run: openBillModal },
+                { group: 'Aksi', label: 'Tiket Saya', icon: 'fa-ticket', run: openMyTickets },
+                { group: 'Aksi', label: 'Daftar Teman VIP', icon: 'fa-user-group', run: openFriendList },
+                { group: 'Aksi', label: 'Main Live Club Trivia', icon: 'fa-trophy', run: startLiveTrivia },
+                { group: 'Aksi', label: 'Main The Kinetic Pulse', icon: 'fa-bottle-water', run: startDomPerignonPulse }
+            ];
+            const outlets = taoOutletsData.map(o => ({ group: 'Cabang', label: o.name, sub: o.city, icon: 'fa-location-dot', run: () => { switchTab('mapTab'); selectOutlet(o.id); } }));
+            const menu = menuProducts.map(p => ({ group: 'Menu', label: p.name, sub: '$' + p.price.toLocaleString(), icon: 'fa-plus', run: () => p.type === 'shots' ? addToCartPromo(p.id, p.price) : addToCartItem(p.id) }));
+            return tabs.concat(actions, outlets, menu);
+        }
+        function openCmdk() {
+            const el = document.getElementById('cmdk'); if (!el) return;
+            el.classList.remove('hidden'); el.classList.add('flex');
+            const inp = document.getElementById('cmdkInput'); inp.value = ''; filterCmdk(); setTimeout(() => inp.focus(), 20);
+        }
+        function closeCmdk() { const el = document.getElementById('cmdk'); if (el) { el.classList.add('hidden'); el.classList.remove('flex'); } }
+        function filterCmdk() {
+            const q = document.getElementById('cmdkInput').value.trim().toLowerCase();
+            const all = cmdkSource();
+            cmdkItems = (q ? all.filter(i => (i.label + ' ' + (i.sub || '') + ' ' + i.group).toLowerCase().includes(q)) : all.filter(i => i.group !== 'Menu' && i.group !== 'Cabang')).slice(0, 40);
+            cmdkIndex = 0; renderCmdk();
+        }
+        function renderCmdk() {
+            const list = document.getElementById('cmdkList');
+            if (!cmdkItems.length) { list.innerHTML = `<p class="text-xs text-gray-500 text-center py-8">Tidak ditemukan.</p>`; return; }
+            let lastGroup = '';
+            list.innerHTML = cmdkItems.map((it, k) => {
+                const head = it.group !== lastGroup ? `<p class="px-3 pt-3 pb-1 text-[9px] font-bold text-gray-500 uppercase tracking-widest">${it.group}</p>` : '';
+                lastGroup = it.group;
+                return head + `<button role="option" aria-selected="${k === cmdkIndex}" onmouseenter="cmdkIndex=${k}; markCmdk()" onclick="runCmdk(${k})" data-k="${k}" class="cmdk-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-xs ${k === cmdkIndex ? 'bg-taoGold/15 text-white' : 'text-gray-300'}"><i class="fa-solid ${it.icon} w-4 text-center text-taoGold"></i><span class="flex-1 truncate">${esc(it.label)}</span>${it.sub ? `<span class="text-[10px] text-gray-500">${esc(it.sub)}</span>` : ''}</button>`;
+            }).join('');
+        }
+        function markCmdk() {
+            document.querySelectorAll('#cmdkList .cmdk-item').forEach(b => {
+                const on = +b.dataset.k === cmdkIndex;
+                b.classList.toggle('bg-taoGold/15', on); b.classList.toggle('text-white', on); b.classList.toggle('text-gray-300', !on);
+                b.setAttribute('aria-selected', on);
+                if (on) b.scrollIntoView({ block: 'nearest' });
+            });
+        }
+        function runCmdk(k) { const it = cmdkItems[k]; if (!it) return; closeCmdk(); closeModal(); it.run(); }
+        document.addEventListener('keydown', e => {
+            const open = document.getElementById('cmdk') && !document.getElementById('cmdk').classList.contains('hidden');
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open ? closeCmdk() : openCmdk(); return; }
+            if (!open) {
+                if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); openCmdk(); }
+                return;
+            }
+            if (e.key === 'Escape') { e.stopPropagation(); closeCmdk(); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); cmdkIndex = Math.min(cmdkItems.length - 1, cmdkIndex + 1); markCmdk(); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); cmdkIndex = Math.max(0, cmdkIndex - 1); markCmdk(); }
+            else if (e.key === 'Enter') { e.preventDefault(); runCmdk(cmdkIndex); }
+        }, true);
+
+        /* ---------- Inisialisasi ---------- */
+        taoLoad();
+        window.addEventListener('load', () => {
+            refreshBalance();
+            renderExtraEvents();
+            updateCartDisplays();
+            const bd = document.getElementById('tGoldBalanceDisplay');
+            if (bd) new MutationObserver(() => {
+                const m = document.getElementById('mobileTGold'); if (m) m.textContent = bd.textContent;
+            }).observe(bd, { childList: true, characterData: true, subtree: true });
+            const m = document.getElementById('mobileTGold'); if (m && bd) m.textContent = bd.textContent;
+        });
+        setInterval(taoSave, 3000);
+        window.addEventListener('pagehide', taoSave);
+    </script>
+
     <!-- ===== Interaksi visual tambahan (tidak mengubah logika aplikasi) ===== -->
     <script id="lux-layer-js">
         (function () {
