@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-pitch-lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -322,6 +322,62 @@
         @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .hide-scroll::-webkit-scrollbar { display: none; }
 
+        /* ---------- Pitch / tur demo ---------- */
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+        :root:not([data-pitch-lang="id"]) .pt-bar [lang="id"], :root:not([data-pitch-lang="id"]) .pt-hero [lang="id"], :root:not([data-pitch-lang="id"]) .pt-demo [lang="id"], :root:not([data-pitch-lang="id"]) .pov-caption [lang="id"] { display: none; }
+        html[data-pitch-lang="id"] .pt-bar [lang="en"], html[data-pitch-lang="id"] .pt-hero [lang="en"], html[data-pitch-lang="id"] .pt-demo [lang="en"], html[data-pitch-lang="id"] .pov-caption [lang="en"] { display: none; }
+        .pt-bar { position: sticky; top: 0; z-index: 200; width: 100%; max-width: 1240px; display: flex; align-items: center; gap: 16px; padding: 10px 14px; margin-top: -8px; background: rgba(215, 220, 227, .92); backdrop-filter: blur(8px); border-bottom: 1px solid #C3CAD4; }
+        .pt-logo { font: 700 18px/1 var(--font-sans); letter-spacing: -.01em; color: var(--ink); text-decoration: none; }
+        .pt-links { display: flex; gap: 4px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+        .pt-links a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 10px; border-radius: 8px; color: #26364F; font: 500 14px var(--font-sans); text-decoration: none; white-space: nowrap; }
+        .pt-links a:hover { background: rgba(255,255,255,.6); }
+        .pt-lang { display: flex; padding: 3px; gap: 2px; border-radius: 10px; background: #fff; border: 1px solid #C3CAD4; }
+        .pt-lang button { min-width: 40px; min-height: 36px; border: 0; border-radius: 7px; background: none; color: var(--muted); font: 600 13px var(--font-mono); cursor: pointer; }
+        .pt-lang button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+        .pt-bar :focus-visible, .pt-hero :focus-visible, .pt-demo :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+
+        .pt-hero { width: 100%; max-width: 1240px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 48px; align-items: start; padding: 40px 8px 8px; }
+        .pt-eyebrow { margin: 0 0 14px; font: 600 12px/1.3 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--brass-text); }
+        .pt-h1 { margin: 0; font: 700 clamp(34px, 5.2vw, 60px)/1.04 var(--font-sans); letter-spacing: -.035em; color: var(--ink); text-wrap: balance; }
+        .pt-lead { margin: 20px 0 0; max-width: 58ch; font-size: 18px; line-height: 1.6; color: #3B475A; }
+        .pt-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+        .pt-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 10px; border: 1px solid transparent; font: 600 15px var(--font-sans); text-decoration: none; cursor: pointer; transition: background-color .18s var(--ease); }
+        .pt-btn-primary { background: var(--ink); color: #fff; }
+        .pt-btn-primary:hover { background: var(--ink-2); }
+        .pt-btn-ghost { background: #fff; color: var(--ink); border-color: #B9C1CC; }
+        .pt-btn-ghost:hover { background: #F3F5F8; }
+        .pt-facts { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+        .pt-facts li { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #3B475A; }
+        .pt-facts i { color: var(--brass); font-size: 18px; }
+        .pt-how { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; background: #fff; border: 1px solid #C9D0DA; border-radius: 16px; overflow: hidden; }
+        .pt-how li { display: flex; gap: 16px; padding: 20px; }
+        .pt-how li + li { border-top: 1px dashed #C9D0DA; }
+        .pt-n { flex: none; width: 32px; height: 32px; border-radius: 8px; background: var(--ink); color: #fff; font: 600 14px/32px var(--font-mono); text-align: center; }
+        .pt-how b { font-size: 17px; color: var(--ink); }
+        .pt-how p { margin: 4px 0 0; font-size: 15px; line-height: 1.55; color: var(--muted); }
+
+        .pt-demo { width: 100%; max-width: 1240px; display: flex; flex-direction: column; gap: 20px; padding: 8px 8px 0; }
+        .pt-demo-head h2 { margin: 0; font: 700 28px/1.2 var(--font-sans); letter-spacing: -.02em; color: var(--ink); }
+        .pt-demo-head p { margin: 8px 0 0; font-size: 16px; color: #3B475A; max-width: 70ch; }
+        .pt-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+        .pt-card { display: flex; flex-direction: column; gap: 12px; padding: 20px; background: #fff; border: 1px solid #C9D0DA; border-radius: 16px; }
+        .pt-card-tag { margin: 0; font: 600 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brass-text); }
+        .pt-card h3 { margin: 0; font-size: 19px; font-weight: 600; color: var(--ink); text-wrap: balance; }
+        .pt-card ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.5; color: #3B475A; flex: 1; }
+        .pt-card .pt-btn { align-self: flex-start; }
+        .pt-note { background: #fff; border: 1px solid #C9D0DA; border-radius: 14px; padding: 4px 18px; }
+        .pt-note summary { min-height: 48px; display: flex; align-items: center; font-weight: 600; font-size: 15px; color: var(--ink); cursor: pointer; }
+        .pt-note ul { margin: 0 0 16px; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.55; color: #3B475A; }
+        .pov-focus { animation: povFocus 1.6s var(--ease); }
+        @keyframes povFocus { 0%, 60% { box-shadow: 0 0 0 4px var(--brass), 0 24px 40px -24px rgba(15,27,45,.45); } 100% { box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 24px 40px -24px rgba(15,27,45,.45); } }
+
+        @media (max-width: 900px) {
+            .pt-hero { grid-template-columns: 1fr; gap: 28px; padding-top: 24px; }
+            .pt-cards { grid-template-columns: 1fr; }
+            .pt-links a:nth-child(n+2):not(:last-child) { display: none; }
+        }
+
         /* ---------- POV 2: E-Wallet ---------- */
         #ewallet-device { font-family: var(--font-sans); }
         #ewallet-wrapper { max-width: 420px !important; width: 100% !important; margin: 0 auto !important; background-color: #F3F5F8; box-shadow: 0 0 0 1px #D5DBE3, 0 20px 40px -20px rgba(15,27,45,.35); height: 100%; }
@@ -565,6 +621,13 @@
         .rounded-full[data-cam]::after { top: auto; bottom: 22px; right: 50%; transform: translateX(50%); white-space: nowrap; }
         .bp-vf[data-cam]::after { top: 24px; right: 24px; }
 
+        /* Overlay deteksi biometrik */
+        .bio-overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 25; pointer-events: none; }
+        .bio-skip { position: absolute; left: 50%; bottom: 64px; transform: translateX(-50%); z-index: 31; max-width: calc(100% - 24px); min-height: 40px; padding: 0 14px; border: 0; border-radius: 8px; background: #fff; color: #0F1B2D; font: 600 13px var(--font-sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; box-shadow: 0 6px 16px -6px rgba(0,0,0,.4); }
+        .rounded-full > .bio-skip, .rounded-3xl > .bio-skip { bottom: 54px; font-size: 12px; }
+        [data-bio="scanning"] .scanner-line, [data-bio="ok"] .scanner-line { opacity: .35; }
+        .bp-vf .bp-vf-status { z-index: 30; }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
             .scanner-line { top: 50% !important; }
@@ -582,9 +645,103 @@
 <body>
 
     <div class="devices-wrapper">
+        <!-- ========================================== -->
+        <!-- PITCH / TUR DEMO (untuk reviewer YC)       -->
+        <!-- ========================================== -->
+        <header class="pt-bar" role="banner">
+            <a class="pt-logo" href="#top">BioPay</a>
+            <nav class="pt-links" aria-label="Bagian halaman">
+                <a href="#demo"><span lang="en">Demo</span><span lang="id">Demo</span></a>
+                <a href="#pov-terminal"><span lang="en">Terminal</span><span lang="id">Terminal</span></a>
+                <a href="#pov-kasku">Kasku</a>
+                <a href="#pov-lintas">Lintas</a>
+                <a href="https://github.com/ikbal66123/biopay" target="_blank" rel="noopener">GitHub</a>
+            </nav>
+            <div class="pt-lang" role="group" aria-label="Language / Bahasa">
+                <button type="button" data-lang="en" aria-pressed="true" onclick="setPitchLang('en')">EN</button>
+                <button type="button" data-lang="id" aria-pressed="false" onclick="setPitchLang('id')">ID</button>
+            </div>
+        </header>
 
-        <div class="pov">
-            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span>POV 1 · Mesin terminal BioPay</p>
+        <section class="pt-hero" id="top">
+            <div class="pt-hero-text">
+                <p class="pt-eyebrow"><span lang="en">Biometric payments · Southeast Asia</span><span lang="id">Pembayaran biometrik · Asia Tenggara</span></p>
+                <h1 class="pt-h1">
+                    <span lang="en">Pay with your face and palm. No card. No phone.</span>
+                    <span lang="id">Bayar dengan wajah dan telapak tangan. Tanpa kartu. Tanpa ponsel.</span>
+                </h1>
+                <p class="pt-lead">
+                    <span lang="en">BioPay is a two-factor biometric checkout that settles from the wallet people already use. A shopper looks at the terminal, shows a palm, and pays. Merchants can charge customers from their own phone, and apps like travel booking can add face-and-palm checkout.</span>
+                    <span lang="id">BioPay adalah checkout biometrik dua faktor yang menagih langsung dari wallet yang sudah dipakai orang. Pembeli melihat ke terminal, menunjukkan telapak tangan, lalu bayar. Merchant bisa menagih pelanggan dari ponselnya sendiri, dan aplikasi seperti travel bisa menambahkan checkout wajah + telapak.</span>
+                </p>
+                <div class="pt-ctas">
+                    <a class="pt-btn pt-btn-primary" href="#demo"><span lang="en">Take the 60-second tour</span><span lang="id">Ikuti tur 60 detik</span></a>
+                    <button type="button" class="pt-btn pt-btn-ghost" onclick="pitchTry('terminal')"><i class="ph-bold ph-scan" aria-hidden="true"></i> <span lang="en">Scan my face now</span><span lang="id">Scan wajah saya sekarang</span></button>
+                </div>
+                <ul class="pt-facts">
+                    <li><i class="ph-bold ph-camera" aria-hidden="true"></i><span lang="en">Uses your real camera</span><span lang="id">Memakai kamera asli</span></li>
+                    <li><i class="ph-bold ph-cpu" aria-hidden="true"></i><span lang="en">Face &amp; palm detection runs on-device</span><span lang="id">Deteksi wajah &amp; telapak berjalan di perangkat</span></li>
+                    <li><i class="ph-bold ph-coins" aria-hidden="true"></i><span lang="en">All money is simulated</span><span lang="id">Semua uang hanya simulasi</span></li>
+                </ul>
+            </div>
+            <ol class="pt-how" aria-label="How it works">
+                <li><span class="pt-n">1</span><div><b><span lang="en">Face</span><span lang="id">Wajah</span></b><p><span lang="en">The terminal finds the shopper's BioID from their face, with a liveness check against photos and screens.</span><span lang="id">Terminal menemukan BioID pembeli dari wajahnya, dengan pemeriksaan liveness untuk menolak foto dan layar.</span></p></div></li>
+                <li><span class="pt-n">2</span><div><b><span lang="en">Palm</span><span lang="id">Telapak</span></b><p><span lang="en">A palm scan is the second factor, so a face alone can never move money.</span><span lang="id">Scan telapak menjadi faktor kedua, jadi wajah saja tidak pernah bisa memindahkan uang.</span></p></div></li>
+                <li><span class="pt-n">3</span><div><b><span lang="en">Settle</span><span lang="id">Bayar</span></b><p><span lang="en">Payment comes from the shopper's linked e-wallet or bank. Tourists pay in rupiah with automatic FX and a VAT-refund receipt.</span><span lang="id">Pembayaran diambil dari e-wallet atau bank yang terhubung. Turis bayar dalam rupiah dengan kurs otomatis dan struk tax refund.</span></p></div></li>
+            </ol>
+        </section>
+
+        <section class="pt-demo" id="demo" aria-labelledby="demo-title">
+            <div class="pt-demo-head">
+                <h2 id="demo-title"><span lang="en">Three ways to try it</span><span lang="id">Tiga cara mencobanya</span></h2>
+                <p><span lang="en">Each takes about a minute. The apps are in Bahasa Indonesia, our launch market. Allow camera access when the browser asks.</span><span lang="id">Masing-masing sekitar satu menit. Aplikasinya berbahasa Indonesia, pasar peluncuran kami. Izinkan akses kamera saat browser meminta.</span></p>
+            </div>
+            <div class="pt-cards">
+                <article class="pt-card">
+                    <p class="pt-card-tag">POV 1 · <span lang="en">Shopper</span><span lang="id">Pembeli</span></p>
+                    <h3><span lang="en">Pay at a store terminal</span><span lang="id">Bayar di terminal toko</span></h3>
+                    <ol>
+                        <li><span lang="en">Tap “Mulai scan wajah” and look at the camera.</span><span lang="id">Tekan “Mulai scan wajah” dan lihat ke kamera.</span></li>
+                        <li><span lang="en">Show your open palm.</span><span lang="id">Tunjukkan telapak tangan terbuka.</span></li>
+                        <li><span lang="en">Confirm the receipt. Foreign merchants trigger auto-FX and tax refund.</span><span lang="id">Konfirmasi struk. Merchant luar negeri memicu kurs otomatis dan tax refund.</span></li>
+                    </ol>
+                    <button type="button" class="pt-btn pt-btn-primary" onclick="pitchTry('terminal')"><span lang="en">Try on the terminal</span><span lang="id">Coba di terminal</span> <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></button>
+                </article>
+                <article class="pt-card">
+                    <p class="pt-card-tag">POV 2 · <span lang="en">Merchant</span><span lang="id">Merchant</span></p>
+                    <h3><span lang="en">Charge a customer from a phone</span><span lang="id">Tagih pelanggan dari ponsel</span></h3>
+                    <ol>
+                        <li><span lang="en">In the Kasku wallet, tap “Tagih Pelanggan”.</span><span lang="id">Di wallet Kasku, tekan “Tagih Pelanggan”.</span></li>
+                        <li><span lang="en">Enter an amount, then scan the customer's face.</span><span lang="id">Isi nominal, lalu scan wajah pelanggan.</span></li>
+                        <li><span lang="en">Scan their palm. The money lands in the merchant's balance.</span><span lang="id">Scan telapaknya. Uang masuk ke saldo merchant.</span></li>
+                    </ol>
+                    <button type="button" class="pt-btn pt-btn-primary" onclick="pitchTry('kasku')"><span lang="en">Try in Kasku</span><span lang="id">Coba di Kasku</span> <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></button>
+                </article>
+                <article class="pt-card">
+                    <p class="pt-card-tag">POV 3 · <span lang="en">Traveler</span><span lang="id">Wisatawan</span></p>
+                    <h3><span lang="en">Book a flight, pay with your face</span><span lang="id">Pesan tiket, bayar pakai wajah</span></h3>
+                    <ol>
+                        <li><span lang="en">Search a route in the Lintas travel app and pick a flight.</span><span lang="id">Cari rute di aplikasi travel Lintas lalu pilih penerbangan.</span></li>
+                        <li><span lang="en">Choose “BioPay” at checkout.</span><span lang="id">Pilih “BioPay” saat pembayaran.</span></li>
+                        <li><span lang="en">Face, then palm, then your e-ticket appears.</span><span lang="id">Wajah, lalu telapak, lalu e-tiket muncul.</span></li>
+                    </ol>
+                    <button type="button" class="pt-btn pt-btn-primary" onclick="pitchTry('lintas')"><span lang="en">Try in Lintas</span><span lang="id">Coba di Lintas</span> <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></button>
+                </article>
+            </div>
+            <details class="pt-note">
+                <summary><span lang="en">What is real in this prototype, and what is simulated</span><span lang="id">Apa yang nyata di prototipe ini, dan apa yang simulasi</span></summary>
+                <ul>
+                    <li><span lang="en"><b>Real:</b> camera access, and on-device detection that a face or palm is actually in front of the camera (MediaPipe, running in your browser). No image or biometric data leaves your device.</span><span lang="id"><b>Nyata:</b> akses kamera, dan deteksi di perangkat bahwa wajah atau telapak benar-benar ada di depan kamera (MediaPipe, berjalan di browser). Tidak ada gambar atau data biometrik yang keluar dari perangkat.</span></li>
+                    <li><span lang="en"><b>Simulated:</b> identity matching (every face resolves to the demo user), liveness depth sensing, palm-vein reading, balances, payments and settlement.</span><span lang="id"><b>Simulasi:</b> pencocokan identitas (semua wajah dianggap pengguna demo), sensor kedalaman liveness, pembacaan vena telapak, saldo, pembayaran, dan settlement.</span></li>
+                    <li><span lang="en">Kasku and Lintas are fictional. DANA, GoPay, BCA, Agoda and other names appear only to illustrate integrations; there is no affiliation.</span><span lang="id">Kasku dan Lintas adalah merek fiktif. DANA, GoPay, BCA, Agoda, dan nama lain hanya ilustrasi integrasi; tidak ada afiliasi.</span></li>
+                    <li><span lang="en">If the camera is blocked or the detection model cannot load, scans continue in simulation mode so the demo never gets stuck.</span><span lang="id">Bila kamera diblokir atau model deteksi gagal dimuat, scan berlanjut dalam mode simulasi agar demo tidak macet.</span></li>
+                </ul>
+            </details>
+        </section>
+
+
+        <div class="pov" id="pov-terminal">
+            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span><span lang="en">POV 1 · BioPay store terminal</span><span lang="id">POV 1 · Mesin terminal BioPay</span></p>
 
             <div class="device bp" id="biopay-device">
                 <div class="toast-container" id="toast-container-1" role="status" aria-live="polite"></div>
@@ -869,9 +1026,9 @@
                             <div class="bp-section">
                                 <p class="bp-section-title">Platform terhubung</p>
                                 <div class="bp-list">
-                                    <button type="button" class="bp-list-row" onclick="showToast('Traveloka sudah menjadi platform utama', 'ph-check-circle', 'text-sky-400')">
-                                        <span class="bp-logo" style="background:#0E7FD8" aria-hidden="true"><i class="ph-fill ph-airplane-tilt"></i></span>
-                                        <span class="bp-row-main"><b>Traveloka</b><small>Tiket pesawat & hotel</small></span>
+                                    <button type="button" class="bp-list-row" onclick="showToast('Lintas sudah menjadi platform utama', 'ph-check-circle', 'text-sky-400')">
+                                        <span class="bp-logo" style="background:#1E3A8A" aria-hidden="true"><i class="ph-fill ph-airplane-tilt"></i></span>
+                                        <span class="bp-row-main"><b>Lintas</b><small>Pesawat, hotel, kereta, atraksi</small></span>
                                         <span class="bp-chip bp-chip-brass">Utama</span>
                                     </button>
                                     <button type="button" class="bp-list-row" onclick="showToast('Agoda terhubung ke akun Anda', 'ph-check-circle', 'text-emerald-400')">
@@ -1129,6 +1286,7 @@
                         <video id="video-tf-scan" autoplay muted playsinline></video>
                         <span class="bp-corners" aria-hidden="true"></span>
                         <div class="scanner-line"></div>
+                        <p class="bp-vf-status" aria-live="polite">Mencari wajah penerima…</p>
                     </div>
                     <button type="button" onclick="closeTfScanModal()" class="bp-btn bp-btn-paper bp-btn-auto">Batal</button>
                 </div>
@@ -1152,6 +1310,7 @@
                         <video id="video-sharing-qr" autoplay muted playsinline></video>
                         <span class="bp-corners" aria-hidden="true"></span>
                         <div class="scanner-line"></div>
+                        <p class="bp-vf-status" aria-live="polite">Mendaftarkan wajah…</p>
                     </div>
                     <button type="button" onclick="cancelSharingScan()" class="bp-btn bp-btn-paper bp-btn-auto">Batal</button>
                 </div>
@@ -1177,8 +1336,8 @@
         <!-- ========================================== -->
         <!-- POV 2: PERANGKAT E-WALLET (LAYAR KANAN)    -->
         <!-- ========================================== -->
-        <div class="pov">
-            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span><span id="pov2-title">POV 2 · Aplikasi e-wallet di ponsel pelanggan</span></p>
+        <div class="pov" id="pov-kasku">
+            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span><span id="pov2-title"><span lang="en">POV 2 · Kasku e-wallet on a merchant's phone</span><span lang="id">POV 2 · Aplikasi e-wallet Kasku di ponsel merchant</span></span></p>
 
             <!-- E-Wallet Berjalan Mandiri Disini -->
             <div class="app-container flex flex-col relative" id="ewallet-device">
@@ -1187,13 +1346,13 @@
                 
                 <!-- CONTAINER UTAMA E-WALLET -->
                 <div id="ewallet-wrapper" class="w-full h-full flex flex-col relative z-0">
-                    <!-- Header E-Wallet DANA -->
+                    <!-- Header E-Wallet Kasku (merek fiktif untuk demo) -->
                     <div id="ewallet-header" class="w-full p-6 pt-10 pb-8 rounded-b-3xl text-white relative shadow-md transition-all duration-500 bg-[#118EEA] shrink-0 z-10">
                         <!-- Top Status & Balance -->
                         <div class="flex justify-between items-center mb-5">
                             <div class="flex items-center gap-1.5 text-white font-bold text-lg">
-                                <div id="ewallet-logo" class="w-10 h-10 bg-white text-[#118EEA] rounded-full items-center justify-center font-bold text-xs hidden">D</div>
-                                <span class="text-xs mr-1 font-normal opacity-80">Rp</span><span id="ewallet-balance-text">1.000.000.000</span>
+                                <div id="ewallet-logo" class="w-10 h-10 bg-white text-[#118EEA] rounded-full items-center justify-center font-bold text-xs hidden">K</div>
+                                <span class="text-xs mr-1 font-semibold tracking-wide opacity-90">kasku ·</span><span class="text-xs mr-1 font-normal opacity-80">Rp</span><span id="ewallet-balance-text">1.000.000.000</span>
                                 <i id="ewallet-eye-icon" onclick="toggleEwalletBalance()" class="ph-bold ph-eye-slash text-sm opacity-80 cursor-pointer ml-1"></i>
                             </div>
                             <div class="flex items-center gap-2 text-white">
@@ -1202,7 +1361,7 @@
                                 <i class="ph-bold ph-battery-full text-base"></i>
                             </div>
                         </div>
-                        <span id="ewallet-header-name" class="hidden">DANA</span>
+                        <span id="ewallet-header-name" class="hidden">Kasku</span>
                         
                         <!-- 4 Main Actions -->
                         <div class="flex justify-around px-2 text-white text-xs font-medium">
@@ -1243,7 +1402,7 @@
                             <i class="ph-bold ph-caret-right text-white/70" aria-hidden="true"></i>
                         </div>
 
-                        <!-- Grid Menu DANA -->
+                        <!-- Grid Menu Kasku -->
                         <div class="bg-white shadow-sm z-10 relative px-3 pt-4 pb-3 border border-gray-200/70 grid grid-cols-4 gap-y-4 gap-x-2 text-center text-slate-700 mx-3 mt-3 rounded-2xl">
                             <div class="flex flex-col items-center gap-1.5 cursor-pointer" onclick="openEwalletService('Pulsa & Data', 'ph-device-mobile', 50000)">
                                 <div class="w-10 h-10 bg-orange-100 rounded-full flex justify-center items-center"><i class="ph-fill ph-device-mobile text-orange-500 text-xl"></i></div><span class="text-[11px] font-medium leading-tight">Pulsa &<br>Data</span>
@@ -1282,7 +1441,7 @@
                             </div>
                         </div>
 
-                        <!-- DANA Protection & Search -->
+                        <!-- Kasku Protection -->
                         <div class="mx-3 mt-3 bg-white rounded-xl shadow-sm border border-gray-200/50 overflow-hidden">
                             <div class="bg-[#118EEA] text-white px-3 py-2 text-xs font-semibold flex justify-between items-center">
                                 <span class="flex items-center gap-1.5"><i class="ph-fill ph-shield-check text-sm"></i> Jaminan 100% Uang Kembali</span>
@@ -1313,8 +1472,8 @@
                         </div>
 
                         <div class="text-center mt-6 mb-4 text-xs text-gray-400 font-medium">
-                            <p>E-Wallet terdaftar serta diawasi</p>
-                            <p>oleh <strong class="text-gray-600">Bank Indonesia</strong></p>
+                            <p>Kasku adalah e-wallet fiktif untuk demo BioPay.</p>
+                            <p>Semua transaksi hanya simulasi.</p>
                         </div>
                     </div>
                     
@@ -1348,8 +1507,8 @@
                                 <div class="flex justify-between items-center border-t border-gray-200 pt-3">
                                     <span class="text-gray-500 text-xs">Metode Pembayaran</span>
                                     <div class="flex items-center gap-1.5">
-                                        <div id="ewallet-service-logo" class="w-4 h-4 bg-[#118EEA] rounded-full text-white flex justify-center items-center text-xs font-bold">D</div>
-                                        <span id="ewallet-service-walletname" class="text-slate-700 text-xs font-bold">DANA</span>
+                                        <div id="ewallet-service-logo" class="w-4 h-4 bg-[#118EEA] rounded-full text-white flex justify-center items-center text-xs font-bold">K</div>
+                                        <span id="ewallet-service-walletname" class="text-slate-700 text-xs font-bold">Kasku</span>
                                     </div>
                                 </div>
                                 <p id="ewallet-service-bal" class="text-right text-gray-400 text-[11px] mt-1">Saldo: Rp 1.000.000.000</p>
@@ -1468,7 +1627,7 @@
                             <div class="scanner-line bg-emerald-500 shadow-[0_0_15px_4px_rgba(16,185,129,0.5)] z-20" style="height: 4px; animation-duration: 2s;"></div>
                         </div>
                         
-                        <p class="text-emerald-600 font-bold text-xs animate-pulse bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200"><i class="ph-bold ph-spinner-gap animate-spin inline-block"></i> Memindai Vein (Aliran Darah)...</p>
+                        <p class="text-emerald-700 font-bold text-xs bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200"><i class="ph-bold ph-hand-palm inline-block" aria-hidden="true"></i> <span id="tagih-hand-status" aria-live="polite">Memindai telapak tangan...</span></p>
                     </div>
 
                     <!-- Modal 4: Tagih Success -->
@@ -1506,8 +1665,8 @@
         <!-- ========================================== -->
         <!-- POV 3: APLIKASI TRAVEL "LINTAS"            -->
         <!-- ========================================== -->
-        <div class="pov">
-            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span>POV 3 · Aplikasi travel Lintas</p>
+        <div class="pov" id="pov-lintas">
+            <p class="pov-caption"><span class="pov-dot" aria-hidden="true"></span><span lang="en">POV 3 · Lintas travel app with BioPay checkout</span><span lang="id">POV 3 · Aplikasi travel Lintas dengan checkout BioPay</span></p>
 
             <div class="app-container" id="travel-device">
                 <div class="toast-container" id="toast-container-3" role="status" aria-live="polite"></div>
@@ -1602,6 +1761,7 @@
                     ]);
                     video.play().catch(() => {});
                     camMark(video, 'live');
+                    loadBioModel('face'); setTimeout(() => loadBioModel('hand'), 800);
                 }
                 CAM.warned = false;
                 let released = false;
@@ -1624,6 +1784,116 @@
                 if (!CAM.warned) { CAM.warned = true; showToast(camErrorText(err) + ' Scan berjalan dalam mode simulasi.', 'ph-camera-slash', 'text-amber-400', camPov(video)); }
                 return null;
             }
+        }
+
+        // ==========================================
+        // DETEKSI BIOMETRIK (MediaPipe Tasks Vision, berjalan di browser)
+        // Scan baru lolos bila wajah / telapak tangan benar-benar terlihat stabil di kamera.
+        // Model hanya dimuat setelah kamera menyala. Bila kamera mati atau model gagal dimuat,
+        // scan jatuh ke mode simulasi supaya demo tidak pernah macet.
+        // ==========================================
+        const MP_VER = '0.10.14';
+        const MP_BASE = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VER}`;
+        const MP_MODELS = {
+            face: 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite',
+            hand: 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task'
+        };
+        const BIO = { vision: null, loading: {}, ts: {} };
+        function loadBioModel(kind) {
+            if (BIO.loading[kind]) return BIO.loading[kind];
+            BIO.loading[kind] = (async () => {
+                if (!BIO.vision) BIO.vision = (async () => {
+                    const v = await import(MP_BASE + '/vision_bundle.mjs');
+                    return { v, fs: await v.FilesetResolver.forVisionTasks(MP_BASE + '/wasm') };
+                })().catch(e => { BIO.vision = null; throw e; });
+                const { v, fs } = await BIO.vision;
+                const make = delegate => kind === 'face'
+                    ? v.FaceDetector.createFromOptions(fs, { baseOptions: { modelAssetPath: MP_MODELS.face, delegate }, runningMode: 'VIDEO', minDetectionConfidence: 0.5 })
+                    : v.HandLandmarker.createFromOptions(fs, { baseOptions: { modelAssetPath: MP_MODELS.hand, delegate }, runningMode: 'VIDEO', numHands: 1, minHandDetectionConfidence: 0.5, minHandPresenceConfidence: 0.5 });
+                try { return await make('GPU'); } catch (e) { return await make('CPU'); }
+            })().catch(err => { console.warn(`Model ${kind} gagal dimuat`, err); BIO.loading[kind] = null; return null; });
+            return BIO.loading[kind];
+        }
+
+        function scanBiometric({ videoId, kind = 'face', cancelled = () => false, statusEl = null, simMs = 2500, needMs = 1500 }) {
+            const video = document.getElementById(videoId);
+            const box = video && video.parentElement;
+            const status = statusEl || (box && box.querySelector('.bp-vf-status'));
+            const label = kind === 'face' ? 'Wajah' : 'Telapak tangan';
+            const say = t => { if (status) status.textContent = t; };
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
+            const mark = st => { if (box) box.setAttribute('data-bio', st); };
+            const simulate = async msg => { mark('sim'); if (msg) say(msg); await sleep(simMs); return cancelled() ? 'cancelled' : 'simulated'; };
+
+            return (async () => {
+                if (!video || !video.srcObject) return simulate();
+                mark('loading'); say('Menyiapkan deteksi AI…');
+                const model = await Promise.race([loadBioModel(kind), sleep(15000).then(() => null)]);
+                if (cancelled()) return 'cancelled';
+                if (!model || !video.srcObject) return simulate('Deteksi AI tidak tersedia · simulasi');
+
+                let canvas = box.querySelector('canvas.bio-overlay');
+                if (!canvas) { canvas = document.createElement('canvas'); canvas.className = 'bio-overlay'; canvas.setAttribute('aria-hidden', 'true'); box.appendChild(canvas); }
+                const ctx = canvas.getContext('2d');
+                const mirrored = /matrix\(-1/.test(getComputedStyle(video).transform);
+                let hit = 0, last = performance.now(), start = last, skipBtn = null, skipped = false, stopped = false, resolved = false;
+                mark('scanning');
+
+                const draw = (found, ok) => {
+                    const cw = box.clientWidth, ch = box.clientHeight, dpr = window.devicePixelRatio || 1;
+                    if (canvas.width !== Math.round(cw * dpr)) { canvas.width = Math.round(cw * dpr); canvas.height = Math.round(ch * dpr); }
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, cw, ch);
+                    if (!found) return;
+                    const vw = video.videoWidth, vh = video.videoHeight, sc = Math.max(cw / vw, ch / vh), ox = (cw - vw * sc) / 2, oy = (ch - vh * sc) / 2;
+                    const mx = x => { const p = ox + x * sc; return mirrored ? cw - p : p; }, my = y => oy + y * sc;
+                    const x1 = Math.min(mx(found.x), mx(found.x + found.w)), x2 = Math.max(mx(found.x), mx(found.x + found.w)), y1 = my(found.y), y2 = my(found.y + found.h);
+                    const col = ok ? '#22C55E' : '#E8B04A', l = Math.min(22, (x2 - x1) / 3);
+                    ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.beginPath();
+                    [[x1, y1, 1, 1], [x2, y1, -1, 1], [x1, y2, 1, -1], [x2, y2, -1, -1]].forEach(([x, y, dx, dy]) => { ctx.moveTo(x + dx * l, y); ctx.lineTo(x, y); ctx.lineTo(x, y + dy * l); });
+                    ctx.stroke();
+                    if (found.points) { ctx.fillStyle = col; found.points.forEach(([px, py]) => { ctx.beginPath(); ctx.arc(mx(px), my(py), 2.5, 0, Math.PI * 2); ctx.fill(); }); }
+                };
+
+                return await new Promise(resolve => {
+                    const finish = r => { stopped = true; if (resolved) return; resolved = true; if (skipBtn) skipBtn.remove(); if (r !== 'detected') ctx.clearRect(0, 0, canvas.width, canvas.height); if (r === 'detected') setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), 900); resolve(r); };
+                    const loop = () => {
+                        if (stopped) return;
+                        if (cancelled()) return finish('cancelled');
+                        if (skipped) { mark('sim'); return finish('skipped'); }
+                        if (!video.srcObject) { stopped = true; simulate('Kamera terputus · simulasi').then(finish); return; }
+                        const now = performance.now(), dt = Math.min(now - last, 200); last = now;
+                        let found = null;
+                        if (video.readyState >= 2 && video.videoWidth) {
+                            const ts = Math.max(now, (BIO.ts[kind] || 0) + 1); BIO.ts[kind] = ts;
+                            try {
+                                const r = model.detectForVideo(video, ts);
+                                if (kind === 'face') {
+                                    const d = r.detections && r.detections[0];
+                                    if (d && d.categories[0].score >= 0.5) found = { x: d.boundingBox.originX, y: d.boundingBox.originY, w: d.boundingBox.width, h: d.boundingBox.height };
+                                } else if (r.landmarks && r.landmarks[0]) {
+                                    const pts = r.landmarks[0].map(p => [p.x * video.videoWidth, p.y * video.videoHeight]);
+                                    const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+                                    found = { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys), points: pts };
+                                }
+                            } catch (e) { console.warn('Deteksi gagal', e); stopped = true; simulate('Deteksi AI tidak tersedia · simulasi').then(finish); return; }
+                        }
+                        hit = found ? hit + dt : Math.max(0, hit - dt * 0.6);
+                        const ok = hit >= needMs;
+                        draw(found, ok);
+                        if (ok) { mark('ok'); say(`${label} terverifikasi`); stopped = true; setTimeout(() => finish('detected'), 450); return; }
+                        say(found ? `${label} terdeteksi · ${Math.min(99, Math.round(hit / needMs * 100))}%` : `Arahkan ${label.toLowerCase()} ke kamera…`);
+                        if (!skipBtn && now - start > 9000) {
+                            skipBtn = document.createElement('button');
+                            skipBtn.type = 'button'; skipBtn.className = 'bio-skip';
+                            skipBtn.textContent = 'Lewati · mode demo'; skipBtn.title = `${label} tidak terdeteksi. Lanjutkan tanpa deteksi.`;
+                            skipBtn.onclick = () => { skipped = true; };
+                            box.appendChild(skipBtn);
+                        }
+                        setTimeout(loop, 70);
+                    };
+                    loop();
+                });
+            })();
         }
 
         // Escape teks input pengguna sebelum dimasukkan ke innerHTML (cegah HTML/script injection & tampilan rusak)
@@ -1825,15 +2095,18 @@
                 if (screenId === 'screen-face-scan') { 
                     toast('Menganalisis Kedalaman 3D Wajah (Anti-Spoofing)...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-face');
-                    setTimeout(() => { if (isScreenActive(screenId)) goToScreen('screen-identity'); }, 2500);
+                    scanBiometric({ videoId: sid('video-face'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
+                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) goToScreen('screen-identity'); });
                 } else if (screenId === 'screen-hand-scan') { 
                     toast('Memindai Aliran Darah & Suhu Tangan...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-hand');
-                    setTimeout(() => { if (isScreenActive(screenId)) { generateRandomPayment(); goToScreen('screen-options'); } }, 2500);
+                    scanBiometric({ videoId: sid('video-hand'), kind: 'hand', cancelled: () => !isScreenActive(screenId) })
+                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) { generateRandomPayment(); goToScreen('screen-options'); } });
                 } else if (screenId === 'screen-menu-auth') { 
                     toast('Liveness 3D SDK Aktif...', 'ph-shield-check', 'text-emerald-400');
                     cameraStream = await openCam('video-auth');
-                    setTimeout(() => { if (isScreenActive(screenId)) { switchTab('home'); goToScreen('screen-dashboard'); } }, 2500);
+                    scanBiometric({ videoId: sid('video-auth'), kind: 'face', cancelled: () => !isScreenActive(screenId) })
+                        .then(r => { if (r !== 'cancelled' && isScreenActive(screenId)) { switchTab('home'); goToScreen('screen-dashboard'); } });
                 }
             }
 
@@ -1958,7 +2231,8 @@
                 if (!cam) cam = await requestCameraAccess(sid('video-tf-scan'), 'user');
                 if (token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
                 tfCamera = cam;
-                setTimeout(() => {
+                scanBiometric({ videoId: sid('video-tf-scan'), kind: 'face', cancelled: () => token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden') }).then(r => {
+                    if (r === 'cancelled') return;
                     // FIX: dulu tetap "menemukan penerima" walau pengguna sudah menekan Batal
                     if (token !== tfScanToken || $('modal-tf-scan').classList.contains('hidden')) return;
                     tfCamera = stopSpecificCamera(tfCamera);
@@ -1966,7 +2240,7 @@
                     $('tf-bio-result').classList.remove('hidden');
                     tfBioTarget = "Budi Santoso"; $('tf-bio-name').innerText = tfBioTarget;
                     toast('Identitas penerima ditemukan!', 'ph-check-circle', 'text-emerald-400');
-                }, 3000);
+                });
             }
 
             function closeTfScanModal() { tfScanToken++; tfCamera = stopSpecificCamera(tfCamera); $('modal-tf-scan').classList.add('hidden'); }
@@ -2093,12 +2367,12 @@
                 const cam = await requestCameraAccess(sid('video-sharing-qr'), 'user');
                 if (token !== sharingScanToken) { stopSpecificCamera(cam); return; }
                 sharingCamera = cam;
-                setTimeout(() => { 
-                    if (token !== sharingScanToken) return;
+                scanBiometric({ videoId: sid('video-sharing-qr'), kind: 'face', cancelled: () => token !== sharingScanToken }).then(r => {
+                    if (r === 'cancelled' || token !== sharingScanToken) return;
                     sharingCamera = stopSpecificCamera(sharingCamera);
                     closeModal('modal-sharing-scan'); 
                     addSharingMemberToList(tempSharingName, tempSharingRole); 
-                }, 3500);
+                });
             }
             function cancelSharingScan() {
                 sharingScanToken++;
@@ -2345,13 +2619,13 @@
                 $('modal-tagih-face').classList.remove('hidden');
                 const token = ++tagihToken;
                 await openTagihCamera('video-tagih-face', token);
-                setTimeout(() => {
-                    if (token !== tagihToken || $('modal-tagih-face').classList.contains('hidden')) return;
+                scanBiometric({ videoId: 'video-tagih-face' + suffix, kind: 'face', statusEl: statusTxt, cancelled: () => token !== tagihToken || $('modal-tagih-face').classList.contains('hidden') }).then(r => {
+                    if (r === 'cancelled' || token !== tagihToken || $('modal-tagih-face').classList.contains('hidden')) return;
                     statusTxt.innerHTML = '<i class="ph-bold ph-check" aria-hidden="true"></i> Wajah Teridentifikasi!';
                     statusTxt.className = statusOk;
                     $('tagih-confirm-amount').textContent = formatRp(tagihAmount);
                     $('tagih-confirm-box').classList.remove('hidden'); $('tagih-confirm-box').classList.add('flex');
-                }, 2500);
+                });
             }
             async function startTagihHandScan() {
                 tagihCamera = stopSpecificCamera(tagihCamera);
@@ -2359,15 +2633,15 @@
                 $('modal-tagih-hand').classList.remove('hidden');
                 const token = ++tagihToken;
                 await openTagihCamera('video-tagih-hand', token);
-                setTimeout(() => {
-                    if (token !== tagihToken || $('modal-tagih-hand').classList.contains('hidden')) return;
+                scanBiometric({ videoId: 'video-tagih-hand' + suffix, kind: 'hand', statusEl: $('tagih-hand-status'), cancelled: () => token !== tagihToken || $('modal-tagih-hand').classList.contains('hidden') }).then(r => {
+                    if (r === 'cancelled' || token !== tagihToken || $('modal-tagih-hand').classList.contains('hidden')) return;
                     tagihToken++;
                     onReceive(tagihAmount);
                     tagihCamera = stopSpecificCamera(tagihCamera);
                     $('modal-tagih-hand').classList.add('hidden');
                     $('tagih-success-amount').textContent = formatRp(tagihAmount);
                     $('modal-tagih-success').classList.remove('hidden');
-                }, 2500);
+                });
             }
             function closeTagihFlow() {
                 tagihToken++;
@@ -2770,15 +3044,12 @@
                 const cam = await requestCameraAccess('tv-bio-video', 'user');
                 if (token !== bioToken) { stopSpecificCamera(cam); return; }
                 bioCam = cam;
-                setTimeout(() => {
-                    if (token !== bioToken) return;
-                    render('palm', 'Wajah cocok. Tunjukkan telapak tangan…');
-                    setTimeout(() => {
-                        if (token !== bioToken) return;
-                        render('done', 'Terverifikasi');
-                        setTimeout(() => { if (token !== bioToken) return; closeSheet(); log('Bayar via BioPay', c.total, false, true); complete('BioPay', c); }, 600);
-                    }, 2200);
-                }, 2200);
+                const cancelled = () => token !== bioToken;
+                if (await scanBiometric({ videoId: 'tv-bio-video', kind: 'face', cancelled }) === 'cancelled') return;
+                render('palm', 'Wajah cocok. Tunjukkan telapak tangan…');
+                if (await scanBiometric({ videoId: 'tv-bio-video', kind: 'hand', cancelled }) === 'cancelled') return;
+                render('done', 'Terverifikasi');
+                setTimeout(() => { if (token !== bioToken) return; closeSheet(); log('Bayar via BioPay', c.total, false, true); complete('BioPay', c); }, 600);
             }
 
             function vaSheet(c) {
@@ -2940,6 +3211,27 @@
         });
         document.querySelectorAll('#travel-device canvas.bp-qr').forEach((c, i) => drawFakeQR(c, 40 + i));
 
+
+        // ==========================================
+        // PITCH: bahasa EN/ID dan tombol "Try it" yang membawa ke perangkat yang tepat
+        // ==========================================
+        function setPitchLang(lang) {
+            document.documentElement.setAttribute('data-pitch-lang', lang);
+            document.querySelectorAll('.pt-lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+            try { localStorage.setItem('biopay-pitch-lang', lang); } catch (e) {}
+        }
+        try { const saved = localStorage.getItem('biopay-pitch-lang'); if (saved === 'id' || saved === 'en') setPitchLang(saved); } catch (e) {}
+        function pitchTry(kind) {
+            const target = { terminal: 'biopay-device', kasku: 'ewallet-device', lintas: 'travel-device' }[kind];
+            const el = document.getElementById(target);
+            el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+            el.classList.remove('pov-focus'); void el.offsetWidth; el.classList.add('pov-focus');
+            setTimeout(() => {
+                if (kind === 'terminal') { BP1.closeAllModals(); BP1.goToScreen('screen-face-scan'); }
+                if (kind === 'kasku') { if (!document.getElementById('biopay-wrapper-p2').classList.contains('hidden')) MK2.closeBioPayInPOV2(); MK2.showBioPayOptions(); }
+                if (kind === 'lintas') { if (!document.getElementById('biopay-wrapper-p3').classList.contains('hidden')) MK3.closeBioPayInPOV2(); TV.tab('home'); TV.openSearch('flight'); }
+            }, 650);
+        }
     </script>
 </body>
 </html>
