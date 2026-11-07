@@ -26,13 +26,14 @@ Jika izin kamera ditolak, alur tetap berjalan (scan disimulasikan).
 
 `tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah**: portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, dan Mini Games. Buka langsung di browser (butuh internet untuk Tailwind, ikon, font, dan foto).
 
-### Tema Signature TAO
+### Tema Monaco Emerald
 
-Warna dan ornamen mengikuti nuansa interior TAO: Pan-Asia "East meets West", pernis merah, sutra, perunggu, dan cahaya temaram.
+Gaya *old money* / billionaire yang elegan dan segar: dial jam mewah, kapal pesiar, dan klub privat.
 
-- **Palet "TAO Lacquer"**: hitam pernis hangat (`#0B0706`), merah lacquer (`#C8102E`), emas perunggu antik (`#CFA45A`), dan teks gading sutra. Skala `neutral` dan `gray` Tailwind diganti sehingga seluruh aplikasi ikut berubah. Kontras teks 4,9:1 sampai 12:1.
-- **Ornamen**: kisi jendela Asia, lampion merah yang berayun, dan aksara 道 (*Tao*) sebagai watermark di intro, hero, Malam Saya, dan rekap.
-- **Tab aktif** berwarna pernis merah dengan huruf gading, dan garis header merah-emas.
+- **Palet**: zamrud tua (`#050C0A`, `#0F5E49`, `#2FA37F`), emas champagne (`#D9BE86`), dan putih mutiara (`#F5F1E8`). Skala `neutral` dan `gray` Tailwind diganti sehingga seluruh aplikasi ikut berubah. Kontras teks 5,1:1 sampai 17:1. Merah ruby (`#B4233C`) hanya dipakai untuk peringatan.
+- **Latar**: gradasi zamrud dalam dengan cahaya champagne yang lembut, cahaya yang mengikuti kursor, dan pola guilloché halus (ukiran pada dial jam mewah dan uang kertas).
+- **Ornamen**: cincin bezel emas tipis dengan penanda menit yang berputar pelan di intro, hero, dan Malam Saya.
+- **Tab aktif** berwarna zamrud dengan huruf mutiara; garis header zamrud-champagne.
 
 ### Fitur Signature
 

@@ -8,24 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700&text=%E9%81%93&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        // Palet "TAO Lacquer": pernis merah, emas perunggu, hitam hangat, gading sutra
-                        taoGold: '#CFA45A',
-                        taoGoldLight: '#F2DDB0',
-                        taoGoldDark: '#8A6526',
-                        taoRed: '#C8102E',
-                        taoLacquer: '#7E0C14',
-                        taoDarkBg: '#0B0706',
-                        taoCardBg: '#1B1411',
-                        taoCardBorder: '#2A201B',
-                        neutral: { 50: '#FAF6F0', 100: '#F1E8DC', 200: '#E0D2C0', 300: '#C9B7A0', 400: '#A39079', 500: '#7D6B58', 600: '#5C4D40', 700: '#3F332B', 800: '#2A201B', 900: '#1B1411', 950: '#110C0A' },
-                        gray: { 100: '#F6EFE6', 200: '#EADFD2', 300: '#D6C7B5', 400: '#B3A18C', 500: '#95826E', 600: '#6E5E4E', 700: '#4A3E34', 800: '#2A201B', 900: '#1B1411' }
+                        // Palet "Monaco Emerald": zamrud tua, emas champagne, putih mutiara
+                        taoGold: '#D9BE86',
+                        taoGoldLight: '#F3E6C4',
+                        taoGoldDark: '#9C7F45',
+                        taoRed: '#B4233C',
+                        taoEmerald: '#2FA37F',
+                        taoEmeraldDeep: '#0F5E49',
+                        taoDarkBg: '#050C0A',
+                        taoCardBg: '#0D1915',
+                        taoCardBorder: '#15241F',
+                        neutral: { 50: '#F7FAF8', 100: '#EEF3F0', 200: '#DCE5E0', 300: '#B9C7C0', 400: '#8C9E95', 500: '#5F7269', 600: '#3B4E46', 700: '#22362E', 800: '#15241F', 900: '#0D1915', 950: '#07100D' },
+                        gray: { 100: '#F5F1E8', 200: '#E6ECE8', 300: '#D3DCD6', 400: '#A9B9B1', 500: '#8C9E95', 600: '#5F7269', 700: '#3B4E46', 800: '#15241F', 900: '#0D1915' }
                     },
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'sans-serif'],
@@ -49,9 +49,9 @@
             background: rgba(18, 18, 18, 0.88);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(207, 164, 90, 0.2);
+            border: 1px solid rgba(217, 190, 134, 0.2);
         }
-        .glow-gold { box-shadow: 0 0 25px rgba(207, 164, 90, 0.25); }
+        .glow-gold { box-shadow: 0 0 25px rgba(217, 190, 134, 0.25); }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -76,8 +76,8 @@
         .animate-float { animation: float 3s ease-in-out infinite; }
         
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 15px rgba(207,164,90,0.4); }
-            50% { box-shadow: 0 0 30px rgba(207,164,90,0.8); }
+            0%, 100% { box-shadow: 0 0 15px rgba(217,190,134,0.4); }
+            50% { box-shadow: 0 0 30px rgba(217,190,134,0.8); }
         }
         .animate-pulse-glow { animation: pulse-glow 2s infinite; }
         
@@ -145,7 +145,7 @@
         /* Tab navigasi: tab aktif terasa seperti tombol logam emas */
         .tab-btn { transition: background-color .25s var(--lux-ease), color .25s var(--lux-ease), box-shadow .25s var(--lux-ease), transform .15s var(--lux-ease); }
         .tab-btn.bg-taoGold {
-            background-image: linear-gradient(180deg, #F2DDB0 -40%, #CFA45A 45%, #B8921F 120%);
+            background-image: linear-gradient(180deg, #F3E6C4 -40%, #D9BE86 45%, #B8921F 120%);
             box-shadow: 0 8px 22px -10px rgba(var(--lux-gold),0.85), inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(0,0,0,0.25);
         }
 
@@ -176,7 +176,7 @@
             outline: 2px solid rgba(243,229,171,0.9); outline-offset: 2px; border-radius: 12px;
             box-shadow: 0 0 0 6px rgba(var(--lux-gold),0.18);
         }
-        input, textarea, select { transition: border-color .2s, box-shadow .2s, background-color .2s; caret-color: #CFA45A; }
+        input, textarea, select { transition: border-color .2s, box-shadow .2s, background-color .2s; caret-color: #D9BE86; }
         input:focus, textarea:focus, select:focus { border-color: rgba(var(--lux-gold),0.7) !important; box-shadow: 0 0 0 3px rgba(var(--lux-gold),0.15); }
 
         /* Perpindahan tab & modal yang halus */
@@ -224,11 +224,11 @@
         .font-display:is(.text-xs, .text-sm, .text-\[8px\], .text-\[9px\], .text-\[10px\], .text-\[11px\]) { font-family: 'Plus Jakarta Sans', sans-serif !important; font-weight: 700; letter-spacing: .02em; }
         h1.font-display { letter-spacing: .16em; font-weight: 700; }
         h2.font-display, h3.font-display { letter-spacing: .005em; }
-        .lux-eyebrow { font: 600 10px/1.4 'Plus Jakarta Sans', sans-serif; letter-spacing: .42em; text-transform: uppercase; color: #CFA45A; }
+        .lux-eyebrow { font: 600 10px/1.4 'Plus Jakarta Sans', sans-serif; letter-spacing: .42em; text-transform: uppercase; color: #D9BE86; }
 
         /* Teks emas yang mengalir pelan */
         .lux-gold-text {
-            background: linear-gradient(100deg, #9A7B1C 0%, #F2DDB0 22%, #CFA45A 42%, #FFF6D5 52%, #B8921F 70%, #F2DDB0 100%);
+            background: linear-gradient(100deg, #9A7B1C 0%, #F3E6C4 22%, #D9BE86 42%, #FFF6D5 52%, #B8921F 70%, #F3E6C4 100%);
             background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent !important;
             animation: lux-goldflow 9s ease-in-out infinite alternate;
         }
@@ -239,7 +239,7 @@
         #luxIntro.lux-out { clip-path: inset(0 0 100% 0); }
         #luxIntro .mono { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(64px, 15vw, 132px); line-height: 1; padding-left: .3em; letter-spacing: .1em; opacity: 0; filter: blur(14px); animation: lux-mono 1.6s .15s cubic-bezier(.22, 1, .36, 1) forwards; }
         @keyframes lux-mono { to { opacity: 1; filter: blur(0); letter-spacing: .3em; } }
-        #luxIntro .rule { width: 0; height: 1px; background: linear-gradient(90deg, transparent, #CFA45A, transparent); animation: lux-rule 1.2s .8s cubic-bezier(.22, 1, .36, 1) forwards; }
+        #luxIntro .rule { width: 0; height: 1px; background: linear-gradient(90deg, transparent, #D9BE86, transparent); animation: lux-rule 1.2s .8s cubic-bezier(.22, 1, .36, 1) forwards; }
         @keyframes lux-rule { to { width: min(340px, 64vw); } }
         #luxIntro .tag { font: 500 10px 'Plus Jakarta Sans', sans-serif; letter-spacing: .55em; padding-left: .55em; text-transform: uppercase; color: #a3a3a3; opacity: 0; animation: lux-fadein .9s 1.2s forwards; }
         #luxIntro .skip { position: absolute; bottom: 28px; font: 500 10px 'Plus Jakarta Sans', sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #525252; opacity: 0; animation: lux-fadein .6s 1.6s forwards; }
@@ -276,56 +276,56 @@
         body.lux-intro-on .lux-hero-fade { animation-delay: 2.95s; }
         body.lux-intro-on .lux-hero-fade-2 { animation-delay: 3.1s; }
         @keyframes lux-lineup { from { transform: translateY(105%); } to { transform: none; } }
-        .lux-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 999px; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #0a0a0a; background: linear-gradient(180deg, #F7E7B4 -30%, #CFA45A 50%, #B08A1E 130%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 12px 30px -12px rgba(207, 164, 90, .8); }
+        .lux-cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 999px; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #0a0a0a; background: linear-gradient(180deg, #F7E7B4 -30%, #D9BE86 50%, #B08A1E 130%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 12px 30px -12px rgba(217, 190, 134, .8); }
         .lux-cta::before { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; transform: skewX(-20deg); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent); animation: lux-sweep 4.5s 1.5s ease-in-out infinite; }
         @keyframes lux-sweep { 0%, 70% { left: -60%; } 100% { left: 130%; } }
-        .lux-ghost { display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 999px; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #F2DDB0; border: 1px solid rgba(207, 164, 90, .45); background: rgba(0, 0, 0, .35); backdrop-filter: blur(10px); transition: background-color .3s, border-color .3s; }
-        .lux-ghost:hover { background: rgba(207, 164, 90, .12); border-color: #CFA45A; }
+        .lux-ghost { display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.6rem; border-radius: 999px; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .22em; text-transform: uppercase; color: #F3E6C4; border: 1px solid rgba(217, 190, 134, .45); background: rgba(0, 0, 0, .35); backdrop-filter: blur(10px); transition: background-color .3s, border-color .3s; }
+        .lux-ghost:hover { background: rgba(217, 190, 134, .12); border-color: #D9BE86; }
 
         /* Kartu member */
         .lux-card-scene { perspective: 1400px; max-width: 380px; margin: 0 auto; cursor: pointer; position: relative; border-radius: 18px; }
         .lux-card { position: relative; aspect-ratio: 1.586; transform-style: preserve-3d; transition: transform 1s cubic-bezier(.22, 1, .36, 1); }
         .lux-card-scene.flipped .lux-card { transform: rotateY(180deg); }
-        .lux-face { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; border: 1px solid rgba(207, 164, 90, .35);
+        .lux-face { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; border: 1px solid rgba(217, 190, 134, .35);
             background: radial-gradient(120% 90% at 0% 0%, #2b2b2b 0%, #0d0d0d 55%, #050505 100%), #0a0a0a;
             box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 1), inset 0 1px 0 rgba(255, 255, 255, .08); }
         .lux-face::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .018) 0 1px, transparent 1px 3px); pointer-events: none; }
         .lux-face.front::after { content: ""; position: absolute; inset: -50%; background: linear-gradient(115deg, transparent 40%, rgba(243, 229, 171, .14) 48%, rgba(255, 255, 255, .22) 50%, rgba(243, 229, 171, .14) 52%, transparent 60%); animation: lux-holo 5s ease-in-out infinite; pointer-events: none; }
         @keyframes lux-holo { 0% { transform: translateX(-30%); } 60%, 100% { transform: translateX(30%); } }
         .lux-face.back { transform: rotateY(180deg); }
-        .lux-chip { width: 44px; height: 34px; border-radius: 7px; background: linear-gradient(135deg, #F2DDB0, #B8921F 60%, #E9D27F); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25); position: relative; }
+        .lux-chip { width: 44px; height: 34px; border-radius: 7px; background: linear-gradient(135deg, #F3E6C4, #B8921F 60%, #E9D27F); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .25); position: relative; }
         .lux-chip::before, .lux-chip::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: rgba(0, 0, 0, .35); top: 35%; }
         .lux-chip::after { top: 65%; }
 
         /* Papan LED & selebrasi */
         .lux-led { background: #050505; border: 1px solid #262626; border-radius: 14px; padding: 18px 14px; text-align: center; overflow: hidden; position: relative; background-image: radial-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px); background-size: 6px 6px; }
-        .lux-led span { font: 800 clamp(18px, 4.5vw, 28px)/1.15 'Plus Jakarta Sans', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #fff7d6; text-shadow: 0 0 6px #FFD86B, 0 0 18px #CFA45A, 0 0 36px rgba(207, 164, 90, .8); word-break: break-word; }
-        #luxCelebration { position: fixed; inset: 0; z-index: 9998; background: radial-gradient(circle at 50% 60%, rgba(40, 28, 5, .85), rgba(0, 0, 0, .96)); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 18px; padding: 24px; opacity: 0; transition: opacity .6s; }
+        .lux-led span { font: 800 clamp(18px, 4.5vw, 28px)/1.15 'Plus Jakarta Sans', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #fff7d6; text-shadow: 0 0 6px #FFD86B, 0 0 18px #D9BE86, 0 0 36px rgba(217, 190, 134, .8); word-break: break-word; }
+        #luxCelebration { position: fixed; inset: 0; z-index: 9998; background: radial-gradient(circle at 50% 60%, rgba(8, 48, 37, .85), rgba(0, 0, 0, .96)); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 18px; padding: 24px; opacity: 0; transition: opacity .6s; }
         #luxCelebration.on { opacity: 1; }
         #luxCelebration .lux-led { animation: lux-flicker 1.4s ease-out both; max-width: 680px; width: 100%; padding: 30px 18px; }
         #luxCelebration .lux-led span { font-size: clamp(26px, 7vw, 56px); }
         @keyframes lux-flicker { 0% { opacity: 0; } 10% { opacity: 1; } 14% { opacity: .2; } 22% { opacity: 1; } 26% { opacity: .4; } 34%, 100% { opacity: 1; } }
 
         /* Concierge */
-        #conciergeFab { position: fixed; left: 20px; bottom: 20px; z-index: 41; display: flex; align-items: center; gap: 10px; padding: 8px 18px 8px 8px; border-radius: 999px; background: rgba(12, 12, 12, .92); backdrop-filter: blur(14px); border: 1px solid rgba(207, 164, 90, .45); box-shadow: 0 18px 40px -16px rgba(0, 0, 0, .95); color: #F2DDB0; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .18em; text-transform: uppercase; }
-        #conciergeFab .orb { width: 36px; height: 36px; border-radius: 999px; display: grid; place-items: center; color: #0a0a0a; background: linear-gradient(180deg, #F7E7B4, #C9A43A); position: relative; }
-        #conciergeFab .orb::after { content: ""; position: absolute; inset: -4px; border-radius: 999px; border: 1px solid rgba(207, 164, 90, .6); animation: lux-orb 2.4s ease-out infinite; }
+        #conciergeFab { position: fixed; left: 20px; bottom: 20px; z-index: 41; display: flex; align-items: center; gap: 10px; padding: 8px 18px 8px 8px; border-radius: 999px; background: rgba(8, 20, 16, .92); backdrop-filter: blur(14px); border: 1px solid rgba(217, 190, 134, .45); box-shadow: 0 18px 40px -16px rgba(0, 0, 0, .95); color: #F3E6C4; font: 700 11px 'Plus Jakarta Sans', sans-serif; letter-spacing: .18em; text-transform: uppercase; }
+        #conciergeFab .orb { width: 36px; height: 36px; border-radius: 999px; display: grid; place-items: center; color: #0a0a0a; background: linear-gradient(180deg, #F7E7B4, #C9AE76); position: relative; }
+        #conciergeFab .orb::after { content: ""; position: absolute; inset: -4px; border-radius: 999px; border: 1px solid rgba(217, 190, 134, .6); animation: lux-orb 2.4s ease-out infinite; }
         @keyframes lux-orb { from { transform: scale(.9); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
         #conciergePanel { position: fixed; z-index: 55; right: 16px; bottom: 16px; top: 16px; width: min(400px, calc(100vw - 32px)); display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; transform: translateX(calc(100% + 24px)); transition: transform .55s cubic-bezier(.22, 1, .36, 1); }
         #conciergePanel.open { transform: none; visibility: visible; transition: transform .55s cubic-bezier(.22, 1, .36, 1); }
         #conciergePanel:not(.open) { visibility: hidden; transition: transform .55s cubic-bezier(.22, 1, .36, 1), visibility 0s .55s; }
         @media (max-width: 640px) { #conciergePanel { right: 8px; left: 8px; bottom: 8px; top: 8px; width: auto; } #conciergeFab span.lbl { display: none; } #conciergeFab { padding: 8px; } }
         .lux-msg-in { animation: lux-card .45s cubic-bezier(.22, 1, .36, 1) both; }
-        .lux-typing i { display: inline-block; width: 6px; height: 6px; margin: 0 2px; border-radius: 99px; background: #CFA45A; animation: lux-dot 1s infinite ease-in-out; }
+        .lux-typing i { display: inline-block; width: 6px; height: 6px; margin: 0 2px; border-radius: 99px; background: #D9BE86; animation: lux-dot 1s infinite ease-in-out; }
         .lux-typing i:nth-child(2) { animation-delay: .15s; } .lux-typing i:nth-child(3) { animation-delay: .3s; }
         @keyframes lux-dot { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
 
         /* Dashboard manajemen */
         .lux-kpi { position: relative; overflow: hidden; }
-        .lux-kpi::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(207, 164, 90, .6), transparent); }
+        .lux-kpi::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(217, 190, 134, .6), transparent); }
         .lux-bar { transition: height .9s cubic-bezier(.22, 1, .36, 1), background-color .2s; }
         .lux-flash { animation: lux-flash 1.2s ease-out; }
-        @keyframes lux-flash { from { background-color: rgba(207, 164, 90, .18); } to { background-color: transparent; } }
+        @keyframes lux-flash { from { background-color: rgba(217, 190, 134, .18); } to { background-color: transparent; } }
 
         @media (prefers-reduced-motion: reduce) {
             #luxIntro { display: none !important; }
@@ -333,62 +333,67 @@
         }
     </style>
 
-    <!-- ===== Tema Signature TAO: lacquer merah, emas perunggu, kisi Asia ===== -->
+    <!-- ===== Tema Monaco Emerald: zamrud, champagne, mutiara, guilloché ===== -->
     <style id="tao-signature">
-        :root { --lux-gold: 207, 164, 90; --tao-red: 200, 16, 46; }
-        body { background-color: #0B0706 !important; color: #F6EFE6; }
-        .glass-panel { background-color: rgba(26, 18, 14, .86) !important; border-color: rgba(207, 164, 90, .2); }
+        :root { --lux-gold: 217, 190, 134; --emerald: 47, 163, 127; }
+        body { background-color: #050C0A !important; color: #F5F1E8; }
+        .glass-panel { background-color: rgba(10, 22, 18, .82) !important; border-color: rgba(217, 190, 134, .18); }
+
+        /* Latar: zamrud dalam, cahaya champagne, dan ukiran guilloché seperti dial jam mewah */
         body::before {
             background:
-                radial-gradient(600px circle at var(--mx) var(--my), rgba(207, 164, 90, .07), transparent 60%),
-                radial-gradient(900px 520px at 8% -12%, rgba(200, 16, 46, .17), transparent 70%),
-                radial-gradient(800px 600px at 105% 108%, rgba(158, 15, 26, .15), transparent 70%);
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' fill='none' stroke='%23D9BE86' stroke-opacity='.045' stroke-width='.7'%3E%3Cg%3E%3Ccircle cx='60' cy='60' r='18'/%3E%3Ccircle cx='60' cy='60' r='30'/%3E%3Ccircle cx='60' cy='60' r='42'/%3E%3Ccircle cx='60' cy='60' r='54'/%3E%3C/g%3E%3Cg%3E%3Ccircle cx='0' cy='0' r='30'/%3E%3Ccircle cx='0' cy='0' r='42'/%3E%3Ccircle cx='120' cy='0' r='30'/%3E%3Ccircle cx='120' cy='0' r='42'/%3E%3Ccircle cx='0' cy='120' r='30'/%3E%3Ccircle cx='0' cy='120' r='42'/%3E%3Ccircle cx='120' cy='120' r='30'/%3E%3Ccircle cx='120' cy='120' r='42'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 120px 120px,
+                radial-gradient(600px circle at var(--mx) var(--my), rgba(217, 190, 134, .07), transparent 60%),
+                radial-gradient(1000px 620px at -5% -15%, rgba(15, 94, 73, .55), transparent 70%),
+                radial-gradient(800px 560px at 108% -5%, rgba(217, 190, 134, .10), transparent 65%),
+                radial-gradient(900px 700px at 100% 112%, rgba(15, 94, 73, .35), transparent 70%),
+                linear-gradient(180deg, #06120E 0%, #050C0A 55%, #040908 100%) !important;
         }
-        header.glass-panel::after { background: linear-gradient(90deg, transparent, rgba(200, 16, 46, .55) 22%, #F2DDB0 50%, rgba(200, 16, 46, .55) 78%, transparent); background-size: 200% 100%; }
+        header.glass-panel::after { background: linear-gradient(90deg, transparent, rgba(47, 163, 127, .5) 22%, #F3E6C4 50%, rgba(47, 163, 127, .5) 78%, transparent); background-size: 200% 100%; }
 
-        /* Tab aktif: pernis merah dengan huruf gading */
-        .tab-btn.bg-taoGold { background-image: linear-gradient(180deg, #E0333F -25%, #B3121E 55%, #7E0C14 135%) !important; color: #FBEBD0 !important; box-shadow: 0 8px 22px -10px rgba(200, 16, 46, .95), inset 0 1px 0 rgba(255, 215, 190, .35), inset 0 -1px 0 rgba(0, 0, 0, .3) !important; }
-        .tab-btn.bg-taoGold i, .tab-btn.bg-taoGold span { color: #FBEBD0 !important; }
+        /* Tab aktif: zamrud dengan huruf mutiara */
+        .tab-btn.bg-taoGold { background-image: linear-gradient(180deg, #3BB58E -25%, #147556 50%, #0B4A37 135%) !important; color: #F5F1E8 !important; box-shadow: 0 8px 22px -10px rgba(20, 117, 86, .95), inset 0 1px 0 rgba(220, 255, 240, .3), inset 0 -1px 0 rgba(0, 0, 0, .3) !important; }
+        .tab-btn.bg-taoGold i, .tab-btn.bg-taoGold span { color: #F5F1E8 !important; }
 
-        /* Kisi jendela Asia */
-        .tao-lattice { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' fill='none' stroke='%23CFA45A' stroke-width='1'%3E%3Cpath d='M0 24H48M24 0V48M12 12H36V36H12Z M12 0V12M36 0V12M12 36V48M36 36V48M0 12H12M0 36H12M36 12H48M36 36H48'/%3E%3C/svg%3E"); background-size: 48px 48px; }
-        .tao-glyph { font-family: 'Noto Serif TC', 'Noto Serif CJK TC', 'Songti TC', serif; font-weight: 700; line-height: 1; color: rgba(200, 16, 46, .16); text-shadow: 0 0 80px rgba(200, 16, 46, .35); user-select: none; pointer-events: none; }
+        /* Guilloché & cincin bezel */
+        .lux-guilloche { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' fill='none' stroke='%23D9BE86' stroke-width='.6'%3E%3Ccircle cx='40' cy='40' r='12'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='28'/%3E%3Ccircle cx='40' cy='40' r='36'/%3E%3Ccircle cx='0' cy='0' r='20'/%3E%3Ccircle cx='0' cy='0' r='28'/%3E%3Ccircle cx='80' cy='0' r='20'/%3E%3Ccircle cx='80' cy='0' r='28'/%3E%3Ccircle cx='0' cy='80' r='20'/%3E%3Ccircle cx='0' cy='80' r='28'/%3E%3Ccircle cx='80' cy='80' r='20'/%3E%3Ccircle cx='80' cy='80' r='28'/%3E%3C/svg%3E"); background-size: 80px 80px; }
+        .lux-bezel { position: absolute; border-radius: 999px; border: 1px solid rgba(217, 190, 134, .22); pointer-events: none; }
+        .lux-bezel.spin { animation: lux-spin 80s linear infinite; }
+        .lux-bezel.spin.rev { animation-direction: reverse; animation-duration: 120s; }
+        .lux-bezel.spin::before { content: ""; position: absolute; top: -3px; left: 50%; width: 6px; height: 6px; margin-left: -3px; border-radius: 99px; background: #F3E6C4; box-shadow: 0 0 14px 3px rgba(243, 230, 196, .6); }
+        .lux-bezel.ticks { border: 0; background: repeating-conic-gradient(from 0deg, rgba(217, 190, 134, .35) 0deg .6deg, transparent .6deg 6deg); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px)); mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px)); }
+        @keyframes lux-spin { to { transform: rotate(360deg); } }
 
-        /* Lampion */
-        .tao-lantern { position: absolute; width: 30px; height: 40px; border-radius: 46% 46% 42% 42% / 52% 52% 48% 48%; background: radial-gradient(circle at 50% 42%, #FF8A5C 0%, #D9222E 42%, #7A0A12 100%); box-shadow: 0 0 26px 6px rgba(255, 90, 60, .35), 0 0 70px 18px rgba(200, 16, 46, .22); animation: tao-sway 6s ease-in-out infinite; transform-origin: 50% -40px; }
-        .tao-lantern::before { content: ""; position: absolute; left: 50%; top: -5px; width: 16px; height: 5px; margin-left: -8px; border-radius: 2px; background: #CFA45A; }
-        .tao-lantern::after { content: ""; position: absolute; left: 50%; bottom: -14px; width: 2px; height: 14px; margin-left: -1px; background: linear-gradient(#CFA45A, transparent); }
-        .tao-lantern i { position: absolute; inset: 22% 18%; border-left: 1px solid rgba(255, 210, 160, .25); border-right: 1px solid rgba(255, 210, 160, .25); border-radius: 50%; }
-        @keyframes tao-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-
-        #luxIntro { background: radial-gradient(60% 50% at 50% 50%, rgba(158, 15, 26, .35), #0B0706 70%); }
-        #luxIntro .tao-glyph { position: absolute; font-size: min(70vh, 80vw); opacity: 0; animation: lux-fadein 1.6s .1s forwards; }
+        #luxIntro { background: radial-gradient(60% 55% at 50% 50%, rgba(15, 94, 73, .5), rgba(5, 12, 10, 0) 72%), #050C0A; }
+        #luxIntro .lux-bezel { left: 50%; top: 50%; transform: translate(-50%, -50%); opacity: 0; animation: lux-fadein 1.4s .2s forwards; }
+        #luxIntro .lux-bezel.spin { animation: lux-fadein 1.4s .2s forwards, lux-spin-c 40s linear infinite; }
+        @keyframes lux-spin-c { from { transform: translate(-50%, -50%) rotate(0); } to { transform: translate(-50%, -50%) rotate(360deg); } }
 
         /* Komponen Signature */
-        .tao-seal { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #FBEBD0; background: linear-gradient(160deg, #D9222E, #7E0C14); box-shadow: inset 0 1px 0 rgba(255, 220, 200, .35), 0 8px 20px -10px rgba(200, 16, 46, .9); }
+        .tao-seal { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #F5F1E8; background: linear-gradient(160deg, #2FA37F, #0B4A37); box-shadow: inset 0 1px 0 rgba(220, 255, 240, .3), 0 8px 20px -10px rgba(20, 117, 86, .9); }
         .tao-eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 18px; }
-        .tao-eq i { width: 3px; border-radius: 2px; background: #CFA45A; animation: tao-eq 1s ease-in-out infinite; }
+        .tao-eq i { width: 3px; border-radius: 2px; background: #D9BE86; animation: tao-eq 1s ease-in-out infinite; }
         .tao-eq i:nth-child(2) { animation-delay: -.4s; } .tao-eq i:nth-child(3) { animation-delay: -.2s; } .tao-eq i:nth-child(4) { animation-delay: -.7s; } .tao-eq i:nth-child(5) { animation-delay: -.5s; }
-        .tao-eq.paused i { animation-play-state: paused; }
         @keyframes tao-eq { 0%, 100% { height: 25%; } 50% { height: 100%; } }
         .tao-ring { transition: stroke-dashoffset 1s cubic-bezier(.22, 1, .36, 1); }
-        #missionToast { position: fixed; top: 84px; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: calc(100vw - 32px); z-index: 70; display: flex; align-items: center; gap: 12px; padding: 10px 18px 10px 10px; border-radius: 999px; background: rgba(20, 13, 10, .95); border: 1px solid rgba(207, 164, 90, .5); box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 1); transform: translateY(-140%); opacity: 0; transition: transform .6s cubic-bezier(.22, 1, .36, 1), opacity .4s; }
+        #missionToast { position: fixed; top: 84px; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: calc(100vw - 32px); z-index: 70; display: flex; align-items: center; gap: 12px; padding: 10px 18px 10px 10px; border-radius: 999px; background: rgba(8, 20, 16, .95); border: 1px solid rgba(217, 190, 134, .5); box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 1); transform: translateY(-140%); opacity: 0; transition: transform .6s cubic-bezier(.22, 1, .36, 1), opacity .4s; }
         #missionToast.on { transform: none; opacity: 1; }
 
         /* Tur fitur */
         #tourLayer { position: fixed; inset: 0; z-index: 9990; }
-        #tourSpot { position: absolute; border-radius: 18px; border: 1px solid rgba(242, 221, 176, .7); box-shadow: 0 0 0 9999px rgba(8, 5, 4, .8), 0 0 40px rgba(207, 164, 90, .35); transition: all .55s cubic-bezier(.22, 1, .36, 1); pointer-events: none; }
+        #tourSpot { position: absolute; border-radius: 18px; border: 1px solid rgba(243, 230, 196, .7); box-shadow: 0 0 0 9999px rgba(3, 9, 7, .8), 0 0 40px rgba(217, 190, 134, .35); transition: all .55s cubic-bezier(.22, 1, .36, 1); pointer-events: none; }
         #tourCard { position: absolute; width: min(360px, calc(100vw - 32px)); transition: top .55s cubic-bezier(.22, 1, .36, 1), left .55s cubic-bezier(.22, 1, .36, 1), opacity .3s; }
 
-        @media (prefers-reduced-motion: reduce) { .tao-lantern, .tao-eq i { animation: none !important; } #tourSpot, #tourCard { transition: none; } }
+        @media (prefers-reduced-motion: reduce) { .lux-bezel.spin, .tao-eq i { animation: none !important; } #luxIntro .lux-bezel { opacity: 1; } #tourSpot, #tourCard { transition: none; } }
     </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-100 bg-[#0B0706] selection:bg-taoGold selection:text-black">
+<body class="min-h-screen flex flex-col text-slate-100 bg-[#050C0A] selection:bg-taoGold selection:text-black">
 
     <!-- Intro pembuka -->
     <div id="luxIntro" aria-hidden="true">
-        <div class="tao-glyph">道</div>
-        <span class="tao-lantern" style="left:14%;top:12%"><i></i></span><span class="tao-lantern" style="right:14%;top:18%;animation-delay:-3s"><i></i></span>
+        <span class="lux-bezel w-[min(78vw,440px)] h-[min(78vw,440px)]"></span>
+        <span class="lux-bezel ticks w-[min(70vw,400px)] h-[min(70vw,400px)]"></span>
+        <span class="lux-bezel spin w-[min(60vw,340px)] h-[min(60vw,340px)]"></span>
         <div class="mono lux-gold-text">TAO</div>
         <div class="rule"></div>
         <div class="tag">Group · Global Hospitality</div>
@@ -402,11 +407,11 @@
     <div id="topSpenderOverlay" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-md hidden flex-col items-center justify-center overflow-hidden transition-opacity duration-1000">
         <div id="rainContainer" class="absolute inset-0 z-0 pointer-events-none"></div>
         <div id="topSpenderText" class="relative z-20 text-center space-y-4 opacity-0 flex flex-col items-center justify-center h-full pb-32 pointer-events-none">
-            <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-yellow-700 via-taoGold to-yellow-700 text-black font-extrabold text-xs md:text-sm tracking-widest uppercase shadow-[0_0_30px_rgba(207,164,90,0.6)] border border-yellow-300">
+            <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-gradient-to-r from-yellow-700 via-taoGold to-yellow-700 text-black font-extrabold text-xs md:text-sm tracking-widest uppercase shadow-[0_0_30px_rgba(217,190,134,0.6)] border border-yellow-300">
                 <i class="fa-solid fa-crown animate-bounce text-lg"></i> Peringatan Top Spender
             </div>
             <h2 id="tsTable" class="font-display text-4xl md:text-6xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">VIP MEJA</h2>
-            <p id="tsItem" class="text-taoGold font-bold text-xl md:text-3xl mt-2 drop-shadow-[0_0_15px_rgba(207,164,90,0.8)] max-w-lg mx-auto">Memesan Item VIP</p>
+            <p id="tsItem" class="text-taoGold font-bold text-xl md:text-3xl mt-2 drop-shadow-[0_0_15px_rgba(217,190,134,0.8)] max-w-lg mx-auto">Memesan Item VIP</p>
             <div class="mt-4 px-5 py-2.5 bg-emerald-950/80 border border-emerald-500 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.4)] inline-block pointer-events-auto">
                 <p id="tsSpend" class="text-emerald-400 font-black text-lg tracking-widest uppercase animate-pulse">Total Spend: $--</p>
             </div>
@@ -504,7 +509,7 @@
     <nav class="bg-neutral-950/90 border-b border-white/5 sticky top-[65px] z-30 overflow-x-auto no-scrollbar">
         <div class="max-w-7xl mx-auto flex items-center gap-1 px-4 py-2 min-w-max">
             <button id="tab-mapTab" onclick="switchTab('mapTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 bg-taoGold text-black transition"><i class="fa-solid fa-list"></i> <span>Portofolio Global</span></button>
-            <button id="tab-myNightTab" onclick="switchTab('myNightTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-moon text-taoRed"></i> <span>Malam Saya</span></button>
+            <button id="tab-myNightTab" onclick="switchTab('myNightTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-moon text-taoEmerald"></i> <span>Malam Saya</span></button>
             <button id="tab-hubTab" onclick="switchTab('hubTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition hidden"><i class="fa-solid fa-fire"></i> <span>Live Hub</span></button>
             <button id="tab-vipTab" onclick="switchTab('vipTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-crown text-taoGold"></i> <span>VIP Ops</span></button>
             <button id="tab-leaderboardTab" onclick="switchTab('leaderboardTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition relative overflow-hidden group">
@@ -530,7 +535,7 @@
 
         <section id="leaderboardTab" class="tab-content hidden space-y-6">
             <!-- Grand Prize Banner -->
-            <div class="relative rounded-2xl overflow-hidden border-2 border-taoGold/50 shadow-[0_0_30px_rgba(207,164,90,0.2)] bg-neutral-900 group">
+            <div class="relative rounded-2xl overflow-hidden border-2 border-taoGold/50 shadow-[0_0_30px_rgba(217,190,134,0.2)] bg-neutral-900 group">
                 <div class="h-64 sm:h-80 bg-cover bg-center transition duration-1000 group-hover:scale-105" style="background-image: url('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=1200&auto=format&fit=crop');"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
@@ -560,11 +565,11 @@
                     </div>
                     <!-- Rank 1 -->
                     <div class="flex flex-col items-center group w-1/3 sm:w-40 relative z-20">
-                        <i class="fa-solid fa-crown text-taoGold text-3xl mb-[-10px] z-20 animate-float drop-shadow-[0_0_10px_rgba(207,164,90,0.8)]"></i>
+                        <i class="fa-solid fa-crown text-taoGold text-3xl mb-[-10px] z-20 animate-float drop-shadow-[0_0_10px_rgba(217,190,134,0.8)]"></i>
                         <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 px-2 py-1 rounded border border-taoGold text-[10px] text-taoGold z-30 pointer-events-none">Total Spend: $320K</div>
-                        <img src="https://ui-avatars.com/api/?name=Richard+S&background=1B1411&color=CFA45A&bold=true&size=128" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-taoGold mb-4 object-cover animate-pulse-glow z-10 bg-neutral-900">
+                        <img src="https://ui-avatars.com/api/?name=Richard+S&background=0D1915&color=D9BE86&bold=true&size=128" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-taoGold mb-4 object-cover animate-pulse-glow z-10 bg-neutral-900">
                         <div class="text-center absolute top-[90px] sm:top-[110px] w-full z-20"><h4 class="text-sm font-bold text-taoGold truncate px-1">Richard S.</h4><p class="text-[10px] text-yellow-200 font-bold">1,250,000 pts</p></div>
-                        <div class="w-full h-32 sm:h-40 bg-gradient-to-b from-yellow-400 via-yellow-600 to-yellow-800 rounded-t-xl relative shadow-[0_0_30px_rgba(207,164,90,0.3)] flex justify-center border-t-2 border-x border-yellow-200"><span class="text-5xl sm:text-6xl font-black text-black/30 mt-4 font-display">1</span><i class="fa-solid fa-trophy absolute bottom-4 text-yellow-300/40 text-4xl"></i></div>
+                        <div class="w-full h-32 sm:h-40 bg-gradient-to-b from-yellow-400 via-yellow-600 to-yellow-800 rounded-t-xl relative shadow-[0_0_30px_rgba(217,190,134,0.3)] flex justify-center border-t-2 border-x border-yellow-200"><span class="text-5xl sm:text-6xl font-black text-black/30 mt-4 font-display">1</span><i class="fa-solid fa-trophy absolute bottom-4 text-yellow-300/40 text-4xl"></i></div>
                     </div>
                     <!-- Rank 3 -->
                     <div class="flex flex-col items-center group w-1/3 sm:w-32 relative">
@@ -653,10 +658,16 @@
                 <div id="luxHeroBg" class="lux-kenburns absolute inset-0 -z-10 bg-cover bg-center"></div>
                 <div class="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/60 to-black/10"></div>
                 <div class="absolute inset-0 -z-10 bg-gradient-to-r from-black/85 via-black/35 to-transparent"></div>
-                <div class="absolute inset-0 -z-10 bg-[radial-gradient(60%_70%_at_85%_20%,rgba(200,16,46,0.35),transparent_70%)]"></div>
-                <div class="absolute inset-0 -z-10 tao-lattice opacity-[0.05] [mask-image:linear-gradient(90deg,transparent,black)]"></div>
-                <div class="tao-glyph absolute -z-10 right-[-2%] top-[-6%] text-[300px] sm:text-[440px] hidden md:block" aria-hidden="true">道</div>
-                <div class="hidden md:block" aria-hidden="true"><span class="tao-lantern" style="right:9%;top:-6px"><i></i></span><span class="tao-lantern" style="right:17%;top:34px;transform:scale(.75);animation-delay:-2s"><i></i></span><span class="tao-lantern" style="right:4%;top:70px;animation-delay:-4s;width:24px;height:32px"><i></i></span></div>
+                <div class="absolute inset-0 -z-10 bg-[radial-gradient(55%_70%_at_82%_30%,rgba(47,163,127,0.30),transparent_70%)]"></div>
+                <div class="absolute inset-0 -z-10 bg-[radial-gradient(40%_50%_at_95%_0%,rgba(243,230,196,0.12),transparent_70%)]"></div>
+                <div class="absolute inset-0 -z-10 lux-guilloche opacity-[0.10] [mask-image:radial-gradient(60%_80%_at_85%_35%,black,transparent)]"></div>
+                <div class="hidden md:block absolute -z-10 right-[4%] top-1/2 -translate-y-1/2 w-[420px] h-[420px]" aria-hidden="true">
+                    <span class="lux-bezel inset-0"></span>
+                    <span class="lux-bezel ticks inset-[18px]"></span>
+                    <span class="lux-bezel spin inset-[56px]"></span>
+                    <span class="lux-bezel spin rev inset-[110px] !border-taoEmerald/40"></span>
+                    <span class="absolute inset-[150px] rounded-full bg-[radial-gradient(circle,rgba(47,163,127,0.35),transparent_70%)]"></span>
+                </div>
                 <div class="relative p-6 sm:p-10 w-full">
                     <p class="lux-eyebrow lux-hero-fade">TAO Group Hospitality · Members Only</p>
                     <h2 class="font-display text-[2.6rem] sm:text-6xl lg:text-7xl leading-[1.02] text-white max-w-3xl mt-3">
@@ -667,7 +678,7 @@
                     <div class="lux-hero-fade flex flex-wrap gap-3 mt-6">
                         <button onclick="luxScrollToVenues()" class="lux-cta">Reservasi Meja <i class="fa-solid fa-arrow-right"></i></button>
                         <button onclick="openMemberCard()" class="lux-ghost"><i class="fa-solid fa-id-card"></i> Kartu Member</button>
-                        <button onclick="startTour()" class="lux-ghost !border-taoRed/60 !text-white"><i class="fa-solid fa-route text-taoRed"></i> Tur 60 Detik</button>
+                        <button onclick="startTour()" class="lux-ghost !border-taoEmerald/60 !text-white"><i class="fa-solid fa-route text-taoEmerald"></i> Tur 60 Detik</button>
                     </div>
                     <div id="luxHeroStats" class="lux-hero-fade-2 grid grid-cols-2 sm:grid-cols-4 gap-px mt-8 bg-white/10 rounded-2xl overflow-hidden border border-white/10 max-w-3xl"></div>
                 </div>
@@ -753,7 +764,7 @@
                         </div>
                     </div>
                     <div id="bookingControlsArea" class="flex items-center gap-4 w-full md:w-auto">
-                        <button id="btnRevealHeatmap" onclick="revealHeatmapArea()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-taoGold to-amber-500 text-black font-extrabold text-[10px] uppercase hover:brightness-110 shadow-[0_0_15px_rgba(207,164,90,0.4)] flex items-center gap-1.5 transition whitespace-nowrap">
+                        <button id="btnRevealHeatmap" onclick="revealHeatmapArea()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-taoGold to-amber-500 text-black font-extrabold text-[10px] uppercase hover:brightness-110 shadow-[0_0_15px_rgba(217,190,134,0.4)] flex items-center gap-1.5 transition whitespace-nowrap">
                             <i class="fa-solid fa-map-location-dot"></i> Pilih & Reservasi Meja
                         </button>
                         <div id="runningBillTracker" class="hidden flex items-center gap-4 w-full md:w-auto">
@@ -784,7 +795,7 @@
 
                      <!-- Mega Club Layout -->
                      <div class="bg-neutral-950 p-6 rounded-xl border border-neutral-800 space-y-6 shadow-inner relative overflow-hidden">
-                         <div class="w-full py-3 bg-gradient-to-r from-taoGold/5 via-taoGold/20 to-taoGold/5 border border-taoGold/30 rounded-lg text-taoGold font-bold text-xs uppercase tracking-widest text-center shadow-[0_0_15px_rgba(207,164,90,0.1)]">
+                         <div class="w-full py-3 bg-gradient-to-r from-taoGold/5 via-taoGold/20 to-taoGold/5 border border-taoGold/30 rounded-lg text-taoGold font-bold text-xs uppercase tracking-widest text-center shadow-[0_0_15px_rgba(217,190,134,0.1)]">
                              <i class="fa-solid fa-compact-disc animate-spin mr-2"></i> Main Stage & DJ Booth
                          </div>
 
@@ -1005,7 +1016,7 @@
                 </div>
 
                 <div id="bottleShowBanner" onclick="openBottleShow()" data-tilt="3" class="lux-tilt relative mb-6 rounded-2xl overflow-hidden border border-taoGold/40 cursor-pointer">
-                    <div class="absolute inset-0 bg-[radial-gradient(120%_140%_at_0%_0%,#3b2a07_0%,#0b0b0b_60%)]"></div>
+                    <div class="absolute inset-0 bg-[radial-gradient(120%_140%_at_0%_0%,#0F4A3A_0%,#07100D_62%)]"></div>
                     <div class="relative p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 shrink-0 rounded-full grid place-items-center bg-taoGold/15 border border-taoGold/50 text-taoGold text-xl"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
@@ -1690,10 +1701,10 @@
                     </div>
                     <div class="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar pr-1">
                         <!-- Black Card VIP -->
-                        <div class="p-4 bg-gradient-to-b from-neutral-900 to-black border border-taoGold rounded-xl relative overflow-hidden group shadow-[0_0_15px_rgba(207,164,90,0.2)]">
+                        <div class="p-4 bg-gradient-to-b from-neutral-900 to-black border border-taoGold rounded-xl relative overflow-hidden group shadow-[0_0_15px_rgba(217,190,134,0.2)]">
                             <div class="absolute top-0 right-0 bg-taoGold text-black text-[9px] font-bold px-3 py-1 rounded-bl-lg shadow-md z-20 uppercase tracking-widest">Status Anda</div>
                             <div class="flex items-center gap-3 mb-3 relative z-10">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-800 to-black border border-taoGold flex items-center justify-center text-taoGold font-bold shadow-[0_0_15px_rgba(207,164,90,0.5)]"><i class="fa-solid fa-gem"></i></div>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-800 to-black border border-taoGold flex items-center justify-center text-taoGold font-bold shadow-[0_0_15px_rgba(217,190,134,0.5)]"><i class="fa-solid fa-gem"></i></div>
                                 <div><h4 class="text-sm font-bold text-taoGold font-display tracking-wider">Black Card VIP</h4><span class="text-[9px] text-gray-400 uppercase tracking-widest">Akses Tanpa Batas</span></div>
                             </div>
                             <ul class="text-xs text-gray-200 space-y-1.5 ml-1 relative z-10">
@@ -1794,7 +1805,7 @@
                                 <label class="cursor-pointer"><input type="radio" name="vibe" value="social" class="peer sr-only"><div class="p-2 rounded-lg border border-neutral-700 bg-neutral-900 peer-checked:border-taoGold peer-checked:bg-taoGold/10 peer-checked:text-taoGold text-[10px] text-gray-400 transition flex items-center justify-between"><span>Social Lounge (Santai)</span> <i class="fa-solid fa-martini-glass text-xs"></i></div></label>
                             </div>
                         </div>
-                        <button type="submit" class="w-full py-3 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase hover:brightness-110 transition shadow-[0_0_15px_rgba(207,164,90,0.3)] mt-2">Masuk ke Sistem Kelab</button>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-taoGold text-black font-extrabold text-xs uppercase hover:brightness-110 transition shadow-[0_0_15px_rgba(217,190,134,0.3)] mt-2">Masuk ke Sistem Kelab</button>
                     </form>
                 </div>
             `);
@@ -1868,7 +1879,7 @@
                 const isWinner = stat.pct === highestPct;
                 let borderClass = 'border-neutral-800', textClass = 'text-gray-300', barColor = 'bg-neutral-600', badgeHtml = '';
                 if (isWinner) {
-                    borderClass = 'border-taoGold/60 shadow-[0_0_15px_rgba(207,164,90,0.15)] bg-taoGold/5';
+                    borderClass = 'border-taoGold/60 shadow-[0_0_15px_rgba(217,190,134,0.15)] bg-taoGold/5';
                     textClass = 'text-taoGold font-extrabold';
                     barColor = 'bg-gradient-to-r from-yellow-500 to-taoGold shadow-[0_0_8px_#d4af37]';
                     badgeHtml += `<span class="absolute -top-2.5 -right-2 text-[9px] bg-gradient-to-r from-yellow-500 to-taoGold text-black px-2 py-0.5 rounded shadow-lg font-bold flex items-center gap-1 z-10"><i class="fa-solid fa-compact-disc animate-spin"></i> Sedang Diputar</span>`;
@@ -1930,7 +1941,7 @@
                 for(let i = 0; i < currentPax; i++) {
                     const name = mockNames[i % mockNames.length];
                     const isHost = i === 0;
-                    profilesHtml += `<div class="flex items-center justify-between p-2 rounded-lg bg-neutral-900/60 border border-neutral-800 hover:border-taoGold/30 transition cursor-pointer" onclick="viewGuestProfile('${name}', '${tableCode}')"><div class="flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=1B1411&color=CFA45A&bold=true" class="w-8 h-8 rounded-full border border-taoGold/40 shadow-sm"><div><p class="text-xs font-bold text-white hover:text-taoGold transition">${name}</p><p class="text-[9px] ${isHost ? 'text-taoGold font-bold' : 'text-gray-400'}">${isHost ? '<i class="fa-solid fa-crown mr-0.5"></i> Host Meja' : 'Tamu Undangan'}</p></div></div><button onclick="event.stopPropagation(); handleTableAction('message', '${tableCode}')" class="w-6 h-6 rounded-full bg-neutral-800 text-gray-400 hover:text-taoGold flex items-center justify-center transition text-[10px]"><i class="fa-solid fa-paper-plane"></i></button></div>`;
+                    profilesHtml += `<div class="flex items-center justify-between p-2 rounded-lg bg-neutral-900/60 border border-neutral-800 hover:border-taoGold/30 transition cursor-pointer" onclick="viewGuestProfile('${name}', '${tableCode}')"><div class="flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${name.replace(' ', '+')}&background=0D1915&color=D9BE86&bold=true" class="w-8 h-8 rounded-full border border-taoGold/40 shadow-sm"><div><p class="text-xs font-bold text-white hover:text-taoGold transition">${name}</p><p class="text-[9px] ${isHost ? 'text-taoGold font-bold' : 'text-gray-400'}">${isHost ? '<i class="fa-solid fa-crown mr-0.5"></i> Host Meja' : 'Tamu Undangan'}</p></div></div><button onclick="event.stopPropagation(); handleTableAction('message', '${tableCode}')" class="w-6 h-6 rounded-full bg-neutral-800 text-gray-400 hover:text-taoGold flex items-center justify-center transition text-[10px]"><i class="fa-solid fa-paper-plane"></i></button></div>`;
                 }
                 let vibeBadgeHtml = '';
                 if (vibeKey && vibeData[vibeKey]) {
@@ -2135,15 +2146,15 @@
         // --- STREAMING_CHUNK: Friends & Encrypted Chat ---
         function viewGuestProfile(nm, tbl) {
             let f = vipFriends.find(x=>x.name===nm); if(!f) { f={id:'g-'+Date.now(), name:nm, status:'Online', tier:'Guest', avatar:nm.replace(' ','+')}; vipFriends.push(f); }
-            showModal(`<div class="space-y-4 text-center"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=1B1411&color=CFA45A" class="w-16 h-16 rounded-full mx-auto"><h3 class="font-bold text-white text-lg">${nm}</h3><div class="grid grid-cols-3 gap-2"><button onclick="addFriendFromProfile('${nm}')" class="p-2 bg-neutral-900 border border-neutral-700 text-emerald-400 rounded text-[9px]"><i class="fa-solid fa-user-plus block mb-1"></i>Tambah</button><button onclick="openDirectMessage('${f.id}')" class="p-2 bg-neutral-900 border border-neutral-700 text-cyan-400 rounded text-[9px]"><i class="fa-solid fa-comment block mb-1"></i>Chat</button><button onclick="handleTableAction('drink','${tbl}')" class="p-2 bg-neutral-900 border border-neutral-700 text-taoGold rounded text-[9px]"><i class="fa-solid fa-martini-glass block mb-1"></i>Kirim</button></div></div>`);
+            showModal(`<div class="space-y-4 text-center"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=0D1915&color=D9BE86" class="w-16 h-16 rounded-full mx-auto"><h3 class="font-bold text-white text-lg">${nm}</h3><div class="grid grid-cols-3 gap-2"><button onclick="addFriendFromProfile('${nm}')" class="p-2 bg-neutral-900 border border-neutral-700 text-emerald-400 rounded text-[9px]"><i class="fa-solid fa-user-plus block mb-1"></i>Tambah</button><button onclick="openDirectMessage('${f.id}')" class="p-2 bg-neutral-900 border border-neutral-700 text-cyan-400 rounded text-[9px]"><i class="fa-solid fa-comment block mb-1"></i>Chat</button><button onclick="handleTableAction('drink','${tbl}')" class="p-2 bg-neutral-900 border border-neutral-700 text-taoGold rounded text-[9px]"><i class="fa-solid fa-martini-glass block mb-1"></i>Kirim</button></div></div>`);
         }
         function addFriendFromProfile(nm) { closeModal(); showToast(`Permintaan ke ${nm} terkirim!`, "success"); }
         function openFriendList() {
-            showModal(`<div class="space-y-4"><h3 class="text-white font-bold"><i class="fa-solid fa-user-group text-taoGold"></i> Daftar Teman</h3><div class="space-y-2">${vipFriends.map(f=>`<div onclick="openFriendProfile('${f.id}')" class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl flex items-center justify-between cursor-pointer hover:border-taoGold"><div class="flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=1B1411&color=CFA45A" class="w-8 h-8 rounded-full"><div><h4 class="text-white text-xs font-bold">${f.name}</h4><p class="text-[9px] text-emerald-400">${f.status}</p></div></div></div>`).join('')}</div></div>`);
+            showModal(`<div class="space-y-4"><h3 class="text-white font-bold"><i class="fa-solid fa-user-group text-taoGold"></i> Daftar Teman</h3><div class="space-y-2">${vipFriends.map(f=>`<div onclick="openFriendProfile('${f.id}')" class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl flex items-center justify-between cursor-pointer hover:border-taoGold"><div class="flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=0D1915&color=D9BE86" class="w-8 h-8 rounded-full"><div><h4 class="text-white text-xs font-bold">${f.name}</h4><p class="text-[9px] text-emerald-400">${f.status}</p></div></div></div>`).join('')}</div></div>`);
         }
         function openFriendProfile(id) {
             const f = vipFriends.find(x=>x.id===id); if(!f)return;
-            showModal(`<div class="space-y-4 text-center"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=1B1411&color=CFA45A" class="w-20 h-20 rounded-full mx-auto"><h3 class="font-bold text-white text-xl">${f.name}</h3><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="openDirectMessage('${f.id}')" class="p-3 bg-neutral-800 text-cyan-400 text-xs rounded-xl font-bold">Message</button><button onclick="inviteFriendToTable('${f.id}')" class="p-3 bg-taoGold text-black text-xs rounded-xl font-bold">Undang Meja</button></div></div>`);
+            showModal(`<div class="space-y-4 text-center"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=0D1915&color=D9BE86" class="w-20 h-20 rounded-full mx-auto"><h3 class="font-bold text-white text-xl">${f.name}</h3><div class="grid grid-cols-2 gap-2 mt-4"><button onclick="openDirectMessage('${f.id}')" class="p-3 bg-neutral-800 text-cyan-400 text-xs rounded-xl font-bold">Message</button><button onclick="inviteFriendToTable('${f.id}')" class="p-3 bg-taoGold text-black text-xs rounded-xl font-bold">Undang Meja</button></div></div>`);
         }
         function inviteFriendToTable(id) { if(!userHasTable){showToast("Pesan meja dulu!","error");return;} const f=vipFriends.find(x=>x.id===id); closeModal(); showToast(`Undangan terkirim ke ${f.name}`); setTimeout(()=>addNotification("Undangan Diterima",`${f.name} menuju meja Anda.`),4000); }
         function openCompanionInvite() {
@@ -2155,7 +2166,7 @@
         function openInbox() {
             const b = document.getElementById('inboxNotifBadge'); if(b) b.classList.add('hidden');
             const ids = Object.keys(dmHistory);
-            showModal(`<div class="space-y-4"><h3 class="text-white font-bold"><i class="fa-solid fa-envelope text-taoGold"></i> Inbox</h3><div class="space-y-2">${ids.length>0?ids.map(id=>{const f=vipFriends.find(x=>x.id===id); return f?`<div onclick="openDirectMessage('${id}')" class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl cursor-pointer flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=1B1411&color=CFA45A" class="w-8 h-8 rounded-full"><span class="text-white text-xs font-bold">${f.name}</span></div>`:'';}).join(''):'<div class="text-center py-4 text-gray-500 text-xs">Inbox Kosong</div>'}</div></div>`);
+            showModal(`<div class="space-y-4"><h3 class="text-white font-bold"><i class="fa-solid fa-envelope text-taoGold"></i> Inbox</h3><div class="space-y-2">${ids.length>0?ids.map(id=>{const f=vipFriends.find(x=>x.id===id); return f?`<div onclick="openDirectMessage('${id}')" class="p-3 bg-neutral-900 border border-neutral-800 rounded-xl cursor-pointer flex items-center gap-3"><img src="https://ui-avatars.com/api/?name=${f.avatar}&background=0D1915&color=D9BE86" class="w-8 h-8 rounded-full"><span class="text-white text-xs font-bold">${f.name}</span></div>`:'';}).join(''):'<div class="text-center py-4 text-gray-500 text-xs">Inbox Kosong</div>'}</div></div>`);
         }
         function openDirectMessage(id) {
             const f = vipFriends.find(x=>x.id===id); if(!f)return;
@@ -2925,7 +2936,7 @@
                 <p class="text-[11px] text-gray-400">Ketuk saat cincin menyentuh lingkaran emas. ${PULSE_BEATS} ketukan.</p>
                 <div class="flex justify-center gap-6 text-xs"><span class="text-gray-400">Skor <b id="pScore" class="text-white font-display">0</b></span><span class="text-gray-400">Combo <b id="pCombo" class="text-cyan-300 font-display">0</b></span><span class="text-gray-400">Ketukan <b id="pBeat" class="text-white font-display">0/${PULSE_BEATS}</b></span></div>
                 <button id="pulsePad" onpointerdown="pulseTap(event)" aria-label="Ketuk mengikuti irama" class="relative w-56 h-56 mx-auto rounded-full bg-black border border-neutral-800 flex items-center justify-center touch-manipulation">
-                    <span class="absolute w-32 h-32 rounded-full border-4 border-taoGold/80 shadow-[0_0_25px_rgba(207,164,90,0.35)]"></span>
+                    <span class="absolute w-32 h-32 rounded-full border-4 border-taoGold/80 shadow-[0_0_25px_rgba(217,190,134,0.35)]"></span>
                     <span id="pulseRing" class="absolute w-32 h-32 rounded-full border-2 border-cyan-300" style="transform:scale(0)"></span>
                     <span id="pulseJudge" class="relative text-white font-black text-sm tracking-widest">SIAP</span>
                 </button>
@@ -3215,7 +3226,7 @@
         /* ---------- Hero ---------- */
         function renderLuxHero() {
             const bg = document.getElementById('luxHeroBg');
-            if (bg) bg.style.backgroundImage = `url('${brandImageMapping.TAO.replace('w=600', 'w=1600')}'), radial-gradient(120% 90% at 70% 30%, #3a2a08, #050505 70%)`;
+            if (bg) bg.style.backgroundImage = `url('${brandImageMapping.TAO.replace('w=600', 'w=1600')}'), radial-gradient(120% 90% at 70% 30%, #0F4A3A, #050C0A 70%)`;
             const cities = new Set(taoOutletsData.map(o => o.city)).size;
             const guests = taoOutletsData.reduce((s, o) => s + (parseInt(String(o.crowd).split('/')[0].replace(/[^0-9]/g, ''), 10) || 0), 0);
             const stats = [[taoOutletsData.length, 'Venue Global', ''], [cities, 'Kota', ''], [guests, 'Tamu Malam Ini', ''], [24, 'Concierge', '/7']];
@@ -3349,7 +3360,7 @@
                     if (p.life <= 0 || p.y > innerHeight + 20) { parts.splice(i, 1); continue; }
                     ctx.globalAlpha = Math.max(0, p.life);
                     if (p.spark) { ctx.fillStyle = `hsl(45, 100%, ${70 + p.life * 25}%)`; ctx.fillRect(p.x, p.y, p.w, p.h); }
-                    else { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.hue ? '#CFA45A' : '#F2DDB0'; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore(); }
+                    else { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.hue ? '#D9BE86' : '#F3E6C4'; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore(); }
                 }
                 ctx.globalAlpha = 1;
                 if ((el > 8000 && !parts.length) || el > 10000) return closeCelebration();
@@ -3475,7 +3486,7 @@
                             <div class="absolute left-10 right-0 top-0 bottom-0 flex items-end justify-around gap-[2px]">
                                 ${mgr.hourly.map((v, i) => `<div class="flex-1 h-full flex flex-col justify-end items-center relative group" tabindex="0" aria-label="${mgrHours[i]}: $${v.toLocaleString()}${i === mgr.hourly.length - 1 ? ' (berjalan)' : ''}" onmouseenter="mgrTip(${i}, this)" onfocus="mgrTip(${i}, this)" onmouseleave="mgrTip(-1)" onblur="mgrTip(-1)">
                                     ${i === peak ? `<span class="text-[10px] font-bold text-white mb-1">$${(v / 1000).toFixed(1)}k</span>` : ''}
-                                    <div class="lux-bar w-full max-w-[24px] rounded-t ${i === mgr.hourly.length - 1 ? 'bg-taoGold/55' : 'bg-[#C9A43A]'} group-hover:bg-taoGoldLight" style="height:${(v / top * 100).toFixed(1)}%"></div>
+                                    <div class="lux-bar w-full max-w-[24px] rounded-t ${i === mgr.hourly.length - 1 ? 'bg-taoGold/55' : 'bg-[#C9AE76]'} group-hover:bg-taoGoldLight" style="height:${(v / top * 100).toFixed(1)}%"></div>
                                 </div>`).join('')}
                             </div>
                             <div id="mgrTipBox" class="hidden absolute z-10 -translate-x-1/2 -translate-y-full px-3 py-2 rounded-lg bg-black/90 border border-white/10 text-[11px] text-white whitespace-nowrap pointer-events-none"></div>
@@ -3484,7 +3495,7 @@
                     </div>
                     <div class="lg:col-span-2 glass-panel rounded-2xl p-5 border border-neutral-800">
                         <div class="flex justify-between items-baseline"><h3 class="text-sm font-bold text-white">Komposisi pendapatan</h3><span class="text-[10px] text-gray-500">USD</span></div>
-                        <div class="space-y-3.5 mt-5">${mixRows.map(([k, v]) => `<div><div class="flex justify-between text-[11px] mb-1.5"><span class="text-gray-300">${k}</span><span class="text-white font-bold">$${v.toLocaleString()}</span></div><div class="h-2.5 bg-white/[0.04] rounded-r"><div class="lux-bar h-full bg-[#C9A43A] rounded-r" style="width:${(v / mixMax * 100).toFixed(1)}%"></div></div></div>`).join('')}</div>
+                        <div class="space-y-3.5 mt-5">${mixRows.map(([k, v]) => `<div><div class="flex justify-between text-[11px] mb-1.5"><span class="text-gray-300">${k}</span><span class="text-white font-bold">$${v.toLocaleString()}</span></div><div class="h-2.5 bg-white/[0.04] rounded-r"><div class="lux-bar h-full bg-[#C9AE76] rounded-r" style="width:${(v / mixMax * 100).toFixed(1)}%"></div></div></div>`).join('')}</div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -3670,7 +3681,7 @@
             const C = 2 * Math.PI * 52, frac = doorQ.ready ? 1 : 1 - doorQ.pos / doorQ.total;
             box.innerHTML = `<div class="flex items-center gap-5">
                     <div class="relative w-32 h-32 shrink-0">
-                        <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90"><circle cx="60" cy="60" r="52" stroke="rgba(255,255,255,.07)" stroke-width="6" fill="none"/><circle class="tao-ring" cx="60" cy="60" r="52" stroke="${doorQ.ready ? '#34D399' : '#CFA45A'}" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - frac)).toFixed(1)}"/></svg>
+                        <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90"><circle cx="60" cy="60" r="52" stroke="rgba(255,255,255,.07)" stroke-width="6" fill="none"/><circle class="tao-ring" cx="60" cy="60" r="52" stroke="${doorQ.ready ? '#34D399' : '#D9BE86'}" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - frac)).toFixed(1)}"/></svg>
                         <div class="absolute inset-0 grid place-items-center text-center">${doorQ.ready ? '<div><i class="fa-solid fa-check text-emerald-400 text-2xl"></i><p class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest mt-1">Giliran Anda</p></div>' : `<div><p class="font-display text-5xl text-white leading-none">${doorQ.pos}</p><p class="text-[9px] text-gray-400 uppercase tracking-widest mt-1">di depan Anda</p></div>`}</div>
                     </div>
                     <div class="min-w-0 space-y-1.5">
@@ -3697,12 +3708,12 @@
             const box = document.getElementById('npCard'); if (!box) return;
             const tr = setlist[np.i], nx = [1, 2].map(k => setlist[(np.i + k) % setlist.length]);
             box.innerHTML = `<div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-2xl shrink-0 grid place-items-center tao-lattice bg-[#2A1410] border border-taoGold/30 relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-br from-taoRed/40 to-transparent"></div><span class="tao-eq relative"><i></i><i></i><i></i><i></i><i></i></span></div>
-                    <div class="min-w-0 flex-1"><p class="text-[9px] font-bold text-taoRed uppercase tracking-[0.3em]"><span class="inline-block w-1.5 h-1.5 rounded-full bg-taoRed animate-pulse mr-1"></span>Live dari DJ booth</p>
+                    <div class="w-16 h-16 rounded-2xl shrink-0 grid place-items-center lux-guilloche bg-[#0F2A22] border border-taoGold/30 relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-br from-taoEmerald/40 to-transparent"></div><span class="tao-eq relative"><i></i><i></i><i></i><i></i><i></i></span></div>
+                    <div class="min-w-0 flex-1"><p class="text-[9px] font-bold text-taoEmerald uppercase tracking-[0.3em]"><span class="inline-block w-1.5 h-1.5 rounded-full bg-taoEmerald animate-pulse mr-1"></span>Live dari DJ booth</p>
                     <p class="text-base font-bold text-white truncate mt-1">${tr.t}</p><p class="text-xs text-gray-400 truncate">${tr.a}</p></div>
                     <button onclick="likeTrack()" aria-label="Kirim energi ke DJ" class="w-10 h-10 rounded-full border ${np.liked[np.i] ? 'border-taoRed bg-taoRed/20 text-taoRed' : 'border-neutral-700 text-gray-400'} hover:text-taoRed transition"><i class="fa-${np.liked[np.i] ? 'solid' : 'regular'} fa-heart"></i></button>
                 </div>
-                <div class="mt-4"><div class="h-1 bg-white/10 rounded-full overflow-hidden"><div id="npBar" class="h-full bg-gradient-to-r from-taoRed to-taoGold rounded-full" style="width:${(np.pos / tr.d * 100).toFixed(1)}%"></div></div>
+                <div class="mt-4"><div class="h-1 bg-white/10 rounded-full overflow-hidden"><div id="npBar" class="h-full bg-gradient-to-r from-taoEmerald to-taoGold rounded-full" style="width:${(np.pos / tr.d * 100).toFixed(1)}%"></div></div>
                 <div class="flex justify-between text-[10px] text-gray-500 mt-1.5"><span id="npTime">${mmss(np.pos)}</span><span>${mmss(tr.d)}</span></div></div>
                 <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-3 mb-2">Berikutnya</p>
                 ${nx.map(x => `<div class="flex justify-between text-[11px] py-1"><span class="text-gray-300 truncate pr-2">${x.t}</span><span class="text-gray-500 truncate">${x.a}</span></div>`).join('')}
@@ -3754,13 +3765,13 @@
         function sigGuestNote() {
             const p = sig.prefs;
             const fav = sigFavDrink();
-            const body = p ? `<div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full grid place-items-center bg-taoRed text-white text-[11px] font-bold">${esc((p.name || 'T').slice(0, 1).toUpperCase())}</div><div><p class="text-xs text-white font-semibold">${esc(p.name || 'Tamu Black Card')}</p><p class="text-[10px] text-gray-500">${userHasTable ? 'Meja ' + esc(myAssignedTable) : 'Belum di meja'} · ${esc(p.music)}</p></div></div>
+            const body = p ? `<div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full grid place-items-center bg-taoEmeraldDeep text-white text-[11px] font-bold">${esc((p.name || 'T').slice(0, 1).toUpperCase())}</div><div><p class="text-xs text-white font-semibold">${esc(p.name || 'Tamu Black Card')}</p><p class="text-[10px] text-gray-500">${userHasTable ? 'Meja ' + esc(myAssignedTable) : 'Belum di meja'} · ${esc(p.music)}</p></div></div>
                 <ul class="mt-3 space-y-1.5 text-[11px] text-gray-300">
                     ${fav ? `<li><i class="fa-solid fa-wine-bottle text-taoGold w-4"></i> Favorit: ${esc(fav.name)}</li>` : ''}
                     ${p.allergies.length ? `<li class="text-rose-200"><i class="fa-solid fa-triangle-exclamation text-taoRed w-4"></i> Alergi: ${p.allergies.map(esc).join(', ')}</li>` : ''}
                     ${p.bday ? `<li><i class="fa-solid fa-cake-candles text-taoGold w-4"></i> Ulang tahun: ${new Date(p.bday + 'T00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'long' })}</li>` : ''}
                 </ul>` : `<p class="text-[11px] text-gray-500">Belum ada profil tamu yang tersinkron. Profil muncul di sini saat tamu mengisi preferensi di tab <b class="text-gray-300">Malam Saya</b>.</p>`;
-            return `<div class="glass-panel rounded-2xl p-5 border border-taoRed/30"><h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-address-card text-taoRed"></i> Catatan tamu untuk host</h3>${body}</div>`;
+            return `<div class="glass-panel rounded-2xl p-5 border border-taoEmerald/30"><h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-address-card text-taoEmerald"></i> Catatan tamu untuk host</h3>${body}</div>`;
         }
 
         /* ---------- Rekap malam ---------- */
@@ -3776,9 +3787,8 @@
             const stats = [[money(spend), 'Total belanja'], [items, 'Item dipesan'], [shows, 'Bottle Show'], [`${done}/${MISSIONS.length}`, 'Misi selesai'], [(sig.best.trivia || 0).toLocaleString(), 'Skor trivia'], ['+' + sig.earned.toLocaleString(), 'T-Gold misi']];
             const shareText = `Malam saya di ${currentOutletData ? currentOutletData.name : 'TAO'}: ${items} item, ${shows} Bottle Show, ${done}/${MISSIONS.length} misi selesai. #TAOGroup`;
             showModal(`<div class="space-y-4">
-                <div id="recapCard" class="relative rounded-3xl overflow-hidden border border-taoGold/40 bg-[radial-gradient(120%_80%_at_50%_0%,#5A0B12_0%,#140A08_60%,#0B0706_100%)] p-6 text-center">
-                    <div class="absolute inset-0 tao-lattice opacity-[0.05]"></div>
-                    <div class="tao-glyph absolute -right-4 -top-6 text-[160px] opacity-60" aria-hidden="true">道</div>
+                <div id="recapCard" class="relative rounded-3xl overflow-hidden border border-taoGold/40 bg-[radial-gradient(120%_80%_at_50%_0%,#145C47_0%,#0A1713_60%,#050C0A_100%)] p-6 text-center">
+                    <div class="absolute inset-0 lux-guilloche opacity-[0.07]"></div>
                     <div class="relative">
                         <p class="lux-eyebrow">Rekap Malam Anda</p>
                         <h3 class="font-display text-4xl text-white mt-2 leading-tight">${name ? esc(name) + ', ' : ''}<span class="italic lux-gold-text">malam yang luar biasa.</span></h3>
@@ -3805,9 +3815,9 @@
             const h = new Date().getHours(), greet = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam';
             const name = sigName();
             root.innerHTML = `
-                <div class="relative rounded-3xl overflow-hidden border border-taoRed/30 p-6 sm:p-8 bg-[radial-gradient(90%_120%_at_0%_0%,#4A0A10_0%,#160C09_55%,#0B0706_100%)]">
-                    <div class="absolute inset-0 tao-lattice opacity-[0.05]"></div>
-                    <div class="tao-glyph absolute right-4 -top-6 text-[180px] sm:text-[240px] hidden sm:block" aria-hidden="true">道</div>
+                <div class="relative rounded-3xl overflow-hidden border border-taoGold/25 p-6 sm:p-8 bg-[radial-gradient(90%_120%_at_0%_0%,#0F5E49_0%,#0A1713_55%,#050C0A_100%)]">
+                    <div class="absolute inset-0 lux-guilloche opacity-[0.08] [mask-image:linear-gradient(90deg,transparent,black)]"></div>
+                    <div class="hidden sm:block absolute -right-16 top-1/2 -translate-y-1/2 w-[300px] h-[300px]" aria-hidden="true"><span class="lux-bezel inset-0"></span><span class="lux-bezel ticks inset-[16px]"></span><span class="lux-bezel spin inset-[48px]"></span></div>
                     <div class="relative flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div><p class="lux-eyebrow">Malam Saya</p><h2 class="font-display text-4xl sm:text-5xl text-white mt-2 leading-tight">${greet}${name ? ', <span class="italic lux-gold-text">' + esc(name) + '</span>' : ''}.</h2>
                         <p class="text-xs text-gray-300 mt-2">${currentOutletData ? esc(currentOutletData.name) + ' · ' : ''}${userHasTable ? 'Meja <b class="text-white">' + esc(myAssignedTable) + '</b> siap untuk Anda' : 'Belum ada meja. Ambil antrean atau reservasi meja.'}</p></div>
@@ -3822,7 +3832,7 @@
                     <div class="glass-panel rounded-2xl p-5 border border-neutral-800"><div class="flex items-center gap-3 mb-4"><span class="tao-seal"><i class="fa-solid fa-music"></i></span><div><h3 class="text-sm font-bold text-white">Sedang Diputar</h3><p class="text-[10px] text-gray-500">Langsung dari DJ booth</p></div></div><div id="npCard"></div></div>
                     <div class="glass-panel rounded-2xl p-5 border border-neutral-800"><div class="flex items-center gap-3 mb-4"><span class="tao-seal"><i class="fa-solid fa-flag-checkered"></i></span><div><h3 class="text-sm font-bold text-white">Misi Malam Ini</h3><p class="text-[10px] text-gray-500">Selesaikan untuk T-Gold</p></div></div>
                         <div id="missionHead" class="flex items-end justify-between"></div>
-                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden mt-3"><div id="missionBar" class="h-full bg-gradient-to-r from-taoRed to-taoGold rounded-full transition-all duration-700" style="width:0%"></div></div>
+                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden mt-3"><div id="missionBar" class="h-full bg-gradient-to-r from-taoEmerald to-taoGold rounded-full transition-all duration-700" style="width:0%"></div></div>
                         <div id="missionList" class="divide-y divide-white/5 mt-2"></div></div>
                 </div>`;
             renderQueueCard(); renderNowPlaying(); renderMissions();
