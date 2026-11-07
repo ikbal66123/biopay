@@ -6,6 +6,8 @@ BioPay is a two-factor biometric checkout for Southeast Asia. A shopper looks at
 
 This repository is an interactive prototype that runs entirely in the browser, as a single `index.html`.
 
+> The repository also contains **Cek Sehat Mandiri**, a separate health self-check PWA, in [`cek-sehat/`](cek-sehat/README.md).
+
 **Live demo:** https://ikbal66123.github.io/biopay/ (open in Chrome, Edge or Safari and allow camera access)
 
 ---

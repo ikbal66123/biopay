@@ -52,9 +52,11 @@ let store: KV | null = defaultStore();
 const memory: { entries: Entry[] } = { entries: [] };
 const listeners = new Set<() => void>();
 
+/** Swap the storage backend (tests only). Resets the in-memory copy. */
 export function _setStore(s: KV | null) {
   store = s;
   cache = null;
+  memory.entries = [];
 }
 
 let cache: Entry[] | null = null;
