@@ -138,9 +138,11 @@ export async function handleAi(body: unknown, client: AiClient): Promise<unknown
 
     case 'makanan': {
       if (!req.foto) throw new HttpError(400, 'Foto makanan belum ada.');
-      return structured(client, MakananSchema, `${SAFETY}\n- Tugas: perkirakan kandungan gizi makanan pada foto untuk SATU porsi seperti yang terlihat. Perhatikan minyak goreng, santan, gula, dan garam tersembunyi pada masakan Indonesia. Semua angka adalah perkiraan; isi keyakinan dengan jujur.`, [
+      return structured(client, MakananSchema, `${SAFETY}\n- Tugas: kenali makanan dan minuman pada foto, lalu perkirakan kandungan gizinya untuk SATU porsi seperti yang terlihat: kalori, karbohidrat, gula, serat, protein, lemak, lemak jenuh, natrium, kolesterol, serta 4-8 vitamin dan mineral yang paling menonjol beserta jumlahnya.
+- Perhatikan minyak goreng, santan, gula, kecap, dan garam tersembunyi pada masakan Indonesia. Pakai pengetahuan gizi umum (misalnya Tabel Komposisi Pangan Indonesia).
+- Semua angka adalah perkiraan; isi keyakinan dengan jujur. Jika foto bukan makanan, isi makanan dengan daftar kosong dan keyakinan rendah.`, [
         imageBlock(req.foto),
-        { type: 'text', text: `${konteks}\n\nPerkirakan gizi makanan pada foto ini dan beri satu saran singkat sesuai kondisi pengguna.` },
+        { type: 'text', text: `${konteks}\n\nKenali makanan pada foto ini, perkirakan gizinya, dan beri satu saran singkat sesuai kondisi pengguna.` },
       ]);
     }
 

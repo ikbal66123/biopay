@@ -4,6 +4,7 @@ import { IconCamera, IconCheck } from '../components/Icons';
 import { askAi, buildContext, hasAiConsent, resizeImage, setAiConsent } from '../lib/ai/client';
 import type { MakananResult } from '../lib/ai/schemas';
 import { addFood, foodToday, loadFood } from '../lib/foodLog';
+import { limitUse, scale, shareWords } from '../lib/nutrition';
 import { loadMeds } from '../lib/meds';
 import { loadProfile } from '../lib/profile';
 import { useHistory } from '../lib/useHistory';
@@ -43,8 +44,8 @@ export default function FoodPage() {
     }
   };
 
-  const n = r?.per_porsi;
-  const x = (v: number) => Math.round(v * portion);
+  const n = r ? scale(r.per_porsi, portion) : null;
+  const x = (v: number) => Math.round(v);
 
   return (
     <div className="space-y-4">
@@ -109,10 +110,13 @@ export default function FoodPage() {
               [
                 ['Kalori', x(n.kalori), 'kkal'],
                 ['Karbohidrat', x(n.karbohidrat_g), 'g'],
+                ['Gula', x(n.gula_g), 'g'],
                 ['Protein', x(n.protein_g), 'g'],
                 ['Lemak', x(n.lemak_g), 'g'],
                 ['Serat', x(n.serat_g), 'g'],
-                ['Gula', x(n.gula_g), 'g'],
+                ['Natrium', x(n.natrium_mg), 'mg'],
+                ['Lemak jenuh', x(n.lemak_jenuh_g), 'g'],
+                ['Kolesterol', x(n.kolesterol_mg), 'mg'],
               ] as const
             ).map(([k, v, u]) => (
               <div key={k} className="rounded-xl bg-slate-50 p-2 dark:bg-slate-950">
@@ -124,11 +128,76 @@ export default function FoodPage() {
               </div>
             ))}
           </dl>
-          {r.vitamin_mineral.length > 0 && <p className="text-sm">Vitamin & mineral utama: {r.vitamin_mineral.join(', ')}</p>}
-          {(r.tersembunyi.length > 0 || r.asin) && (
+
+          <div className="space-y-2">
+            <h3 className="font-semibold">Dibanding batas sehari (Kemenkes)</h3>
+            {limitUse(n).map((l) => (
+              <div key={l.key}>
+                <div className="flex justify-between text-sm">
+                  <span>
+                    {l.label}: <b className="tabular-nums">{x(l.amount)} {l.unit}</b> dari {l.limit} {l.unit}
+                  </span>
+                </div>
+                <div className="mt-1 h-2 rounded-full bg-slate-200 dark:bg-slate-800">
+                  <div
+                    className={`h-2 rounded-full ${l.level === 'bahaya' ? 'bg-red-500' : l.level === 'perhatian' ? 'bg-amber-400' : 'bg-emerald-500'}`}
+                    style={{ width: `${Math.min(100, l.share * 100)}%` }}
+                  />
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{shareWords(l.share)}</p>
+              </div>
+            ))}
+          </div>
+
+          {r.zat_gizi.length > 0 && (
+            <div>
+              <h3 className="font-semibold">Vitamin & mineral</h3>
+              <ul className="mt-1 divide-y divide-slate-100 text-[15px] dark:divide-slate-800">
+                {r.zat_gizi.map((z) => (
+                  <li key={z.nama} className="flex items-center justify-between gap-2 py-1.5">
+                    <span>{z.nama}</span>
+                    <span className="flex items-center gap-2">
+                      <span className="tabular-nums">
+                        {String(Math.round(z.jumlah * portion * 10) / 10).replace('.', ',')} {z.satuan}
+                      </span>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                          z.tingkat === 'tinggi'
+                            ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200'
+                            : z.tingkat === 'sedang'
+                              ? 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-200'
+                              : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                        }`}
+                      >
+                        {z.tingkat}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {r.baik_untuk.length > 0 && (
+            <Notice tone="ok">
+              <p className="font-semibold">Yang baik</p>
+              <ul className="list-disc pl-5 text-sm">
+                {r.baik_untuk.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            </Notice>
+          )}
+          {(r.perlu_dibatasi.length > 0 || r.tersembunyi.length > 0 || r.asin) && (
             <Notice tone="warn">
-              {r.tersembunyi.length > 0 && <>Perhatikan: {r.tersembunyi.join(', ')}. </>}
-              {r.asin && 'Makanan ini cenderung asin.'}
+              <p className="font-semibold">Perlu dibatasi</p>
+              <ul className="list-disc pl-5 text-sm">
+                {r.perlu_dibatasi.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+                {r.tersembunyi.length > 0 && <li>Tersembunyi: {r.tersembunyi.join(', ')}</li>}
+                {r.asin && <li>Makanan ini cenderung asin.</li>}
+              </ul>
             </Notice>
           )}
           <p className="text-[15px]">{r.saran}</p>
