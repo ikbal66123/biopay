@@ -466,6 +466,51 @@
         @media (pointer: fine) { html { overscroll-behavior: none; } }
         @media (prefers-reduced-motion: reduce) { .hero-copy > *, .hero-copy-2 { animation: none !important; } }
     </style>
+
+    <!-- ===== Peta Global ===== -->
+    <style id="tao-globe-css">
+        .globe-wrap { position: relative; height: calc(100vh - 170px); min-height: 580px; background: #050C0A; }
+        #globeMap { position: absolute; inset: 0 0 0 372px; }
+        .globe-panel { position: absolute; z-index: 3; top: 16px; left: 16px; bottom: 16px; width: 340px; display: flex; flex-direction: column; padding: 20px; border-radius: 20px; background: rgba(6, 16, 13, .84); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(243, 230, 196, .14); }
+        .globe-list { overflow-y: auto; flex: 1; margin: 8px -8px 0; padding: 0 8px 8px; overscroll-behavior: contain; }
+        .globe-city summary { list-style: none; cursor: pointer; }
+        .globe-city summary::-webkit-details-marker { display: none; }
+        .globe-card { position: absolute; z-index: 3; top: 16px; right: 16px; width: min(380px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow-y: auto; overscroll-behavior: contain; border-radius: 20px; background: #0A1612; border: 1px solid rgba(243, 230, 196, .16); box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .9); animation: tao-rise .35s cubic-bezier(.22, 1, .36, 1) both; }
+        .globe-controls { position: absolute; z-index: 3; left: 388px; bottom: 16px; display: flex; gap: 8px; }
+        .globe-btn { padding: 9px 14px; border-radius: 999px; background: rgba(6, 16, 13, .88); border: 1px solid rgba(243, 230, 196, .2); color: #F5F1E8; font: 500 13px 'Jost', sans-serif; transition: border-color .2s, background-color .2s; }
+        .globe-btn:hover { border-color: #D9BE86; background: rgba(15, 94, 73, .35); }
+        #globeResults { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 5; padding: 6px; border-radius: 14px; background: #0A1612; border: 1px solid rgba(243, 230, 196, .16); box-shadow: 0 20px 40px -16px rgba(0, 0, 0, .9); max-height: 320px; overflow-y: auto; }
+        .gm-city { display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 999px; background: rgba(6, 16, 13, .9); border: 1px solid rgba(217, 190, 134, .55); color: #F5F1E8; font: 500 13px 'Jost', sans-serif; white-space: nowrap; box-shadow: 0 8px 20px -8px rgba(0, 0, 0, .8); cursor: pointer; transition: transform .2s, border-color .2s; }
+        .gm-city .n { min-width: 26px; height: 26px; padding: 0 7px; border-radius: 999px; display: grid; place-items: center; background: #D9BE86; color: #06110D; font-weight: 700; font-size: 12px; }
+        .gm-city:hover, .gm-city:focus-visible { border-color: #F3E6C4; transform: translateY(-2px); }
+        .gm-near .gm-city-wrap { display: none; }
+        #globeMap:not(.gm-near) .gm-venue-wrap { display: none; }
+        .gm-venue { display: flex; align-items: center; gap: 6px; background: none; border: 0; padding: 0; cursor: pointer; }
+        .gm-venue .dot { width: 14px; height: 14px; flex: none; border-radius: 99px; background: #8C9E95; border: 2px solid #050C0A; box-shadow: 0 0 0 1px rgba(217, 190, 134, .7); transition: transform .2s; }
+        .gm-venue[data-state="open"] .dot { background: #2FA37F; box-shadow: 0 0 0 1px #2FA37F, 0 0 0 6px rgba(47, 163, 127, .2); }
+        .gm-venue[data-state="soon"] .dot { background: #050C0A; border: 2px dashed #D9BE86; box-shadow: none; }
+        .gm-venue .lbl { display: none; padding: 3px 8px; border-radius: 6px; background: rgba(6, 16, 13, .9); color: #F5F1E8; font: 500 12px 'Jost', sans-serif; white-space: nowrap; border: 1px solid rgba(255, 255, 255, .12); }
+        .gm-labels .gm-venue .lbl, .gm-venue:hover .lbl, .gm-venue:focus-visible .lbl, .gm-venue.sel .lbl { display: inline-block; }
+        .gm-venue.sel .dot { transform: scale(1.35); background: #F3E6C4; box-shadow: 0 0 0 1px #F3E6C4, 0 0 0 8px rgba(243, 230, 196, .2); }
+        .gm-venue.sel .lbl { border-color: #D9BE86; }
+        .globe-wrap .maplibregl-ctrl-attrib { background: rgba(5, 12, 10, .75) !important; color: #A9B9B1; }
+        .globe-wrap .maplibregl-ctrl-attrib a { color: #D3DCD6; }
+        .globe-wrap .maplibregl-ctrl-group { background: #0A1612; border: 1px solid rgba(255, 255, 255, .12); }
+        .globe-wrap .maplibregl-ctrl-group button + button { border-top-color: rgba(255, 255, 255, .1); }
+        .globe-wrap .maplibregl-ctrl-group .maplibregl-ctrl-icon { filter: invert(1) brightness(.9); }
+        @media (max-width: 899px) {
+            .globe-wrap { height: calc(100vh - 150px); min-height: 520px; }
+            #globeMap { left: 0; }
+            .globe-panel { top: 12px; left: 12px; right: 12px; bottom: auto; width: auto; max-height: 55%; padding: 14px; }
+            .globe-list { display: none; }
+            .globe-panel.list-open .globe-list { display: block; }
+            .globe-card { top: auto; bottom: 12px; left: 12px; right: 12px; width: auto; max-height: 60%; }
+            .globe-controls { left: 12px; bottom: 12px; }
+            #globeCard:not(.hidden) ~ .globe-controls { display: none; }
+            body.on-globe #conciergeFab, body.on-globe #floatingCartBar { display: none !important; }
+            .globe-note { display: none; }
+        }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col text-slate-100 bg-[#050C0A] selection:bg-taoGold selection:text-black">
     <a href="#main" class="skip-link">Lewati ke konten utama</a>
@@ -590,6 +635,7 @@
     <nav class="bg-neutral-950/90 border-b border-white/5 sticky top-[65px] z-30 overflow-x-auto no-scrollbar">
         <div class="max-w-7xl mx-auto flex items-center gap-1 px-4 py-2 min-w-max">
             <button id="tab-mapTab" onclick="switchTab('mapTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 bg-taoGold text-black transition"><i class="fa-solid fa-list"></i> <span>Portofolio Global</span></button>
+            <button id="tab-globeTab" onclick="switchTab('globeTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-earth-americas text-taoEmerald"></i> <span>Peta Global</span></button>
             <button id="tab-myNightTab" onclick="switchTab('myNightTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-moon text-taoEmerald"></i> <span>Malam Saya</span></button>
             <button id="tab-hubTab" onclick="switchTab('hubTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition hidden"><i class="fa-solid fa-fire"></i> <span>Live Hub</span></button>
             <button id="tab-vipTab" onclick="switchTab('vipTab')" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 text-gray-400 hover:text-white hover:bg-neutral-800/60 transition"><i class="fa-solid fa-crown text-taoGold"></i> <span>VIP Ops</span></button>
@@ -741,7 +787,7 @@
                 <div class="grid lg:grid-cols-[1.2fr_0.8fr] gap-10 p-6 sm:p-10 lg:p-12 items-end min-h-[480px]">
                     <div class="hero-copy">
                         <h2 class="font-display hero-title text-white">Malam ini di TAO.</h2>
-                        <p class="hero-lede mt-5">Pesan meja di 25 venue di Las Vegas, New York, Singapura, Dubai, dan London. Masuk lewat jalur member, pesan botol dari meja, dan bayar dengan T&#8209;Gold.</p>
+                        <p id="heroLede" class="hero-lede mt-5">Pesan meja di venue TAO Group di seluruh dunia. Masuk lewat jalur member, pesan botol dari meja, dan bayar dengan T&#8209;Gold.</p>
                         <div class="flex flex-wrap items-center gap-x-7 gap-y-4 mt-8">
                             <button onclick="luxScrollToVenues()" class="lux-cta">Pesan meja</button>
                             <button onclick="openMemberCard()" class="lux-link">Kartu member</button>
@@ -759,6 +805,7 @@
                         <h2 class="text-2xl font-bold font-display text-white">Cabang Grup Tao</h2>
                         <p class="text-xs text-gray-400">Jelajahi portofolio properti eksklusif di seluruh dunia. Klik kartu untuk melihat live hub cabang terkait.</p>
                     </div>
+                    <button onclick="switchTab('globeTab')" class="lux-link text-sm lg:ml-auto">Buka peta global</button>
                     <div class="relative">
                         <input type="text" id="mapSearchInput" onkeyup="filterOutlets()" placeholder="Cari cabang atau kota…" class="bg-neutral-900 border border-neutral-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-taoGold w-full sm:w-64">
                         <i class="fa-solid fa-search text-gray-500 absolute right-3 top-2.5 text-xs"></i>
@@ -771,7 +818,6 @@
                     <button onclick="setCategoryFilter('Restoran')" id="btn-cat-Restoran" class="px-4 py-2 rounded-full text-xs font-bold bg-neutral-800 text-gray-300 hover:text-white hover:border-taoGold transition border border-neutral-700">Restoran Mewah</button>
                     <button onclick="setCategoryFilter('Klub Siang')" id="btn-cat-KlubSiang" class="px-4 py-2 rounded-full text-xs font-bold bg-neutral-800 text-gray-300 hover:text-white hover:border-taoGold transition border border-neutral-700">Klub Siang</button>
                     <button onclick="setCategoryFilter('Lounge & Bar')" id="btn-cat-Lounge" class="px-4 py-2 rounded-full text-xs font-bold bg-neutral-800 text-gray-300 hover:text-white hover:border-taoGold transition border border-neutral-700">Lounge</button>
-                    <button onclick="setCategoryFilter('Hotel')" id="btn-cat-Hotel" class="px-4 py-2 rounded-full text-xs font-bold bg-neutral-800 text-gray-300 hover:text-white hover:border-taoGold transition border border-neutral-700">Hotel</button>
                 </div>
 
                 <div>
@@ -1411,6 +1457,33 @@
             </div>
         </section>
 
+        <!-- Peta Global -->
+        <section id="globeTab" class="tab-content hidden">
+            <div class="globe-wrap rounded-[28px] overflow-hidden border border-white/10">
+                <div id="globeMap" role="region" aria-label="Peta global cabang TAO Group"></div>
+                <div class="globe-panel">
+                    <div class="flex items-start justify-between gap-3">
+                        <div><h2 class="font-display text-3xl text-white">Peta cabang</h2><p id="globeSummary" class="text-sm text-gray-300 mt-1"></p></div>
+                        <button type="button" onclick="this.closest('.globe-panel').classList.toggle('list-open')" class="min-[900px]:hidden globe-btn shrink-0">Daftar</button>
+                    </div>
+                    <div class="relative mt-4">
+                        <label for="globeSearch" class="sr-only">Cari cabang, kota, atau negara</label>
+                        <input id="globeSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Cari cabang, kota, atau negara…" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="globeResults" oninput="globeSearchInput()" onkeydown="globeSearchKey(event)" onblur="setTimeout(() => document.getElementById('globeResults').classList.add('hidden'), 150)" class="w-full bg-[#07100D] border border-neutral-700 rounded-xl pl-10 pr-3 py-3 text-sm text-white placeholder-gray-500">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm" aria-hidden="true"></i>
+                        <ul id="globeResults" role="listbox" aria-label="Hasil pencarian" class="hidden"></ul>
+                    </div>
+                    <div id="globeList" class="globe-list" aria-label="Daftar cabang per negara"></div>
+                    <p class="globe-note text-xs text-gray-500 mt-3 leading-relaxed">Status buka dihitung dari jam setempat dengan jam operasional umum per jenis venue. Daftar dari sumber publik TAO Group, November 2026.</p>
+                </div>
+                <aside id="globeCard" class="globe-card hidden" aria-label="Detail cabang" aria-live="polite"></aside>
+                <div class="globe-controls">
+                    <button id="globeProjBtn" type="button" onclick="toggleGlobeProjection()" class="globe-btn">Tampilan datar</button>
+                    <button type="button" onclick="globeReset()" class="globe-btn">Lihat dunia</button>
+                </div>
+                <div id="globeFallback" class="hidden absolute inset-0 z-[4] grid place-items-center p-8 text-center text-sm text-gray-300 bg-[#050C0A]/90"></div>
+            </div>
+        </section>
+
         <!-- Malam Saya -->
         <section id="myNightTab" class="tab-content hidden space-y-6">
             <div id="myNightRoot" class="space-y-4"></div>
@@ -1503,33 +1576,60 @@
             { id: 'f5', type: 'food', name: 'Truffle Parmesan Fries', desc: 'Kentang goreng garing ditaburi parutan keju parmigiano dan minyak truffle.', price: 22, img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=500&q=60' }
         ];
 
-        const rawOutlets = [
-            ["TAO Nightclub", "Las Vegas, NV", "Klub Malam", "2,450", "92%"],
-            ["TAO Asian Bistro", "Las Vegas, NV", "Restoran", "680", "85%"],
-            ["TAO Beach Dayclub", "Las Vegas, NV", "Klub Siang", "1,800", "90%"],
-            ["The Venetian Resort (TAO Base)", "Las Vegas, NV", "Hotel", "3,200", "95%"],
-            ["OMNIA Nightclub", "Las Vegas, NV", "Klub Malam", "3,100", "96%"],
-            ["Hakkasan Nightclub", "Las Vegas, NV", "Klub Malam", "2,800", "94%"],
-            ["Hakkasan Restaurant", "Las Vegas, NV", "Restoran", "550", "88%"],
-            ["Marquee Nightclub", "Las Vegas, NV", "Klub Malam", "2,200", "89%"],
-            ["Marquee Dayclub", "Las Vegas, NV", "Klub Siang", "1,950", "91%"],
-            ["LAVO Italian Restaurant", "Las Vegas, NV", "Restoran", "450", "78%"],
-            ["Beauty & Essex", "Las Vegas, NV", "Lounge & Bar", "380", "82%"],
-            ["TAO Downtown", "New York, NY", "Klub Malam", "1,600", "94%"],
-            ["TAO Uptown", "New York, NY", "Restoran", "420", "80%"],
-            ["Marquee New York", "New York, NY", "Klub Malam", "1,400", "93%"],
-            ["LAVO New York", "New York, NY", "Klub Malam", "950", "85%"],
-            ["Beauty & Essex NYC", "New York, NY", "Lounge & Bar", "400", "86%"],
-            ["TAO Chicago", "Chicago, IL", "Klub Malam", "1,350", "89%"],
-            ["TAO Los Angeles", "Los Angeles, CA", "Restoran", "620", "91%"],
-            ["The Highlight Room", "Los Angeles, CA", "Lounge & Bar", "510", "87%"],
-            ["Marquee Singapore", "Singapore", "Klub Malam", "2,600", "95%"],
-            ["LAVO Singapore", "Singapore", "Restoran", "720", "88%"],
-            ["KOMA Singapore", "Singapore", "Restoran", "580", "90%"],
-            ["Hakkasan Mayfair", "London, UK", "Restoran", "480", "84%"],
-            ["Ling Ling Dubai", "Dubai, UAE", "Lounge & Bar", "690", "92%"],
-            ["Hakkasan Dubai", "Dubai, UAE", "Restoran", "550", "87%"]
+        // Cabang TAO Group Hospitality (termasuk Hakkasan Group) dari sumber publik, November 2026:
+        // taogroup.com/venues, hakkasangroup.com, dan pemberitaan. Koordinat menunjuk ke gedung/area venue (perkiraan).
+        // [nama, merek, kategori, kota, negara, area, lat, lng, zona waktu, tamu, okupansi, segera dibuka?]
+        const TAO_VENUES = [
+            ["TAO Asian Bistro", "TAO", "Restoran", "Las Vegas, NV", "Amerika Serikat", "The Venetian", 36.1213, -115.1693, "America/Los_Angeles", "680", "85%"],
+            ["TAO Nightclub", "TAO", "Klub Malam", "Las Vegas, NV", "Amerika Serikat", "The Venetian", 36.1217, -115.1699, "America/Los_Angeles", "2,450", "92%"],
+            ["TAO Beach Dayclub", "TAO", "Klub Siang", "Las Vegas, NV", "Amerika Serikat", "The Venetian", 36.1224, -115.1709, "America/Los_Angeles", "1,800", "90%"],
+            ["LAVO Italian Restaurant", "LAVO", "Restoran", "Las Vegas, NV", "Amerika Serikat", "The Palazzo", 36.1244, -115.1681, "America/Los_Angeles", "450", "78%"],
+            ["OMNIA Nightclub", "OMNIA", "Klub Malam", "Las Vegas, NV", "Amerika Serikat", "Caesars Palace", 36.1170, -115.1751, "America/Los_Angeles", "3,100", "96%"],
+            ["OMNIA Dayclub & Skybar", "OMNIA", "Klub Siang", "Las Vegas, NV", "Amerika Serikat", "Caesars Palace", 36.1159, -115.1762, "America/Los_Angeles", "1,600", "88%"],
+            ["Marquee Nightclub", "Marquee", "Klub Malam", "Las Vegas, NV", "Amerika Serikat", "The Cosmopolitan", 36.1099, -115.1740, "America/Los_Angeles", "2,200", "89%"],
+            ["Marquee Dayclub", "Marquee", "Klub Siang", "Las Vegas, NV", "Amerika Serikat", "The Cosmopolitan", 36.1093, -115.1746, "America/Los_Angeles", "1,950", "91%"],
+            ["Hakkasan Restaurant", "Hakkasan", "Restoran", "Las Vegas, NV", "Amerika Serikat", "MGM Grand", 36.1023, -115.1703, "America/Los_Angeles", "550", "88%"],
+            ["Hakkasan Nightclub", "Hakkasan", "Klub Malam", "Las Vegas, NV", "Amerika Serikat", "MGM Grand", 36.1028, -115.1696, "America/Los_Angeles", "2,800", "94%"],
+            ["Beauty & Essex Las Vegas", "Beauty & Essex", "Lounge & Bar", "Las Vegas, NV", "Amerika Serikat", "The Cosmopolitan", 36.1103, -115.1735, "America/Los_Angeles", "380", "82%"],
+            ["JEWEL Nightclub", "JEWEL", "Klub Malam", "Las Vegas, NV", "Amerika Serikat", "ARIA", 36.1073, -115.1767, "America/Los_Angeles", "1,200", "86%"],
+            ["Liquid Pool Lounge", "Liquid", "Klub Siang", "Las Vegas, NV", "Amerika Serikat", "ARIA", 36.1066, -115.1777, "America/Los_Angeles", "700", "80%"],
+            ["TAO Downtown", "TAO", "Restoran", "New York, NY", "Amerika Serikat", "Chelsea", 40.7423, -74.0049, "America/New_York", "520", "90%"],
+            ["TAO Downtown Nightclub", "TAO", "Klub Malam", "New York, NY", "Amerika Serikat", "Chelsea", 40.7420, -74.0045, "America/New_York", "900", "93%"],
+            ["TAO Uptown", "TAO", "Restoran", "New York, NY", "Amerika Serikat", "Midtown East", 40.7626, -73.9716, "America/New_York", "420", "80%"],
+            ["Beauty & Essex New York", "Beauty & Essex", "Lounge & Bar", "New York, NY", "Amerika Serikat", "Lower East Side", 40.7203, -73.9866, "America/New_York", "400", "86%"],
+            ["Cathédrale", "Cathédrale", "Restoran", "New York, NY", "Amerika Serikat", "Moxy East Village", 40.7318, -73.9892, "America/New_York", "300", "84%"],
+            ["Sake No Hana", "Sake No Hana", "Restoran", "New York, NY", "Amerika Serikat", "Moxy Lower East Side", 40.7189, -73.9930, "America/New_York", "220", "79%"],
+            ["Peak with Priceless", "Peak", "Restoran", "New York, NY", "Amerika Serikat", "Edge, Hudson Yards", 40.7536, -74.0012, "America/New_York", "350", "87%"],
+            ["Magic Hour Rooftop", "Magic Hour", "Lounge & Bar", "New York, NY", "Amerika Serikat", "Moxy Times Square", 40.7520, -73.9885, "America/New_York", "600", "83%"],
+            ["Crane Club", "Crane Club", "Restoran", "New York, NY", "Amerika Serikat", "Chelsea", 40.7404, -74.0037, "America/New_York", "200", "81%"],
+            ["TAO Asian Bistro Los Angeles", "TAO", "Restoran", "Los Angeles, CA", "Amerika Serikat", "Hollywood", 34.0995, -118.3292, "America/Los_Angeles", "620", "91%"],
+            ["Beauty & Essex Los Angeles", "Beauty & Essex", "Lounge & Bar", "Los Angeles, CA", "Amerika Serikat", "Hollywood", 34.1003, -118.3296, "America/Los_Angeles", "360", "84%"],
+            ["Avenue Los Angeles", "Avenue", "Klub Malam", "Los Angeles, CA", "Amerika Serikat", "Hollywood", 34.0999, -118.3299, "America/Los_Angeles", "500", "88%"],
+            ["The Highlight Room", "Highlight Room", "Lounge & Bar", "Los Angeles, CA", "Amerika Serikat", "Dream Hollywood", 34.0997, -118.3287, "America/Los_Angeles", "510", "87%"],
+            ["TAO Chicago", "TAO", "Klub Malam", "Chicago, IL", "Amerika Serikat", "River North", 41.8932, -87.6295, "America/Chicago", "1,350", "89%"],
+            ["TAO Asian Bistro Mohegan Sun", "TAO", "Restoran", "Uncasville, CT", "Amerika Serikat", "Mohegan Sun", 41.4910, -72.0905, "America/New_York", "480", "76%"],
+            ["Beauty & Essex Mohegan Sun", "Beauty & Essex", "Lounge & Bar", "Uncasville, CT", "Amerika Serikat", "Mohegan Sun", 41.4903, -72.0893, "America/New_York", "320", "74%"],
+            ["Hakkasan Miami", "Hakkasan", "Restoran", "Miami, FL", "Amerika Serikat", "Fontainebleau, Miami Beach", 25.8180, -80.1225, "America/New_York", "400", "85%"],
+            ["Casadonna", "Casadonna", "Restoran", "Miami, FL", "Amerika Serikat", "Edgewater", 25.7963, -80.1866, "America/New_York", "450", "88%"],
+            ["Marquee Singapore", "Marquee", "Klub Malam", "Singapura", "Singapura", "Marina Bay Sands", 1.2838, 103.8607, "Asia/Singapore", "2,600", "95%"],
+            ["LAVO Singapore", "LAVO", "Restoran", "Singapura", "Singapura", "Marina Bay Sands", 1.2826, 103.8584, "Asia/Singapore", "720", "88%"],
+            ["KOMA Singapore", "KOMA", "Restoran", "Singapura", "Singapura", "Marina Bay Sands", 1.2840, 103.8596, "Asia/Singapore", "580", "90%"],
+            ["Avenue Singapore", "Avenue", "Lounge & Bar", "Singapura", "Singapura", "Marina Bay Sands", 1.2832, 103.8603, "Asia/Singapore", "450", "86%"],
+            ["LAVO Mexico City", "LAVO", "Restoran", "Mexico City", "Meksiko", "Polanco", 19.4290, -99.1945, "America/Mexico_City", "380", "82%"],
+            ["Ling Ling Mexico City", "Ling Ling", "Lounge & Bar", "Mexico City", "Meksiko", "Polanco", 19.4335, -99.1960, "America/Mexico_City", "420", "84%"],
+            ["Hakkasan Mayfair", "Hakkasan", "Restoran", "London", "Inggris", "Mayfair", 51.5106, -0.1440, "Europe/London", "480", "84%"],
+            ["Yauatcha Soho", "Yauatcha", "Restoran", "London", "Inggris", "Soho", 51.5137, -0.1361, "Europe/London", "260", "88%"],
+            ["Yauatcha City", "Yauatcha", "Restoran", "London", "Inggris", "Broadgate", 51.5197, -0.0819, "Europe/London", "240", "80%"],
+            ["Hakkasan Dubai", "Hakkasan", "Restoran", "Dubai", "Uni Emirat Arab", "Atlantis The Palm", 25.1306, 55.1173, "Asia/Dubai", "550", "87%"],
+            ["Ling Ling Dubai", "Ling Ling", "Lounge & Bar", "Dubai", "Uni Emirat Arab", "Atlantis The Royal", 25.1384, 55.1293, "Asia/Dubai", "690", "92%"],
+            ["Hakkasan Abu Dhabi", "Hakkasan", "Restoran", "Abu Dhabi", "Uni Emirat Arab", "Emirates Palace", 24.4617, 54.3172, "Asia/Dubai", "430", "83%"],
+            ["Hakkasan Doha", "Hakkasan", "Restoran", "Doha", "Qatar", "The St. Regis Doha", 25.3594, 51.5294, "Asia/Qatar", "400", "81%"],
+            ["Hakkasan Bodrum", "Hakkasan", "Restoran", "Bodrum", "Turki", "Semenanjung Bodrum", 37.0890, 27.4180, "Europe/Istanbul", "300", "72%"],
+            ["Hakkasan Mumbai", "Hakkasan", "Restoran", "Mumbai", "India", "Bandra", 19.0607, 72.8336, "Asia/Kolkata", "380", "86%"],
+            ["Hakkasan Shanghai", "Hakkasan", "Restoran", "Shanghai", "Tiongkok", "The Bund", 31.2394, 121.4905, "Asia/Shanghai", "420", "84%"],
+            ["Hakkasan Muscat", "Hakkasan", "Restoran", "Muscat", "Oman", "Muscat", 23.5880, 58.3829, "Asia/Muscat", "0", "0%", true]
         ];
+        const rawOutlets = TAO_VENUES.filter(v => !v[11]).map(v => [v[0], v[3], v[2], v[9], v[10]]);
 
         const brandImageMapping = {
             "TAO": "https://images.unsplash.com/photo-1542451313056-b7c8e6266459?auto=format&fit=crop&w=600&q=80",
@@ -3156,7 +3256,7 @@
         /* ---------- Pencarian cepat (Ctrl/⌘ + K) ---------- */
         let cmdkItems = [], cmdkIndex = 0;
         function cmdkSource() {
-            const tabs = [['mapTab', 'Portofolio Global', 'fa-list'], ['myNightTab', 'Malam Saya', 'fa-moon'], ['hubTab', 'Live Hub', 'fa-fire'], ['vipTab', 'VIP Ops', 'fa-crown'], ['leaderboardTab', 'Leaderboard', 'fa-trophy'], ['communityTab', 'T-Community', 'fa-comments'], ['eventTab', 'Event', 'fa-calendar-days'], ['socialTab', 'Escrow', 'fa-shield-heart'], ['djTab', 'DJ Request', 'fa-compact-disc'], ['menuTab', 'Menu F&B', 'fa-bell-concierge'], ['otherFeaturesTab', 'Mini Games', 'fa-gamepad'], ['managerTab', 'Dashboard Manajemen', 'fa-chart-line']]
+            const tabs = [['mapTab', 'Portofolio Global', 'fa-list'], ['globeTab', 'Peta Global', 'fa-earth-americas'], ['myNightTab', 'Malam Saya', 'fa-moon'], ['hubTab', 'Live Hub', 'fa-fire'], ['vipTab', 'VIP Ops', 'fa-crown'], ['leaderboardTab', 'Leaderboard', 'fa-trophy'], ['communityTab', 'T-Community', 'fa-comments'], ['eventTab', 'Event', 'fa-calendar-days'], ['socialTab', 'Escrow', 'fa-shield-heart'], ['djTab', 'DJ Request', 'fa-compact-disc'], ['menuTab', 'Menu F&B', 'fa-bell-concierge'], ['otherFeaturesTab', 'Mini Games', 'fa-gamepad'], ['managerTab', 'Dashboard Manajemen', 'fa-chart-line']]
                 .filter(([id]) => { const b = document.getElementById('tab-' + id); return b && !b.classList.contains('hidden'); })
                 .map(([id, label, icon]) => ({ group: 'Halaman', label, icon, run: () => switchTab(id) }));
             const actions = [
@@ -3175,7 +3275,7 @@
                 { group: 'Aksi', label: 'Main Live Club Trivia', icon: 'fa-trophy', run: startLiveTrivia },
                 { group: 'Aksi', label: 'Main The Kinetic Pulse', icon: 'fa-bottle-water', run: startDomPerignonPulse }
             ];
-            const outlets = taoOutletsData.map(o => ({ group: 'Cabang', label: o.name, sub: o.city, icon: 'fa-location-dot', run: () => { switchTab('mapTab'); selectOutlet(o.id); } }));
+            const outlets = taoOutletsData.map(o => ({ group: 'Cabang', label: o.name, sub: o.city, icon: 'fa-location-dot', run: () => openGlobeAt(o.name) }));
             const menu = menuProducts.map(p => ({ group: 'Menu', label: p.name, sub: '$' + p.price.toLocaleString(), icon: 'fa-plus', run: () => p.type === 'shots' ? addToCartPromo(p.id, p.price) : addToCartItem(p.id) }));
             return tabs.concat(actions, outlets, menu);
         }
@@ -3282,6 +3382,8 @@
         function renderLuxHero() {
             const img = document.getElementById('luxHeroImg');
             if (img && !img.src) img.src = brandImageMapping.TAO.replace('w=600', 'w=1800');
+            const lede = document.getElementById('heroLede');
+            if (lede) { const cities = new Set(taoOutletsData.map(o => o.city)).size; lede.textContent = `Pesan meja di ${taoOutletsData.length} venue di ${cities} kota, dari Las Vegas dan New York sampai Singapura, Dubai, dan London. Masuk lewat jalur member, pesan botol dari meja, dan bayar dengan T‑Gold.`; }
             renderTonightBoard();
         }
         function renderTonightBoard() {
@@ -3294,7 +3396,7 @@
                     <span class="min-w-0"><span class="block text-[15px] text-white truncate">${esc(o.name)}</span><span class="block text-xs text-gray-400">${esc(o.city)}</span></span>
                     <span class="text-right"><span class="flex items-center justify-end gap-2 text-xs text-gray-300"><span class="w-1.5 h-1.5 rounded-full ${dot}"></span>${label}</span><span class="block text-xs text-gray-500 tabular-nums mt-0.5">${o.pct}% terisi</span></span>
                 </button></li>`; }).join('')}</ul>
-                <button onclick="luxScrollToVenues()" class="lux-link text-sm mt-3">Lihat semua ${taoOutletsData.length} venue</button>`;
+                <div class="flex flex-wrap gap-x-6 gap-y-2 mt-3"><button onclick="switchTab('globeTab')" class="lux-link text-sm">Lihat di peta</button><button onclick="luxScrollToVenues()" class="lux-link text-sm">Semua ${taoOutletsData.length} venue</button></div>`;
         }
         function luxScrollToVenues() {
             const g = document.getElementById('outletCardsGrid');
@@ -3901,6 +4003,7 @@
         const TOUR = [
             { tab: 'mapTab', sel: '#luxHero', t: 'Selamat datang di TAO Group OS', d: 'Satu aplikasi untuk reservasi, pesanan, dan pengalaman VIP di seluruh portofolio TAO Group.' },
             { tab: 'mapTab', sel: '#outletCardsGrid', t: 'Portofolio venue', d: 'Semua venue dengan indikator keramaian langsung. Ketuk kartu untuk memilih venue dan memesan meja.' },
+            { tab: 'globeTab', sel: '.globe-wrap', t: 'Peta global', d: 'Semua cabang TAO Group di globe 3D, lengkap dengan jam setempat dan status buka. Cari kota atau venue, lalu ketuk untuk persiapan kunjungan.' },
             { tab: null, sel: 'header [onclick="openMemberCard()"]', t: 'Kartu member digital', d: 'Black Card dengan QR untuk pintu masuk VIP dan progres poin menuju tingkat berikutnya.' },
             { tab: 'myNightTab', sel: '#myNightRoot', t: 'Malam Saya', d: 'Antrean pintu digital, lagu yang sedang diputar, misi berhadiah, profil preferensi, dan rekap malam yang bisa dibagikan.' },
             { tab: 'menuTab', sel: '#bottleShowBanner', t: 'Bottle Show', d: 'Tamu merancang perayaan sendiri, lengkap dengan pesan di papan LED. Pendapatan langsung masuk ke tagihan meja.' },
@@ -3963,6 +4066,320 @@
         const __sigSwitchTab = window.switchTab;
         window.switchTab = function (tabId, isBackwards) { __sigSwitchTab(tabId, isBackwards); if (tabId === 'myNightTab') renderMyNight(); };
         window.addEventListener('load', () => { if (currentActiveAppTab === 'myNightTab') renderMyNight(); });
+    </script>
+
+    <!-- ===== Peta Global: globe interaktif semua cabang TAO Group ===== -->
+    <script id="tao-globe">
+        const MAPLIBRE_VER = '5.24.0';
+        const GLOBE_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+        const GLOBE_RASTER = {
+            version: 8,
+            sources: { carto: { type: 'raster', tileSize: 256, attribution: '© OpenStreetMap contributors © CARTO', tiles: ['a', 'b', 'c', 'd'].map(s => `https://${s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png`) } },
+            layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#050C0A' } }, { id: 'carto', type: 'raster', source: 'carto' }]
+        };
+        // Jam buka umum per jenis venue (perkiraan): [hari buka (0=Minggu), jam buka, jam tutup]
+        const VENUE_HOURS = { 'Klub Malam': [[0, 3, 4, 5, 6], 22.5, 4], 'Klub Siang': [[0, 5, 6], 11, 18], 'Restoran': [[0, 1, 2, 3, 4, 5, 6], 17, 23.5], 'Lounge & Bar': [[0, 1, 2, 3, 4, 5, 6], 17, 2] };
+        const GLOBE_VENUES = TAO_VENUES.map((v, i) => {
+            const outlet = taoOutletsData.find(o => o.name === v[0]);
+            return { key: 'g' + i, name: v[0], brand: v[1], cat: v[2], city: v[3], country: v[4], area: v[5], lat: v[6], lng: v[7], tz: v[8], crowd: v[9], cap: v[10], soon: !!v[11], outletId: outlet ? outlet.id : null, image: outlet ? outlet.image : brandImageMapping.DEFAULT };
+        });
+        const cityKey = v => v.city + '|' + v.country;
+        const GLOBE_CITIES = Object.values(GLOBE_VENUES.reduce((m, v) => { (m[cityKey(v)] = m[cityKey(v)] || { key: cityKey(v), city: v.city, country: v.country, venues: [] }).venues.push(v); return m; }, {}))
+            .map(c => ({ ...c, lat: c.venues.reduce((s, v) => s + v.lat, 0) / c.venues.length, lng: c.venues.reduce((s, v) => s + v.lng, 0) / c.venues.length }));
+
+        let globe = null, globeMarkers = [], globeCityMarkers = [], globeSel = null, globeProj = 'globe', globeTried = false, globeFallbackUsed = false, globeResIdx = -1, globeResItems = [];
+
+        /* ---------- Waktu lokal & status buka (realtime) ---------- */
+        function venueClock(v) {
+            const parts = new Intl.DateTimeFormat('en-US', { timeZone: v.tz, weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date());
+            const get = t => (parts.find(p => p.type === t) || {}).value;
+            const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
+            const h = +get('hour') + (+get('minute')) / 60;
+            const local = new Intl.DateTimeFormat('id-ID', { timeZone: v.tz, hour: '2-digit', minute: '2-digit' }).format(new Date());
+            return { day, h, local };
+        }
+        const fmtHour = x => String(Math.floor(x)).padStart(2, '0') + '.' + String(Math.round((x % 1) * 60)).padStart(2, '0');
+        function venueStatus(v) {
+            const c = venueClock(v);
+            if (v.soon) return { open: false, soon: true, local: c.local, label: 'Segera dibuka' };
+            const [days, o, cl] = VENUE_HOURS[v.cat] || VENUE_HOURS['Restoran'];
+            const overnight = cl < o;
+            let open;
+            if (!overnight) open = days.includes(c.day) && c.h >= o && c.h < cl;
+            else open = (days.includes(c.day) && c.h >= o) || (days.includes((c.day + 6) % 7) && c.h < cl);
+            let label;
+            if (open) label = 'Buka sampai ' + fmtHour(cl);
+            else {
+                let d = c.day, todayLater = days.includes(d) && c.h < o;
+                if (todayLater) label = 'Buka pukul ' + fmtHour(o);
+                else { let k = 1; while (k < 8 && !days.includes((d + k) % 7)) k++; label = (k === 1 ? 'Buka besok ' : 'Buka ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][(d + k) % 7] + ' ') + fmtHour(o); }
+            }
+            return { open, soon: false, local: c.local, label };
+        }
+
+        /* ---------- Memuat MapLibre ---------- */
+        function ensureMapLibre(cb) {
+            if (window.maplibregl) return cb();
+            const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VER}/dist/maplibre-gl.css`; document.head.appendChild(css);
+            // Versi UMD dengan worker tertanam: tetap jalan saat file dibuka langsung (file://) maupun lewat https
+            const js = document.createElement('script'); js.src = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VER}/dist/maplibre-gl.js`;
+            js.onload = cb; js.onerror = () => globeFail('Pustaka peta tidak bisa dimuat. Periksa koneksi internet, lalu buka tab ini lagi.');
+            document.head.appendChild(js);
+        }
+        function globeFail(msg) {
+            const f = document.getElementById('globeFallback');
+            if (f) { f.textContent = msg; f.classList.remove('hidden'); }
+            globeTried = false;
+        }
+
+        function initGlobe() {
+            renderGlobePanel();
+            const box = document.getElementById('globeMap');
+            if (!box || box.clientWidth === 0) return; // tab sudah ditinggalkan sebelum peta dibuat
+            if (globe) { globe.resize(); groupCityMarkers(); return; }
+            if (globeTried) return;
+            globeTried = true;
+            ensureMapLibre(() => {
+                try {
+                    globe = new maplibregl.Map({ container: 'globeMap', style: GLOBE_STYLE, center: globeHomeCenter(), zoom: globeHomeZoom() - (luxReduce ? 0 : 0.6), attributionControl: { compact: true }, maxPitch: 70, trackResize: false });
+                } catch (e) { return globeFail('Browser ini tidak mendukung peta 3D (WebGL).'); }
+                globe.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
+                globe.on('style.load', () => { globeApplyProjection(); globeTheme(); });
+                globe.on('error', e => {
+                    const msg = String(e && e.error && e.error.message || '');
+                    if (!globeFallbackUsed && /style|Failed to fetch|NetworkError|404|403/i.test(msg) && !globe.isStyleLoaded()) { globeFallbackUsed = true; globe.setStyle(GLOBE_RASTER); }
+                });
+                addGlobeMarkers();
+                globe.on('load', () => { if (!luxReduce && globeVisible()) globe.easeTo({ zoom: globeHomeZoom(), duration: 1800 }); });
+                globe.on('zoom', updateMarkerMode);
+                globe.on('click', e => { if (e.originalEvent && !e.originalEvent.target.closest('.gm-venue, .gm-city')) closeGlobeCard(); });
+            });
+        }
+        // Ukuran peta hanya disesuaikan saat tab peta terlihat: wadah tersembunyi (lebar 0) membuat MapLibre error
+        function globeVisible() { const el = document.getElementById('globeMap'); return !!el && el.clientWidth > 0; }
+        window.addEventListener('resize', () => { if (globe && globeVisible()) { globe.resize(); groupCityMarkers(); } });
+        function globeHomeCenter() { return window.innerWidth >= 900 ? [-35, 30] : [-75, 28]; }
+        function globeHomeZoom() { const el = document.getElementById('globeMap'); const w = el ? el.clientWidth : 800, h = el ? el.clientHeight : 600; return Math.max(0.2, Math.min(1.75, Math.log2(Math.min(w, h - 120) * Math.PI / 512 * 0.92))); }
+        function globeApplyProjection() { try { globe.setProjection({ type: globeProj === 'globe' ? 'globe' : 'mercator' }); } catch (e) {} try { globe.setSky({ 'sky-color': '#050C0A', 'horizon-color': '#0F5E49', 'fog-color': '#050C0A', 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 5, 1, 7, 0] }); } catch (e) {} }
+        function globeTheme() {
+            const st = globe.getStyle(); if (!st || !st.layers) return;
+            for (const l of st.layers) {
+                const set = (k, v) => { try { globe.setPaintProperty(l.id, k, v); } catch (e) {} };
+                if (l.type === 'background') set('background-color', '#08140F');
+                else if (l.type === 'fill' && /water|ocean|sea/.test(l.id)) set('fill-color', '#041612');
+                else if (l.type === 'fill' && /landcover|landuse|park|wood|grass/.test(l.id)) set('fill-color', '#0B1C16');
+                else if (l.type === 'line' && /boundary|admin|border/.test(l.id)) { set('line-color', 'rgba(217,190,134,0.38)'); }
+                else if (l.type === 'symbol' && /place|country|city|town|state|capital|label/.test(l.id)) { set('text-color', '#CFDBD4'); set('text-halo-color', '#050C0A'); }
+            }
+        }
+        function toggleGlobeProjection() {
+            globeProj = globeProj === 'globe' ? 'flat' : 'globe';
+            if (globe) globeApplyProjection();
+            const b = document.getElementById('globeProjBtn'); if (b) b.textContent = globeProj === 'globe' ? 'Tampilan datar' : 'Tampilan globe';
+        }
+        function globeReset() { closeGlobeCard(); if (globe) globeZeroPadding(); if (globe) globe.flyTo({ center: globeHomeCenter(), zoom: globeHomeZoom(), pitch: 0, bearing: 0, duration: luxReduce ? 0 : 1800 }); }
+
+        /* ---------- Penanda: kota saat jauh, venue saat dekat ---------- */
+        function addGlobeMarkers() {
+            globeCityMarkers = GLOBE_CITIES.map(c => {
+                const el = document.createElement('button');
+                el.className = 'gm-city'; el.type = 'button';
+                el.setAttribute('aria-label', `${c.city}, ${c.country}: ${c.venues.length} venue`);
+                el.innerHTML = `<span class="n">${c.venues.length}</span><span class="t">${esc(c.city)}</span>`;
+                el.addEventListener('click', ev => { ev.stopPropagation(); globeFlyCity(c); });
+                const wrap = document.createElement('div'); wrap.className = 'gm-city-wrap'; wrap.appendChild(el);
+                return new maplibregl.Marker({ element: wrap, anchor: 'center' }).setLngLat([c.lng, c.lat]).addTo(globe);
+            });
+            globeMarkers = GLOBE_VENUES.map(v => {
+                const el = document.createElement('button');
+                el.className = 'gm-venue'; el.type = 'button'; el.dataset.key = v.key;
+                el.innerHTML = `<span class="dot"></span><span class="lbl">${esc(v.name)}</span>`;
+                el.addEventListener('click', ev => { ev.stopPropagation(); globeSelect(v.key); });
+                const wrap = document.createElement('div'); wrap.className = 'gm-venue-wrap'; wrap.appendChild(el);
+                return { v, el, m: new maplibregl.Marker({ element: wrap, anchor: 'left', offset: [-7, 0] }).setLngLat([v.lng, v.lat]).addTo(globe) };
+            });
+            refreshGlobeStatus();
+            updateMarkerMode();
+            groupCityMarkers();
+            globe.on('moveend', groupCityMarkers);
+        }
+        let globeGroupMarkers = [];
+        function groupCityMarkers() {
+            if (!globe || !globeVisible()) return;
+            globeGroupMarkers.forEach(m => m.remove()); globeGroupMarkers = [];
+            const items = GLOBE_CITIES.map((c, i) => ({ c, i, pt: globe.project([c.lng, c.lat]) })).sort((a, b) => b.c.venues.length - a.c.venues.length);
+            const used = new Set();
+            items.forEach(lead => {
+                if (used.has(lead.i)) return;
+                const group = items.filter(o => !used.has(o.i) && Math.abs(o.pt.x - lead.pt.x) < 120 && Math.abs(o.pt.y - lead.pt.y) < 34);
+                group.forEach(o => used.add(o.i));
+                group.forEach(o => { globeCityMarkers[o.i].getElement().style.visibility = group.length > 1 ? 'hidden' : ''; });
+                if (group.length < 2) return;
+                const total = group.reduce((s, o) => s + o.c.venues.length, 0);
+                const el = document.createElement('button');
+                el.className = 'gm-city'; el.type = 'button';
+                el.setAttribute('aria-label', group.map(o => o.c.city).join(', ') + ': ' + total + ' venue');
+                el.innerHTML = `<span class="n">${total}</span><span class="t">${esc(lead.c.city)} +${group.length - 1}</span>`;
+                el.addEventListener('click', ev => {
+                    ev.stopPropagation(); closeGlobeCard(); globeZeroPadding();
+                    const b = new maplibregl.LngLatBounds(); group.forEach(o => o.c.venues.forEach(v => b.extend([v.lng, v.lat])));
+                    const cam = globe.cameraForBounds(b, { padding: globePadding(), maxZoom: 15.5 });
+                    globe.flyTo({ center: cam ? cam.center : [lead.c.lng, lead.c.lat], zoom: cam ? cam.zoom : 5, pitch: 0, bearing: 0, duration: luxReduce ? 0 : 2200, essential: true });
+                });
+                const wrap = document.createElement('div'); wrap.className = 'gm-city-wrap'; wrap.appendChild(el);
+                globeGroupMarkers.push(new maplibregl.Marker({ element: wrap, anchor: 'center' }).setLngLat([lead.c.lng, lead.c.lat]).addTo(globe));
+            });
+        }
+        function updateMarkerMode() {
+            if (!globe) return;
+            const z = globe.getZoom(), near = z >= 9;
+            const root = document.getElementById('globeMap');
+            root.classList.toggle('gm-near', near);
+            root.classList.toggle('gm-labels', z >= 13);
+        }
+        function refreshGlobeStatus() {
+            globeMarkers.forEach(({ v, el }) => {
+                const s = venueStatus(v);
+                el.dataset.state = s.soon ? 'soon' : s.open ? 'open' : 'closed';
+                el.setAttribute('aria-label', `${v.name}, ${v.city}. ${s.label}, pukul ${s.local} waktu setempat`);
+                el.classList.toggle('sel', globeSel === v.key);
+            });
+            document.querySelectorAll('[data-gstatus]').forEach(n => {
+                const v = GLOBE_VENUES.find(x => x.key === n.dataset.gstatus); if (!v) return;
+                const s = venueStatus(v);
+                n.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${s.soon ? 'bg-gray-500' : s.open ? 'bg-taoEmerald' : 'bg-gray-600'}"></span>${s.open ? 'Buka' : s.soon ? 'Segera' : 'Tutup'}, ${s.local}`;
+            });
+            if (globeSel) renderGlobeCard(GLOBE_VENUES.find(x => x.key === globeSel), false);
+        }
+        setInterval(() => { if (currentActiveAppTab === 'globeTab') refreshGlobeStatus(); }, 30000);
+
+        function globeFlyCity(c) {
+            closeGlobeCard();
+            if (!globe) return;
+            if (c.venues.length === 1) return globeSelect(c.venues[0].key);
+            const b = new maplibregl.LngLatBounds();
+            c.venues.forEach(v => b.extend([v.lng, v.lat]));
+            globeZeroPadding();
+            const cam = globe.cameraForBounds(b, { padding: globePadding(), maxZoom: 15.5 });
+            globe.flyTo({ center: cam ? cam.center : [c.lng, c.lat], zoom: cam ? cam.zoom : 12, pitch: 0, bearing: 0, duration: luxReduce ? 0 : 2400, essential: true });
+        }
+        // Padding pada flyTo tersimpan permanen di peta dan merusak perhitungan kamera berikutnya, jadi selalu dinolkan
+        function globeZeroPadding() { try { const p = globe.getPadding(); if (p.top || p.right || p.bottom || p.left) globe.setPadding({ top: 0, right: 0, bottom: 0, left: 0 }); } catch (e) {} }
+        function globePadding() {
+            const wide = window.innerWidth >= 900;
+            return wide ? { top: 70, bottom: 70, left: 50, right: 420 } : { top: 190, bottom: 280, left: 30, right: 30 };
+        }
+
+        /* ---------- Pilih venue & kartu venue ---------- */
+        function globeSelect(key, fly = true) {
+            const v = GLOBE_VENUES.find(x => x.key === key); if (!v) return;
+            globeSel = key;
+            renderGlobeCard(v, true);
+            refreshGlobeStatus();
+            if (globe && fly) {
+                globeZeroPadding();
+                const wide = window.innerWidth >= 900;
+                globe.flyTo({ center: [v.lng, v.lat], zoom: 16, pitch: 50, bearing: -15, offset: wide ? [-200, 0] : [0, -150], duration: luxReduce ? 0 : 2600, essential: true });
+            }
+        }
+        function renderGlobeCard(v, focus) {
+            const card = document.getElementById('globeCard'); if (!card || !v) return;
+            const s = venueStatus(v);
+            const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`${v.name} ${v.area} ${v.city}`);
+            card.innerHTML = `
+                <div class="relative h-36 bg-neutral-800 overflow-hidden"><img src="${v.image}" alt="" width="600" height="300" loading="lazy" class="w-full h-full object-cover" onerror="this.remove()"><div class="absolute inset-0 bg-gradient-to-t from-[#0A1612] to-transparent"></div>
+                    <button onclick="closeGlobeCard()" aria-label="Tutup kartu venue" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/60 text-white hover:bg-black/80"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+                <div class="p-5 -mt-8 relative">
+                    <p class="text-xs text-taoGoldLight">${esc(v.brand)}, ${esc(v.cat)}</p>
+                    <h3 class="font-display text-3xl text-white leading-tight mt-1">${esc(v.name)}</h3>
+                    <p class="text-sm text-gray-300 mt-1">${esc(v.area)}, ${esc(v.city)}, ${esc(v.country)}</p>
+                    <div class="grid grid-cols-2 gap-px bg-white/10 rounded-xl overflow-hidden mt-4 text-sm">
+                        <div class="bg-[#0A1612] p-3"><p class="text-xs text-gray-400">Waktu setempat</p><p class="text-white tabular-nums mt-0.5">${s.local}</p></div>
+                        <div class="bg-[#0A1612] p-3"><p class="text-xs text-gray-400">Status</p><p class="mt-0.5 flex items-center gap-2 ${s.open ? 'text-emerald-300' : 'text-gray-300'}"><span class="w-1.5 h-1.5 rounded-full ${s.open ? 'bg-taoEmerald' : 'bg-gray-500'}"></span>${s.open ? 'Buka' : s.soon ? 'Segera dibuka' : 'Tutup'}</p></div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">${s.label}${s.open && !v.soon ? `, sekitar ${esc(v.cap)} terisi` : ''}</p>
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-5">
+                        ${v.soon ? `<button onclick="showToast('Kami akan mengabari Anda saat ${esc(v.name)} dibuka', 'success')" class="lux-cta">Kabari saya</button>` : `<button onclick="globeVisit('${v.key}')" class="lux-cta">Persiapan kunjungan</button>`}
+                        <a href="${maps}" target="_blank" rel="noopener" class="lux-link text-sm">Petunjuk arah</a>
+                    </div>
+                </div>`;
+            card.classList.remove('hidden');
+            if (focus) card.scrollTop = 0;
+        }
+        function closeGlobeCard() {
+            globeSel = null;
+            const card = document.getElementById('globeCard'); if (card) card.classList.add('hidden');
+            globeMarkers.forEach(({ el }) => el.classList.remove('sel'));
+        }
+        function globeVisit(key) {
+            const v = GLOBE_VENUES.find(x => x.key === key); if (!v || !v.outletId) return;
+            selectOutlet(v.outletId);
+        }
+
+        /* ---------- Panel: ringkasan, pencarian, daftar ---------- */
+        const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        function renderGlobePanel() {
+            const open = GLOBE_VENUES.filter(v => !v.soon), soon = GLOBE_VENUES.filter(v => v.soon);
+            const cities = new Set(open.map(v => v.city)).size, countries = new Set(open.map(v => v.country)).size;
+            const sum = document.getElementById('globeSummary');
+            if (sum) sum.textContent = `${open.length} venue di ${cities} kota dan ${countries} negara.` + (soon.length ? ` Segera dibuka: ${soon.map(v => v.city).join(', ')}.` : '');
+            const list = document.getElementById('globeList'); if (!list || list.dataset.ready) return;
+            list.dataset.ready = '1';
+            const byCountry = {};
+            GLOBE_CITIES.forEach(c => (byCountry[c.country] = byCountry[c.country] || []).push(c));
+            const order = Object.keys(byCountry).sort((a, b) => byCountry[b].reduce((s, c) => s + c.venues.length, 0) - byCountry[a].reduce((s, c) => s + c.venues.length, 0));
+            list.innerHTML = order.map(country => `
+                <div class="pt-4"><p class="text-xs text-gray-400 px-2">${esc(country)}</p>
+                ${byCountry[country].sort((a, b) => b.venues.length - a.venues.length).map(c => `
+                    <details class="globe-city" ${c.city.startsWith('Las Vegas') ? 'open' : ''}>
+                        <summary class="flex items-center justify-between gap-2 px-2 py-2 rounded-lg hover:bg-white/5"><span class="text-[15px] text-white">${esc(c.city)}</span><span class="text-xs text-gray-400 tabular-nums">${c.venues.length}</span></summary>
+                        <ul>${c.venues.map(v => `<li><button onclick="globeSelect('${v.key}')" class="w-full flex items-center justify-between gap-3 pl-4 pr-2 py-2 rounded-lg text-left hover:bg-white/5"><span class="min-w-0"><span class="block text-sm text-gray-200 truncate">${esc(v.name)}</span><span class="block text-xs text-gray-500 truncate">${esc(v.area)}</span></span><span data-gstatus="${v.key}" class="flex items-center gap-1.5 text-xs text-gray-400 whitespace-nowrap tabular-nums"></span></button></li>`).join('')}</ul>
+                    </details>`).join('')}
+                </div>`).join('');
+            refreshGlobeStatus();
+        }
+        function globeSearchInput() {
+            const inp = document.getElementById('globeSearch'), box = document.getElementById('globeResults');
+            const q = norm(inp.value.trim());
+            if (!q) { box.classList.add('hidden'); inp.setAttribute('aria-expanded', 'false'); globeResItems = []; return; }
+            const cities = GLOBE_CITIES.filter(c => norm(c.city + ' ' + c.country).includes(q)).map(c => ({ type: 'city', c, label: c.city, sub: `${c.country}, ${c.venues.length} venue` }));
+            const venues = GLOBE_VENUES.filter(v => norm([v.name, v.brand, v.city, v.country, v.area].join(' ')).includes(q)).map(v => ({ type: 'venue', v, label: v.name, sub: `${v.area}, ${v.city}` }));
+            globeResItems = cities.concat(venues).slice(0, 8);
+            globeResIdx = globeResItems.length ? 0 : -1;
+            renderGlobeResults();
+        }
+        function renderGlobeResults() {
+            const inp = document.getElementById('globeSearch'), box = document.getElementById('globeResults');
+            box.innerHTML = globeResItems.length ? globeResItems.map((it, k) => `<li id="gres${k}" role="option" aria-selected="${k === globeResIdx}"><button type="button" tabindex="-1" onmousedown="event.preventDefault()" onclick="pickGlobeResult(${k})" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left ${k === globeResIdx ? 'bg-white/10' : 'hover:bg-white/5'}"><i class="fa-solid ${it.type === 'city' ? 'fa-city' : 'fa-location-dot'} text-taoGold w-4 text-center" aria-hidden="true"></i><span class="min-w-0"><span class="block text-sm text-white truncate">${esc(it.label)}</span><span class="block text-xs text-gray-400 truncate">${esc(it.sub)}</span></span></button></li>`).join('')
+                : `<li class="px-3 py-3 text-sm text-gray-400">Tidak ada cabang yang cocok. Coba nama kota atau merek, misalnya “Hakkasan”.</li>`;
+            box.classList.remove('hidden');
+            inp.setAttribute('aria-expanded', 'true');
+            inp.setAttribute('aria-activedescendant', globeResIdx >= 0 ? 'gres' + globeResIdx : '');
+        }
+        function globeSearchKey(e) {
+            if (e.key === 'ArrowDown' && globeResItems.length) { e.preventDefault(); globeResIdx = (globeResIdx + 1) % globeResItems.length; renderGlobeResults(); }
+            else if (e.key === 'ArrowUp' && globeResItems.length) { e.preventDefault(); globeResIdx = (globeResIdx - 1 + globeResItems.length) % globeResItems.length; renderGlobeResults(); }
+            else if (e.key === 'Enter') { e.preventDefault(); if (globeResIdx >= 0) pickGlobeResult(globeResIdx); }
+            else if (e.key === 'Escape') { e.stopPropagation(); document.getElementById('globeResults').classList.add('hidden'); }
+        }
+        function pickGlobeResult(k) {
+            const it = globeResItems[k]; if (!it) return;
+            const inp = document.getElementById('globeSearch');
+            inp.value = it.label; document.getElementById('globeResults').classList.add('hidden'); inp.setAttribute('aria-expanded', 'false');
+            if (it.type === 'city') globeFlyCity(it.c); else globeSelect(it.v.key);
+        }
+        function openGlobeAt(name) {
+            switchTab('globeTab');
+            const v = GLOBE_VENUES.find(x => x.name === name);
+            if (v) setTimeout(() => globeSelect(v.key), globe ? 50 : 1500);
+        }
+
+        const __globeSwitchTab = window.switchTab;
+        window.switchTab = function (tabId, isBackwards) {
+            __globeSwitchTab(tabId, isBackwards);
+            document.body.classList.toggle('on-globe', tabId === 'globeTab');
+            if (tabId === 'globeTab') setTimeout(initGlobe, 30);
+        };
     </script>
 
     <!-- ===== Aksesibilitas: elemen klik non-tombol bisa dipakai dengan keyboard ===== -->

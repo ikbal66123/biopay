@@ -26,6 +26,19 @@ Jika izin kamera ditolak, alur tetap berjalan (scan disimulasikan).
 
 `tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah**: portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, dan Mini Games. Buka langsung di browser (butuh internet untuk Tailwind, ikon, font, dan foto).
 
+### Peta Global
+
+Tab **Peta Global** menampilkan semua cabang TAO Group di globe 3D (MapLibre GL 5.24 dengan peta dasar CARTO Dark Matter: nama negara, kota, sampai jalan).
+
+- **Data cabang nyata**: 47 venue di 15 kota dan 9 negara, plus Hakkasan Muscat yang segera dibuka. Mereknya TAO, Hakkasan, OMNIA, Marquee, LAVO, Beauty & Essex, Avenue, Yauatcha, Ling Ling, dan lainnya. Disusun dari taogroup.com, hakkasangroup.com, dan pemberitaan per November 2026 (`TAO_VENUES` di dalam file). Koordinat menunjuk ke gedung atau area venue. Data yang sama dipakai di seluruh aplikasi.
+- **Realtime**: jam setempat dan status buka atau tutup setiap venue dihitung langsung dari zona waktu kotanya, dengan jam operasional umum per jenis venue (perkiraan), dan diperbarui tiap 30 detik.
+- **Pencarian**: cari nama venue, merek, kota, negara, atau area (misalnya "hakkasan", "singapura", "caesars"). Pilih hasilnya, peta terbang ke sana.
+- **Penanda**: dari jauh, kota yang berdekatan digabung (misalnya "Las Vegas +2"). Ketuk untuk memperbesar ke kota itu, lalu ketuk titik venue.
+- **Kartu venue**: foto, area, jam setempat, status, tombol **Persiapan kunjungan** (masuk ke alur reservasi yang sama dengan portofolio), dan **Petunjuk arah** (Google Maps).
+- Tampilan globe atau datar, tombol *Lihat dunia*, dan daftar cabang per negara dan kota.
+
+Peta butuh internet (unpkg.com untuk MapLibre, basemaps.cartocdn.com untuk peta dasar) dan tetap jalan saat file dibuka langsung tanpa server.
+
 ### Desain
 
 Sistem desain lengkap (warna, huruf, tata letak, gerak, komponen, gaya bahasa) ada di [`DESIGN.md`](DESIGN.md). Skill desain yang dipakai ada di `.claude/skills/` (lihat `.claude/skills/SOURCES.md`): `frontend-design`, `taste-skill`, `web-design-guidelines`, `ui-ux-pro-max`, dan `playwright-cli`.
