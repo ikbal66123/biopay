@@ -1,0 +1,9 @@
+# Deploy from Git (Netlify: Add new site → Import from GitHub, base directory "cek-sehat").
+# "Netlify Drop" (drag a folder) only uploads the app, not this server function.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

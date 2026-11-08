@@ -10,8 +10,39 @@ Aplikasi web (PWA) untuk membantu memahami kondisi kesehatan dari rumah dan tahu
 - **Mode Riset** (dari Riwayat, atau `#riset`): uji akurasi detak jantung kamera terhadap oksimeter, dengan
   analisis Bland-Altman dan ekspor sinyal mentah. Rencana risetnya ada di [`riset/PROPOSAL.md`](riset/PROPOSAL.md)
 
-Semua data disimpan di `localStorage` perangkat. Tidak ada server, tidak ada login, dan tidak ada data yang dikirim
-keluar dari perangkat. Setelah dibuka sekali, aplikasi berjalan offline (service worker).
+Fitur tambahan (rencana di `CLAUDE.md` proyek, tahap 1 "prototipe demo"):
+
+| Fitur | Status |
+|---|---|
+| **Beranda + asisten suara**: bicara atau ketik, aplikasi langsung pindah ke fitur yang dimaksud; kata darurat langsung membuka layar darurat. Indonesia, Jawa, Sunda | Berjalan (pengenalan suara memakai layanan browser) |
+| **Tombol darurat**: 112, 119, Basarnas 115, ambil & kirim lokasi GPS, panduan pertolongan pertama. Gratis, tanpa tarif | Berjalan |
+| **Tanya AI**: keluhan + foto + data vital → 2–4 kemungkinan (tanpa persen), penanganan awal, kapan ke dokter, lalu chat | Berjalan setelah server AI aktif |
+| **Foto makanan** (perkiraan gizi, koreksi porsi) dan **foto obat** (jadwal, interaksi, "tanyakan ke dokter atau apoteker") | Berjalan setelah server AI aktif; jadwal & pengingat obat berjalan tanpa AI |
+| **Peringatan dini** dari tren riwayat (tensi naik 3 hari, gula tinggi berulang, demam 3 hari, demam turun pada DBD, dll.) | Berjalan |
+| **Misi harian** sesuai kondisi, poin, cek mingguan | Berjalan (hadiah: DEMO) |
+| **Menu sehat sesuai kantong** (warteg/masakan rumah) | Berjalan |
+| **Alat ukur Bluetooth** (standar Bluetooth kesehatan: tensi, gula, suhu, oksimeter, timbangan, detak) | Berjalan di Chrome Android/komputer; iPhone belum |
+| **Mode keluarga**: kirim kabar & peringatan lewat WhatsApp, dengan izin | Berjalan (notifikasi otomatis butuh server) |
+| **Panggil dokter**: chat/video, dokter ke rumah dengan tarif jarak & pelacakan, darurat | DEMO (dokter fiktif, contoh tarif) |
+| **Dashboard dokter** hijau/kuning/merah | DEMO (pasien fiktif) |
+| Peta waspada lingkungan, SATUSEHAT/BPJS, HealthKit/Health Connect, dokter langganan sungguhan | Belum: butuh server, izin, dan mitra |
+
+Data kesehatan disimpan di perangkat (`localStorage`/IndexedDB), tanpa login. Yang keluar dari HP hanya apa yang
+pengguna kirim sendiri: ke server AI (setelah persetujuan), ke WhatsApp keluarga, atau file ekspor. Setelah dibuka
+sekali, aplikasi berjalan offline kecuali fitur AI dan pengenalan suara.
+
+## Mengaktifkan server AI
+
+Fitur AI memanggil Claude lewat Netlify Function `netlify/functions/ai.mts` (`/api/ai`), sehingga API key tidak
+pernah ada di HP. **Netlify Drop (seret folder) tidak bisa**, karena hanya mengunggah aplikasi tanpa server.
+
+1. Buat API key di <https://console.anthropic.com> (bayar sesuai pemakaian).
+2. Di Netlify: **Add new site → Import an existing project → GitHub**, pilih repo ini dan branch-nya,
+   **Base directory** `cek-sehat`. Pengaturan build dibaca dari `netlify.toml`.
+3. **Site configuration → Environment variables**: tambahkan `ANTHROPIC_API_KEY`. Disarankan juga
+   `APP_ACCESS_CODE` (kode bebas) agar orang lain tidak memakai kredit Anda; isi kode yang sama di aplikasi:
+   Profil → Kode akses server AI.
+4. Deploy ulang. Model yang dipakai: `claude-opus-5-5`, dengan fallback otomatis jika permintaan ditolak.
 
 ## Menjalankan
 

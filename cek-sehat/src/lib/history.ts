@@ -9,7 +9,7 @@ import { GLUCOSE_TIMING_LABEL, type GlucoseTiming } from './classify';
 export type EntryType = 'detak' | 'tekanan' | 'gula' | 'berat' | 'suhu';
 
 export type EntryData =
-  | { type: 'detak'; bpm: number; source: 'kamera' | 'manual' }
+  | { type: 'detak'; bpm: number; source: 'kamera' | 'manual' | 'alat' }
   | { type: 'tekanan'; sys: number; dia: number }
   | { type: 'gula'; mgdl: number; timing: GlucoseTiming }
   | { type: 'berat'; weightKg: number; heightCm: number; bmi: number }
@@ -133,7 +133,7 @@ export function formatValue(e: Entry): string {
 export function formatDetail(e: Entry): string {
   switch (e.type) {
     case 'detak':
-      return e.source === 'kamera' ? 'Diukur dengan kamera' : 'Diukur dengan alat lain';
+      return e.source === 'kamera' ? 'Diukur dengan kamera' : e.source === 'alat' ? 'Dari alat Bluetooth' : 'Diukur dengan alat lain';
     case 'gula':
       return GLUCOSE_TIMING_LABEL[e.timing];
     case 'berat':
