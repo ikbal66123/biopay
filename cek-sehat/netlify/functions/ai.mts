@@ -5,10 +5,9 @@ import { HttpError, MAX_BODY_BYTES, handleAi } from '../lib/aiHandler';
 
 /**
  * POST /api/ai
- * Needs the environment variable ANTHROPIC_API_KEY (set in Netlify:
- * Site configuration → Environment variables). Optional APP_ACCESS_CODE:
- * when set, the app must send the same code, so strangers cannot spend
- * your API credit.
+ * Food-photo analysis. Needs the environment variable ANTHROPIC_API_KEY
+ * (Netlify: Site configuration → Environment variables). Anyone who can open
+ * the app can use it, so watch your usage in the Anthropic console.
  */
 const json = (status: number, data: unknown) =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
@@ -16,8 +15,6 @@ const json = (status: number, data: unknown) =>
 export default async (req: Request): Promise<Response> => {
   if (req.method !== 'POST') return json(405, { error: 'Gunakan POST.' });
   if (!process.env.ANTHROPIC_API_KEY) return json(503, { error: 'Fitur AI belum diaktifkan: ANTHROPIC_API_KEY belum diisi di server.' });
-  const code = process.env.APP_ACCESS_CODE;
-  if (code && req.headers.get('x-access-code') !== code) return json(401, { error: 'Kode akses salah. Isi kode akses di menu Profil.' });
 
   const raw = await req.text();
   if (raw.length > MAX_BODY_BYTES) return json(413, { error: 'Foto terlalu besar.' });

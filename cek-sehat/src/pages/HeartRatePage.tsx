@@ -6,7 +6,6 @@ import ResultCard from '../components/ResultCard';
 import { CameraError, openRearCamera, stopCamera } from '../lib/camera';
 import { classifyPulse } from '../lib/classify';
 import { addEntry } from '../lib/history';
-import { takeNavState } from '../lib/nav';
 import { analyzePpg, frameStats, isFingerCovering, type PpgResult, type Sample } from '../lib/ppg';
 
 const MEASURE_MS = 30_000;
@@ -100,12 +99,6 @@ export default function HeartRatePage({ onMeasured, embedded = false }: Props = 
       setPhase('error');
     }
   };
-
-  // Voice assistant: "cek detak jantung" opens this screen and starts right away.
-  useEffect(() => {
-    if (!embedded && takeNavState().autostart) void start();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Frame loop, runs while measuring.
   useEffect(() => {

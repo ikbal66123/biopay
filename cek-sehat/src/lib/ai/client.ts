@@ -1,10 +1,12 @@
-/** App side of the AI features: calls the server function at /api/ai. */
+/**
+ * App side of "Foto Makanan".
+ * Two ways to reach Claude:
+ *  1. the user's own API key saved on this phone → the app calls Anthropic directly
+ *     (works even when the app is uploaded with Netlify Drop);
+ *  2. otherwise the server function at /api/ai (deploy from Git with ANTHROPIC_API_KEY set).
+ */
 import { readPref, writePref } from '../prefs';
-import type { Entry } from '../history';
-import { formatDateTime, formatValue, TYPE_LABEL } from '../history';
-import type { Medicine } from '../meds';
-import { ageOf, CONDITION_LABEL, type Profile } from '../profile';
-import type { AiRequest, PatientContext } from './schemas';
+import type { FoodRequest, MakananResult } from './schemas';
 
 export const AI_ENDPOINT = '/api/ai';
 
@@ -14,38 +16,66 @@ export function hasAiConsent(): boolean {
 export function setAiConsent(v: boolean) {
   writePref('ai:setuju', v ? '1' : '0');
 }
-export function getAccessCode(): string {
-  return readPref('ai:kode') ?? '';
+
+export function getApiKey(): string {
+  return readPref('ai:kunci') ?? '';
 }
-export function setAccessCode(code: string) {
-  writePref('ai:kode', code.trim());
+export function setApiKey(key: string) {
+  writePref('ai:kunci', key.trim());
+}
+export function looksLikeApiKey(key: string): boolean {
+  return /^sk-ant-[A-Za-z0-9_-]{20,}$/.test(key.trim());
 }
 
-export class AiError extends Error {}
+export class AiError extends Error {
+  constructor(
+    message: string,
+    /** "setup": AI is not connected yet → show the API-key form */
+    public kind: 'setup' | 'other' = 'other',
+  ) {
+    super(message);
+  }
+}
 
-export async function askAi<T>(req: AiRequest, signal?: AbortSignal): Promise<T> {
-  if (typeof navigator !== 'undefined' && navigator.onLine === false)
-    throw new AiError('Tidak ada internet. Fitur AI butuh koneksi; fitur lain tetap bisa dipakai.');
+async function viaServer(req: FoodRequest): Promise<MakananResult> {
   let res: Response;
   try {
-    res = await fetch(AI_ENDPOINT, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-access-code': getAccessCode() },
-      body: JSON.stringify(req),
-      signal,
-    });
-  } catch (e) {
-    if ((e as Error).name === 'AbortError') throw e;
-    throw new AiError('Tidak bisa terhubung ke server. Periksa internet Anda.');
+    res = await fetch(AI_ENDPOINT, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(req) });
+  } catch {
+    throw new AiError('Tidak bisa terhubung. Periksa internet Anda.');
   }
   const type = res.headers.get('content-type') ?? '';
-  if (!type.includes('application/json'))
-    throw new AiError(
-      'Fitur AI belum aktif di alamat ini. Aplikasi perlu di-deploy bersama server AI (lihat panduan di README).',
-    );
+  if (!type.includes('application/json')) throw new AiError('AI belum terhubung. Isi API key di bagian Koneksi AI di bawah.', 'setup');
   const data = await res.json();
+  if (res.status === 503) throw new AiError('AI belum terhubung. Isi API key di bagian Koneksi AI di bawah.', 'setup');
   if (!res.ok) throw new AiError(data?.error ?? 'Terjadi kesalahan. Coba lagi.');
-  return data as T;
+  return data as MakananResult;
+}
+
+async function direct(key: string, req: FoodRequest): Promise<MakananResult> {
+  // loaded only when needed, so the rest of the app stays small and offline
+  const [{ default: Anthropic }, { analyzeFood, FoodError }] = await Promise.all([import('@anthropic-ai/sdk'), import('./food')]);
+  const client = new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true, maxRetries: 1 });
+  try {
+    return await analyzeFood(client, req.foto, req.kondisi);
+  } catch (e) {
+    if (e instanceof FoodError) throw new AiError(e.message);
+    if (e instanceof Anthropic.AuthenticationError) throw new AiError('API key ditolak. Periksa lagi kuncinya.', 'setup');
+    if (e instanceof Anthropic.PermissionDeniedError) throw new AiError('API key ini tidak punya izin. Periksa akun Anthropic Anda.', 'setup');
+    if (e instanceof Anthropic.RateLimitError) throw new AiError('Layanan AI sedang sibuk atau saldo kredit habis. Coba lagi nanti.');
+    if (e instanceof Anthropic.BadRequestError) throw new AiError('Permintaan ditolak. Periksa saldo kredit di akun Anthropic, atau coba foto lain.');
+    if (e instanceof Anthropic.APIConnectionError) throw new AiError('Tidak bisa terhubung. Periksa internet Anda.');
+    if (e instanceof Anthropic.APIError) throw new AiError('Layanan AI sedang bermasalah. Coba lagi nanti.');
+    throw new AiError('Terjadi kesalahan. Coba lagi.');
+  }
+}
+
+export async function analyzeFoodPhoto(foto: string, kondisi: string[]): Promise<MakananResult> {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false)
+    throw new AiError('Tidak ada internet. Foto makanan butuh koneksi; fitur lain tetap bisa dipakai.');
+  const req: FoodRequest = { task: 'makanan', foto, kondisi };
+  const key = getApiKey();
+  return key ? direct(key, req) : viaServer(req);
 }
 
 /** Downscale a photo before sending: smaller upload, same usefulness. */
@@ -68,20 +98,4 @@ export function resizeImage(file: File, max = 1280, quality = 0.85): Promise<str
     };
     img.src = url;
   });
-}
-
-/** What the AI gets to know: profile, medicines and the last week of measurements. */
-export function buildContext(profile: Profile, entries: Entry[], meds: Medicine[], now = Date.now()): PatientContext {
-  const week = now - 7 * 24 * 60 * 60 * 1000;
-  return {
-    usia: ageOf(profile),
-    jenis_kelamin: profile.sex,
-    kondisi: profile.conditions.map((c) => CONDITION_LABEL[c]),
-    obat: meds.map((m) => [m.name, m.strength, `${m.timesPerDay}x sehari`].filter(Boolean).join(' ')),
-    catatan: profile.notes,
-    data_terbaru: entries
-      .filter((e) => e.time >= week)
-      .slice(0, 12)
-      .map((e) => `${TYPE_LABEL[e.type]} ${formatValue(e)} (${e.label}, ${formatDateTime(e.time)})`),
-  };
 }

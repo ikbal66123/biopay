@@ -5,44 +5,34 @@ Aplikasi web (PWA) untuk membantu memahami kondisi kesehatan dari rumah dan tahu
 
 - **Detak Jantung**: perkiraan detak jantung dengan kamera belakang dan flash (PPG)
 - **Cek Angka**: IMT (Kemenkes RI), tekanan darah (AHA), gula darah, suhu tubuh, nadi manual
+- **Foto Makanan** (AI): mengenali makanan di foto dan memperkirakan kalori, karbohidrat, gula, serat, protein,
+  lemak, lemak jenuh, natrium, kolesterol, serta vitamin dan mineral; dibandingkan dengan batas gula/garam/lemak
+  harian Kemenkes, dengan koreksi porsi dan saran sesuai kondisi
 - **Cek Gejala**: triase tanda bahaya → IGD, keluhan sedang → dokter dalam 24 jam, keluhan ringan → rawat di rumah
 - **Riwayat**: grafik tren 7/30 hari, hapus per entri atau semua, ekspor CSV untuk dokter
 - **Mode Riset** (dari Riwayat, atau `#riset`): uji akurasi detak jantung kamera terhadap oksimeter, dengan
   analisis Bland-Altman dan ekspor sinyal mentah. Rencana risetnya ada di [`riset/PROPOSAL.md`](riset/PROPOSAL.md)
 
-Fitur tambahan (rencana di `CLAUDE.md` proyek, tahap 1 "prototipe demo"):
+Semua data disimpan di `localStorage` perangkat, tanpa login. Satu-satunya yang keluar dari perangkat adalah foto
+makanan (dan kondisi yang dipilih) saat pengguna menekan analisis, setelah menyetujui layar persetujuan. Setelah dibuka
+sekali, aplikasi berjalan offline (service worker), kecuali Foto Makanan yang butuh internet.
 
-| Fitur | Status |
-|---|---|
-| **Beranda + asisten suara**: bicara atau ketik, aplikasi langsung pindah ke fitur yang dimaksud; kata darurat langsung membuka layar darurat. Indonesia, Jawa, Sunda | Berjalan (pengenalan suara memakai layanan browser) |
-| **Tombol darurat**: 112, 119, Basarnas 115, ambil & kirim lokasi GPS, panduan pertolongan pertama. Gratis, tanpa tarif | Berjalan |
-| **Tanya AI**: keluhan + foto + data vital → 2–4 kemungkinan (tanpa persen), penanganan awal, kapan ke dokter, lalu chat | Berjalan setelah server AI aktif |
-| **Foto makanan** (perkiraan gizi, koreksi porsi) dan **foto obat** (jadwal, interaksi, "tanyakan ke dokter atau apoteker") | Berjalan setelah server AI aktif; jadwal & pengingat obat berjalan tanpa AI |
-| **Peringatan dini** dari tren riwayat (tensi naik 3 hari, gula tinggi berulang, demam 3 hari, demam turun pada DBD, dll.) | Berjalan |
-| **Misi harian** sesuai kondisi, poin, cek mingguan | Berjalan (hadiah: DEMO) |
-| **Menu sehat sesuai kantong** (warteg/masakan rumah) | Berjalan |
-| **Alat ukur Bluetooth** (standar Bluetooth kesehatan: tensi, gula, suhu, oksimeter, timbangan, detak) | Berjalan di Chrome Android/komputer; iPhone belum |
-| **Mode keluarga**: kirim kabar & peringatan lewat WhatsApp, dengan izin | Berjalan (notifikasi otomatis butuh server) |
-| **Panggil dokter**: chat/video, dokter ke rumah dengan tarif jarak & pelacakan, darurat | DEMO (dokter fiktif, contoh tarif) |
-| **Dashboard dokter** hijau/kuning/merah | DEMO (pasien fiktif) |
-| Peta waspada lingkungan, SATUSEHAT/BPJS, HealthKit/Health Connect, dokter langganan sungguhan | Belum: butuh server, izin, dan mitra |
+## Menghubungkan Foto Makanan dengan AI
 
-Data kesehatan disimpan di perangkat (`localStorage`/IndexedDB), tanpa login. Yang keluar dari HP hanya apa yang
-pengguna kirim sendiri: ke server AI (setelah persetujuan), ke WhatsApp keluarga, atau file ekspor. Setelah dibuka
-sekali, aplikasi berjalan offline kecuali fitur AI dan pengenalan suara.
+Foto Makanan memakai Claude (model `claude-opus-5-5`). Ada dua cara:
 
-## Mengaktifkan server AI
+**A. API key di aplikasi (paling mudah, untuk pemakaian pribadi).** Bisa dipakai walau aplikasi diunggah lewat
+Netlify Drop. Di aplikasi: tab Foto Makanan → **Koneksi AI** → tempel API key dari
+<https://console.anthropic.com> (menu API Keys, isi saldo kredit dulu). Kunci disimpan hanya di HP itu dan aplikasi
+memanggil Anthropic langsung dari HP.
 
-Fitur AI memanggil Claude lewat Netlify Function `netlify/functions/ai.mts` (`/api/ai`), sehingga API key tidak
-pernah ada di HP. **Netlify Drop (seret folder) tidak bisa**, karena hanya mengunggah aplikasi tanpa server.
-
-1. Buat API key di <https://console.anthropic.com> (bayar sesuai pemakaian).
-2. Di Netlify: **Add new site → Import an existing project → GitHub**, pilih repo ini dan branch-nya,
-   **Base directory** `cek-sehat`. Pengaturan build dibaca dari `netlify.toml`.
-3. **Site configuration → Environment variables**: tambahkan `ANTHROPIC_API_KEY`. Disarankan juga
-   `APP_ACCESS_CODE` (kode bebas) agar orang lain tidak memakai kredit Anda; isi kode yang sama di aplikasi:
-   Profil → Kode akses server AI.
-4. Deploy ulang. Model yang dipakai: `claude-opus-5-5`, dengan fallback otomatis jika permintaan ditolak.
+**B. Server (untuk aplikasi yang dipakai banyak orang).** Kunci disimpan di server, tidak di HP pengguna.
+1. Netlify: **Add new site → Import an existing project → GitHub**, pilih repo ini dan branch-nya, **Base directory**
+   `cek-sehat` (pengaturan build dibaca dari `netlify.toml`). Netlify Drop tidak bisa, karena tidak menjalankan server.
+2. **Site configuration → Environment variables**: isi `ANTHROPIC_API_KEY`. Deploy ulang.
+3. Fungsi server ada di `netlify/functions/ai.mts` (`POST /api/ai`). Jika pengguna tidak mengisi kunci sendiri,
+   aplikasi memakai server ini. Semua orang yang membuka aplikasi bisa memakai kredit Anda, jadi pantau pemakaian di
+   console Anthropic.
 
 ## Menjalankan
 

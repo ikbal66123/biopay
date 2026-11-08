@@ -1,55 +1,30 @@
 import { useEffect, useState } from 'react';
 import EmergencyBanner from './components/EmergencyBanner';
 import Welcome from './components/Welcome';
-import { IconCalc, IconHeart, IconHistory, IconHome, IconStethoscope } from './components/Icons';
+import { IconCalc, IconFood, IconHeart, IconHistory, IconStethoscope } from './components/Icons';
+import ErrorBoundary from './components/ErrorBoundary';
 import HeartRatePage from './pages/HeartRatePage';
 import CheckNumbersPage from './pages/CheckNumbersPage';
 import SymptomsPage from './pages/SymptomsPage';
 import HistoryPage from './pages/HistoryPage';
 import ResearchPage from './pages/ResearchPage';
-import HomePage from './pages/HomePage';
-import EmergencyPage from './pages/EmergencyPage';
-import AskAiPage from './pages/AskAiPage';
-import DoctorPage from './pages/DoctorPage';
 import FoodPage from './pages/FoodPage';
-import MedicinePage from './pages/MedicinePage';
-import MenuPage from './pages/MenuPage';
-import MissionsPage from './pages/MissionsPage';
-import DevicesPage from './pages/DevicesPage';
-import FamilyPage from './pages/FamilyPage';
-import ProfilePage from './pages/ProfilePage';
-import DoctorDashboardPage from './pages/DoctorDashboardPage';
 import { readPref, writePref } from './lib/prefs';
 
-/** Screens reached from the Beranda (home), not from the tab bar. */
-const PAGES = {
-  riset: ResearchPage,
-  darurat: EmergencyPage,
-  'tanya-ai': AskAiPage,
-  dokter: DoctorPage,
-  'foto-makanan': FoodPage,
-  'foto-obat': MedicinePage,
-  menu: MenuPage,
-  misi: MissionsPage,
-  alat: DevicesPage,
-  keluarga: FamilyPage,
-  profil: ProfilePage,
-  'dashboard-dokter': DoctorDashboardPage,
-} as const;
-
-type Tab = 'beranda' | 'jantung' | 'angka' | 'gejala' | 'riwayat' | keyof typeof PAGES;
+type Tab = 'jantung' | 'angka' | 'makanan' | 'gejala' | 'riwayat' | 'riset';
 
 const TABS: { id: Tab; label: string; Icon: typeof IconHeart }[] = [
-  { id: 'beranda', label: 'Beranda', Icon: IconHome },
   { id: 'jantung', label: 'Detak Jantung', Icon: IconHeart },
   { id: 'angka', label: 'Cek Angka', Icon: IconCalc },
+  { id: 'makanan', label: 'Foto Makanan', Icon: IconFood },
   { id: 'gejala', label: 'Cek Gejala', Icon: IconStethoscope },
   { id: 'riwayat', label: 'Riwayat', Icon: IconHistory },
 ];
 
 function tabFromHash(): Tab {
   const h = window.location.hash.replace('#', '') as Tab;
-  return h in PAGES || TABS.some((t) => t.id === h) ? h : 'beranda';
+  // "riset" (research mode) is reached from the Riwayat page, not from the tab bar
+  return h === 'riset' || TABS.some((t) => t.id === h) ? h : 'jantung';
 }
 
 export default function App() {
@@ -57,10 +32,7 @@ export default function App() {
   const [tab, setTab] = useState<Tab>(tabFromHash);
 
   useEffect(() => {
-    const onHash = () => {
-      setTab(tabFromHash());
-      window.scrollTo({ top: 0 });
-    };
+    const onHash = () => setTab(tabFromHash());
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
@@ -84,15 +56,14 @@ export default function App() {
       ) : (
         <>
           <main className="mx-auto max-w-md px-4 pb-28 pt-4">
-            {tab === 'jantung' && <HeartRatePage />}
-            {tab === 'angka' && <CheckNumbersPage />}
-            {tab === 'gejala' && <SymptomsPage />}
-            {tab === 'riwayat' && <HistoryPage />}
-            {tab === 'beranda' && <HomePage />}
-            {tab in PAGES && (() => {
-              const Page = PAGES[tab as keyof typeof PAGES];
-              return <Page key={tab} />;
-            })()}
+            <ErrorBoundary key={tab}>
+              {tab === 'jantung' && <HeartRatePage />}
+              {tab === 'angka' && <CheckNumbersPage />}
+              {tab === 'makanan' && <FoodPage />}
+              {tab === 'gejala' && <SymptomsPage />}
+              {tab === 'riwayat' && <HistoryPage />}
+              {tab === 'riset' && <ResearchPage />}
+            </ErrorBoundary>
           </main>
           <nav
             className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95"

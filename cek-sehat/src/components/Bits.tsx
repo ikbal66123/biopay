@@ -1,22 +1,3 @@
-import { IconArrowLeft } from './Icons';
-
-export function BackHome() {
-  return (
-    <a href="#beranda" className="mb-2 inline-flex items-center gap-1 text-sm font-semibold text-teal-700 dark:text-teal-400">
-      <IconArrowLeft width={16} height={16} /> Beranda
-    </a>
-  );
-}
-
-/** Marks simulated parts of the prototype (fictional doctors, clinics, patients). */
-export function DemoBadge({ children = 'DEMO' }: { children?: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center rounded-md bg-violet-100 px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-violet-800 dark:bg-violet-950 dark:text-violet-200">
-      {children}
-    </span>
-  );
-}
-
 export function Notice({ tone = 'info', children }: { tone?: 'info' | 'warn' | 'danger' | 'ok'; children: React.ReactNode }) {
   const cls = {
     info: 'border-sky-300 bg-sky-50 text-sky-950 dark:border-sky-800 dark:bg-sky-950/40 dark:text-sky-100',
@@ -36,7 +17,7 @@ export function Spinner({ label }: { label: string }) {
   );
 }
 
-/** Small reminder shown before anything is sent to the AI service. */
+/** Shown once, before the first photo is sent to the AI service. */
 export function AiConsent({ onAccept }: { onAccept: () => void }) {
   return (
     <div className="card space-y-3 text-[15px]">
@@ -44,10 +25,10 @@ export function AiConsent({ onAccept }: { onAccept: () => void }) {
       <ul className="list-disc space-y-1 pl-5">
         <li>Fitur ini butuh internet.</li>
         <li>
-          Keluhan, foto, dan data kesehatan yang Anda pilih akan <b>dikirim ke layanan AI (Claude dari Anthropic)</b> lewat server aplikasi
-          untuk dianalisis. Data lain tetap di HP ini.
+          Foto makanan dan kondisi yang Anda pilih akan <b>dikirim ke layanan AI (Claude dari Anthropic)</b> untuk dianalisis. Data
+          kesehatan lain tetap di HP ini.
         </li>
-        <li>Jawaban AI adalah perkiraan, bukan diagnosis. Tetap periksa ke dokter jika ragu.</li>
+        <li>Hasilnya perkiraan. Untuk diet khusus, ikuti anjuran dokter atau ahli gizi.</li>
       </ul>
       <button className="btn-primary w-full" onClick={onAccept}>
         Saya setuju, lanjutkan
