@@ -511,6 +511,55 @@
             .globe-note { display: none; }
         }
     </style>
+
+    <!-- ===== Peta Global: lapisan data ===== -->
+    <style id="tao-globe-layers-css">
+        .gp-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 12px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .06); }
+        .gp-tab { padding: 8px 10px; border-radius: 9px; font: 500 13px 'Jost', sans-serif; color: #A9B9B1; transition: background-color .2s, color .2s; }
+        .gp-tab:hover { color: #F5F1E8; }
+        .gp-tab.on { background: rgba(15, 94, 73, .55); color: #F5F1E8; }
+        .gl-row { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; cursor: pointer; transition: background-color .2s; }
+        .gl-row:hover { background: rgba(255, 255, 255, .04); }
+        .gl-row:has(input:focus-visible) { outline: 2px solid #F3E6C4; outline-offset: 2px; }
+        .gl-ico { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border-radius: 10px; background: rgba(255, 255, 255, .05); color: #8C9E95; transition: background-color .2s, color .2s; }
+        .gl-row.on .gl-ico { background: rgba(15, 94, 73, .7); color: #F3E6C4; }
+        .gl-switch { position: relative; width: 34px; height: 20px; flex: none; border-radius: 99px; background: #22362E; transition: background-color .2s; }
+        .gl-switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 99px; background: #8C9E95; transition: transform .2s, background-color .2s; }
+        .gl-row.on .gl-switch { background: #D9BE86; }
+        .gl-row.on .gl-switch::after { transform: translateX(14px); background: #06110D; }
+        .gl-status { position: absolute; z-index: 3; top: 16px; left: 388px; display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px; background: rgba(6, 16, 13, .86); border: 1px solid rgba(243, 230, 196, .14); color: #F5F1E8; font: 500 12px 'Jost', sans-serif; backdrop-filter: blur(10px); }
+        .gl-live-dot { width: 7px; height: 7px; border-radius: 99px; background: #2FA37F; box-shadow: 0 0 0 4px rgba(47, 163, 127, .2); }
+        .globe-controls { right: 16px; align-items: center; }
+        .gl-ticker { flex: 1; min-width: 0; display: flex; align-items: center; gap: 14px; overflow-x: auto; white-space: nowrap; padding: 9px 14px; border-radius: 999px; background: rgba(6, 16, 13, .86); border: 1px solid rgba(243, 230, 196, .14); color: #D3DCD6; font: 400 12.5px 'Jost', sans-serif; scrollbar-width: none; }
+        .gl-ticker::-webkit-scrollbar { display: none; }
+        .gl-ticker button { color: inherit; display: inline-flex; align-items: center; gap: 6px; }
+        .gl-ticker button:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+        .gl-ticker span { display: inline-flex; align-items: center; gap: 6px; }
+        .gl-sep { width: 1px; height: 14px; background: rgba(255, 255, 255, .15); }
+        .gl-coords { flex: none; padding: 9px 12px; border-radius: 999px; background: rgba(6, 16, 13, .86); border: 1px solid rgba(243, 230, 196, .14); color: #A9B9B1; font: 400 12px 'Jost', sans-serif; min-width: 190px; text-align: center; }
+        .gl-coords:empty { display: none; }
+        .gl-hide-venues .gm-city-wrap, .gl-hide-venues .gm-venue-wrap { display: none !important; }
+        .gm-city-wrap { position: relative; }
+        .gm-city-wrap .gl-wx { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 5px; }
+        .gl-wx-off .gl-wx { display: none !important; }
+        .gl-wx { display: flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; background: rgba(5, 12, 10, .78); border: 1px solid rgba(125, 211, 252, .25); color: #E0F2FE; font: 500 11.5px 'Jost', sans-serif; white-space: nowrap; pointer-events: auto; }
+        .gl-wx .gl-wind { font-size: 9px; color: #7DD3FC; }
+        .gl-iss { display: flex; align-items: center; gap: 6px; pointer-events: none; }
+        .gl-iss-dot { width: 26px; height: 26px; border-radius: 99px; display: grid; place-items: center; background: #0B2A3A; border: 1px solid #7DD3FC; color: #7DD3FC; font-size: 12px; box-shadow: 0 0 0 6px rgba(125, 211, 252, .15); }
+        .gl-iss-lbl { padding: 2px 7px; border-radius: 6px; background: rgba(5, 12, 10, .85); color: #E0F2FE; font: 600 11px 'Jost', sans-serif; }
+        .gl-popup .maplibregl-popup-content { background: #0A1612; color: #D3DCD6; border: 1px solid rgba(243, 230, 196, .18); border-radius: 12px; padding: 12px 30px 12px 14px; font: 400 13px/1.5 'Jost', sans-serif; box-shadow: 0 20px 40px -16px rgba(0, 0, 0, .9); }
+        .gl-popup .maplibregl-popup-content b { color: #F5F1E8; font-weight: 600; }
+        .gl-popup .maplibregl-popup-content span { color: #8C9E95; font-size: 12px; }
+        .gl-popup .maplibregl-popup-content a { color: #F3E6C4; text-decoration: underline; text-underline-offset: 3px; }
+        .gl-popup .maplibregl-popup-close-button { color: #A9B9B1; font-size: 18px; right: 6px; top: 4px; }
+        .gl-popup .maplibregl-popup-tip { border-top-color: #0A1612 !important; border-bottom-color: #0A1612 !important; }
+        @media (max-width: 899px) {
+            .gl-status { display: none; }
+            .globe-controls { right: 12px; flex-wrap: wrap; }
+            .gl-ticker { order: -1; flex-basis: 100%; }
+            .gl-coords { display: none; }
+        }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col text-slate-100 bg-[#050C0A] selection:bg-taoGold selection:text-black">
     <a href="#main" class="skip-link">Lewati ke konten utama</a>
@@ -1466,19 +1515,29 @@
                         <div><h2 class="font-display text-3xl text-white">Peta cabang</h2><p id="globeSummary" class="text-sm text-gray-300 mt-1"></p></div>
                         <button type="button" onclick="this.closest('.globe-panel').classList.toggle('list-open')" class="min-[900px]:hidden globe-btn shrink-0">Daftar</button>
                     </div>
-                    <div class="relative mt-4">
+                    <div class="gp-tabs mt-4" role="tablist" aria-label="Isi panel peta">
+                        <button id="gpTabCabang" type="button" role="tab" aria-selected="true" aria-controls="gpCabang" class="gp-tab on" onclick="setGlobePanelTab('cabang')">Cabang</button>
+                        <button id="gpTabLayers" type="button" role="tab" aria-selected="false" aria-controls="gpLayers" class="gp-tab" onclick="setGlobePanelTab('layers')">Lapisan data</button>
+                    </div>
+                    <div id="gpCabang" role="tabpanel" aria-labelledby="gpTabCabang" class="flex flex-col min-h-0 flex-1">
+                    <div class="relative mt-3">
                         <label for="globeSearch" class="sr-only">Cari cabang, kota, atau negara</label>
                         <input id="globeSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Cari cabang, kota, atau negara…" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="globeResults" oninput="globeSearchInput()" onkeydown="globeSearchKey(event)" onblur="setTimeout(() => document.getElementById('globeResults').classList.add('hidden'), 150)" class="w-full bg-[#07100D] border border-neutral-700 rounded-xl pl-10 pr-3 py-3 text-sm text-white placeholder-gray-500">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm" aria-hidden="true"></i>
                         <ul id="globeResults" role="listbox" aria-label="Hasil pencarian" class="hidden"></ul>
                     </div>
                     <div id="globeList" class="globe-list" aria-label="Daftar cabang per negara"></div>
+                    </div>
+                    <div id="gpLayers" role="tabpanel" aria-labelledby="gpTabLayers" class="hidden globe-list mt-3 space-y-1"></div>
                     <p class="globe-note text-xs text-gray-500 mt-3 leading-relaxed">Status buka dihitung dari jam setempat dengan jam operasional umum per jenis venue. Daftar dari sumber publik TAO Group, November 2026.</p>
                 </div>
                 <aside id="globeCard" class="globe-card hidden" aria-label="Detail cabang" aria-live="polite"></aside>
+                <div class="gl-status" aria-live="polite"><span class="gl-live-dot" aria-hidden="true"></span><span id="glLive">Memuat sumber data…</span><span id="glUtc" class="tabular-nums text-gray-400"></span></div>
                 <div class="globe-controls">
                     <button id="globeProjBtn" type="button" onclick="toggleGlobeProjection()" class="globe-btn">Tampilan datar</button>
                     <button type="button" onclick="globeReset()" class="globe-btn">Lihat dunia</button>
+                    <div id="glTicker" class="gl-ticker" aria-live="polite"></div>
+                    <div id="glCoords" class="gl-coords tabular-nums" aria-hidden="true"></div>
                 </div>
                 <div id="globeFallback" class="hidden absolute inset-0 z-[4] grid place-items-center p-8 text-center text-sm text-gray-300 bg-[#050C0A]/90"></div>
             </div>
@@ -4143,7 +4202,7 @@
                 try {
                     globe = new maplibregl.Map({ container: 'globeMap', style: GLOBE_STYLE, center: globeHomeCenter(), zoom: globeHomeZoom() - (luxReduce ? 0 : 0.6), attributionControl: { compact: true }, maxPitch: 70, trackResize: false });
                 } catch (e) { return globeFail('Browser ini tidak mendukung peta 3D (WebGL).'); }
-                globe.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
+                globe.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
                 globe.on('style.load', () => { globeApplyProjection(); globeTheme(); });
                 globe.on('error', e => {
                     const msg = String(e && e.error && e.error.message || '');
@@ -4207,11 +4266,14 @@
         function groupCityMarkers() {
             if (!globe || !globeVisible()) return;
             globeGroupMarkers.forEach(m => m.remove()); globeGroupMarkers = [];
-            const items = GLOBE_CITIES.map((c, i) => ({ c, i, pt: globe.project([c.lng, c.lat]) })).sort((a, b) => b.c.venues.length - a.c.venues.length);
+            // Di mode globe, kota di sisi belakang bumi (lebih dari 90° dari titik tengah) tidak digabung dengan kota di sisi depan
+            const ctr = globe.getCenter(), rad = Math.PI / 180;
+            const back = c => globeProj === 'globe' && (Math.sin(ctr.lat * rad) * Math.sin(c.lat * rad) + Math.cos(ctr.lat * rad) * Math.cos(c.lat * rad) * Math.cos((c.lng - ctr.lng) * rad)) < 0;
+            const items = GLOBE_CITIES.map((c, i) => ({ c, i, pt: globe.project([c.lng, c.lat]), back: back(c) })).sort((a, b) => (a.back - b.back) || (b.c.venues.length - a.c.venues.length));
             const used = new Set();
             items.forEach(lead => {
                 if (used.has(lead.i)) return;
-                const group = items.filter(o => !used.has(o.i) && Math.abs(o.pt.x - lead.pt.x) < 120 && Math.abs(o.pt.y - lead.pt.y) < 34);
+                const group = items.filter(o => !used.has(o.i) && o.back === lead.back && Math.abs(o.pt.x - lead.pt.x) < 120 && Math.abs(o.pt.y - lead.pt.y) < (glOn.has('weather') ? 60 : 34));
                 group.forEach(o => used.add(o.i));
                 group.forEach(o => { globeCityMarkers[o.i].getElement().style.visibility = group.length > 1 ? 'hidden' : ''; });
                 if (group.length < 2) return;
@@ -4226,9 +4288,10 @@
                     const cam = globe.cameraForBounds(b, { padding: globePadding(), maxZoom: 15.5 });
                     globe.flyTo({ center: cam ? cam.center : [lead.c.lng, lead.c.lat], zoom: cam ? cam.zoom : 5, pitch: 0, bearing: 0, duration: luxReduce ? 0 : 2200, essential: true });
                 });
-                const wrap = document.createElement('div'); wrap.className = 'gm-city-wrap'; wrap.appendChild(el);
+                const wrap = document.createElement('div'); wrap.className = 'gm-city-wrap'; wrap.dataset.lead = lead.c.key; wrap.appendChild(el);
                 globeGroupMarkers.push(new maplibregl.Marker({ element: wrap, anchor: 'center' }).setLngLat([lead.c.lng, lead.c.lat]).addTo(globe));
             });
+            if (typeof glPlaceWeather === 'function') glPlaceWeather();
         }
         function updateMarkerMode() {
             if (!globe) return;
@@ -4298,6 +4361,7 @@
                         <div class="bg-[#0A1612] p-3"><p class="text-xs text-gray-400">Status</p><p class="mt-0.5 flex items-center gap-2 ${s.open ? 'text-emerald-300' : 'text-gray-300'}"><span class="w-1.5 h-1.5 rounded-full ${s.open ? 'bg-taoEmerald' : 'bg-gray-500'}"></span>${s.open ? 'Buka' : s.soon ? 'Segera dibuka' : 'Tutup'}</p></div>
                     </div>
                     <p class="text-xs text-gray-400 mt-2">${s.label}${s.open && !v.soon ? `, sekitar ${esc(v.cap)} terisi` : ''}</p>
+                    ${(() => { const w = typeof glVenueWeather === 'function' ? glVenueWeather(v) : null; const night = typeof glIsNight === 'function' ? glIsNight(v.lat, v.lng) : null; return (w || night !== null) ? `<div class="mt-3 space-y-1.5 text-sm text-gray-300">${w ? `<p class="flex items-center gap-2"><i class="fa-solid fa-cloud-sun text-taoGoldLight w-4" aria-hidden="true"></i>${esc(w)}</p>` : ''}${night !== null ? `<p class="flex items-center gap-2"><i class="fa-solid ${night ? 'fa-moon' : 'fa-sun'} text-taoGoldLight w-4" aria-hidden="true"></i>${night ? 'Sedang malam di kota ini' : 'Sedang siang di kota ini'}</p>` : ''}</div>` : ''; })()}
                     <div class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-5">
                         ${v.soon ? `<button onclick="showToast('Kami akan mengabari Anda saat ${esc(v.name)} dibuka', 'success')" class="lux-cta">Kabari saya</button>` : `<button onclick="globeVisit('${v.key}')" class="lux-cta">Persiapan kunjungan</button>`}
                         <a href="${maps}" target="_blank" rel="noopener" class="lux-link text-sm">Petunjuk arah</a>
@@ -4379,6 +4443,270 @@
             __globeSwitchTab(tabId, isBackwards);
             document.body.classList.toggle('on-globe', tabId === 'globeTab');
             if (tabId === 'globeTab') setTimeout(initGlobe, 30);
+        };
+    </script>
+
+    <!-- ===== Peta Global: lapisan data langsung (gaya pusat komando) ===== -->
+    <script id="tao-globe-layers">
+        // Semua sumber tanpa API key dan bisa diakses langsung dari browser. Tiap sumber punya batas waktu dan
+        // penanganan gagal sendiri: satu sumber mati tidak menghentikan peta.
+        const GL_LAYERS = [
+            { id: 'venues', name: 'Cabang TAO Group', icon: 'fa-location-dot', src: 'Sumber publik TAO Group', every: 0 },
+            { id: 'daynight', name: 'Siang & malam', icon: 'fa-circle-half-stroke', src: 'Posisi matahari, dihitung di perangkat', every: 60 },
+            { id: 'weather', name: 'Cuaca kota TAO', icon: 'fa-cloud-sun', src: 'Open-Meteo', every: 900 },
+            { id: 'rain', name: 'Radar hujan', icon: 'fa-cloud-showers-heavy', src: 'RainViewer', every: 600 },
+            { id: 'quakes', name: 'Gempa 24 jam', icon: 'fa-house-crack', src: 'USGS, M2.5 ke atas', every: 300 },
+            { id: 'flights', name: 'Penerbangan langsung', icon: 'fa-plane', src: 'OpenSky Network', every: 60 },
+            { id: 'iss', name: 'Satelit ISS', icon: 'fa-satellite', src: 'Where the ISS at?', every: 10 }
+        ];
+        const glOn = new Set(['venues', 'daynight', 'weather', 'quakes']);
+        const glState = {}; // id -> { status: 'idle'|'loading'|'ok'|'error', count, at, msg }
+        const glTimers = {};
+        let glReady = false, glQuakes = [], glWeather = {}, glFlights = [], glIss = null, glIssMarker = null, glPopup = null;
+
+        (function readLayersFromUrl() {
+            const q = new URLSearchParams(location.search).get('layers');
+            if (!q) return;
+            glOn.clear();
+            q.split(',').map(s => s.trim()).forEach(id => { if (GL_LAYERS.some(l => l.id === id)) glOn.add(id); });
+        })();
+        function glWriteUrl() {
+            try { const u = new URL(location.href); u.searchParams.set('layers', [...glOn].join(',')); history.replaceState(null, '', u); } catch (e) {}
+        }
+
+        async function glFetch(url, ms = 12000) {
+            const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), ms);
+            try { const r = await fetch(url, { signal: ctl.signal }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
+            finally { clearTimeout(t); }
+        }
+        function glSet(id, patch) { glState[id] = Object.assign(glState[id] || {}, patch); renderLayerPanel(); renderGlobeTicker(); }
+
+        /* ---------- Panel lapisan ---------- */
+        function renderLayerPanel() {
+            const box = document.getElementById('gpLayers'); if (!box) return;
+            const ago = t => { if (!t) return ''; const s = Math.round((Date.now() - t) / 1000); return s < 60 ? 'baru saja' : Math.round(s / 60) + ' mnt lalu'; };
+            box.innerHTML = GL_LAYERS.map(l => {
+                const st = glState[l.id] || {}, on = glOn.has(l.id);
+                const status = !on ? 'Mati' : st.status === 'loading' ? 'Memuat…' : st.status === 'error' ? (st.msg || 'Tidak tersedia') : st.status === 'ok' ? (st.count != null ? st.count + ' ' : '') + (st.unit || '') + (st.at ? ', ' + ago(st.at) : '') : 'Aktif';
+                return `<label class="gl-row ${on ? 'on' : ''}">
+                    <input type="checkbox" class="sr-only peer" ${on ? 'checked' : ''} onchange="toggleGlobeLayer('${l.id}', this.checked)">
+                    <span class="gl-ico"><i class="fa-solid ${l.icon}" aria-hidden="true"></i></span>
+                    <span class="min-w-0 flex-1"><span class="block text-sm text-white">${l.name}</span><span class="block text-xs ${st.status === 'error' && on ? 'text-rose-300' : 'text-gray-400'} truncate">${status}</span><span class="block text-[11px] text-gray-500 truncate">${l.src}</span></span>
+                    <span class="gl-switch" aria-hidden="true"></span>
+                </label>`;
+            }).join('');
+        }
+        function setGlobePanelTab(t) {
+            ['Cabang', 'Layers'].forEach(n => {
+                const on = (n === 'Cabang') === (t === 'cabang');
+                document.getElementById('gp' + n).classList.toggle('hidden', !on);
+                const b = document.getElementById('gpTab' + n); b.setAttribute('aria-selected', on); b.classList.toggle('on', on);
+            });
+            if (t === 'layers') renderLayerPanel();
+            if (window.innerWidth < 900) document.querySelector('.globe-panel').classList.add('list-open');
+        }
+        function toggleGlobeLayer(id, on) {
+            on ? glOn.add(id) : glOn.delete(id);
+            glWriteUrl();
+            if (glReady) glApply(id);
+            if (id === 'weather' && typeof groupCityMarkers === 'function') groupCityMarkers();
+            renderLayerPanel(); renderGlobeTicker();
+        }
+
+        /* ---------- Siapkan setelah peta & style siap ---------- */
+        function glInit() {
+            if (!globe || glReady) return;
+            glReady = true;
+            globe.on('style.load', () => { glAddSources(); GL_LAYERS.forEach(l => glApply(l.id)); });
+            if (globe.isStyleLoaded()) glAddSources();
+            GL_LAYERS.forEach(l => glApply(l.id));
+            globe.on('mousemove', e => { const c = document.getElementById('glCoords'); if (c) c.textContent = `${Math.abs(e.lngLat.lat).toFixed(3)}° ${e.lngLat.lat >= 0 ? 'LU' : 'LS'}, ${Math.abs(e.lngLat.lng).toFixed(3)}° ${e.lngLat.lng >= 0 ? 'BT' : 'BB'}`; });
+            globe.on('moveend', () => { if (glOn.has('flights')) glLoad('flights'); glPlaceWeather(); });
+            setInterval(() => { const u = document.getElementById('glUtc'); if (u) u.textContent = new Intl.DateTimeFormat('id-ID', { timeZone: 'UTC', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date()) + ' UTC'; }, 1000);
+            renderLayerPanel();
+        }
+        function glBeforeId() { const l = (globe.getStyle().layers || []).find(x => x.type === 'symbol'); return l ? l.id : undefined; }
+        function glAddSources() {
+            const empty = { type: 'FeatureCollection', features: [] };
+            const add = (id, src) => { if (!globe.getSource(id)) globe.addSource(id, src); };
+            add('gl-night', { type: 'geojson', data: empty });
+            add('gl-quakes', { type: 'geojson', data: empty });
+            add('gl-flights', { type: 'geojson', data: empty });
+            add('gl-iss-orbit', { type: 'geojson', data: empty });
+            const before = glBeforeId();
+            const lay = (spec, b) => { if (!globe.getLayer(spec.id)) globe.addLayer(spec, b); };
+            lay({ id: 'gl-night', type: 'fill', source: 'gl-night', paint: { 'fill-color': '#01060A', 'fill-opacity': 0.5 } }, before);
+            lay({ id: 'gl-night-edge', type: 'line', source: 'gl-night', paint: { 'line-color': 'rgba(243,230,196,0.35)', 'line-width': 1, 'line-blur': 2 } }, before);
+            lay({ id: 'gl-iss-orbit', type: 'line', source: 'gl-iss-orbit', paint: { 'line-color': '#7DD3FC', 'line-width': 1.2, 'line-dasharray': [2, 2], 'line-opacity': 0.8 } });
+            lay({ id: 'gl-quakes-halo', type: 'circle', source: 'gl-quakes', paint: { 'circle-radius': ['interpolate', ['linear'], ['get', 'mag'], 2.5, 8, 7, 34], 'circle-color': ['interpolate', ['linear'], ['get', 'mag'], 2.5, 'rgba(251,191,36,0.15)', 5, 'rgba(249,115,22,0.18)', 6.5, 'rgba(180,35,60,0.25)'], 'circle-stroke-width': 0 } });
+            lay({ id: 'gl-quakes', type: 'circle', source: 'gl-quakes', paint: { 'circle-radius': ['interpolate', ['linear'], ['get', 'mag'], 2.5, 3, 7, 11], 'circle-color': ['interpolate', ['linear'], ['get', 'mag'], 2.5, '#FBBF24', 5, '#F97316', 6.5, '#E11D48'], 'circle-stroke-color': '#050C0A', 'circle-stroke-width': 1.5 } });
+            if (!globe.hasImage('gl-plane')) globe.addImage('gl-plane', glPlaneIcon(), { pixelRatio: 2 });
+            lay({ id: 'gl-flights', type: 'symbol', source: 'gl-flights', layout: { 'icon-image': 'gl-plane', 'icon-size': 0.9, 'icon-rotate': ['get', 'track'], 'icon-rotation-alignment': 'map', 'icon-allow-overlap': true, 'icon-ignore-placement': true } });
+            globe.on('click', 'gl-quakes', e => { const f = e.features[0]; glShowPopup(e.lngLat, `<b>Gempa M${(+f.properties.mag).toFixed(1)}</b><br>${esc(f.properties.place || '')}<br><span>${glAgo(+f.properties.time)}, kedalaman ${(+f.properties.depth).toFixed(0)} km</span><br><a href="${esc(f.properties.url)}" target="_blank" rel="noopener">Detail di USGS</a>`); });
+            globe.on('click', 'gl-flights', e => { const p = e.features[0].properties; glShowPopup(e.lngLat, `<b>${esc(p.callsign || p.icao)}</b><br>${esc(p.country)}<br><span>${p.alt ? Math.round(p.alt).toLocaleString('id-ID') + ' m' : 'Di darat'}, ${p.speed ? Math.round(p.speed * 3.6) + ' km/j' : ''}</span><br><a href="https://globe.adsbexchange.com/?icao=${esc(p.icao)}" target="_blank" rel="noopener">Lacak penerbangan</a>`); });
+            ['gl-quakes', 'gl-flights'].forEach(id => { globe.on('mouseenter', id, () => globe.getCanvas().style.cursor = 'pointer'); globe.on('mouseleave', id, () => globe.getCanvas().style.cursor = ''); });
+        }
+        function glShowPopup(ll, html) { if (glPopup) glPopup.remove(); glPopup = new maplibregl.Popup({ className: 'gl-popup', closeButton: true, maxWidth: '260px' }).setLngLat(ll).setHTML(html).addTo(globe); }
+        const glAgo = t => { const m = Math.round((Date.now() - t) / 60000); return m < 60 ? m + ' mnt lalu' : Math.round(m / 60) + ' jam lalu'; };
+        function glPlaneIcon() {
+            const s = 40, c = document.createElement('canvas'); c.width = c.height = s; const x = c.getContext('2d');
+            x.translate(s / 2, s / 2); x.fillStyle = '#F3E6C4'; x.strokeStyle = '#050C0A'; x.lineWidth = 2;
+            x.beginPath(); x.moveTo(0, -16); x.lineTo(3, -4); x.lineTo(15, 3); x.lineTo(15, 6); x.lineTo(3, 3); x.lineTo(2, 11); x.lineTo(6, 14); x.lineTo(6, 16); x.lineTo(0, 14); x.lineTo(-6, 16); x.lineTo(-6, 14); x.lineTo(-2, 11); x.lineTo(-3, 3); x.lineTo(-15, 6); x.lineTo(-15, 3); x.lineTo(-3, -4); x.closePath(); x.stroke(); x.fill();
+            return x.getImageData(0, 0, s, s);
+        }
+        function glVis(id, on) { if (globe.getLayer(id)) globe.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'); }
+
+        /* ---------- Menyalakan / mematikan tiap lapisan ---------- */
+        function glApply(id) {
+            // isStyleLoaded() bernilai false selama ada sumber yang sedang dimuat, jadi cek sumber kita sendiri
+            if (!globe || !globe.getSource('gl-night')) return;
+            const on = glOn.has(id);
+            clearInterval(glTimers[id]); glTimers[id] = null;
+            const def = GL_LAYERS.find(l => l.id === id);
+            if (id === 'venues') { document.getElementById('globeMap').classList.toggle('gl-hide-venues', !on); return; }
+            if (id === 'daynight') { glVis('gl-night', on); glVis('gl-night-edge', on); }
+            if (id === 'quakes') { glVis('gl-quakes', on); glVis('gl-quakes-halo', on); }
+            if (id === 'flights') glVis('gl-flights', on);
+            if (id === 'iss') { glVis('gl-iss-orbit', on); if (glIssMarker) glIssMarker.getElement().style.display = on ? '' : 'none'; }
+            if (id === 'weather') glPlaceWeather();
+            if (id === 'rain') { if (!on && globe.getLayer('gl-rain')) globe.setLayoutProperty('gl-rain', 'visibility', 'none'); }
+            if (!on) return;
+            glLoad(id);
+            if (def.every) glTimers[id] = setInterval(() => { if (currentActiveAppTab === 'globeTab') glLoad(id); }, def.every * 1000);
+        }
+
+        async function glLoad(id) {
+            if (!glOn.has(id)) return;
+            try {
+                if (id === 'daynight') { globe.getSource('gl-night').setData(glNightPolygon(new Date())); glSet(id, { status: 'ok', count: null, unit: 'Diperbarui', at: Date.now() }); return; }
+                glSet(id, { status: (glState[id] || {}).status === 'ok' ? 'ok' : 'loading' });
+                if (id === 'quakes') {
+                    const j = await glFetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
+                    glQuakes = (j.features || []).map(f => ({ mag: f.properties.mag, place: f.properties.place, time: f.properties.time, url: f.properties.url, lng: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], depth: f.geometry.coordinates[2] })).filter(q => q.mag != null);
+                    globe.getSource('gl-quakes').setData({ type: 'FeatureCollection', features: glQuakes.map(q => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [q.lng, q.lat] }, properties: { mag: q.mag, place: q.place, time: q.time, url: q.url, depth: q.depth } })) });
+                    glSet(id, { status: 'ok', count: glQuakes.length, unit: 'gempa', at: Date.now() });
+                }
+                if (id === 'weather') {
+                    const lat = GLOBE_CITIES.map(c => c.lat.toFixed(3)).join(','), lng = GLOBE_CITIES.map(c => c.lng.toFixed(3)).join(',');
+                    let j = await glFetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m,is_day&timezone=auto`);
+                    if (!Array.isArray(j)) j = [j];
+                    j.forEach((w, i) => { if (GLOBE_CITIES[i] && w.current) glWeather[GLOBE_CITIES[i].key] = w.current; });
+                    glPlaceWeather();
+                    glSet(id, { status: 'ok', count: Object.keys(glWeather).length, unit: 'kota', at: Date.now() });
+                    if (globeSel) renderGlobeCard(GLOBE_VENUES.find(x => x.key === globeSel), false);
+                }
+                if (id === 'rain') {
+                    const j = await glFetch('https://api.rainviewer.com/public/weather-maps.json');
+                    const frames = (j.radar && j.radar.past) || []; const last = frames[frames.length - 1];
+                    if (!last) throw new Error('kosong');
+                    const url = `${j.host}${last.path}/256/{z}/{x}/{y}/2/1_1.png`;
+                    if (globe.getLayer('gl-rain')) globe.removeLayer('gl-rain');
+                    if (globe.getSource('gl-rain')) globe.removeSource('gl-rain');
+                    globe.addSource('gl-rain', { type: 'raster', tiles: [url], tileSize: 256, maxzoom: 7, attribution: 'Radar © RainViewer' });
+                    globe.addLayer({ id: 'gl-rain', type: 'raster', source: 'gl-rain', paint: { 'raster-opacity': 0.65 } }, glBeforeId());
+                    glSet(id, { status: 'ok', count: null, unit: 'Radar ' + new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' }).format(new Date(last.time * 1000)), at: Date.now() });
+                }
+                if (id === 'flights') {
+                    if (Date.now() - (glState.flights && glState.flights.req || 0) < 20000) return;
+                    if (globe.getZoom() < 5.5) { globe.getSource('gl-flights').setData({ type: 'FeatureCollection', features: [] }); glFlights = []; glSet(id, { status: 'ok', count: null, unit: 'Perbesar ke satu kota', at: null }); return; }
+                    glState.flights = Object.assign(glState.flights || {}, { req: Date.now() });
+                    const b = globe.getBounds();
+                    const j = await glFetch(`https://opensky-network.org/api/states/all?lamin=${b.getSouth().toFixed(2)}&lomin=${b.getWest().toFixed(2)}&lamax=${b.getNorth().toFixed(2)}&lomax=${b.getEast().toFixed(2)}`, 15000);
+                    glFlights = (j.states || []).filter(s => s[5] != null && s[6] != null).map(s => ({ icao: s[0], callsign: (s[1] || '').trim(), country: s[2], lng: s[5], lat: s[6], alt: s[13] != null ? s[13] : s[7], ground: s[8], speed: s[9], track: s[10] || 0 }));
+                    globe.getSource('gl-flights').setData({ type: 'FeatureCollection', features: glFlights.map(f => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [f.lng, f.lat] }, properties: f })) });
+                    glSet(id, { status: 'ok', count: glFlights.length, unit: 'pesawat di layar', at: Date.now() });
+                }
+                if (id === 'iss') {
+                    const now = Math.floor(Date.now() / 1000);
+                    const pos = await glFetch('https://api.wheretheiss.at/v1/satellites/25544');
+                    glIss = pos;
+                    if (!glIssMarker) {
+                        const el = document.createElement('div'); el.className = 'gl-iss';
+                        el.innerHTML = '<span class="gl-iss-dot"><i class="fa-solid fa-satellite" aria-hidden="true"></i></span><span class="gl-iss-lbl">ISS</span>';
+                        el.title = 'Stasiun Luar Angkasa Internasional';
+                        glIssMarker = new maplibregl.Marker({ element: el }).setLngLat([pos.longitude, pos.latitude]).addTo(globe);
+                    } else glIssMarker.setLngLat([pos.longitude, pos.latitude]);
+                    glIssMarker.getElement().style.display = '';
+                    if (!glState.iss || !glState.iss.orbitAt || Date.now() - glState.iss.orbitAt > 5 * 60000) {
+                        const ts = Array.from({ length: 10 }, (_, k) => now + k * 600).join(',');
+                        const path = await glFetch(`https://api.wheretheiss.at/v1/satellites/25544/positions?timestamps=${ts}&units=kilometers`);
+                        const coords = [];
+                        path.forEach((p, k) => { let lng = p.longitude; if (k && Math.abs(lng - coords[k - 1][0]) > 180) lng += lng < coords[k - 1][0] ? 360 : -360; coords.push([lng, p.latitude]); });
+                        globe.getSource('gl-iss-orbit').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords }, properties: {} });
+                        glState.iss = Object.assign(glState.iss || {}, { orbitAt: Date.now() });
+                    }
+                    glSet(id, { status: 'ok', count: null, unit: `${Math.round(pos.altitude)} km, ${Math.round(pos.velocity).toLocaleString('id-ID')} km/j`, at: Date.now() });
+                }
+            } catch (e) {
+                glSet(id, { status: 'error', msg: id === 'flights' ? 'Sumber sedang membatasi akses, coba lagi nanti' : 'Tidak tersedia, periksa koneksi' });
+            }
+        }
+
+        /* ---------- Siang & malam: poligon wilayah malam dari posisi matahari ---------- */
+        function glNightPolygon(date) {
+            const rad = Math.PI / 180, d = (date.getTime() / 86400000) + 2440587.5 - 2451545.0;
+            const g = (357.529 + 0.98560028 * d) * rad, q = 280.459 + 0.98564736 * d;
+            const L = (q + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * rad, e = (23.439 - 0.00000036 * d) * rad;
+            const decl = Math.asin(Math.sin(e) * Math.sin(L));
+            const ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L)) / rad;
+            const gmst = (18.697374558 + 24.06570982441908 * d) % 24;
+            const sunLng = ((ra - gmst * 15) % 360 + 540) % 360 - 180;
+            const pts = [];
+            for (let lng = -180; lng <= 180; lng += 2) {
+                const ha = (lng - sunLng) * rad;
+                pts.push([lng, Math.atan(-Math.cos(ha) / Math.tan(decl)) / rad]);
+            }
+            const pole = decl > 0 ? -90 : 90; // malam di kutub yang membelakangi matahari
+            const ring = pts.concat([[180, pole], [-180, pole], pts[0]]);
+            return { type: 'Feature', geometry: { type: 'Polygon', coordinates: [ring] }, properties: {} };
+        }
+        function glIsNight(lat, lng) {
+            const f = glNightPolygon(new Date()), ring = f.geometry.coordinates[0];
+            let inside = false;
+            for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [xi, yi] = ring[i], [xj, yj] = ring[j]; if (((yi > lat) !== (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside; }
+            return inside;
+        }
+
+        /* ---------- Cuaca kota ---------- */
+        const WMO = c => c == null ? ['fa-question', 'Tidak diketahui'] : c === 0 ? ['fa-sun', 'Cerah'] : c <= 2 ? ['fa-cloud-sun', 'Cerah berawan'] : c === 3 ? ['fa-cloud', 'Berawan'] : c <= 48 ? ['fa-smog', 'Berkabut'] : c <= 57 ? ['fa-cloud-rain', 'Gerimis'] : c <= 67 ? ['fa-cloud-showers-heavy', 'Hujan'] : c <= 77 ? ['fa-snowflake', 'Salju'] : c <= 82 ? ['fa-cloud-showers-heavy', 'Hujan lebat'] : c <= 86 ? ['fa-snowflake', 'Salju'] : ['fa-cloud-bolt', 'Badai petir'];
+        function glWeatherText(w) { const [, txt] = WMO(w.weather_code); return `${Math.round(w.temperature_2m)}°C, ${txt.toLowerCase()}, angin ${Math.round(w.wind_speed_10m)} km/j`; }
+        // Label cuaca menempel di penanda kota, jadi ikut tergabung saat kota-kota berdekatan digabung
+        function glWxChip(key) {
+            const w = glWeather[key]; if (!w) return '';
+            const [ic, txt] = WMO(w.weather_code);
+            return `<span class="gl-wx" title="${esc(txt)}, angin ${Math.round(w.wind_speed_10m)} km/j"><i class="fa-solid ${ic}" aria-hidden="true"></i><span>${Math.round(w.temperature_2m)}°</span><i class="fa-solid fa-location-arrow gl-wind" style="transform:rotate(${(w.wind_direction_10m + 180 - 45).toFixed(0)}deg)" aria-hidden="true"></i></span>`;
+        }
+        function glPlaceWeather() {
+            if (!globe) return;
+            document.getElementById('globeMap').classList.toggle('gl-wx-off', !glOn.has('weather'));
+            GLOBE_CITIES.forEach((c, i) => {
+                const m = globeCityMarkers[i]; if (!m) return;
+                const wrap = m.getElement(); const old = wrap.querySelector('.gl-wx'); if (old) old.remove();
+                wrap.insertAdjacentHTML('beforeend', glWxChip(c.key));
+            });
+            globeGroupMarkers.forEach(m => { const wrap = m.getElement(); const old = wrap.querySelector('.gl-wx'); if (old) old.remove(); if (wrap.dataset.lead) wrap.insertAdjacentHTML('beforeend', glWxChip(wrap.dataset.lead)); });
+        }
+        function glVenueWeather(v) { const w = glWeather[cityKey(v)]; return w ? glWeatherText(w) : null; }
+
+        /* ---------- Baris peristiwa & status ---------- */
+        function renderGlobeTicker() {
+            const t = document.getElementById('glTicker'); if (!t) return;
+            const items = [];
+            if (glOn.has('quakes') && glQuakes.length) { const top = glQuakes.slice().sort((a, b) => b.mag - a.mag)[0]; items.push(`<button onclick="globe.flyTo({ center: [${top.lng}, ${top.lat}], zoom: 5 })"><i class="fa-solid fa-house-crack text-orange-400" aria-hidden="true"></i> Gempa terbesar 24 jam: M${top.mag.toFixed(1)}, ${esc(top.place || '')}</button>`); }
+            if (glOn.has('daynight')) { const night = GLOBE_CITIES.filter(c => glIsNight(c.lat, c.lng)).length; items.push(`<span><i class="fa-solid fa-moon text-taoGoldLight" aria-hidden="true"></i> Sedang malam di ${night} dari ${GLOBE_CITIES.length} kota TAO</span>`); }
+            if (glOn.has('iss') && glIss) items.push(`<button onclick="globe.flyTo({ center: [${glIss.longitude}, ${glIss.latitude}], zoom: 3 })"><i class="fa-solid fa-satellite text-sky-300" aria-hidden="true"></i> ISS di ${Math.abs(glIss.latitude).toFixed(1)}° ${glIss.latitude >= 0 ? 'LU' : 'LS'}, ${Math.abs(glIss.longitude).toFixed(1)}° ${glIss.longitude >= 0 ? 'BT' : 'BB'}</button>`);
+            if (glOn.has('flights') && glFlights.length) items.push(`<span><i class="fa-solid fa-plane text-taoGoldLight" aria-hidden="true"></i> ${glFlights.length} pesawat di area ini</span>`);
+            const live = GL_LAYERS.filter(l => l.every && glOn.has(l.id) && (glState[l.id] || {}).status === 'ok').length;
+            const s = document.getElementById('glLive'); if (s) s.textContent = live + ' sumber langsung aktif';
+            t.innerHTML = items.join('<span class="gl-sep" aria-hidden="true"></span>') || '<span class="text-gray-500">Nyalakan lapisan untuk melihat peristiwa terbaru</span>';
+        }
+
+        // Hubungkan ke peta yang sudah ada
+        const __glInitGlobe = window.initGlobe;
+        window.initGlobe = function () {
+            __glInitGlobe();
+            const wait = setInterval(() => { if (globe && globe.isStyleLoaded()) { clearInterval(wait); glInit(); } }, 300);
+            setTimeout(() => clearInterval(wait), 30000);
         };
     </script>
 

@@ -37,7 +37,23 @@ Tab **Peta Global** menampilkan semua cabang TAO Group di globe 3D (MapLibre GL 
 - **Kartu venue**: foto, area, jam setempat, status, tombol **Persiapan kunjungan** (masuk ke alur reservasi yang sama dengan portofolio), dan **Petunjuk arah** (Google Maps).
 - Tampilan globe atau datar, tombol *Lihat dunia*, dan daftar cabang per negara dan kota.
 
-Peta butuh internet (unpkg.com untuk MapLibre, basemaps.cartocdn.com untuk peta dasar) dan tetap jalan saat file dibuka langsung tanpa server.
+
+**Lapisan data langsung** (tab *Lapisan data* di panel peta, terinspirasi OSIRIS). Semua tanpa API key dan diambil langsung oleh browser:
+
+| Lapisan | Sumber | Diperbarui |
+|---|---|---|
+| Siang & malam (batas terminator) | Posisi matahari, dihitung di perangkat | Tiap menit |
+| Cuaca 16 kota TAO (suhu, kondisi, arah angin) | Open-Meteo | Tiap 15 menit |
+| Radar hujan | RainViewer | Tiap 10 menit |
+| Gempa 24 jam, M2.5 ke atas | USGS | Tiap 5 menit |
+| Penerbangan di area yang sedang dilihat (zoom ke kota) | OpenSky Network | Tiap 60 detik, minimal 20 detik antar-permintaan |
+| Satelit ISS dan jalur orbitnya | Where the ISS at? | Tiap 10 detik |
+
+Lapisan yang aktif tersimpan di URL (`?layers=venues,daynight,weather,quakes`), jadi tampilan peta bisa dibagikan. Baris status menampilkan jumlah sumber yang aktif dan jam UTC; baris bawah menampilkan peristiwa terbaru dan koordinat kursor; kartu venue menampilkan cuaca kota dan apakah sedang malam. Setiap sumber punya batas waktu sendiri: kalau satu sumber gagal, lapisannya menampilkan "Tidak tersedia" dan sisa peta tetap jalan.
+
+Tidak disertakan dari OSIRIS: CCTV, pelacakan kapal AIS (butuh key berbayar dan server), alat pengintaian siber, zona konflik, dan kabel bawah laut (lisensi non-komersial).
+
+Peta butuh internet (unpkg.com untuk MapLibre, basemaps.cartocdn.com untuk peta dasar, dan sumber lapisan di atas) dan tetap jalan saat file dibuka langsung tanpa server.
 
 ### Desain
 
