@@ -458,6 +458,104 @@
         .bp-p2-close { position: absolute; top: 0; left: 0; z-index: 200; width: 56px; height: 40px; display: flex; align-items: center; justify-content: center; border: 0; border-right: 1px solid var(--line); background: var(--card); color: var(--ink); font-size: 18px; cursor: pointer; }
         .bp-p2-close:hover { background: var(--hover); }
 
+        /* ---------- Notifikasi tagihan (Kasku & Lintas) ---------- */
+        .bc-bell { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; border: 0; background: rgba(255,255,255,.14); color: #fff; font-size: 20px; cursor: pointer; }
+        .bc-bell:hover { background: rgba(255,255,255,.24); }
+        .bc-bell:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+        .bc-badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #DC2626; color: #fff; font: 700 11px/18px var(--font-sans); text-align: center; box-shadow: 0 0 0 2px #fff; }
+        .bc-badge[hidden] { display: none; }
+        .bc-modal { position: absolute; inset: 0; z-index: 65; background: rgba(14, 26, 51, .45); font-family: var(--font-sans); color: #0E1A33; }
+        .bc-modal:not(.hidden) { display: flex; align-items: flex-end; }
+        .bc-modal *, .bc-modal *::before { box-sizing: border-box; }
+        .bc-modal :focus-visible { outline: 2px solid var(--bc-accent); outline-offset: 2px; }
+        .bc-panel { width: 100%; max-height: 94%; display: flex; flex-direction: column; background: #F6F7F9; border-radius: 22px 22px 0 0; overflow: hidden; animation: slideUpModal .25s var(--ease); }
+        .bc-head { flex: none; display: flex; align-items: center; gap: 4px; min-height: 60px; padding: 8px 8px 8px 12px; background: #fff; border-bottom: 1px solid #E3E7ED; }
+        .bc-head h3 { margin: 0 0 0 4px; flex: 1; font-size: 17px; font-weight: 600; }
+        .bc-icon { flex: none; width: 44px; height: 44px; border: 0; border-radius: 12px; background: none; color: #0E1A33; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .bc-icon:hover { background: #EEF1F5; }
+        .bc-body { flex: 1; min-height: 0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 18px; }
+        .bc-center { align-items: center; text-align: center; }
+        .bc-sec { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .bc-sec-head { display: flex; align-items: center; gap: 8px; }
+        .bc-sec-head h4 { margin: 0; font-size: 14px; font-weight: 600; color: #55627A; }
+        .bc-count { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--bc-accent); color: #fff; font: 700 12px/22px var(--font-sans); text-align: center; }
+        .bc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; background: #fff; border: 1px solid #E3E7ED; border-radius: 16px; overflow: hidden; }
+        .bc-list > li + li { border-top: 1px solid #EDF0F4; }
+        .bc-bill button, .bc-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; border: 0; background: #fff; text-align: left; font: inherit; color: inherit; }
+        .bc-bill button { cursor: pointer; }
+        .bc-bill button:hover { background: #FAFBFC; }
+        .bc-ico { flex: none; width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 21px; }
+        .bc-ico-muted { background: #EEF1F5; color: #55627A; }
+        .bc-ico-soft { background: color-mix(in srgb, var(--bc-accent) 12%, white); color: var(--bc-accent); }
+        .bc-bill-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .bc-bill-main b { font-size: 15px; font-weight: 600; }
+        .bc-bill-main small { font-size: 13px; color: #55627A; line-height: 1.4; }
+        .bc-due { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 12px; font-weight: 600; color: #55627A; }
+        .bc-due.urgent { color: #B42318; }
+        .bc-bill-side { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+        .bc-bill-side b { font: 600 14px var(--font-mono); font-variant-numeric: tabular-nums; }
+        .bc-pay { padding: 6px 12px; border-radius: 999px; background: var(--bc-accent); color: #fff; font-size: 13px; font-weight: 600; }
+        .bc-chip { flex: none; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+        .bc-chip.ok { background: #E7F4EC; color: #0F7B4F; }
+        .bc-time { flex: none; font: 500 12px var(--font-mono); color: #7A869A; }
+        .bc-empty { margin: 0; display: flex; align-items: center; gap: 8px; padding: 16px; border-radius: 16px; background: #fff; border: 1px dashed #C7D1E0; font-size: 14px; color: #0F7B4F; }
+        .bc-link { align-self: center; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 8px; border: 0; background: none; color: var(--bc-accent); font: 600 14px var(--font-sans); cursor: pointer; }
+        .bc-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+        .bc-card { width: 100%; display: flex; flex-direction: column; gap: 14px; padding: 16px; background: #fff; border: 1px solid #E3E7ED; border-radius: 16px; }
+        .bc-left { text-align: left; }
+        .bc-summary { display: flex; align-items: center; gap: 12px; }
+        .bc-sum-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .bc-sum-main b { font-size: 15px; }
+        .bc-sum-main small { font-size: 13px; color: #55627A; }
+        .bc-sum-amt { font: 600 16px var(--font-mono); font-variant-numeric: tabular-nums; }
+        .bc-dl { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; padding-top: 12px; border-top: 1px dashed #D6DCE5; }
+        .bc-dl div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .bc-dl dt { font: 600 11px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: #7A869A; }
+        .bc-dl dd { margin: 0; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+        .bc-methods { display: flex; flex-direction: column; gap: 8px; }
+        .bc-method { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 12px 14px; border: 1px solid #E3E7ED; border-radius: 14px; background: #fff; text-align: left; font: inherit; color: inherit; cursor: pointer; transition: border-color .15s var(--ease), box-shadow .15s var(--ease); }
+        .bc-method:hover { border-color: #C7D1E0; }
+        .bc-method[aria-checked="true"] { border-color: var(--bc-accent); box-shadow: 0 0 0 1px var(--bc-accent); }
+        .bc-radio { flex: none; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #C7D1E0; }
+        [aria-checked="true"] > .bc-radio { border: 6px solid var(--bc-accent); }
+        .bc-banks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        .bc-bank { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 10px; border: 1px solid #E3E7ED; border-radius: 12px; background: #fff; font: 600 14px var(--font-sans); color: #0E1A33; cursor: pointer; text-align: left; }
+        .bc-bank[aria-checked="true"] { border-color: var(--bc-accent); box-shadow: 0 0 0 1px var(--bc-accent); }
+        .bc-bank-logo { flex: none; min-width: 40px; height: 28px; padding: 0 6px; border-radius: 6px; color: #fff; font: 700 11px/28px var(--font-mono); text-align: center; }
+        .bc-err { margin: 0; font-size: 13px; color: #B42318; }
+        .bc-err:empty { display: none; }
+        .bc-lines { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+        .bc-lines div { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: #55627A; }
+        .bc-lines div span:last-child { font-family: var(--font-mono); color: #0E1A33; }
+        .bc-lines .total { padding-top: 8px; border-top: 1px solid #E3E7ED; font-size: 15px; font-weight: 600; color: #0E1A33; }
+        .bc-foot { flex: none; padding: 12px 16px 16px; background: #fff; border-top: 1px solid #E3E7ED; }
+        .bc-btn { width: 100%; min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 14px; background: var(--bc-accent); color: #fff; font: 600 15px var(--font-sans); cursor: pointer; }
+        .bc-btn:hover { filter: brightness(.94); }
+        .bc-btn:disabled { opacity: .7; cursor: progress; }
+        .bc-btn-ghost { background: #fff; color: #0E1A33; border: 1px solid #D6DCE5; }
+        .bc-sub { margin: 0; max-width: 32ch; font-size: 14px; line-height: 1.5; color: #55627A; }
+        .bc-qris { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 20px; background: #fff; border: 1px solid #E3E7ED; border-radius: 18px; }
+        .bc-qris-head { font: 700 12px var(--font-mono); letter-spacing: .1em; color: var(--bc-accent); }
+        .bc-qr { width: 220px; height: 220px; }
+        .bc-qris-amt { font: 600 20px var(--font-mono); }
+        .bc-qris small { font: 500 11px var(--font-mono); color: #7A869A; }
+        .bc-timer { margin: 0; display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 10px; background: #FFF4E5; color: #9A4A00; font-size: 14px; }
+        .bc-timer b { font-family: var(--font-mono); }
+        .bc-label { font: 600 12px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: #7A869A; }
+        .bc-va { display: flex; align-items: center; justify-content: space-between; gap: 8px; font: 600 22px var(--font-mono); letter-spacing: .04em; }
+        .bc-va .bc-link { align-self: auto; }
+        .bc-steps { margin: 0; padding: 14px 14px 14px 34px; background: #fff; border: 1px solid #E3E7ED; border-radius: 16px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.5; color: #3B475A; }
+        .bc-steps-row { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .bc-steps-row span { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; border-radius: 10px; background: #EEF1F5; color: #55627A; font-size: 13px; font-weight: 600; }
+        .bc-steps-row span.on { background: var(--bc-accent); color: #fff; }
+        .bc-steps-row span.done { background: #E7F4EC; color: #0F7B4F; }
+        .bc-done { width: 72px; height: 72px; border-radius: 50%; background: #0F7B4F; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+        .bc-done-title { margin: -6px 0 0; font-size: 20px; font-weight: 600; }
+        .bc-spin { animation: bcSpin 1s linear infinite; }
+        .app-container:has(.bc-modal:not(.hidden)) > .toast-container { bottom: 92px; }
+        @keyframes bcSpin { to { transform: rotate(360deg); } }
+        .tv-hero-actions { display: inline-flex; align-items: center; gap: 8px; }
+
         /* ---------- POV 3: Lintas (travel). Biru tua untuk struktur, oranye hanya untuk aksi pemesanan. ---------- */
         #travel-device { width: 100% !important; max-width: 1240px !important; height: 800px !important; background: #F7F8FA; }
         .tv { --tv-primary: #1E3A8A; --tv-primary-2: #274BAE; --tv-accent: #C2410C; --tv-accent-h: #A8380A; --tv-accent-soft: #FFF1E8;
@@ -1553,6 +1651,7 @@
                                 <i id="ewallet-eye-icon" onclick="toggleEwalletBalance()" class="ph-bold ph-eye-slash text-sm opacity-80 cursor-pointer ml-1"></i>
                             </div>
                             <div class="flex items-center gap-2 text-white">
+                                <button type="button" class="bc-bell" onclick="KB.open()" aria-label="Notifikasi dan tagihan"><i class="ph-bold ph-bell" aria-hidden="true"></i><span class="bc-badge" data-bc-badge="kb" hidden>0</span></button>
                                 <i class="ph-bold ph-bluetooth-connected text-sm"></i>
                                 <i class="ph-bold ph-wifi-high text-sm"></i>
                                 <i class="ph-bold ph-battery-full text-base"></i>
@@ -1580,7 +1679,7 @@
                                 </div>
                                 <span>Kirim</span>
                             </div>
-                            <div class="flex flex-col items-center gap-1.5 cursor-pointer hover:opacity-80" onclick="triggerEwalletAction('Pesan')">
+                            <div class="flex flex-col items-center gap-1.5 cursor-pointer hover:opacity-80" onclick="KB.open()">
                                 <div class="w-10 h-10 rounded-xl border border-white/40 flex justify-center items-center bg-white/10"><i class="ph-bold ph-envelope-simple text-xl text-white shadow-sm"></i></div>
                                 <span>Pesan</span>
                             </div>
@@ -3346,7 +3445,8 @@
                     <div class="tv-body has-nav" style="padding:0;gap:0">
                         <div class="tv-hero">
                             <div class="tv-hero-top"><p class="tv-brand">lintas<span>.</span></p>
-                                <button type="button" class="tv-pill" onclick="TV.tab('account')" aria-label="Akun Lintas"><i class="ph-bold ph-user-circle" aria-hidden="true"></i> Ikbal</button></div>
+                                <span class="tv-hero-actions"><button type="button" class="bc-bell" onclick="LB.open()" aria-label="Notifikasi dan tagihan"><i class="ph-bold ph-bell" aria-hidden="true"></i><span class="bc-badge" data-bc-badge="lb" ${typeof LB === 'undefined' || !LB.count() ? 'hidden' : ''}>${typeof LB === 'undefined' ? 0 : LB.count()}</span></button>
+                                <button type="button" class="tv-pill" onclick="TV.tab('account')" aria-label="Akun Lintas"><i class="ph-bold ph-user-circle" aria-hidden="true"></i> Ikbal</button></span></div>
                             <p class="tv-hero-hello">Mau ke mana minggu ini, Ikbal?</p>
                             <div class="tv-pills">
                                 <button type="button" class="tv-pill" onclick="TV.tab('account')"><i class="ph-bold ph-wallet" aria-hidden="true"></i> Lintas Pay <b>${rp(state.balance)}</b></button>
@@ -3732,6 +3832,7 @@
                         <section class="tv-sec"><div class="tv-sec-head"><h3>Pengaturan</h3></div>
                             <div class="tv-list">
                                 <button type="button" class="tv-li" role="switch" aria-checked="${state.notif}" onclick="TV.toggleNotif(this)"><i class="ph ph-bell" aria-hidden="true"></i><span class="tv-li-main"><b>Notifikasi harga turun</b><small>Kabari saat rute favorit lebih murah</small></span><span class="tv-switch" aria-hidden="true"></span></button>
+                                <button type="button" class="tv-li" onclick="LB.open()"><i class="ph ph-receipt" aria-hidden="true"></i><span class="tv-li-main"><b>Tagihan & notifikasi</b><small>${typeof LB === 'undefined' ? 0 : LB.count()} tagihan menunggu pembayaran</small></span><i class="ph-bold ph-caret-right" style="background:none;width:auto" aria-hidden="true"></i></button>
                                 <button type="button" class="tv-li" onclick="MK3.openBioPayInPOV2()"><i class="ph ph-fingerprint" aria-hidden="true"></i><span class="tv-li-main"><b>Kelola BioPay</b><small>Wallet, Bio-Pass, anggota keluarga</small></span><i class="ph-bold ph-caret-right" style="background:none;width:auto" aria-hidden="true"></i></button>
                             </div>
                         </section>
@@ -3760,7 +3861,7 @@
             })();
             renderHome();
 
-            return { tab, back, openSearch, quickHotel, setField, step, swap, doSearch, sortBy, pick, form, traveler, addon, applyPromo, toPay, method, payNow, closeSheet, vaCheck, openTicket, cancelSheet, cancelBooking, copyPromo, receive, toggleNotif, topupSheet, doTopup, get state() { return state; } };
+            return { addHistory: (t, a, inc, bio) => { log(t, a, inc, bio); refresh(); }, refresh, tab, back, openSearch, quickHotel, setField, step, swap, doSearch, sortBy, pick, form, traveler, addon, applyPromo, toPay, method, payNow, closeSheet, vaCheck, openTicket, cancelSheet, cancelBooking, copyPromo, receive, toggleNotif, topupSheet, doTopup, get state() { return state; } };
         })();
 
         // BioPay & komponen merchant di POV 3: disalin dari POV 1 dan POV 2 (bukan ditulis ulang)
@@ -3781,6 +3882,233 @@
         });
         document.querySelectorAll('#travel-device canvas.bp-qr').forEach((c, i) => drawFakeQR(c, 40 + i));
 
+
+
+        // ==========================================
+        // NOTIFIKASI TAGIHAN (dipakai Kasku POV 2 & Lintas POV 3)
+        // Tagihan masuk lewat notifikasi, lalu dibayar dengan QRIS, BioPay (wajah + telapak), atau transfer bank (VA).
+        // ==========================================
+        const BILL_BANKS = [
+            { code: 'BCA', name: 'BCA', color: '#005DAA', prefix: '39012' }, { code: 'BNI', name: 'BNI', color: '#E55300', prefix: '98808' },
+            { code: 'BRI', name: 'BRI', color: '#00529C', prefix: '26215' }, { code: 'MDR', name: 'Mandiri', color: '#003D79', prefix: '89508' },
+            { code: 'CIMB', name: 'CIMB Niaga', color: '#7A0019', prefix: '58899' }, { code: 'PMT', name: 'Permata', color: '#1B7F3A', prefix: '85613' },
+            { code: 'BSI', name: 'BSI', color: '#00A39D', prefix: '90027' }
+        ];
+        const BILL_METHODS = {
+            qris: { label: 'QRIS', desc: 'Scan pakai aplikasi bank atau e-wallet mana pun', icon: 'ph-qr-code', fee: 0 },
+            biopay: { label: 'BioPay', desc: 'Wajah + telapak tangan, tanpa kartu', icon: 'ph-fingerprint', fee: 0 },
+            bank: { label: 'Transfer bank', desc: 'Virtual account, dicek otomatis', icon: 'ph-bank', fee: 2500 }
+        };
+        function createBillCenter({ key, ns, pov, hostId, accent, appName, bills, pool, info = [], onPaid }) {
+            const host = document.getElementById(hostId);
+            const toast = (m, i, c) => showToast(m, i, c, pov);
+            const esc = escapeHTML, rp = formatRp;
+            const fmtDue = d => d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            const daysLeft = d => Math.ceil((d - new Date()) / 86400000);
+            const state = {
+                bills: bills.map((b, i) => ({ ...b, id: key + 'b' + i, status: 'unpaid', due: new Date(Date.now() + b.dueIn * 86400000) })),
+                info: info.map(n => ({ ...n, at: new Date(Date.now() - n.ago * 60000) })), seq: bills.length, poolIdx: 0
+            };
+            let current = null, method = 'qris', bank = null, bioToken = 0, cam = null, timer = null;
+
+            const modal = document.createElement('div');
+            modal.className = 'bc-modal hidden'; modal.id = key + '-bills';
+            modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true'); modal.setAttribute('aria-label', 'Notifikasi & tagihan');
+            modal.style.setProperty('--bc-accent', accent);
+            modal.innerHTML = `<div class="bc-panel" id="${key}-panel"></div>`;
+            modal.addEventListener('click', e => { if (e.target === modal) close(); });
+            modal.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+            host.appendChild(modal);
+            const panel = modal.querySelector('.bc-panel');
+
+            const unpaid = () => state.bills.filter(b => b.status === 'unpaid');
+            const fee = () => BILL_METHODS[method].fee;
+            function badge() { const n = unpaid().length; document.querySelectorAll(`[data-bc-badge="${key}"]`).forEach(el => { el.textContent = n; el.hidden = n === 0; }); }
+            function stop() { bioToken++; cam = stopSpecificCamera(cam); clearInterval(timer); timer = null; }
+            function open(billId) { modal.classList.remove('hidden'); if (billId) pick(billId); else renderList(); }
+            function close() { stop(); modal.classList.add('hidden'); }
+            const head = (title, backFn) => `<header class="bc-head">${backFn ? `<button type="button" class="bc-icon" aria-label="Kembali" onclick="${ns}.${backFn}"><i class="ph-bold ph-arrow-left" aria-hidden="true"></i></button>` : ''}<h3>${title}</h3><button type="button" class="bc-icon" aria-label="Tutup" onclick="${ns}.close()"><i class="ph-bold ph-x" aria-hidden="true"></i></button></header>`;
+            const summary = b => `<div class="bc-summary"><span class="bc-ico" style="background:${b.color}"><i class="ph-fill ${b.icon}" aria-hidden="true"></i></span><span class="bc-sum-main"><b>${esc(b.name)}</b><small>${esc(b.detail)}</small></span><span class="bc-sum-amt">${rp(b.amount)}</span></div>`;
+
+            function renderList() {
+                stop(); current = null;
+                const due = unpaid().sort((a, b) => a.due - b.due), paid = state.bills.filter(b => b.status === 'paid');
+                const billCard = b => {
+                    const d = daysLeft(b.due), urgent = d <= 3;
+                    return `<li class="bc-bill"><button type="button" onclick="${ns}.pick('${b.id}')">
+                        <span class="bc-ico" style="background:${b.color}"><i class="ph-fill ${b.icon}" aria-hidden="true"></i></span>
+                        <span class="bc-bill-main"><b>${esc(b.name)}</b><small>${esc(b.detail)}</small><span class="bc-due ${urgent ? 'urgent' : ''}"><i class="ph-bold ph-calendar-blank" aria-hidden="true"></i> ${d <= 0 ? 'Jatuh tempo hari ini' : `Jatuh tempo ${fmtDue(b.due)} · ${d} hari lagi`}</span></span>
+                        <span class="bc-bill-side"><b>${rp(b.amount)}</b><span class="bc-pay">Bayar</span></span></button></li>`;
+                };
+                panel.innerHTML = `${head('Notifikasi')}
+                    <div class="bc-body">
+                        <section class="bc-sec"><div class="bc-sec-head"><h4>Tagihan menunggu</h4><span class="bc-count">${due.length}</span></div>
+                            ${due.length ? `<ul class="bc-list">${due.map(billCard).join('')}</ul>` : '<p class="bc-empty"><i class="ph ph-check-circle" aria-hidden="true"></i> Semua tagihan sudah lunas.</p>'}
+                        </section>
+                        ${paid.length ? `<section class="bc-sec"><div class="bc-sec-head"><h4>Sudah dibayar</h4></div><ul class="bc-list">${paid.map(b => `<li class="bc-row"><span class="bc-ico bc-ico-muted"><i class="ph-bold ph-check" aria-hidden="true"></i></span><span class="bc-bill-main"><b>${esc(b.name)}</b><small>${b.paidVia} · ${b.ref}</small></span><span class="bc-chip ok">Lunas</span></li>`).join('')}</ul></section>` : ''}
+                        <section class="bc-sec"><div class="bc-sec-head"><h4>Info lainnya</h4></div>
+                            <ul class="bc-list">${state.info.map(n => `<li class="bc-row"><span class="bc-ico bc-ico-muted"><i class="ph ${n.icon}" aria-hidden="true"></i></span><span class="bc-bill-main"><b>${esc(n.title)}</b><small>${esc(n.text)}</small></span><span class="bc-time">${n.at.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span></li>`).join('')}</ul>
+                        </section>
+                        <button type="button" class="bc-link" onclick="${ns}.addBill()"><i class="ph-bold ph-plus-circle" aria-hidden="true"></i> Simulasikan tagihan baru masuk</button>
+                    </div>`;
+                panel.querySelector('button').focus();
+            }
+
+            function pick(id) {
+                stop(); current = state.bills.find(b => b.id === id);
+                if (!current || current.status !== 'unpaid') { renderList(); return; }
+                bank = null; renderMethod();
+            }
+            function renderMethod() {
+                const b = current, total = b.amount + fee();
+                panel.innerHTML = `${head('Bayar tagihan', 'back()')}
+                    <div class="bc-body">
+                        <div class="bc-card">${summary(b)}
+                            <dl class="bc-dl"><div><dt>No. pelanggan</dt><dd class="bp-num">${esc(b.customer)}</dd></div><div><dt>Periode</dt><dd>${esc(b.period)}</dd></div><div><dt>Jatuh tempo</dt><dd>${fmtDue(b.due)}</dd></div></dl>
+                        </div>
+                        <section class="bc-sec"><div class="bc-sec-head"><h4>Pilih metode pembayaran</h4></div>
+                            <div class="bc-methods" role="radiogroup" aria-label="Metode pembayaran">
+                                ${Object.entries(BILL_METHODS).map(([k, m]) => `<button type="button" role="radio" aria-checked="${method === k}" class="bc-method" onclick="${ns}.setMethod('${k}')"><span class="bc-ico bc-ico-soft"><i class="ph-bold ${m.icon}" aria-hidden="true"></i></span><span class="bc-bill-main"><b>${m.label}</b><small>${m.desc}${m.fee ? ` · biaya admin ${rp(m.fee)}` : ' · tanpa biaya admin'}</small></span><span class="bc-radio" aria-hidden="true"></span></button>`).join('')}
+                            </div>
+                        </section>
+                        ${method === 'bank' ? `<section class="bc-sec"><div class="bc-sec-head"><h4>Pilih bank</h4></div>
+                            <div class="bc-banks" role="radiogroup" aria-label="Bank">${BILL_BANKS.map(k => `<button type="button" role="radio" aria-checked="${bank === k.code}" class="bc-bank" onclick="${ns}.setBank('${k.code}')"><span class="bc-bank-logo" style="background:${k.color}">${k.code}</span>${k.name}</button>`).join('')}</div>
+                            <p class="bc-err" id="${key}-bank-err" aria-live="polite"></p></section>` : ''}
+                        <div class="bc-lines"><div><span>Tagihan</span><span>${rp(b.amount)}</span></div><div><span>Biaya admin</span><span>${fee() ? rp(fee()) : 'Gratis'}</span></div><div class="total"><span>Total bayar</span><span>${rp(total)}</span></div></div>
+                    </div>
+                    <footer class="bc-foot"><button type="button" class="bc-btn" onclick="${ns}.proceed()">Lanjut bayar ${rp(total)}</button></footer>`;
+            }
+            function setMethod(k) { method = k; renderMethod(); panel.querySelector(`.bc-method[aria-checked="true"]`).focus(); }
+            function setBank(code) { bank = code; renderMethod(); panel.querySelector(`.bc-bank[aria-checked="true"]`).focus(); }
+            function back() { if (current && panel.querySelector('.bc-methods')) renderList(); else if (current) { stop(); renderMethod(); } else renderList(); }
+            function proceed() {
+                if (method === 'bank' && !bank) { document.getElementById(key + '-bank-err').textContent = 'Pilih bank dulu.'; return; }
+                ({ qris: renderQris, bank: renderVA, biopay: renderBio })[method]();
+            }
+            function countdown(el, minutes) {
+                const end = Date.now() + minutes * 60000;
+                const tick = () => { const left = Math.max(0, end - Date.now()); el.textContent = `${String(Math.floor(left / 60000)).padStart(2, '0')}:${String(Math.floor(left / 1000) % 60).padStart(2, '0')}`; };
+                tick(); timer = setInterval(tick, 1000);
+            }
+            function renderQris() {
+                const b = current;
+                panel.innerHTML = `${head('Bayar dengan QRIS', 'back()')}
+                    <div class="bc-body bc-center">
+                        <p class="bc-sub">Scan kode ini dengan aplikasi bank atau e-wallet apa pun yang mendukung QRIS.</p>
+                        <div class="bc-qris"><span class="bc-qris-head">QRIS · ${esc(appName)}</span><canvas class="bc-qr" width="220" height="220" aria-label="Kode QRIS untuk ${esc(b.name)}"></canvas><span class="bc-qris-amt">${rp(b.amount)}</span><small>NMID ID${String(b.customer).replace(/\D/g, '').slice(0, 10).padEnd(10, '0')}</small></div>
+                        <p class="bc-timer"><i class="ph-bold ph-clock" aria-hidden="true"></i> Kode berlaku <b id="${key}-timer">15:00</b></p>
+                    </div>
+                    <footer class="bc-foot"><button type="button" class="bc-btn" id="${key}-check" onclick="${ns}.checkStatus('QRIS')">Cek status pembayaran</button></footer>`;
+                drawFakeQR(panel.querySelector('canvas'), b.amount % 97 + 11);
+                countdown(document.getElementById(key + '-timer'), 15);
+            }
+            function renderVA() {
+                const b = current, k = BILL_BANKS.find(x => x.code === bank), total = b.amount + fee();
+                const va = k.prefix + String(Math.floor(1e10 + Math.random() * 9e10)).slice(0, 11);
+                const vaFmt = va.replace(/(\d{4})(?=\d)/g, '$1 ');
+                panel.innerHTML = `${head(`Transfer ${k.name}`, 'back()')}
+                    <div class="bc-body">
+                        <div class="bc-card"><span class="bc-label">Nomor virtual account ${esc(k.name)}</span>
+                            <div class="bc-va"><span class="bp-num">${vaFmt}</span><button type="button" class="bc-link" onclick="copyToClipboard('${va}', 'Nomor VA', ${pov})"><i class="ph-bold ph-copy" aria-hidden="true"></i> Salin</button></div>
+                            <div class="bc-lines"><div class="total"><span>Jumlah transfer</span><span>${rp(total)}</span></div></div>
+                            <p class="bc-timer"><i class="ph-bold ph-clock" aria-hidden="true"></i> Bayar sebelum <b id="${key}-timer">60:00</b></p>
+                        </div>
+                        <section class="bc-sec"><div class="bc-sec-head"><h4>Cara bayar lewat m-banking ${esc(k.name)}</h4></div>
+                            <ol class="bc-steps"><li>Buka aplikasi m-banking ${esc(k.name)}, lalu login.</li><li>Pilih <b>Transfer</b> → <b>Virtual Account</b>.</li><li>Masukkan nomor <span class="bp-num">${vaFmt}</span>.</li><li>Pastikan nama tagihan <b>${esc(b.name)}</b> dan jumlah ${rp(total)}, lalu konfirmasi.</li></ol>
+                        </section>
+                    </div>
+                    <footer class="bc-foot"><button type="button" class="bc-btn" id="${key}-check" onclick="${ns}.checkStatus('Transfer ${esc(k.name)}')">Saya sudah transfer</button></footer>`;
+                countdown(document.getElementById(key + '-timer'), 60);
+            }
+            async function renderBio() {
+                const b = current, token = ++bioToken;
+                panel.innerHTML = `${head('Bayar dengan BioPay', 'back()')}
+                    <div class="bc-body bc-center">
+                        <p class="bc-sub">Total <b class="bp-num">${rp(b.amount)}</b> ditagihkan ke wallet utama BioPay.</p>
+                        <div class="bc-steps-row" id="${key}-bio-steps"><span class="on"><i class="ph-bold ph-user-focus" aria-hidden="true"></i> Wajah</span><span><i class="ph-bold ph-hand-palm" aria-hidden="true"></i> Telapak</span></div>
+                        <div class="bp-vf bp-vf-sq"><span class="bp-vf-ghost" aria-hidden="true"><i class="ph ph-user-focus"></i></span><video id="${key}-bio-video" autoplay muted playsinline></video><span class="bp-corners" aria-hidden="true"></span><div class="scanner-line"></div><p class="bp-vf-status" aria-live="polite">Menyiapkan kamera…</p></div>
+                    </div>
+                    <footer class="bc-foot"><button type="button" class="bc-btn bc-btn-ghost" onclick="${ns}.back()">Batal</button></footer>`;
+                const steps = document.getElementById(key + '-bio-steps');
+                cam = await requestCameraAccess(key + '-bio-video', 'user');
+                if (token !== bioToken) { cam = stopSpecificCamera(cam); return; }
+                const cancelled = () => token !== bioToken;
+                if (await scanBiometric({ videoId: key + '-bio-video', kind: 'face', cancelled }) === 'cancelled') return;
+                steps.innerHTML = '<span class="done"><i class="ph-bold ph-check" aria-hidden="true"></i> Wajah</span><span class="on"><i class="ph-bold ph-hand-palm" aria-hidden="true"></i> Telapak</span>';
+                if (await scanBiometric({ videoId: key + '-bio-video', kind: 'hand', cancelled }) === 'cancelled') return;
+                steps.innerHTML = '<span class="done"><i class="ph-bold ph-check" aria-hidden="true"></i> Wajah</span><span class="done"><i class="ph-bold ph-check" aria-hidden="true"></i> Telapak</span>';
+                setTimeout(() => { if (token === bioToken) markPaid('BioPay'); }, 500);
+            }
+            function checkStatus(label) {
+                const btn = document.getElementById(key + '-check'); if (!btn) return;
+                btn.disabled = true; btn.innerHTML = '<i class="ph-bold ph-spinner-gap bc-spin" aria-hidden="true"></i> Mengecek pembayaran…';
+                setTimeout(() => { if (current && current.status === 'unpaid' && !modal.classList.contains('hidden')) markPaid(label); }, 1400);
+            }
+            function markPaid(label) {
+                stop();
+                const b = current, total = b.amount + (label.startsWith('Transfer') ? BILL_METHODS.bank.fee : 0);
+                b.status = 'paid'; b.paidVia = label; b.paidAt = new Date(); b.ref = 'INV' + Date.now().toString(36).toUpperCase().slice(-7);
+                state.info.unshift({ icon: 'ph-check-circle', title: `${b.name} lunas`, text: `Dibayar via ${label} · ${rp(total)}`, at: new Date() });
+                onPaid && onPaid(b, label, total);
+                badge();
+                toast(`${b.name} lunas via ${label}`, 'ph-check-circle', 'text-emerald-400');
+                panel.innerHTML = `${head('Pembayaran berhasil')}
+                    <div class="bc-body bc-center">
+                        <div class="bc-done"><i class="ph-bold ph-check" aria-hidden="true"></i></div>
+                        <h4 class="bc-done-title">Tagihan lunas</h4>
+                        <div class="bc-card bc-left">${summary(b)}
+                            <dl class="bc-dl"><div><dt>Metode</dt><dd>${esc(label)}</dd></div><div><dt>Total dibayar</dt><dd class="bp-num">${rp(total)}</dd></div><div><dt>No. referensi</dt><dd class="bp-num">${b.ref}</dd></div><div><dt>Waktu</dt><dd>${b.paidAt.toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</dd></div></dl>
+                        </div>
+                    </div>
+                    <footer class="bc-foot"><button type="button" class="bc-btn" onclick="${ns}.done()">Selesai</button></footer>`;
+                current = null;
+            }
+            function done() { renderList(); }
+            function addBill() {
+                const t = pool[state.poolIdx++ % pool.length];
+                const b = { ...t, id: key + 'b' + (state.seq++), status: 'unpaid', due: new Date(Date.now() + t.dueIn * 86400000) };
+                state.bills.push(b); badge();
+                toast(`Tagihan baru: ${b.name} ${rp(b.amount)}`, 'ph-bell-ringing', 'text-yellow-400');
+                if (!modal.classList.contains('hidden') && !current) renderList();
+            }
+            badge();
+            return { open, close, pick, setMethod, setBank, back, proceed, checkStatus, done, addBill, badge, count: () => unpaid().length, get state() { return state; } };
+        }
+
+        var KB = createBillCenter({
+            key: 'kb', ns: 'KB', pov: 2, hostId: 'ewallet-wrapper', accent: '#118EEA', appName: 'Kasku',
+            bills: [
+                { name: 'Listrik PLN pascabayar', detail: 'ID 5321 0087 4410 · R1/1300 VA', customer: '532100874410', period: 'Oktober 2026', amount: 412580, dueIn: 2, icon: 'ph-lightning', color: '#D97706' },
+                { name: 'Internet rumah', detail: 'Paket 50 Mbps · No. 1220 4471 98', customer: '1220447198', period: 'November 2026', amount: 385000, dueIn: 6, icon: 'ph-wifi-high', color: '#7C3AED' },
+                { name: 'BPJS Kesehatan', detail: 'VA 8888 0812 3456 · 1 peserta', customer: '888808123456', period: 'November 2026', amount: 150000, dueIn: 9, icon: 'ph-heartbeat', color: '#059669' }
+            ],
+            pool: [
+                { name: 'Air PDAM', detail: 'No. sambungan 01-778213', customer: '01778213', period: 'Oktober 2026', amount: 87300, dueIn: 5, icon: 'ph-drop', color: '#0284C7' },
+                { name: 'Iuran apartemen', detail: 'Tower B · unit 12-07', customer: 'B1207', period: 'November 2026', amount: 1250000, dueIn: 4, icon: 'ph-buildings', color: '#475569' }
+            ],
+            info: [
+                { icon: 'ph-megaphone', title: 'Cashback 10% pakai BioPay', text: 'Berlaku di merchant BioPay sampai 30 Nov.', ago: 95 },
+                { icon: 'ph-shield-check', title: 'Login dari perangkat baru', text: 'Chrome di Windows · Jakarta. Bukan kamu? Ganti PIN.', ago: 340 }
+            ],
+            onPaid: (b, label, total) => addEwalletHistory(`Bayar ${b.name}`, `Via ${label} · ${b.ref}`, total.toLocaleString('id-ID'), true)
+        });
+        var LB = createBillCenter({
+            key: 'lb', ns: 'LB', pov: 3, hostId: 'travel-wrapper', accent: '#C2410C', appName: 'Lintas',
+            bills: [
+                { name: 'Pelunasan hotel Griya Laut', detail: 'Seminyak, Bali · 2 malam · LT8M2QK', customer: 'LT8M2QK', period: 'Check-in 21 Nov 2026', amount: 1240000, dueIn: 3, icon: 'ph-buildings', color: '#0F766E' },
+                { name: 'Tagihan Lintas PayLater', detail: 'Cicilan 2 dari 3 · tiket CGK–DPS', customer: 'PL-0042-7781', period: 'November 2026', amount: 563000, dueIn: 8, icon: 'ph-airplane-tilt', color: '#1E3A8A' }
+            ],
+            pool: [
+                { name: 'Biaya ganti jadwal', detail: 'Nusantara Air NA-318 · 1 penumpang', customer: 'LT5RX7A', period: 'Penerbangan 28 Nov 2026', amount: 275000, dueIn: 1, icon: 'ph-airplane-tilt', color: '#B91C1C' },
+                { name: 'Tambahan bagasi 10 kg', detail: 'Selat Airways SL-218 · LT7QK2M', customer: 'LT7QK2M', period: 'Penerbangan 19 Nov 2026', amount: 155000, dueIn: 2, icon: 'ph-suitcase-rolling', color: '#7C2D12' }
+            ],
+            info: [
+                { icon: 'ph-airplane-takeoff', title: 'Check-in online dibuka', text: 'Selat Airways SL-218 ke Yogyakarta, 19 Nov.', ago: 40 },
+                { icon: 'ph-seal-percent', title: 'Promo INAPHEMAT', text: 'Hotel 15% lebih hemat, maks. Rp 300.000.', ago: 260 }
+            ],
+            onPaid: (b, label, total) => TV.addHistory(`Bayar ${b.name}`, total, false, label === 'BioPay')
+        });
+        TV.refresh();
 
         // ==========================================
         // PITCH: bahasa EN/ID dan tombol "Try it" yang membawa ke perangkat yang tepat
