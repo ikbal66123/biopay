@@ -1,6 +1,6 @@
 # Naskah voiceover · Video demo BioPay (3:27)
 
-Video `biopay-demo.mp4` hanya berisi musik latar dan teks di layar. Kalau mau ditambah suara narator, rekam naskah di bawah ini dengan tempo santai, lalu tempel di aplikasi edit video (CapCut, InShot, Premiere, dan lain-lain) mengikuti timecode. Kecilkan volume musik saat narasi berjalan.
+Video `biopay-demo.mp4` sudah berisi narasi suara Bahasa Indonesia (suara sintetis neural) dan musik latar; musik otomatis mengecil saat narator bicara. Narasi di video adalah versi ringkas dari naskah di bawah agar pas dengan durasi tiap adegan. Kalau mau memakai suara sendiri, rekam naskah ini mengikuti timecode lalu ganti audionya di aplikasi edit video (CapCut, InShot, Premiere, dan lain-lain).
 
 | Waktu | Adegan | Narasi |
 |---|---|---|
