@@ -57,6 +57,49 @@
         /* Kontainer perangkat tidak boleh ikut ter-scroll oleh scrollIntoView/fokus input */
         .app-container, .device, .tv, .bp-dash, #ewallet-wrapper { overflow: clip !important; }
 
+        /* ---------- POV 4: ATM tanpa kartu ---------- */
+        #atm-device { max-width: 820px; height: 800px; display: flex; flex-direction: column; gap: 14px; padding: 18px; background: linear-gradient(#26364F, #1C2B44); border-color: #13203A; }
+        .atm-top { display: flex; align-items: center; gap: 12px; padding: 4px 6px; color: #fff; }
+        .atm-brand { font: 700 24px var(--font-sans); letter-spacing: -.01em; }
+        .atm-ready { padding: 5px 10px; border-radius: 8px; background: #E8B04A; color: var(--ink); font: 600 12px var(--font-mono); letter-spacing: .06em; }
+        .atm-cam { margin-left: auto; width: 14px; height: 14px; border-radius: 50%; background: #0B1220; box-shadow: 0 0 0 3px #3A4A66, inset 0 0 0 3px #7DD3FC; }
+        .atm-screen { flex: 1; min-height: 0; overflow-y: auto; border-radius: 16px; background: var(--paper); border: 6px solid #0B1220; padding: 22px; display: flex; flex-direction: column; gap: 14px; color: var(--text); }
+        .atm-hw { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .atm-hw > div { min-height: 76px; border-radius: 12px; background: #C9D0DA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #3B475A; font: 600 11px var(--font-mono); letter-spacing: .04em; text-transform: uppercase; position: relative; overflow: hidden; }
+        .atm-slot i { color: var(--danger); font-size: 18px; }
+        .atm-sensor i { font-size: 26px; color: #0B1220; }
+        .atm-sensor.on { background: #FBF1DE; box-shadow: inset 0 0 0 2px #E8B04A; }
+        .atm-sensor.on i { color: var(--brass); animation: atmPulse 1s ease-in-out infinite; }
+        @keyframes atmPulse { 50% { transform: scale(1.12); } }
+        .atm-cash-slot { width: 70%; height: 8px; border-radius: 4px; background: #0B1220; }
+        .atm-notes { position: absolute; top: 18px; width: 52%; height: 0; transition: height .9s var(--ease); display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+        .atm-notes i { display: block; height: 9px; border-radius: 2px; background: #D85F6E; } .atm-notes i:nth-child(2) { background: #C94A5A; }
+        .atm-notes.out { height: 31px; }
+        .atm-h { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.02em; color: var(--ink); }
+        .atm-p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--muted); }
+        .atm-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .atm-timer { font: 600 13px var(--font-mono); color: var(--muted); padding: 6px 10px; border-radius: 8px; background: var(--hover); }
+        .atm-steps { display: flex; gap: 8px; }
+        .atm-steps span { flex: 1; text-align: center; padding: 8px; border-radius: 8px; background: var(--hover); color: var(--muted); font: 600 12px var(--font-sans); }
+        .atm-steps span.on { background: var(--ink); color: #fff; } .atm-steps span.ok { background: var(--ok-soft); color: var(--ok); }
+        .atm-screen .bp-vf { max-height: 330px; aspect-ratio: 4 / 3; width: auto; height: 330px; }
+        .atm-src { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; }
+        .atm-src button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--line); background: #fff; font: inherit; color: var(--text); cursor: pointer; text-align: left; }
+        .atm-src button[aria-checked="true"] { border-color: var(--ink); }
+        .atm-src b { font-size: 15px; } .atm-src small { font: 500 13px var(--font-mono); color: var(--muted); }
+        .atm-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+        .atm-grid button { min-height: 72px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: #fff; font: 600 16px var(--font-sans); color: var(--ink); cursor: pointer; text-align: left; }
+        .atm-grid button i { font-size: 24px; color: var(--brass); }
+        .atm-grid button:hover, .atm-src button:hover { border-color: var(--line-2, #B9C1CC); }
+        .atm-grid button.sel { background: var(--ink); color: #fff; border-color: var(--ink); } .atm-grid button.sel i { color: #E8B04A; }
+        .atm-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; }
+        .atm-actions .bp-btn { flex: 1; min-width: 160px; }
+        .atm-big { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; flex: 1; }
+        .atm-big .mark { width: 84px; height: 84px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 42px; color: #fff; background: var(--ok); }
+        .atm-big .mark.wait { background: var(--brass); }
+        .atm-rcpt { width: 100%; max-width: 420px; padding: 14px 16px; border-radius: 12px; background: #fff; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+        .atm-rcpt div { display: flex; justify-content: space-between; gap: 12px; } .atm-rcpt span { color: var(--muted); }
+        @media (max-width: 640px) { #atm-device { padding: 10px; } .atm-screen { padding: 14px; } .atm-grid { grid-template-columns: 1fr 1fr; } .atm-h { font-size: 22px; } .atm-hw > div { min-height: 60px; font-size: 9px; } .atm-screen .bp-vf { height: 260px; } }
         /* ---------- BioPay app (POV 1 & mini-app POV 2) ---------- */
         .bp, #biopay-p2-root, #biopay-p3-root { font-family: var(--font-sans); color: var(--text); background: var(--paper); container-type: inline-size; }
         .bp *, #biopay-p2-root *, #biopay-p3-root * { box-sizing: border-box; }
@@ -177,6 +220,59 @@
         .bp-perf::after { right: -29px; clip-path: inset(0 50% 0 0); }
         .bp-balend { font: 600 13px var(--font-mono); color: var(--ok); }
         .bp-balend.is-bad { color: var(--danger); }
+
+        /* Smart Route, BioPoin, insight, keamanan */
+        .bp-route { display: flex; flex-direction: column; gap: 8px; }
+        .bp-route-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .bp-route-auto { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--muted); font: 600 12px var(--font-sans); cursor: pointer; }
+        .bp-route-auto[aria-checked="true"] { background: var(--brass-soft); border-color: #E9C98F; color: var(--brass-text); }
+        .bp-route-list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--card); }
+        .bp-route-opt { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 8px 14px; border: 0; border-top: 1px solid var(--line); background: var(--card); text-align: left; font: inherit; color: var(--text); cursor: pointer; }
+        .bp-route-opt:first-child { border-top: 0; }
+        .bp-route-opt:hover { background: var(--hover); }
+        .bp-route-opt .bp-row-main b { font-size: 14px; }
+        .bp-route-opt .bp-row-main small { font-size: 12px; color: var(--muted); }
+        .bp-route-opt em { font-style: normal; font: 600 11px var(--font-sans); color: var(--ok); background: var(--ok-soft); padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
+        .bp-route-opt.is-low { opacity: .55; }
+        .bp-route-dot { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #B9C1CC; }
+        .bp-route-opt[aria-checked="true"] { background: #F7F9FB; }
+        .bp-route-opt[aria-checked="true"] .bp-route-dot { border: 6px solid var(--ink); }
+        .bp-route-why { margin: 0; font-size: 12px; line-height: 1.45; color: var(--muted); }
+        .bp-route-why.is-bad { color: var(--danger); font-weight: 600; }
+        .bp-reward-pill { margin: 4px 0 0; padding: 8px 14px; border-radius: 999px; background: var(--brass-soft); color: var(--brass-text); font: 600 13px var(--font-sans); }
+        .bp-reward-card { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 12px 16px; border: 1px solid #EBD3A6; border-radius: var(--r-card); background: var(--brass-soft); text-align: left; font: inherit; color: var(--text); cursor: pointer; }
+        .bp-reward-ico { flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--brass); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .bp-points { padding: 18px; border-radius: var(--r-card); background: var(--ink); color: #fff; }
+        .bp-points-top { display: flex; justify-content: space-between; align-items: center; font: 600 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+        .bp-tier { padding: 4px 10px; border-radius: 999px; background: #E8B04A; color: var(--ink); letter-spacing: .04em; }
+        .bp-points-num { margin: 8px 0 12px; font-size: 32px; font-weight: 700; letter-spacing: -.02em; }
+        .bp-points-next { margin: 8px 0 0; font-size: 12px; color: rgba(255,255,255,.75); }
+        .bp-meter { display: block; height: 8px; border-radius: 99px; background: rgba(127,139,156,.25); overflow: hidden; }
+        .bp-meter > span { display: block; height: 100%; width: 0; border-radius: 99px; background: #E8B04A; }
+        .bp-meter > span.is-warn { background: #D97706; } .bp-meter > span.is-bad { background: var(--danger); }
+        .bp-meter-sm { height: 6px; margin: 6px 0 2px; background: var(--hover); }
+        .bp-meter-sm { height: 4px; } .bp-meter-sm > span { background: var(--brass); } .bp-mission.done .bp-meter-sm > span { background: var(--ok); } .bp-cat-list .bp-meter-sm > span { background: var(--ink-2, #26364F); }
+        .bp-card-pad.bp-budget { flex-direction: column; align-items: stretch; gap: 8px; }
+        .bp-budget .bp-meter { background: var(--hover); } .bp-budget .bp-meter > span { background: var(--ok); }
+        .bp-streak { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .bp-streak span { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 0; border-radius: 10px; background: var(--card); border: 1px solid var(--line); color: var(--faint); font-size: 16px; }
+        .bp-streak span.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+        .bp-streak span.bonus:not(.on) { border-color: #E9C98F; color: var(--brass); }
+        .bp-streak small { font: 600 10px var(--font-mono); }
+        .bp-mission { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--card); }
+        .bp-mission .bp-row-main { flex: 1; min-width: 0; }
+        .bp-mission.done .bp-row-icon { color: var(--ok); }
+        .bp-voucher-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        .bp-voucher { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px; border-radius: var(--r-card); border: 1px dashed #C9A35E; background: var(--card); text-align: left; font: inherit; color: var(--text); cursor: pointer; }
+        .bp-voucher i { font-size: 22px; color: var(--brass); }
+        .bp-voucher b { font-size: 13px; line-height: 1.35; }
+        .bp-voucher small { font: 600 12px var(--font-mono); color: var(--brass-text); }
+        .bp-voucher:disabled { opacity: .5; cursor: not-allowed; }
+        .bp-cat-list { list-style: none; margin: 0; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); }
+        .bp-cat-top { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
+        .bp-cat-top b { font-weight: 600; }
+        .bp-chip-bad { background: #FDECEA; color: var(--danger); }
+        .bp-bad-text { color: var(--danger) !important; }
 
         /* Daftar & masuk */
         .screen:not(.bp-dash) { justify-content: flex-start !important; }
@@ -422,7 +518,7 @@
         .pt-flow i { font-size: 18px; color: var(--brass); }
         .pt-flow .pt-flow-sep { width: 28px; height: 1px; background: #C3CAD4; }
         .pt-demo { padding: 32px 8px 0; gap: 0; }
-        .pt-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 6px; background: #E6EAF0; border-radius: 18px; }
+        .pt-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 6px; background: #E6EAF0; border-radius: 18px; }
         .pt-tabs button { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; border: 0; border-radius: 13px; background: transparent; color: var(--muted); text-align: left; font-family: var(--font-sans); cursor: pointer; transition: background-color .18s var(--ease), box-shadow .18s var(--ease), color .18s var(--ease); }
         .pt-tabs button:hover { background: rgba(255,255,255,.55); color: var(--ink); }
         .pt-tabs button[aria-selected="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(15,27,45,.08), 0 4px 12px -6px rgba(15,27,45,.18); }
@@ -434,7 +530,44 @@
         .pt-tabs :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
         .pt-foot { width: 100%; max-width: 1240px; padding: 0 8px 24px; }
         .pt-foot .pt-note { background: transparent; border-color: #DDE2E9; }
-        :root:not([data-pitch-lang="id"]) .pt-foot [lang="id"] { display: none; }
+        :root:not([data-pitch-lang="id"]) .pt-foot [lang="id"], :root:not([data-pitch-lang="id"]) .pt-partner [lang="id"] { display: none; }
+        html[data-pitch-lang="id"] .pt-partner [lang="en"] { display: none; }
+        .pt-partner { width: 100%; max-width: 1240px; padding: 56px 8px 32px; display: flex; flex-direction: column; gap: 0; }
+        .pt-h2 { margin: 0; font-size: 36px; line-height: 1.12; letter-spacing: -.025em; font-weight: 700; color: var(--ink); max-width: 22ch; }
+        .pt-partner .pt-lead { max-width: 64ch; }
+        .pt-pgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
+        .pt-pcard { display: flex; flex-direction: column; gap: 8px; padding: 18px; background: #fff; border: 1px solid #DDE2E9; border-radius: 14px; }
+        .pt-pcard i { width: 40px; height: 40px; border-radius: 10px; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .pt-pcard b { font-size: 16px; line-height: 1.3; color: var(--ink); }
+        .pt-pcard > span { font-size: 14px; line-height: 1.5; color: #4A5568; }
+        .pt-pcols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin-top: 12px; }
+        .pt-panel { display: flex; flex-direction: column; gap: 14px; padding: 20px; background: #fff; border: 1px solid #DDE2E9; border-radius: 14px; min-width: 0; }
+        .pt-range { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #3B475A; }
+        .pt-range > span { display: flex; justify-content: space-between; gap: 12px; }
+        .pt-range output { font-weight: 600; color: var(--ink); }
+        .pt-range input { width: 100%; accent-color: var(--ink); min-height: 28px; }
+        .pt-sim-out { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+        .pt-sim-out div { padding: 12px; border-radius: 10px; background: #F3F5F8; display: flex; flex-direction: column; gap: 4px; }
+        .pt-sim-out small { font-size: 12px; color: #566173; line-height: 1.35; }
+        .pt-sim-out b { font-size: 17px; color: var(--ink); }
+        .pt-sim-out div:nth-child(2) { background: #E7F4EC; } .pt-sim-out div:nth-child(2) b { color: #0F7B4F; }
+        .pt-fine { margin: 0; font-size: 12px; line-height: 1.5; color: #6B7585; }
+        .pt-sb-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; }
+        .pt-sb-row label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #566173; min-width: 0; }
+        .pt-sb-row select, .pt-sb-row input { min-height: 44px; padding: 0 10px; border: 1px solid #C9D0DA; border-radius: 10px; font: 500 15px var(--font-sans); background: #fff; color: var(--ink); width: 100%; }
+        .pt-sb-log { list-style: none; margin: 0; padding: 12px; border-radius: 10px; background: #0B1220; color: #D7DEE8; font: 12px/1.55 var(--font-mono); min-height: 220px; max-height: 320px; overflow: auto; display: flex; flex-direction: column; gap: 10px; }
+        .pt-sb-log li.muted { color: #8A96A8; font-family: var(--font-sans); font-size: 13px; }
+        .pt-sb-log .t { color: #E8B04A; } .pt-sb-log .ok { color: #6EE7A8; } .pt-sb-log pre { margin: 4px 0 0; white-space: pre-wrap; word-break: break-word; color: #AFC0D6; }
+        .pt-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+        .pt-steps li { display: flex; gap: 12px; font-size: 14px; line-height: 1.5; color: #4A5568; }
+        .pt-steps b { display: block; color: var(--ink); font-size: 15px; }
+        .pt-steps code, .pt-code-panel code { font-family: var(--font-mono); font-size: 12.5px; }
+        .pt-code { margin: 0; padding: 14px; border-radius: 10px; background: #0B1220; color: #D7DEE8; overflow-x: auto; font: 12.5px/1.6 var(--font-mono); }
+        .pt-partner-cta { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 20px; border-radius: 14px; background: var(--ink); color: rgba(255,255,255,.82); }
+        .pt-partner-cta p { margin: 0; max-width: 70ch; font-size: 15px; line-height: 1.5; } .pt-partner-cta b { color: #fff; }
+        .pt-partner-cta .pt-btn-primary { background: #E8B04A; color: var(--ink); }
+        @media (max-width: 980px) { .pt-pgrid { grid-template-columns: 1fr 1fr; } .pt-pcols { grid-template-columns: 1fr; } }
+        @media (max-width: 560px) { .pt-pgrid { grid-template-columns: 1fr; } .pt-sim-out { grid-template-columns: 1fr; } .pt-sb-row { grid-template-columns: 1fr; } .pt-h2 { font-size: 28px; } }
         html[data-pitch-lang="id"] .pt-foot [lang="en"] { display: none; }
         .pt-foot :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
         @media (max-width: 760px) {
@@ -823,6 +956,7 @@
             <a class="pt-logo" href="#top">BioPay</a>
             <nav class="pt-links" aria-label="Bagian halaman">
                 <a href="#demo"><span lang="en">Demo</span><span lang="id">Demo</span></a>
+                <a href="#partners"><span lang="en">Partners</span><span lang="id">Mitra</span></a>
                 <a href="https://github.com/ikbal66123/biopay" target="_blank" rel="noopener">GitHub</a>
             </nav>
             <div class="pt-lang" role="group" aria-label="Language / Bahasa">
@@ -859,6 +993,9 @@
                 </button>
                 <button type="button" role="tab" id="dev-tab-lintas" data-dev="lintas" aria-controls="pov-lintas" aria-selected="false" tabindex="-1" onclick="selectDevice('lintas')">
                     <i class="ph ph-airplane-tilt" aria-hidden="true"></i><span><b><span lang="en">Travel app</span><span lang="id">Aplikasi travel</span></b><small><span lang="en">Book a trip, pay with BioPay</span><span lang="id">Pesan tiket, bayar pakai BioPay</span></small></span>
+                </button>
+                <button type="button" role="tab" id="dev-tab-atm" data-dev="atm" aria-controls="pov-atm" aria-selected="false" tabindex="-1" onclick="selectDevice('atm')">
+                    <i class="ph ph-money" aria-hidden="true"></i><span><b><span lang="en">Cardless ATM</span><span lang="id">ATM tanpa kartu</span></b><small><span lang="en">Withdraw cash with face + palm</span><span lang="id">Tarik tunai dengan wajah + telapak</span></small></span>
                 </button>
             </div>
         </section>
@@ -1159,6 +1296,15 @@
                             </div>
                         </div>
 
+                        <div class="bp-route">
+                            <div class="bp-route-head">
+                                <p class="bp-section-title">Bayar pakai</p>
+                                <button type="button" id="route-auto" class="bp-route-auto" role="switch" aria-checked="true" onclick="toggleSmartRoute()"><i class="ph-bold ph-sparkle" aria-hidden="true"></i> Smart Route</button>
+                            </div>
+                            <div id="route-list" class="bp-route-list" role="radiogroup" aria-label="Sumber dana"></div>
+                            <p id="route-why" class="bp-route-why"></p>
+                        </div>
+
                         <div class="bp-stack-tight">
                             <button type="button" id="btn-confirm-payment" onclick="processPayment()" class="bp-btn bp-btn-ok">
                                 <i class="ph-bold ph-check" aria-hidden="true"></i> Konfirmasi Bayar
@@ -1176,6 +1322,7 @@
                         <div class="bp-success-mark" aria-hidden="true"><i class="ph-bold ph-check"></i></div>
                         <h2 class="bp-h1">Pembayaran berhasil</h2>
                         <p class="bp-sub">Struk sedang dicetak. Silakan ambil barang Anda.</p>
+                        <p id="success-reward" class="bp-reward-pill hidden"></p>
                         <p class="bp-fine bp-inline"><i class="ph ph-printer" aria-hidden="true"></i> Mencetak struk…</p>
                     </div>
                 </div>
@@ -1233,6 +1380,8 @@
                         </div>
                         <nav class="bp-nav" role="tablist" aria-label="Menu BioPay">
                             <button type="button" role="tab" aria-selected="true" id="nav-home" onclick="switchTab('home')" class="bp-tab"><i class="ph ph-house" aria-hidden="true"></i><span data-i18n="nav-home">Home</span></button>
+                            <button type="button" role="tab" aria-selected="false" id="nav-hadiah" onclick="switchTab('hadiah')" class="bp-tab"><i class="ph ph-gift" aria-hidden="true"></i><span>Hadiah</span></button>
+                            <button type="button" role="tab" aria-selected="false" id="nav-insight" onclick="switchTab('insight')" class="bp-tab"><i class="ph ph-chart-donut" aria-hidden="true"></i><span>Insight</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-operasional" onclick="switchTab('operasional')" class="bp-tab"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i><span data-i18n="nav-op">Operasional</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-travel" onclick="switchTab('travel')" class="bp-tab"><i class="ph ph-airplane-tilt" aria-hidden="true"></i><span data-i18n="nav-travel">Travel</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-wallets" onclick="switchTab('wallets')" class="bp-tab"><i class="ph ph-wallet" aria-hidden="true"></i><span data-i18n="nav-wallets">Wallets</span></button>
@@ -1259,7 +1408,7 @@
                                     <p class="bp-balance-label">Saldo <span id="home-wallet-name">DANA</span> · sumber dana utama</p>
                                     <button type="button" id="toggle-balance-icon" onclick="toggleBalance()" class="bp-icon-btn bp-on-ink ph-bold ph-eye-slash" aria-label="Sembunyikan saldo" aria-pressed="false"></button>
                                 </div>
-                                <p id="main-balance-text" class="bp-balance-amount">Rp 1.000.000.000</p>
+                                <p id="main-balance-text" class="bp-balance-amount">Rp 2.450.000</p>
                                 <div id="foreign-balances-container" class="bp-fx-list hidden"></div>
                                 <div class="bp-balance-actions">
                                     <button type="button" onclick="showTopUpModal()" class="bp-btn bp-btn-paper"><i class="ph-bold ph-plus" aria-hidden="true"></i> <span id="txt-topup" data-i18n="btn-topup">Top Up</span></button>
@@ -1275,11 +1424,72 @@
                                 <button type="button" onclick="showExchangeModal()" class="bp-qa bp-qa-accent"><i class="ph ph-currency-circle-dollar" aria-hidden="true"></i><span id="txt-exchange" data-i18n="text-exchange">Tukar<br>Valas</span></button>
                             </div>
 
-                            <button type="button" class="bp-list-row bp-card" onclick="showToast('Sistem biometrik aktif dan melacak upaya intrusi.', 'ph-shield-check', 'text-emerald-500')">
-                                <span class="bp-row-icon bp-ok-text" aria-hidden="true"><i class="ph-bold ph-shield-check"></i></span>
-                                <span class="bp-row-main"><b>Keamanan biometrik aktif</b><small>Wajah + telapak wajib untuk setiap transaksi</small></span>
-                                <span class="bp-chip bp-chip-ok">Aman</span>
+                            <button type="button" class="bp-reward-card" onclick="switchTab('hadiah')">
+                                <span class="bp-reward-ico" aria-hidden="true"><i class="ph-fill ph-coins"></i></span>
+                                <span class="bp-row-main"><b><span id="home-points" class="bp-num">1.240</span> BioPoin · <span id="home-tier">Silver</span></b><small id="home-mission">2 misi menunggu · beruntun 4 hari</small></span>
+                                <i class="ph-bold ph-caret-right bp-muted" aria-hidden="true"></i>
                             </button>
+
+                            <button type="button" class="bp-list-row bp-card" onclick="switchTab('pengaturan')">
+                                <span id="home-sec-ico" class="bp-row-icon bp-ok-text" aria-hidden="true"><i class="ph-bold ph-shield-check"></i></span>
+                                <span class="bp-row-main"><b id="home-sec-title">Keamanan biometrik aktif</b><small id="home-sec-sub">Wajah + telapak wajib untuk setiap transaksi</small></span>
+                                <span id="home-sec-chip" class="bp-chip bp-chip-ok">Aman</span>
+                            </button>
+                        </section>
+
+                        <!-- Tab: Hadiah (BioPoin, misi, voucher) -->
+                        <section id="tab-hadiah" class="bp-panel hidden">
+                            <div class="bp-points">
+                                <div class="bp-points-top"><span>BioPoin</span><span id="rw-tier" class="bp-tier">Silver</span></div>
+                                <p id="rw-points" class="bp-points-num bp-num">1.240</p>
+                                <div class="bp-meter" aria-hidden="true"><span id="rw-meter"></span></div>
+                                <p id="rw-next" class="bp-points-next">760 poin lagi ke Gold</p>
+                            </div>
+                            <div class="bp-section">
+                                <div class="bp-section-head"><p class="bp-section-title">Beruntun mingguan</p><span id="rw-streak-txt" class="bp-chip bp-chip-brass">4 hari</span></div>
+                                <div id="rw-streak" class="bp-streak"></div>
+                                <p class="bp-fine">Bayar pakai BioPay setiap hari untuk menjaga beruntun. Hari ke-7: bonus 200 poin.</p>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Misi minggu ini</p>
+                                <ul id="rw-missions" class="bp-list"></ul>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Tukar poin</p>
+                                <div id="rw-vouchers" class="bp-voucher-grid"></div>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Ajak teman</p>
+                                <button type="button" class="bp-list-row bp-card" onclick="shareReferral()">
+                                    <span class="bp-row-icon" aria-hidden="true"><i class="ph-bold ph-user-plus"></i></span>
+                                    <span class="bp-row-main"><b>Kode <span class="bp-num" data-user="bioId">12345</span>-AJAK</b><small>Kamu dan temanmu masing-masing dapat 500 poin setelah transaksi pertamanya</small></span>
+                                    <i class="ph-bold ph-copy bp-muted" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </section>
+
+                        <!-- Tab: Insight (pengeluaran & anggaran) -->
+                        <section id="tab-insight" class="bp-panel hidden">
+                            <div class="bp-stat-grid">
+                                <div class="bp-stat"><span>Pengeluaran bulan ini</span><b id="in-total" class="bp-num">Rp 0</b><small id="in-delta">-</small></div>
+                                <div class="bp-stat"><span>Hemat dari promo</span><b id="in-saved" class="bp-num">Rp 0</b><small>Cashback & bebas biaya lewat Smart Route</small></div>
+                            </div>
+                            <div class="bp-section">
+                                <div class="bp-section-head"><p class="bp-section-title">Anggaran bulanan</p><button type="button" class="bp-link" onclick="cycleBudget()"><i class="ph-bold ph-pencil-simple" aria-hidden="true"></i> Ubah</button></div>
+                                <div class="bp-card bp-card-pad bp-budget">
+                                    <div class="bp-meter" aria-hidden="true"><span id="in-budget-bar"></span></div>
+                                    <p id="in-budget-txt" class="bp-fine">-</p>
+                                </div>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Per kategori</p>
+                                <ul id="in-cats" class="bp-cat-list"></ul>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Per sumber dana</p>
+                                <ul id="in-wallets" class="bp-cat-list"></ul>
+                                <p class="bp-fine">BioPay tidak menyimpan uangmu. Semua dana tetap di e-wallet dan bank milikmu; BioPay hanya menjembatani.</p>
+                            </div>
                         </section>
 
                         <!-- Tab: Operasional -->
@@ -1333,17 +1543,17 @@
                                 <div id="wallet-list-container" class="bp-list">
                                     <button type="button" class="wallet-card bp-wallet" aria-pressed="true" onclick="setMainWallet(this, 'DANA')">
                                         <span class="bp-logo" style="background:#0E7FD8" aria-hidden="true">DDA</span>
-                                        <span class="bp-row-main"><b>DANA</b><small id="bal-DANA" class="bp-num">Saldo: Rp 1.000.000.000</small></span>
+                                        <span class="bp-row-main"><b>DANA</b><small id="bal-DANA" class="bp-num">Saldo: Rp 2.450.000</small></span>
                                         <span class="status-container"><span class="bp-chip bp-chip-brass">Utama</span></span>
                                     </button>
                                     <button type="button" class="wallet-card bp-wallet" aria-pressed="false" onclick="setMainWallet(this, 'GoPay Wallet')">
                                         <span class="bp-logo" style="background:#00838F" aria-hidden="true">GP</span>
-                                        <span class="bp-row-main"><b>GoPay Wallet</b><small id="bal-GoPayWallet" class="bp-num">Saldo: Rp 1.000.000.000</small></span>
+                                        <span class="bp-row-main"><b>GoPay Wallet</b><small id="bal-GoPayWallet" class="bp-num">Saldo: Rp 860.000</small></span>
                                         <span class="status-container"><span class="bp-chip">Terhubung</span></span>
                                     </button>
                                     <button type="button" class="wallet-card bp-wallet" aria-pressed="false" onclick="setMainWallet(this, 'BCA M-Banking')">
                                         <span class="bp-logo" style="background:#00529C" aria-hidden="true">BCA</span>
-                                        <span class="bp-row-main"><b>BCA M-Banking</b><small id="bal-BCAM-Banking" class="bp-num">Saldo: Rp 1.000.000.000</small></span>
+                                        <span class="bp-row-main"><b>BCA M-Banking</b><small id="bal-BCAM-Banking" class="bp-num">Saldo: Rp 12.750.000</small></span>
                                         <span class="status-container"><span class="bp-chip">Terhubung</span></span>
                                     </button>
                                 </div>
@@ -1406,6 +1616,25 @@
                                 <span class="bp-avatar bp-avatar-lg" aria-hidden="true" data-user="initials">IH</span>
                                 <span class="bp-row-main"><b data-user="name">Ikbal Habibi</b><small><span data-user="email">ikbal@biopay.id</span> · BioID #<span data-user="bioId">12345</span></small><small><span data-user="docLabel">KTP</span> · <span data-user="countryName">Indonesia</span> · <span data-user="phone">+6281234567890</span></small></span>
                                 <img class="bp-doc-thumb hidden" data-user-img="docPhoto" alt="Foto dokumen identitas">
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Pusat keamanan</p>
+                                <div class="bp-list">
+                                    <button type="button" id="sec-freeze" class="bp-setting" role="switch" aria-checked="false" onclick="toggleFreeze()">
+                                        <span class="bp-row-main"><b>Kunci BioID sementara</b><small>Blokir semua pembayaran biometrik dalam satu ketukan, misalnya saat curiga</small></span><span class="bp-switch" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="bp-list-row" onclick="cycleTxLimit()">
+                                        <span class="bp-row-main"><b>Limit per transaksi</b><small>Transaksi di atas limit ditolak walau biometrik cocok</small></span>
+                                        <span class="bp-inline bp-muted"><span id="sec-limit" class="bp-num">Rp 5.000.000</span><i class="ph-bold ph-caret-right" aria-hidden="true"></i></span>
+                                    </button>
+                                    <button type="button" id="sec-night" class="bp-setting" role="switch" aria-checked="true" onclick="toggleNightGuard()">
+                                        <span class="bp-row-main"><b>Mode malam</b><small>Pukul 23.00–05.00 limit otomatis turun ke Rp 500.000</small></span><span class="bp-switch" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Aktivitas terakhir</p>
+                                <ul id="sec-activity" class="bp-list"></ul>
                             </div>
                             <div class="bp-section">
                                 <p class="bp-section-title">Preferensi</p>
@@ -2006,6 +2235,89 @@
             </div> <!-- /end travel-device -->
         </div> <!-- /end pov3 wrapper -->
 
+        <div class="pov" id="pov-atm" role="tabpanel" aria-labelledby="dev-tab-atm" hidden>
+            <p class="pov-caption"><span lang="en">Concept: an ATM connected to BioPay. Scan your face and palm, you land on your BioPay page, then withdraw cash. No card, no PIN.</span><span lang="id">Konsep: ATM yang terhubung ke BioPay. Scan wajah dan telapak, kamu masuk ke halaman BioPay, lalu tarik tunai. Tanpa kartu, tanpa PIN.</span></p>
+            <div class="app-container atm" id="atm-device">
+                <div class="toast-container" id="toast-container-4" role="status" aria-live="polite"></div>
+                <div class="atm-top"><span class="atm-brand">ATM</span><span class="atm-ready">BioPay Ready</span><span class="atm-cam" aria-hidden="true"></span></div>
+                <div class="atm-screen" id="atm-screen" aria-live="polite"></div>
+                <div class="atm-hw" aria-hidden="true">
+                    <div class="atm-slot"><span>Slot kartu · tidak dipakai</span><i class="ph-bold ph-prohibit"></i></div>
+                    <div class="atm-sensor" id="atm-sensor"><i class="ph-bold ph-hand-palm"></i><span>Sensor telapak</span></div>
+                    <div class="atm-cash"><span class="atm-cash-slot"></span><span class="atm-notes" id="atm-notes"><i></i><i></i><i></i></span><small>Uang keluar</small></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="pt-partner" id="partners" aria-labelledby="partners-title">
+            <p class="pt-eyebrow"><span lang="en">For e-wallets, banks & PayLater</span><span lang="id">Untuk e-wallet, bank & PayLater</span></p>
+            <h2 class="pt-h2" id="partners-title"><span lang="en">Plug in once. Get paid at every face.</span><span lang="id">Integrasi sekali. Dibayar di setiap wajah.</span></h2>
+            <p class="pt-lead"><span lang="en">BioPay is not another wallet. It authenticates the customer with face + palm and routes the payment to the wallet or bank they already use. Your brand, your ledger, your customer.</span><span lang="id">BioPay bukan dompet baru. BioPay memverifikasi pelanggan dengan wajah + telapak, lalu meneruskan pembayaran ke wallet atau bank yang sudah mereka pakai. Merekmu, saldomu, pelangganmu.</span></p>
+
+            <div class="pt-pgrid">
+                <div class="pt-pcard"><i class="ph-bold ph-storefront" aria-hidden="true"></i><b><span lang="en">New checkout surfaces, zero hardware for you</span><span lang="id">Titik bayar baru, tanpa mesin dari kamu</span></b><span><span lang="en">Your wallet works at BioPay terminals, merchant phones, in-app checkout, bills and cardless ATMs, without the customer opening your app.</span><span lang="id">Wallet-mu bisa dipakai di terminal BioPay, ponsel merchant, checkout aplikasi, tagihan, dan ATM tanpa kartu, tanpa pelanggan membuka aplikasimu.</span></span></div>
+                <div class="pt-pcard"><i class="ph-bold ph-vault" aria-hidden="true"></i><b><span lang="en">Money never leaves your ledger</span><span lang="id">Uang tidak pernah keluar dari sistemmu</span></b><span><span lang="en">BioPay holds no balances. You approve every charge through a webhook and keep the customer relationship.</span><span lang="id">BioPay tidak menyimpan saldo. Kamu menyetujui setiap transaksi lewat webhook dan tetap memegang hubungan dengan pelanggan.</span></span></div>
+                <div class="pt-pcard"><i class="ph-bold ph-shield-check" aria-hidden="true"></i><b><span lang="en">Two biometric factors instead of OTP</span><span lang="id">Dua faktor biometrik, bukan OTP</span></b><span><span lang="en">Face + palm with liveness replaces PINs and SMS codes that get phished, so stolen phones and leaked OTPs stop being an attack path.</span><span lang="id">Wajah + telapak dengan liveness menggantikan PIN dan kode SMS yang mudah dicuri, jadi HP hilang dan OTP bocor tidak lagi jadi celah.</span></span></div>
+                <div class="pt-pcard"><i class="ph-bold ph-trend-up" aria-hidden="true"></i><b><span lang="en">More transactions, more top-ups</span><span lang="id">Transaksi naik, top up naik</span></b><span><span lang="en">Smart Route sends customers to the wallet with the best promo, so your campaigns reach people at the till. Every routed payment shows your brand.</span><span lang="id">Smart Route mengarahkan pelanggan ke wallet dengan promo terbaik, jadi kampanyemu sampai ke kasir. Setiap pembayaran menampilkan merekmu.</span></span></div>
+            </div>
+
+            <div class="pt-pcols">
+                <div class="pt-panel">
+                    <p class="pt-card-tag"><span lang="en">Revenue simulator</span><span lang="id">Simulasi pendapatan</span></p>
+                    <label class="pt-range"><span><span lang="en">Your customers paying through BioPay / month</span><span lang="id">Pelangganmu yang bayar lewat BioPay / bulan</span><output id="ps-u-out" class="bp-num">20.000</output></span><input id="ps-u" type="range" min="1000" max="200000" step="1000" value="20000" oninput="partnerSim()"></label>
+                    <label class="pt-range"><span><span lang="en">Payments per customer / month</span><span lang="id">Transaksi per pelanggan / bulan</span><output id="ps-f-out" class="bp-num">8</output></span><input id="ps-f" type="range" min="1" max="30" step="1" value="8" oninput="partnerSim()"></label>
+                    <label class="pt-range"><span><span lang="en">Average ticket</span><span lang="id">Rata-rata nilai transaksi</span><output id="ps-t-out" class="bp-num">Rp 75.000</output></span><input id="ps-t" type="range" min="10000" max="500000" step="5000" value="75000" oninput="partnerSim()"></label>
+                    <div class="pt-sim-out">
+                        <div><small><span lang="en">Payment volume routed to you / month</span><span lang="id">Volume pembayaran ke kamu / bulan</span></small><b id="ps-gmv" class="bp-num">-</b></div>
+                        <div><small><span lang="en">Your fee revenue / month</span><span lang="id">Pendapatan biaya untukmu / bulan</span></small><b id="ps-rev" class="bp-num">-</b></div>
+                        <div><small><span lang="en">Acquisition cost saved</span><span lang="id">Biaya akuisisi yang dihemat</span></small><b id="ps-cac" class="bp-num">-</b></div>
+                    </div>
+                    <p class="pt-fine"><span lang="en">Illustrative assumptions: merchant fee (MDR) 0.7%, of which the wallet keeps 0.5% and BioPay 0.2%; 20% of routed customers are new to you; acquisition cost Rp 50.000 per new user.</span><span lang="id">Asumsi ilustrasi: biaya merchant (MDR) 0,7%, wallet mendapat 0,5% dan BioPay 0,2%; 20% pelanggan yang diarahkan adalah pengguna baru bagimu; biaya akuisisi Rp 50.000 per pengguna baru.</span></p>
+                </div>
+
+                <div class="pt-panel">
+                    <p class="pt-card-tag"><span lang="en">API sandbox (simulated)</span><span lang="id">Sandbox API (simulasi)</span></p>
+                    <div class="pt-sb-row">
+                        <label><span><span lang="en">Your wallet</span><span lang="id">Wallet kamu</span></span><select id="sb-wallet"><option>Kasku</option><option>DANA</option><option>GoPay</option><option>OVO</option><option>Bank / m-banking</option></select></label>
+                        <label><span><span lang="en">Amount (Rp)</span><span lang="id">Nominal (Rp)</span></span><input id="sb-amt" type="number" inputmode="numeric" value="85000" min="1000"></label>
+                        <button type="button" class="pt-btn pt-btn-primary" onclick="partnerSandbox()"><i class="ph-bold ph-play" aria-hidden="true"></i> <span lang="en">Send test charge</span><span lang="id">Kirim transaksi uji</span></button>
+                    </div>
+                    <ol id="sb-log" class="pt-sb-log" aria-live="polite"><li class="muted"><span lang="en">Press “Send test charge” to see the request, the webhook your server receives, and the result.</span><span lang="id">Tekan “Kirim transaksi uji” untuk melihat request, webhook yang diterima servermu, dan hasilnya.</span></li></ol>
+                </div>
+            </div>
+
+            <div class="pt-pcols">
+                <div class="pt-panel">
+                    <p class="pt-card-tag"><span lang="en">Integration in three steps</span><span lang="id">Integrasi dalam tiga langkah</span></p>
+                    <ol class="pt-steps">
+                        <li><span class="pt-n">1</span><span><b><span lang="en">Account linking</span><span lang="id">Hubungkan akun</span></b><span lang="en">The customer approves “Link to BioPay” inside your app (OAuth). No card or wallet data is shared.</span><span lang="id">Pelanggan menyetujui “Hubungkan ke BioPay” di dalam aplikasimu (OAuth). Data kartu atau wallet tidak dibagikan.</span></span></li>
+                        <li><span class="pt-n">2</span><span><b><span lang="en">One webhook</span><span lang="id">Satu webhook</span></b><span lang="en">Approve or decline <code>charge.authorize</code>, then receive <code>charge.succeeded</code>. Refunds use the same endpoint.</span><span lang="id">Setujui atau tolak <code>charge.authorize</code>, lalu terima <code>charge.succeeded</code>. Refund memakai endpoint yang sama.</span></span></li>
+                        <li><span class="pt-n">3</span><span><b><span lang="en">Sandbox, then pilot</span><span lang="id">Sandbox, lalu pilot</span></b><span lang="en">Test with simulated faces, then go live with a handful of pilot merchants before scaling.</span><span lang="id">Uji dengan wajah simulasi, lalu jalan di beberapa merchant pilot sebelum diperluas.</span></span></li>
+                    </ol>
+                </div>
+                <div class="pt-panel pt-code-panel">
+                    <p class="pt-card-tag"><span lang="en">Your server, the whole integration</span><span lang="id">Server kamu, seluruh integrasinya</span></p>
+<pre class="pt-code" translate="no"><code>app.post('/biopay/webhook', verifySignature, async (req, res) =&gt; {
+  const { type, data } = req.body;
+
+  if (type === 'charge.authorize') {
+    // customer already passed face + palm at BioPay
+    const ok = await wallet.hold(data.customer_ref, data.amount);
+    return res.json({ decision: ok ? 'approve' : 'decline' });
+  }
+  if (type === 'charge.succeeded') await wallet.capture(data.id);
+  res.sendStatus(200);
+});</code></pre>
+                    <p class="pt-fine"><span lang="en">Concept API for discussion. Not a live service yet.</span><span lang="id">API konsep untuk diskusi. Belum menjadi layanan yang berjalan.</span></p>
+                </div>
+            </div>
+
+            <div class="pt-partner-cta">
+                <p><b><span lang="en">Looking for launch partners in Indonesia.</span><span lang="id">Mencari mitra peluncuran di Indonesia.</span></b> <span lang="en">E-wallets, banks, PayLater providers and merchant chains that want face + palm checkout in a pilot.</span><span lang="id">E-wallet, bank, penyedia PayLater, dan jaringan merchant yang ingin mencoba checkout wajah + telapak dalam pilot.</span></p>
+                <a class="pt-btn pt-btn-primary" href="https://github.com/ikbal66123/biopay" target="_blank" rel="noopener"><i class="ph-bold ph-handshake" aria-hidden="true"></i> <span lang="en">Become a launch partner</span><span lang="id">Jadi mitra peluncuran</span></a>
+            </div>
+        </section>
+
         <section class="pt-foot">
             <details class="pt-note">
                 <summary><span lang="en">What is real in this prototype, and what is simulated</span><span lang="id">Apa yang nyata di prototipe ini, dan apa yang simulasi</span></summary>
@@ -2014,6 +2326,7 @@
                     <li><span lang="en"><b>Simulated:</b> identity matching (every face resolves to the demo user), liveness depth sensing, palm-vein reading, balances, payments and settlement.</span><span lang="id"><b>Simulasi:</b> pencocokan identitas (semua wajah dianggap pengguna demo), sensor kedalaman liveness, pembacaan vena telapak, saldo, pembayaran, dan settlement.</span></li>
                     <li><span lang="en"><b>Accounts:</b> sign-up (details, consent, face and palm enrollment) and sign-in work, but accounts live only in this browser's storage, with passwords stored as salted SHA-256 hashes. A production system needs a server. Demo login: ikbal@biopay.id / biopay123.</span><span lang="id"><b>Akun:</b> daftar (data diri, persetujuan, rekam wajah dan telapak) dan masuk berfungsi, tetapi akun hanya tersimpan di browser ini dengan kata sandi berupa hash SHA-256 ber-salt. Sistem produksi butuh server. Akun demo: ikbal@biopay.id / biopay123.</span></li>
                     <li><span lang="en">Kasku and Lintas are fictional. DANA, GoPay, BCA, Agoda and other names appear only to illustrate integrations; there is no affiliation.</span><span lang="id">Kasku dan Lintas adalah merek fiktif. DANA, GoPay, BCA, Agoda, dan nama lain hanya ilustrasi integrasi; tidak ada afiliasi.</span></li>
+                    <li><span lang="en"><b>Concepts:</b> the cardless ATM, wallet promos used by Smart Route, and the partner API and sandbox show the intended product; they are not connected to real banks, wallets or ATMs.</span><span lang="id"><b>Konsep:</b> ATM tanpa kartu, promo wallet yang dipakai Smart Route, serta API dan sandbox mitra menunjukkan produk yang direncanakan; belum terhubung ke bank, wallet, atau ATM sungguhan.</span></li>
                     <li><span lang="en">If the camera is blocked or the detection model cannot load, scans continue in simulation mode so the demo never gets stuck.</span><span lang="id">Bila kamera diblokir atau model deteksi gagal dimuat, scan berlanjut dalam mode simulasi agar demo tidak macet.</span></li>
                 </ul>
             </details>
@@ -2233,6 +2546,7 @@
         // ==========================================
         const I18N = {"Pembayaran biometrik": {"EN": "Biometric payment", "JP": "生体認証決済"}, "Otorisasi Biometrik BioPay": {"EN": "BioPay Biometric Authorization", "JP": "BioPay 生体認証"}, "Bayar tanpa kartu dan tanpa ponsel. Wajah dan telapak tangan Anda dicocokkan dengan BioID sebelum transaksi diproses.": {"EN": "Pay without a card or a phone. Your face and palm are matched to your BioID before the payment is processed.", "JP": "カードもスマホも不要。決済の前に、顔と手のひらを BioID と照合します。"}, "Scan wajah": {"EN": "Face scan", "JP": "顔スキャン"}, "Pemeriksaan kedalaman 3D, sekitar 3 detik": {"EN": "3D depth check, about 3 seconds", "JP": "3D 深度チェック（約3秒）"}, "Scan telapak tangan": {"EN": "Palm scan", "JP": "手のひらスキャン"}, "Pola pembuluh vena sebagai faktor kedua": {"EN": "Vein pattern as the second factor", "JP": "静脈パターンによる第二要素"}, "Mulai scan wajah": {"EN": "Start face scan", "JP": "顔スキャンを開始"}, "Masuk": {"EN": "Sign in", "JP": "ログイン"}, "Daftar BioID": {"EN": "Create BioID", "JP": "BioID を作成"}, "BioPay Mesh Protocol v3.2 · Template biometrik tidak disimpan di terminal ini": {"EN": "BioPay Mesh Protocol v3.2 · Biometric templates are not stored on this terminal", "JP": "BioPay Mesh Protocol v3.2 · 生体テンプレートはこの端末に保存されません"}, "Bahasa": {"EN": "Language", "JP": "言語"}, "Daftar BioID · Langkah 1 dari 4": {"EN": "Create BioID · Step 1 of 4", "JP": "BioID 作成 · ステップ 1/4"}, "Daftar BioID · Langkah 2 dari 4": {"EN": "Create BioID · Step 2 of 4", "JP": "BioID 作成 · ステップ 2/4"}, "Daftar BioID · Langkah 3 dari 4": {"EN": "Create BioID · Step 3 of 4", "JP": "BioID 作成 · ステップ 3/4"}, "Daftar BioID · Langkah 4 dari 4": {"EN": "Create BioID · Step 4 of 4", "JP": "BioID 作成 · ステップ 4/4"}, "Buat akun BioPay": {"EN": "Create your BioPay account", "JP": "BioPay アカウントを作成"}, "Setelah data diri, kamu akan memfoto dokumen identitas, lalu merekam wajah dan telapak tangan.": {"EN": "After your details, you'll photograph your ID document, then record your face and palm.", "JP": "個人情報の入力後、本人確認書類を撮影し、顔と手のひらを登録します。"}, "Nama lengkap": {"EN": "Full name", "JP": "氏名"}, "Sesuai dokumen identitas.": {"EN": "As shown on your ID document.", "JP": "本人確認書類の表記どおりに入力してください。"}, "Kewarganegaraan": {"EN": "Nationality", "JP": "国籍"}, "Jenis dokumen": {"EN": "Document type", "JP": "書類の種類"}, "Nomor dokumen": {"EN": "Document number", "JP": "書類番号"}, "Email": {"EN": "Email", "JP": "メールアドレス"}, "Nomor HP": {"EN": "Mobile number", "JP": "携帯電話番号"}, "Kode negara": {"EN": "Country code", "JP": "国番号"}, "Kata sandi": {"EN": "Password", "JP": "パスワード"}, "Minimal 8 karakter, berisi huruf dan angka.": {"EN": "At least 8 characters, with letters and numbers.", "JP": "8文字以上で、英字と数字を含めてください。"}, "Ulangi kata sandi": {"EN": "Repeat password", "JP": "パスワード（確認）"}, "Saya setuju wajah, telapak tangan, dan foto dokumen identitas saya diproses untuk verifikasi pembayaran. Data ini bisa saya hapus kapan saja dari Pengaturan (UU No. 27/2022 tentang Pelindungan Data Pribadi).": {"EN": "I agree that my face, palm and ID document photo are processed to verify payments. I can delete this data at any time in Settings (Indonesian Personal Data Protection Law No. 27/2022).", "JP": "決済確認のため、顔・手のひら・本人確認書類の写真が処理されることに同意します。このデータは設定からいつでも削除できます（インドネシア個人情報保護法 2022年第27号）。"}, "Lanjut: foto dokumen": {"EN": "Next: photograph ID", "JP": "次へ：書類を撮影"}, "Sudah punya BioID?": {"EN": "Already have a BioID?", "JP": "BioID をお持ちですか？"}, "Batal": {"EN": "Cancel", "JP": "キャンセル"}, "Foto dokumen identitas": {"EN": "Photograph your ID document", "JP": "本人確認書類の撮影"}, "Letakkan dokumen di dalam bingkai. Pastikan foto wajah dan semua tulisan terbaca, tanpa pantulan cahaya.": {"EN": "Place the document inside the frame. Make sure the photo and all text are readable, with no glare.", "JP": "書類を枠内に合わせてください。顔写真と文字がはっきり読め、光の反射がないようにしてください。"}, "Ambil foto": {"EN": "Take photo", "JP": "撮影する"}, "Unggah dari galeri": {"EN": "Upload from gallery", "JP": "ギャラリーからアップロード"}, "Ulangi": {"EN": "Retake", "JP": "撮り直す"}, "Pakai foto ini": {"EN": "Use this photo", "JP": "この写真を使う"}, "Kembali ke data diri": {"EN": "Back to details", "JP": "個人情報に戻る"}, "Posisikan dokumen di dalam bingkai": {"EN": "Fit the document inside the frame", "JP": "書類を枠内に合わせてください"}, "Kamera tidak tersedia. Unggah foto dokumen dari galeri.": {"EN": "Camera unavailable. Upload a photo of your document instead.", "JP": "カメラを使用できません。書類の写真をアップロードしてください。"}, "Kamera belum aktif. Gunakan “Unggah dari galeri”.": {"EN": "The camera isn't on. Use “Upload from gallery”.", "JP": "カメラがオフです。「ギャラリーからアップロード」を使ってください。"}, "Memeriksa foto dokumen…": {"EN": "Checking the document photo…", "JP": "書類の写真を確認しています…"}, "Foto wajah di dokumen terdeteksi": {"EN": "Face photo on the document detected", "JP": "書類の顔写真を検出しました"}, "Foto wajah di dokumen tidak terlihat jelas. Sebaiknya ulangi foto.": {"EN": "The face photo on the document isn't clear. Consider retaking it.", "JP": "書類の顔写真が不鮮明です。撮り直しをおすすめします。"}, "Foto dokumen tersimpan. Pemeriksaan otomatis tidak tersedia.": {"EN": "Document photo saved. Automatic check unavailable.", "JP": "書類の写真を保存しました。自動チェックは利用できません。"}, "File harus berupa gambar (JPG, PNG, atau HEIC).": {"EN": "The file must be an image (JPG, PNG or HEIC).", "JP": "画像ファイル（JPG・PNG・HEIC）を選んでください。"}, "Ukuran file maksimal 10 MB.": {"EN": "The file must be 10 MB or smaller.", "JP": "ファイルサイズは 10 MB 以下にしてください。"}, "Gambar tidak bisa dibuka. Coba file lain.": {"EN": "The image couldn't be opened. Try another file.", "JP": "画像を開けませんでした。別のファイルをお試しください。"}, "Ambil atau unggah foto dokumen dulu.": {"EN": "Take or upload a document photo first.", "JP": "先に書類を撮影またはアップロードしてください。"}, "Pratinjau foto dokumen identitas": {"EN": "ID document photo preview", "JP": "本人確認書類のプレビュー"}, "Lanjut: rekam wajah": {"EN": "Next: record face", "JP": "次へ：顔を登録"}, "Pendaftaran": {"EN": "Enrollment", "JP": "登録"}, "Menyiapkan kamera…": {"EN": "Preparing camera…", "JP": "カメラを準備しています…"}, "Rekam wajah": {"EN": "Record your face", "JP": "顔の登録"}, "Lepas masker atau kacamata hitam, lalu tatap kamera di tempat yang cukup terang.": {"EN": "Remove any mask or sunglasses, then look at the camera in good light.", "JP": "マスクやサングラスを外し、明るい場所でカメラを見てください。"}, "Rekam telapak tangan": {"EN": "Record your palm", "JP": "手のひらの登録"}, "Buka telapak tangan kanan dan tunjukkan ke kamera, jari sedikit direnggangkan.": {"EN": "Open your right palm and show it to the camera, fingers slightly apart.", "JP": "右手のひらを開き、指を少し広げてカメラに向けてください。"}, "BioID kamu aktif": {"EN": "Your BioID is active", "JP": "BioID が有効になりました"}, "Mulai sekarang kamu bisa bayar di semua terminal BioPay dengan wajah dan telapak tangan.": {"EN": "You can now pay at any BioPay terminal with your face and palm.", "JP": "これからはすべての BioPay 端末で、顔と手のひらで支払えます。"}, "DATA BIOID": {"EN": "BIOID DATA", "JP": "BIOID データ"}, "BARU": {"EN": "NEW", "JP": "新規"}, "Nama": {"EN": "Name", "JP": "氏名"}, "Dokumen": {"EN": "Document", "JP": "書類"}, "Buka dashboard": {"EN": "Open dashboard", "JP": "ダッシュボードを開く"}, "Kembali ke layar awal": {"EN": "Back to start", "JP": "最初の画面に戻る"}, "Masuk ke akun BioPay": {"EN": "Sign in to BioPay", "JP": "BioPay にログイン"}, "Email atau nomor HP": {"EN": "Email or mobile number", "JP": "メールアドレスまたは携帯番号"}, "atau": {"EN": "or", "JP": "または"}, "Masuk dengan wajah": {"EN": "Sign in with face", "JP": "顔でログイン"}, "Belum punya BioID?": {"EN": "No BioID yet?", "JP": "BioID をお持ちでないですか？"}, "Daftar": {"EN": "Sign up", "JP": "登録"}, "Kembali": {"EN": "Back", "JP": "戻る"}, "Tampilkan kata sandi": {"EN": "Show password", "JP": "パスワードを表示"}, "Sembunyikan kata sandi": {"EN": "Hide password", "JP": "パスワードを隠す"}, "Langkah 1 dari 2": {"EN": "Step 1 of 2", "JP": "ステップ 1/2"}, "Langkah 2 dari 2": {"EN": "Step 2 of 2", "JP": "ステップ 2/2"}, "Verifikasi wajah": {"EN": "Face verification", "JP": "顔認証"}, "Tatap kamera dan tahan posisi sebentar.": {"EN": "Look at the camera and hold still.", "JP": "カメラを見て、そのまま少しお待ちください。"}, "Mengukur kedalaman wajah…": {"EN": "Measuring face depth…", "JP": "顔の奥行きを測定しています…"}, "Wajah cocok": {"EN": "Face matched", "JP": "顔が一致しました"}, "Identitas ditemukan": {"EN": "Identity found", "JP": "本人を確認しました"}, "KELAS 3 · TERVERIFIKASI": {"EN": "LEVEL 3 · VERIFIED", "JP": "レベル3 · 認証済み"}, "Skor kecocokan": {"EN": "Match score", "JP": "一致スコア"}, "Lanjut scan telapak tangan": {"EN": "Continue to palm scan", "JP": "手のひらスキャンへ"}, "Verifikasi telapak tangan": {"EN": "Palm verification", "JP": "手のひら認証"}, "Letakkan telapak tangan terbuka sekitar 10 cm di atas sensor.": {"EN": "Hold your open palm about 10 cm above the sensor.", "JP": "開いた手のひらをセンサーの約10cm上にかざしてください。"}, "Pola vena": {"EN": "Vein pattern", "JP": "静脈パターン"}, "Membaca aliran darah dan suhu…": {"EN": "Reading blood flow and temperature…", "JP": "血流と温度を読み取っています…"}, "Biometrik ganda berhasil": {"EN": "Two-factor biometrics passed", "JP": "二要素生体認証に成功"}, "Konfirmasi pembayaran": {"EN": "Confirm payment", "JP": "支払いの確認"}, "Rincian Tagihan": {"EN": "Bill details", "JP": "請求の内訳"}, "Rincian Tagihan ({0})": {"EN": "Bill details ({0})", "JP": "請求の内訳（{0}）"}, "VAT / pajak 10%": {"EN": "VAT 10%", "JP": "付加価値税 10%"}, "Turis terdeteksi: berhak tax refund": {"EN": "Tourist detected: eligible for tax refund", "JP": "旅行者を検出：免税還付の対象です"}, "Total tagihan": {"EN": "Total", "JP": "合計"}, "Kurs": {"EN": "Exchange rate", "JP": "為替レート"}, "Kurs (1 {0})": {"EN": "Rate (1 {0})", "JP": "レート（1 {0}）"}, "Dipotong dari wallet": {"EN": "Charged to wallet", "JP": "ウォレットから引き落とし"}, "Auto-FX aktif": {"EN": "Auto-FX on", "JP": "自動両替オン"}, "Konfirmasi Bayar": {"EN": "Confirm payment", "JP": "支払う"}, "Saldo tidak cukup": {"EN": "Insufficient balance", "JP": "残高が不足しています"}, "Saldo Awal: {0}": {"EN": "Starting balance: {0}", "JP": "支払前残高：{0}"}, "Sisa: {0}": {"EN": "Remaining: {0}", "JP": "残高：{0}"}, "Lewati ke Menu": {"EN": "Skip to menu", "JP": "メニューへ進む"}, "Pembayaran berhasil": {"EN": "Payment successful", "JP": "お支払いが完了しました"}, "Struk sedang dicetak. Silakan ambil barang Anda.": {"EN": "Printing your receipt. Please take your items.", "JP": "レシートを印刷しています。商品をお受け取りください。"}, "Mencetak struk…": {"EN": "Printing receipt…", "JP": "レシートを印刷中…"}, "Pengembalian pajak turis": {"EN": "Tourist tax refund", "JP": "旅行者向け免税還付"}, "Total pembelian": {"EN": "Total purchase", "JP": "購入合計"}, "Pajak dibayar (VAT)": {"EN": "VAT paid", "JP": "支払った付加価値税"}, "Estimasi refund": {"EN": "Estimated refund", "JP": "還付見込額"}, "Struk ini sudah terdaftar. Refund otomatis masuk ke": {"EN": "This receipt is registered. The refund goes automatically to", "JP": "このレシートは登録済みです。還付金は自動的に"}, "saat Anda melewati autogate imigrasi bandara.": {"EN": "when you pass the airport immigration autogate.", "JP": "へ、空港の自動化ゲート通過時に入金されます。"}, "Selesai": {"EN": "Done", "JP": "完了"}, "Area akun": {"EN": "Account area", "JP": "アカウント"}, "Verifikasi ulang wajah": {"EN": "Verify your face again", "JP": "顔を再認証"}, "Menu akun berisi saldo dan data pribadi, jadi wajah Anda diperiksa sekali lagi.": {"EN": "The account menu shows your balance and personal data, so your face is checked once more.", "JP": "アカウントには残高と個人情報が含まれるため、もう一度顔を確認します。"}, "Menganalisis micro-expression…": {"EN": "Analyzing micro-expressions…", "JP": "微表情を分析しています…"}, "· Terverifikasi": {"EN": "· Verified", "JP": "· 認証済み"}, "Saldo": {"EN": "Balance", "JP": "残高"}, "· sumber dana utama": {"EN": "· main funding source", "JP": "· メインの支払元"}, "Keamanan biometrik aktif": {"EN": "Biometric security on", "JP": "生体認証セキュリティ有効"}, "Wajah + telapak wajib untuk setiap transaksi": {"EN": "Face + palm required for every transaction", "JP": "すべての取引で顔と手のひらが必要です"}, "Aman": {"EN": "Secure", "JP": "安全"}, "Sensor pemindai": {"EN": "Scanner", "JP": "スキャナー"}, "Akurasi 99,9%": {"EN": "99.9% accuracy", "JP": "精度 99.9%"}, "Rata-rata 24 jam": {"EN": "24-hour average", "JP": "24時間平均"}, "Pengaturan keamanan": {"EN": "Security settings", "JP": "セキュリティ設定"}, "Verifikasi ganda (2FA)": {"EN": "Two-factor verification (2FA)", "JP": "二要素認証（2FA）"}, "Wajibkan scan wajah + telapak": {"EN": "Require face + palm scan", "JP": "顔と手のひらのスキャンを必須にする"}, "Konversi kurs otomatis": {"EN": "Automatic currency conversion", "JP": "自動通貨換算"}, "Bayar merchant asing langsung dari saldo rupiah": {"EN": "Pay foreign merchants directly from your rupiah balance", "JP": "海外の加盟店にルピア残高から直接支払う"}, "Bayar perjalanan dengan wajah": {"EN": "Pay for travel with your face", "JP": "旅行代金を顔で支払う"}, "Hubungkan aplikasi travel, lalu cukup ucapkan “Bayar pakai BioPay Travel” saat checkout.": {"EN": "Connect a travel app, then just say “Pay with BioPay Travel” at checkout.", "JP": "旅行アプリを連携し、決済時に「BioPay Travel で支払う」と言うだけです。"}, "Platform terhubung": {"EN": "Connected platforms", "JP": "連携済みサービス"}, "Pesawat, hotel, kereta, atraksi": {"EN": "Flights, hotels, trains, activities", "JP": "航空券・ホテル・鉄道・アクティビティ"}, "Utama": {"EN": "Main", "JP": "メイン"}, "Terhubung": {"EN": "Connected", "JP": "連携済み"}, "Sumber dana": {"EN": "Funding sources", "JP": "支払元"}, "Tambah Wallet": {"EN": "Add wallet", "JP": "ウォレットを追加"}, "Ketuk wallet untuk menjadikannya sumber dana utama.": {"EN": "Tap a wallet to make it your main funding source.", "JP": "ウォレットをタップしてメインの支払元に設定します。"}, "Riwayat transaksi": {"EN": "Transaction history", "JP": "取引履歴"}, "Pemilik": {"EN": "Holder", "JP": "所有者"}, "No. ID paspor": {"EN": "Passport ID no.", "JP": "パスポートID番号"}, "Status biometrik": {"EN": "Biometric status", "JP": "生体認証ステータス"}, "Berlaku s/d": {"EN": "Valid until", "JP": "有効期限"}, "Ketuk kartu untuk menyalin nomor ID paspor. Dipakai di imigrasi dan check-in hotel tanpa dokumen kertas.": {"EN": "Tap the card to copy the passport ID. Used at immigration and hotel check-in without paper documents.", "JP": "カードをタップしてパスポートIDをコピー。紙の書類なしで入国審査やホテルのチェックインに使えます。"}, "Berbagi saldo dengan keluarga": {"EN": "Share your balance with family", "JP": "家族と残高を共有"}, "Anggota membayar dengan wajah dan telapak tangan mereka sendiri, memakai saldo Anda dengan limit harian.": {"EN": "Members pay with their own face and palm, using your balance with a daily limit.", "JP": "メンバーは自分の顔と手のひらで、あなたの残高から1日の上限内で支払えます。"}, "Anggota terdaftar": {"EN": "Members", "JP": "登録メンバー"}, "Tambah Anggota": {"EN": "Add member", "JP": "メンバーを追加"}, "Belum ada anggota. Pilih “Tambah Anggota” untuk mendaftarkan.": {"EN": "No members yet. Choose “Add member” to enroll someone.", "JP": "まだメンバーはいません。「メンバーを追加」から登録してください。"}, "Preferensi": {"EN": "Preferences", "JP": "環境設定"}, "Notifikasi push": {"EN": "Push notifications", "JP": "プッシュ通知"}, "Pemberitahuan transaksi masuk & keluar": {"EN": "Alerts for incoming & outgoing transactions", "JP": "入出金の通知"}, "Bahasa (Language)": {"EN": "Language", "JP": "言語"}, "Bahasa tampilan aplikasi": {"EN": "App display language", "JP": "アプリの表示言語"}, "Keluar": {"EN": "Sign out", "JP": "ログアウト"}, "Hapus akun & data biometrik": {"EN": "Delete account & biometric data", "JP": "アカウントと生体データを削除"}, "Pilih bahasa": {"EN": "Choose language", "JP": "言語を選択"}, "Hubungkan wallet atau bank": {"EN": "Connect a wallet or bank", "JP": "ウォレットまたは銀行を連携"}, "Verifikasi & Hubungkan": {"EN": "Verify & connect", "JP": "認証して連携"}, "Top up saldo utama": {"EN": "Top up main balance", "JP": "メイン残高にチャージ"}, "Nominal (Rp)": {"EN": "Amount (Rp)", "JP": "金額（Rp）"}, "Top Up Sekarang": {"EN": "Top up now", "JP": "今すぐチャージ"}, "Transfer uang": {"EN": "Send money", "JP": "送金"}, "Tujuan": {"EN": "To", "JP": "送金先"}, "No. rek / HP": {"EN": "Account / phone no.", "JP": "口座・電話番号"}, "ID atau nomor HP penerima": {"EN": "Recipient ID or phone number", "JP": "受取人のIDまたは電話番号"}, "Buka kamera, scan wajah penerima": {"EN": "Open camera to scan recipient's face", "JP": "カメラで受取人の顔をスキャン"}, "Penerima:": {"EN": "Recipient:", "JP": "受取人："}, "Kirim Dana": {"EN": "Send", "JP": "送金する"}, "Tarik tunai": {"EN": "Withdraw", "JP": "出金"}, "Dana dikirim ke rekening utama Anda.": {"EN": "Funds go to your main bank account.", "JP": "メインの銀行口座に送金されます。"}, "Konfirmasi tarik tunai": {"EN": "Confirm withdrawal", "JP": "出金を確定"}, "Arahkan kamera ke kode QR": {"EN": "Point the camera at the QR code", "JP": "カメラをQRコードに向けてください"}, "Tutup": {"EN": "Close", "JP": "閉じる"}, "Minta dana": {"EN": "Request money", "JP": "送金を依頼"}, "Tunjukkan kode ini ke pengirim": {"EN": "Show this code to the sender", "JP": "このコードを送金者に見せてください"}, "Tagihan bulan ini": {"EN": "This month's bills", "JP": "今月の請求"}, "Tukar valas": {"EN": "Currency exchange", "JP": "両替"}, "Sumber dana (IDR)": {"EN": "From (IDR)", "JP": "両替元（IDR）"}, "Tukar ke": {"EN": "Exchange to", "JP": "両替先"}, "Anda menerima": {"EN": "You receive", "JP": "受取額"}, "Konfirmasi Tukar": {"EN": "Confirm exchange", "JP": "両替を確定"}, "Scan wajah penerima": {"EN": "Scan recipient's face", "JP": "受取人の顔をスキャン"}, "Arahkan kamera ke wajah teman atau penerima.": {"EN": "Point the camera at your friend's or the recipient's face.", "JP": "友人または受取人の顔にカメラを向けてください。"}, "Mencari wajah penerima…": {"EN": "Looking for the recipient's face…", "JP": "受取人の顔を探しています…"}, "Tambah anggota": {"EN": "Add member", "JP": "メンバーを追加"}, "Nama anggota": {"EN": "Member name", "JP": "メンバー名"}, "Hubungan": {"EN": "Relationship", "JP": "続柄"}, "Lanjut Daftarkan Wajah": {"EN": "Continue: enroll face", "JP": "次へ：顔を登録"}, "Registrasi biometrik": {"EN": "Biometric enrollment", "JP": "生体登録"}, "Memindai wajah": {"EN": "Scanning the face of", "JP": "顔をスキャン中："}, "Mendaftarkan wajah…": {"EN": "Enrolling face…", "JP": "顔を登録しています…"}, "Hapus akun?": {"EN": "Delete account?", "JP": "アカウントを削除しますか？"}, "Akun": {"EN": "Account", "JP": "アカウント"}, "beserta template wajah dan telapak tangannya akan dihapus permanen dari perangkat ini. Tindakan ini tidak bisa dibatalkan.": {"EN": "and its face, palm and document data will be permanently deleted from this device. This can't be undone.", "JP": "と、その顔・手のひら・書類データがこの端末から完全に削除されます。元に戻せません。"}, "Ya, hapus permanen": {"EN": "Yes, delete permanently", "JP": "完全に削除する"}, "Limit harian ·": {"EN": "Daily limit ·", "JP": "1日の上限 ·"}, "Limit per hari (Rp)": {"EN": "Limit per day (Rp)", "JP": "1日あたりの上限（Rp）"}, "Simpan Limit": {"EN": "Save limit", "JP": "上限を保存"}, "Hapus anggota": {"EN": "Remove member", "JP": "メンバーを削除"}, "Notifikasi (1 baru)": {"EN": "Notifications (1 new)", "JP": "通知（新着1件）"}, "Pengaturan": {"EN": "Settings", "JP": "設定"}, "Sembunyikan saldo": {"EN": "Hide balance", "JP": "残高を隠す"}, "Tampilkan saldo": {"EN": "Show balance", "JP": "残高を表示"}, "Menu BioPay": {"EN": "BioPay menu", "JP": "BioPay メニュー"}, "Pilihan wallet": {"EN": "Wallet options", "JP": "ウォレットの選択"}, "Cara memilih penerima": {"EN": "How to choose the recipient", "JP": "受取人の選び方"}, "Contoh: 100000": {"EN": "e.g. 100000", "JP": "例：100000"}, "Contoh: 1550000": {"EN": "e.g. 1550000", "JP": "例：1550000"}, "Contoh: 250000": {"EN": "e.g. 250000", "JP": "例：250000"}, "Contoh: Anak, Istri": {"EN": "e.g. Child, Wife", "JP": "例：子ども、妻"}, "Contoh: 0812 3456 7890": {"EN": "e.g. 0812 3456 7890", "JP": "例：0812 3456 7890"}, "Isi nama lengkap, minimal 3 huruf.": {"EN": "Enter your full name, at least 3 letters.", "JP": "氏名を3文字以上で入力してください。"}, "Format email belum benar, contoh nama@email.com.": {"EN": "Check the email format, e.g. name@email.com.", "JP": "メールアドレスの形式を確認してください（例：name@email.com）。"}, "Email ini sudah terdaftar. Silakan masuk.": {"EN": "This email is already registered. Please sign in.", "JP": "このメールアドレスは登録済みです。ログインしてください。"}, "Nomor HP ini sudah terdaftar.": {"EN": "This mobile number is already registered.", "JP": "この携帯番号は登録済みです。"}, "Nomor HP untuk {0} harus {1} digit.": {"EN": "A {0} mobile number must have {1} digits.", "JP": "{0} の携帯番号は {1} 桁です。"}, "Nomor HP untuk {0} biasanya diawali {1}.": {"EN": "A {0} mobile number usually starts with {1}.", "JP": "{0} の携帯番号は通常 {1} で始まります。"}, "Konfirmasi kata sandi tidak sama.": {"EN": "Passwords don't match.", "JP": "パスワードが一致しません。"}, "Persetujuan diperlukan untuk merekam data biometrik.": {"EN": "Consent is required to record biometric data.", "JP": "生体データの登録には同意が必要です。"}, "Pilih kewarganegaraan.": {"EN": "Choose your nationality.", "JP": "国籍を選択してください。"}, "Format nomor dokumen belum benar. {0}": {"EN": "Check the document number. {0}", "JP": "書類番号を確認してください。{0}"}, "Dokumen ini sudah terdaftar.": {"EN": "This document is already registered.", "JP": "この書類は登録済みです。"}, "Isi email atau nomor HP.": {"EN": "Enter your email or mobile number.", "JP": "メールアドレスまたは携帯番号を入力してください。"}, "Isi kata sandi.": {"EN": "Enter your password.", "JP": "パスワードを入力してください。"}, "Email/nomor HP atau kata sandi salah.": {"EN": "Wrong email/mobile number or password.", "JP": "メールアドレス・携帯番号またはパスワードが違います。"}, "BioID {0} aktif. Selamat datang, {1}!": {"EN": "BioID {0} is active. Welcome, {1}!", "JP": "BioID {0} が有効になりました。ようこそ、{1} さん！"}, "Masuk sebagai {0}": {"EN": "Signed in as {0}", "JP": "{0} としてログインしました"}, "{0} keluar. Sampai jumpa!": {"EN": "{0} signed out. See you!", "JP": "{0} さんがログアウトしました。"}, "Sesi berakhir": {"EN": "Session ended", "JP": "セッションが終了しました"}, "Akun demo tidak bisa dihapus. Daftarkan akun baru untuk mencoba fitur ini.": {"EN": "The demo account can't be deleted. Create a new account to try this.", "JP": "デモアカウントは削除できません。新しいアカウントで試してください。"}, "Akun dan data biometrik dihapus.": {"EN": "Account and biometric data deleted.", "JP": "アカウントと生体データを削除しました。"}, "Merekam template wajah…": {"EN": "Recording face template…", "JP": "顔テンプレートを登録しています…"}, "Merekam pola telapak tangan…": {"EN": "Recording palm pattern…", "JP": "手のひらのパターンを登録しています…"}, "Bahasa diubah ke {0}": {"EN": "Language changed to {0}", "JP": "言語を {0} に変更しました"}, "Menyiapkan deteksi AI…": {"EN": "Preparing AI detection…", "JP": "AI 検出を準備しています…"}, "Deteksi AI tidak tersedia · simulasi": {"EN": "AI detection unavailable · simulation", "JP": "AI 検出は利用できません · シミュレーション"}, "Kamera terputus · simulasi": {"EN": "Camera disconnected · simulation", "JP": "カメラが切断されました · シミュレーション"}, "Wajah terverifikasi": {"EN": "Face verified", "JP": "顔を認証しました"}, "Telapak tangan terverifikasi": {"EN": "Palm verified", "JP": "手のひらを認証しました"}, "Wajah terdeteksi · {0}%": {"EN": "Face detected · {0}%", "JP": "顔を検出 · {0}%"}, "Telapak tangan terdeteksi · {0}%": {"EN": "Palm detected · {0}%", "JP": "手のひらを検出 · {0}%"}, "Arahkan wajah ke kamera…": {"EN": "Point your face at the camera…", "JP": "顔をカメラに向けてください…"}, "Arahkan telapak tangan ke kamera…": {"EN": "Show your palm to the camera…", "JP": "手のひらをカメラに向けてください…"}, "Lewati · mode demo": {"EN": "Skip · demo mode", "JP": "スキップ · デモモード"}, "Menganalisis Kedalaman 3D Wajah (Anti-Spoofing)...": {"EN": "Analyzing 3D face depth (anti-spoofing)…", "JP": "顔の3D深度を分析しています（なりすまし防止）…"}, "Memindai Aliran Darah & Suhu Tangan...": {"EN": "Scanning palm blood flow & temperature…", "JP": "手のひらの血流と温度をスキャンしています…"}, "Liveness 3D SDK Aktif...": {"EN": "3D liveness SDK on…", "JP": "3D ライブネス SDK 起動中…"}, "Kartu identitas Thailand": {"EN": "Thai national ID card", "JP": "タイ国民IDカード"}, "Paspor": {"EN": "Passport", "JP": "パスポート"}};
 
+        Object.assign(I18N, {"Bayar pakai": {"EN": "Pay with", "JP": "支払い方法"}, "Smart Route aktif": {"EN": "Smart Route on", "JP": "スマートルート オン"}, "Smart Route mati: pilih sumber dana sendiri": {"EN": "Smart Route off: pick a source yourself", "JP": "スマートルート オフ：支払元を選んでください"}, "Cashback 1% (maks Rp 10.000)": {"EN": "1% cashback (max Rp 10,000)", "JP": "1%キャッシュバック（上限 Rp 10,000）"}, "BioPoin 2x": {"EN": "2x BioPoints", "JP": "BioPoint 2倍"}, "Bebas biaya kurs 1,5%": {"EN": "No 1.5% FX fee", "JP": "為替手数料1.5%無料"}, "Dipilih otomatis: saldo cukup dan {0}.": {"EN": "Picked automatically: enough balance and {0}.", "JP": "自動選択：残高十分、{0}。"}, "Dipilih otomatis: saldo paling cukup.": {"EN": "Picked automatically: highest balance.", "JP": "自動選択：残高が最も多い支払元。"}, "Dipilih manual. Nyalakan Smart Route agar BioPay memilih yang paling untung.": {"EN": "Picked manually. Turn on Smart Route to let BioPay pick the best deal.", "JP": "手動で選択中。スマートルートで最もお得な支払元を自動選択できます。"}, "BioID sedang dikunci. Buka kunci di Pengaturan > Pusat keamanan.": {"EN": "BioID is locked. Unlock it in Settings > Security center.", "JP": "BioIDはロック中です。設定 > セキュリティセンターで解除してください。"}, "Melebihi limit per transaksi ({0}).": {"EN": "Over the per-payment limit ({0}).", "JP": "1回あたりの上限（{0}）を超えています。"}, "BioID dikunci": {"EN": "BioID locked", "JP": "BioIDロック中"}, "Melebihi limit": {"EN": "Over limit", "JP": "上限超過"}, "+{0} BioPoin": {"EN": "+{0} BioPoints", "JP": "+{0} BioPoint"}, "cashback {0}": {"EN": "cashback {0}", "JP": "キャッシュバック {0}"}, "hemat biaya kurs {0}": {"EN": "saved {0} in FX fees", "JP": "為替手数料 {0} 節約"}, "bonus beruntun +200": {"EN": "streak bonus +200", "JP": "連続ボーナス +200"}, "Misi selesai: {0} (+{1} poin)": {"EN": "Mission complete: {0} (+{1} points)", "JP": "ミッション達成：{0}（+{1}ポイント）"}, "{0} misi menunggu · beruntun {1} hari": {"EN": "{0} missions open · {1}-day streak", "JP": "ミッション残り{0} · {1}日連続"}, "Keamanan biometrik aktif": {"EN": "Biometric security on", "JP": "生体認証セキュリティ有効"}, "Wajah + telapak wajib untuk setiap transaksi": {"EN": "Face + palm required for every payment", "JP": "すべての支払いに顔＋手のひらが必要"}, "Semua pembayaran biometrik diblokir": {"EN": "All biometric payments are blocked", "JP": "生体認証での支払いはすべてブロック中"}, "Aman": {"EN": "Safe", "JP": "安全"}, "Terkunci": {"EN": "Locked", "JP": "ロック中"}, "Hadiah": {"EN": "Rewards", "JP": "特典"}, "Insight": {"EN": "Insights", "JP": "分析"}, "Beruntun mingguan": {"EN": "Weekly streak", "JP": "週間連続記録"}, "Bayar pakai BioPay setiap hari untuk menjaga beruntun. Hari ke-7: bonus 200 poin.": {"EN": "Pay with BioPay every day to keep the streak. Day 7: 200 bonus points.", "JP": "毎日BioPayで支払って連続記録を維持。7日目：200ボーナスポイント。"}, "Misi minggu ini": {"EN": "This week's missions", "JP": "今週のミッション"}, "Tukar poin": {"EN": "Redeem points", "JP": "ポイント交換"}, "Ajak teman": {"EN": "Invite friends", "JP": "友達を招待"}, "Kamu dan temanmu masing-masing dapat 500 poin setelah transaksi pertamanya": {"EN": "You and your friend each get 500 points after their first payment", "JP": "友達の初回支払い後、あなたと友達にそれぞれ500ポイント"}, "{0} poin lagi ke {1}": {"EN": "{0} points to {1}", "JP": "{1}まであと{0}ポイント"}, "Level tertinggi. Terima kasih!": {"EN": "Top tier. Thank you!", "JP": "最上位ランクです。ありがとうございます！"}, "{0} hari": {"EN": "{0} days", "JP": "{0}日"}, "Sen": {"EN": "Mon", "JP": "月"}, "Sel": {"EN": "Tue", "JP": "火"}, "Rab": {"EN": "Wed", "JP": "水"}, "Kam": {"EN": "Thu", "JP": "木"}, "Jum": {"EN": "Fri", "JP": "金"}, "Sab": {"EN": "Sat", "JP": "土"}, "Min": {"EN": "Sun", "JP": "日"}, "Selesai": {"EN": "Done", "JP": "完了"}, "poin": {"EN": "points", "JP": "ポイント"}, "Bayar 3 kali pakai BioPay": {"EN": "Pay 3 times with BioPay", "JP": "BioPayで3回支払う"}, "Hemat lewat Smart Route": {"EN": "Save with Smart Route", "JP": "スマートルートで節約"}, "Bayar 1 tagihan bulanan": {"EN": "Pay 1 monthly bill", "JP": "月額請求を1件支払う"}, "Bayar di merchant luar negeri": {"EN": "Pay at a foreign merchant", "JP": "海外の店舗で支払う"}, "Tambah 1 anggota keluarga": {"EN": "Add 1 family member", "JP": "家族を1人追加"}, "Diskon Rp 10.000 di kedai kopi": {"EN": "Rp 10,000 off at coffee shops", "JP": "カフェで Rp 10,000 割引"}, "Gratis 3x biaya transfer antarbank": {"EN": "3 free interbank transfers", "JP": "銀行間送金手数料3回無料"}, "Cashback 5% tiket kereta Lintas": {"EN": "5% cashback on Lintas train tickets", "JP": "Lintas 列車チケット5%キャッシュバック"}, "Donasi Rp 10.000 ke panti asuhan": {"EN": "Donate Rp 10,000 to an orphanage", "JP": "孤児院へ Rp 10,000 寄付"}, "Voucher aktif: {0} · kode {1}": {"EN": "Voucher active: {0} · code {1}", "JP": "クーポン有効：{0} · コード {1}"}, "Kode ajak teman {0} disalin": {"EN": "Invite code {0} copied", "JP": "招待コード {0} をコピーしました"}, "Pengeluaran bulan ini": {"EN": "Spent this month", "JP": "今月の支出"}, "Hemat dari promo": {"EN": "Saved from promos", "JP": "プロモで節約"}, "Cashback & bebas biaya lewat Smart Route": {"EN": "Cashback & fee waivers via Smart Route", "JP": "スマートルートでのキャッシュバックと手数料無料"}, "Anggaran bulanan": {"EN": "Monthly budget", "JP": "月間予算"}, "Ubah": {"EN": "Edit", "JP": "変更"}, "Per kategori": {"EN": "By category", "JP": "カテゴリー別"}, "Per sumber dana": {"EN": "By funding source", "JP": "支払元別"}, "BioPay tidak menyimpan uangmu. Semua dana tetap di e-wallet dan bank milikmu; BioPay hanya menjembatani.": {"EN": "BioPay never holds your money. Funds stay in your own e-wallets and banks; BioPay only bridges them.", "JP": "BioPayはお金を預かりません。資金はあなたの電子ウォレットと銀行にあり、BioPayは橋渡しをするだけです。"}, "{0}% di atas bulan lalu": {"EN": "{0}% above last month", "JP": "先月より{0}%増"}, "{0}% lebih hemat dari bulan lalu": {"EN": "{0}% less than last month", "JP": "先月より{0}%減"}, "{0} dari anggaran {1} terpakai ({2}%). Sisa {3}.": {"EN": "{0} of {1} budget used ({2}%). {3} left.", "JP": "予算{1}のうち{0}使用（{2}%）。残り{3}。"}, "Anggaran bulanan: {0}": {"EN": "Monthly budget: {0}", "JP": "月間予算：{0}"}, "Belanja & minimarket": {"EN": "Shopping & minimarts", "JP": "買い物・コンビニ"}, "Makan & kopi": {"EN": "Food & coffee", "JP": "食事・コーヒー"}, "Travel": {"EN": "Travel", "JP": "旅行"}, "Tagihan": {"EN": "Bills", "JP": "請求書"}, "Transportasi": {"EN": "Transport", "JP": "交通"}, "Pusat keamanan": {"EN": "Security center", "JP": "セキュリティセンター"}, "Kunci BioID sementara": {"EN": "Temporarily lock BioID", "JP": "BioIDを一時ロック"}, "Blokir semua pembayaran biometrik dalam satu ketukan, misalnya saat curiga": {"EN": "Block all biometric payments in one tap, e.g. if something looks wrong", "JP": "不審な時など、ワンタップで生体認証の支払いをすべてブロック"}, "Limit per transaksi": {"EN": "Per-payment limit", "JP": "1回あたりの上限"}, "Transaksi di atas limit ditolak walau biometrik cocok": {"EN": "Payments above the limit are declined even if biometrics match", "JP": "上限を超える支払いは生体認証が一致しても拒否されます"}, "Mode malam": {"EN": "Night mode", "JP": "夜間モード"}, "Pukul 23.00–05.00 limit otomatis turun ke Rp 500.000": {"EN": "From 23:00 to 05:00 the limit drops to Rp 500,000", "JP": "23:00〜5:00は上限が Rp 500,000 に下がります"}, "Mode malam aktif": {"EN": "Night mode on", "JP": "夜間モード オン"}, "Mode malam mati": {"EN": "Night mode off", "JP": "夜間モード オフ"}, "Aktivitas terakhir": {"EN": "Recent activity", "JP": "最近のアクティビティ"}, "Tanpa limit": {"EN": "No limit", "JP": "上限なし"}, "Limit per transaksi: {0}": {"EN": "Per-payment limit: {0}", "JP": "1回あたりの上限：{0}"}, "BioID dikunci. Pembayaran biometrik diblokir.": {"EN": "BioID locked. Biometric payments blocked.", "JP": "BioIDをロックしました。生体認証の支払いはブロックされます。"}, "BioID dibuka kembali.": {"EN": "BioID unlocked.", "JP": "BioIDのロックを解除しました。"}, "BioID dibuka": {"EN": "BioID unlocked", "JP": "BioIDロック解除"}, "Dari aplikasi BioPay": {"EN": "From the BioPay app", "JP": "BioPayアプリから"}, "Baru saja": {"EN": "Just now", "JP": "たった今"}, "Pembayaran di terminal": {"EN": "Payment at terminal", "JP": "端末での支払い"}, "Masuk dengan wajah": {"EN": "Signed in with face", "JP": "顔でサインイン"}, "Wallet terhubung": {"EN": "Wallet linked", "JP": "ウォレット連携"}, "Limit diubah": {"EN": "Limit changed", "JP": "上限を変更"}, "BioID sedang dikunci. Buka kunci di Pengaturan.": {"EN": "BioID is locked. Unlock it in Settings.", "JP": "BioIDはロック中です。設定で解除してください。"}, "Sumber dana": {"EN": "Funding source", "JP": "支払元"}});
         // ==========================================
         // NEGARA, DOKUMEN IDENTITAS & NOMOR HP
         // ==========================================
@@ -2384,12 +2698,12 @@
         };
 
         const dummyMerchants = [
-            { name: 'Starbucks Times Square', loc: 'USA', cur: 'USD', min: 2, max: 25 },
+            { name: 'Starbucks Times Square', loc: 'USA', cur: 'USD', min: 2, max: 25, cat: 'Makan & kopi' },
             { name: 'Lawson Station', loc: 'JP', cur: 'JPY', min: 200, max: 3500 },
             { name: 'Galeries Lafayette', loc: 'FR', cur: 'EUR', min: 10, max: 150 },
-            { name: 'London Underground', loc: 'UK', cur: 'GBP', min: 2, max: 15 },
+            { name: 'London Underground', loc: 'UK', cur: 'GBP', min: 2, max: 15, cat: 'Transportasi' },
             { name: 'Indomaret Point', loc: 'ID', cur: 'IDR', min: 10000, max: 150000 },
-            { name: 'Kopitiam', loc: 'SG', cur: 'SGD', min: 3, max: 30 }
+            { name: 'Kopitiam', loc: 'SG', cur: 'SGD', min: 3, max: 30, cat: 'Makan & kopi' }
         ];
 
         const fxRates = { 'USD': 15500, 'JPY': 105, 'EUR': 16800, 'GBP': 19500, 'SGD': 11500, 'IDR': 1 };
@@ -2475,21 +2789,49 @@
             let currentForeignVat = "";
             let isTouristTransaction = false;
 
-            let walletBalances = { 'DANA': 1000000000, 'GoPay Wallet': 1000000000, 'BCA M-Banking': 1000000000 };
+            let walletBalances = { 'DANA': 2450000, 'GoPay Wallet': 860000, 'BCA M-Banking': 12750000 };
             let currentWalletName = "DANA";
             let isBalanceHidden = false;
             let foreignBalances = { 'USD': 0, 'EUR': 0, 'SGD': 0, 'JPY': 0, 'GBP': 0 };
         
             let cameraStream = null, qrCamera = null, tfCamera = null, sharingCamera = null;
 
+            // Smart Route, BioPoin, insight & keamanan (data demo)
+            const WALLET_PERKS = {
+                'DANA': { txt: 'Cashback 1% (maks Rp 10.000)', kind: 'cash', val: a => Math.min(Math.round(a * 0.01), 10000) },
+                'GoPay Wallet': { txt: 'BioPoin 2x', kind: 'pts', val: a => Math.round(a * 0.005) },
+                'BCA M-Banking': { txt: 'Bebas biaya kurs 1,5%', kind: 'fx', val: (a, tourist) => tourist ? Math.round(a * 0.015) : 0 }
+            };
+            let smartRoute = true, payWallet = 'DANA', payCategory = 'Belanja & minimarket', paidToday = false;
+            let points = 1240, streakDays = 4, savedTotal = 18500, budget = 5000000;
+            const lastMonthSpend = 4350000;
+            const spend = { 'Belanja & minimarket': 1240000, 'Makan & kopi': 685000, 'Travel': 1150000, 'Tagihan': 920000, 'Transportasi': 210000 };
+            const spendByWallet = { 'DANA': 2150000, 'GoPay Wallet': 905000, 'BCA M-Banking': 1150000 };
+            const missions = [
+                { id: 'pay3', t: 'Bayar 3 kali pakai BioPay', goal: 3, prog: 1, pts: 150, icon: 'ph-scan-smiley' },
+                { id: 'route', t: 'Hemat lewat Smart Route', goal: 1, prog: 0, pts: 50, icon: 'ph-sparkle' },
+                { id: 'bill', t: 'Bayar 1 tagihan bulanan', goal: 1, prog: 0, pts: 100, icon: 'ph-receipt' },
+                { id: 'intl', t: 'Bayar di merchant luar negeri', goal: 1, prog: 0, pts: 200, icon: 'ph-globe-hemisphere-west' },
+                { id: 'family', t: 'Tambah 1 anggota keluarga', goal: 1, prog: 0, pts: 150, icon: 'ph-users-three' }
+            ];
+            const vouchers = [
+                { t: 'Diskon Rp 10.000 di kedai kopi', cost: 500, icon: 'ph-coffee' },
+                { t: 'Gratis 3x biaya transfer antarbank', cost: 300, icon: 'ph-paper-plane-tilt' },
+                { t: 'Cashback 5% tiket kereta Lintas', cost: 800, icon: 'ph-train' },
+                { t: 'Donasi Rp 10.000 ke panti asuhan', cost: 400, icon: 'ph-hand-heart' }
+            ];
+            const TX_LIMITS = [1000000, 2000000, 5000000, 10000000, 0];
+            let frozen = false, txLimit = 5000000, nightGuard = true;
+            const activity = [['Pembayaran di terminal', 'Indomaret Point · Jakarta', 'Kemarin 19.42'], ['Masuk dengan wajah', 'Terminal 0042-JKT', 'Kemarin 19.41'], ['Wallet terhubung', 'GoPay Wallet', '3 hari lalu']];
+
             // ==========================================
             // FUNGSI MANDIRI POV 1 (BIOPAY KIRI)
             // ==========================================
-            function addBiopayHistory(title, subtitle, amountStr, isExpense = true) {
+            function addBiopayHistory(title, subtitle, amountStr, isExpense = true, wallet = currentWalletName) {
                 const bpHtml = `
                     <li class="bp-tx">
                         <span class="bp-tx-icon ${isExpense ? '' : 'in'}" aria-hidden="true"><i class="ph-bold ${isExpense ? 'ph-arrow-up-right' : 'ph-arrow-down-left'}"></i></span>
-                        <span class="bp-row-main"><b>${escapeHTML(title)}</b><small>Baru saja · ${escapeHTML(currentWalletName)}</small></span>
+                        <span class="bp-row-main"><b>${escapeHTML(title)}</b><small>Baru saja · ${escapeHTML(wallet)}</small></span>
                         <span class="bp-tx-amt"><b class="bp-num ${isExpense ? '' : 'pos'}">${isExpense ? '-' : '+'}${escapeHTML(amountStr)}</b><small>${escapeHTML(subtitle)}</small></span>
                     </li>`;
                 $('riwayat-biopay-list').insertAdjacentHTML('afterbegin', bpHtml);
@@ -2559,16 +2901,145 @@
                 }
                 $('payment-txt-idreq').innerText = `Rp ${currentPaymentIDR.toLocaleString('id-ID')}`;
 
-                const remaining = walletBalances[currentWalletName] - currentPaymentIDR;
-                const btn = $('btn-confirm-payment');
-                const txtEnd = $('payment-txt-balend');
-
-                const ok = remaining >= 0;
-                txtEnd.textContent = ok ? tr('Sisa: {0}', formatRp(remaining)) : tr('Saldo tidak cukup');
-                txtEnd.className = 'bp-balend' + (ok ? '' : ' is-bad');
-                btn.disabled = !ok;
-                btn.innerHTML = ok ? `<i class="ph-bold ph-check" aria-hidden="true"></i> ${tr('Konfirmasi Bayar')}` : `<i class="ph-bold ph-warning" aria-hidden="true"></i> ${tr('Saldo tidak cukup')}`;
+                payCategory = m.cat || 'Belanja & minimarket';
+                renderRoute(true);
             }
+
+            // ==========================================
+            // SMART ROUTE: pilih sumber dana terbaik otomatis (jembatan ke semua wallet)
+            // ==========================================
+            function perkOf(name, amt, tourist) {
+                const p = WALLET_PERKS[name];
+                if (!p) return { txt: '', val: 0, kind: '' };
+                return { txt: tr(p.txt), val: p.val(amt, tourist), kind: p.kind };
+            }
+            function bestRoute(amt, tourist) {
+                const ok = Object.keys(walletBalances).filter(w => walletBalances[w] >= amt);
+                if (!ok.length) return null;
+                return ok.sort((a, b) => (perkOf(b, amt, tourist).val - perkOf(a, amt, tourist).val) || (walletBalances[b] - walletBalances[a]))[0];
+            }
+            function effectiveLimit() {
+                const h = new Date().getHours();
+                const night = nightGuard && (h >= 23 || h < 5);
+                if (night) return txLimit ? Math.min(txLimit, 500000) : 500000;
+                return txLimit;
+            }
+            function renderRoute(reset = false) {
+                const amt = currentPaymentIDR, tourist = isTouristTransaction;
+                if (reset || !walletBalances[payWallet]) payWallet = smartRoute ? (bestRoute(amt, tourist) || currentWalletName) : currentWalletName;
+                if (smartRoute) payWallet = bestRoute(amt, tourist) || payWallet;
+                $('route-auto').setAttribute('aria-checked', String(smartRoute));
+                $('route-list').innerHTML = Object.keys(walletBalances).map(w => {
+                    const pk = perkOf(w, amt, tourist), enough = walletBalances[w] >= amt, on = w === payWallet;
+                    const perk = pk.val > 0 ? `<em>${escapeHTML(pk.txt)}</em>` : '';
+                    return `<button type="button" role="radio" aria-checked="${on}" class="bp-route-opt${enough ? '' : ' is-low'}" onclick="${NS}pickRoute('${w.replace(/'/g, "\\'")}')">
+                        <span class="bp-route-dot" aria-hidden="true"></span>
+                        <span class="bp-row-main"><b>${escapeHTML(w)}</b><small>${enough ? formatRp(walletBalances[w]) : tr('Saldo tidak cukup')}</small></span>${perk}</button>`;
+                }).join('');
+                const pk = perkOf(payWallet, amt, tourist);
+                const remaining = walletBalances[payWallet] - amt, lim = effectiveLimit();
+                let why = '', bad = '';
+                if (frozen) bad = tr('BioID sedang dikunci. Buka kunci di Pengaturan > Pusat keamanan.');
+                else if (lim && amt > lim) bad = tr('Melebihi limit per transaksi ({0}).', formatRp(lim));
+                else if (remaining < 0) bad = tr('Saldo tidak cukup');
+                else if (smartRoute) why = pk.val > 0 ? tr('Dipilih otomatis: saldo cukup dan {0}.', pk.txt.charAt(0).toLowerCase() + pk.txt.slice(1)) : tr('Dipilih otomatis: saldo paling cukup.');
+                else why = tr('Dipilih manual. Nyalakan Smart Route agar BioPay memilih yang paling untung.');
+                const whyEl = $('route-why'); whyEl.textContent = bad || why; whyEl.classList.toggle('is-bad', !!bad);
+                $('payment-txt-walletname').innerText = payWallet;
+                $('payment-txt-balstart').innerText = tr('Saldo Awal: {0}', formatRp(walletBalances[payWallet]));
+                const btn = $('btn-confirm-payment'), txtEnd = $('payment-txt-balend');
+                const ok = !bad;
+                txtEnd.textContent = remaining >= 0 ? tr('Sisa: {0}', formatRp(remaining)) : tr('Saldo tidak cukup');
+                txtEnd.className = 'bp-balend' + (remaining >= 0 ? '' : ' is-bad');
+                btn.disabled = !ok;
+                btn.innerHTML = ok ? `<i class="ph-bold ph-check" aria-hidden="true"></i> ${tr('Konfirmasi Bayar')}` : `<i class="ph-bold ph-warning" aria-hidden="true"></i> ${frozen ? tr('BioID dikunci') : (lim && amt > lim ? tr('Melebihi limit') : tr('Saldo tidak cukup'))}`;
+            }
+            function toggleSmartRoute() { smartRoute = !smartRoute; renderRoute(); toast(smartRoute ? 'Smart Route aktif' : 'Smart Route mati: pilih sumber dana sendiri', 'ph-sparkle', 'text-amber-400'); }
+            function pickRoute(name) { if (!walletBalances[name]) return; smartRoute = false; payWallet = name; renderRoute(); }
+
+            // ==========================================
+            // BIOPOIN, MISI, BERUNTUN, INSIGHT
+            // ==========================================
+            const tierOf = p => p >= 5000 ? ['Platinum', 0] : p >= 2000 ? ['Gold', 5000] : p >= 1000 ? ['Silver', 2000] : ['Bronze', 1000];
+            function addPoints(n) { points += n; updateHomeExtras(); }
+            function progressMission(id, by = 1) {
+                const m = missions.find(x => x.id === id); if (!m || m.prog >= m.goal) return;
+                m.prog = Math.min(m.goal, m.prog + by);
+                if (m.prog >= m.goal) { points += m.pts; toast(tr('Misi selesai: {0} (+{1} poin)', tr(m.t), m.pts), 'ph-trophy', 'text-amber-400'); }
+                updateHomeExtras();
+            }
+            function updateHomeExtras() {
+                const [tier] = tierOf(points);
+                $('home-points').textContent = points.toLocaleString('id-ID'); $('home-tier').textContent = tier;
+                const open = missions.filter(m => m.prog < m.goal).length;
+                $('home-mission').textContent = tr('{0} misi menunggu · beruntun {1} hari', open, streakDays);
+                const sec = frozen ? ['ph-lock', 'BioID dikunci', 'Semua pembayaran biometrik diblokir', 'Terkunci', 'bp-chip bp-chip-bad', 'bp-row-icon bp-bad-text']
+                    : ['ph-shield-check', 'Keamanan biometrik aktif', 'Wajah + telapak wajib untuk setiap transaksi', 'Aman', 'bp-chip bp-chip-ok', 'bp-row-icon bp-ok-text'];
+                $('home-sec-ico').className = sec[5]; $('home-sec-ico').innerHTML = `<i class="ph-bold ${sec[0]}"></i>`;
+                $('home-sec-title').textContent = tr(sec[1]); $('home-sec-sub').textContent = tr(sec[2]);
+                $('home-sec-chip').textContent = tr(sec[3]); $('home-sec-chip').className = sec[4];
+            }
+            function renderRewards() {
+                const [tier, next] = tierOf(points), prevCap = { Bronze: 0, Silver: 1000, Gold: 2000, Platinum: 5000 }[tier];
+                $('rw-points').textContent = points.toLocaleString('id-ID'); $('rw-tier').textContent = tier;
+                $('rw-meter').style.width = (next ? Math.min(100, (points - prevCap) / (next - prevCap) * 100) : 100) + '%';
+                $('rw-next').textContent = next ? tr('{0} poin lagi ke {1}', (next - points).toLocaleString('id-ID'), tierOf(next)[0]) : tr('Level tertinggi. Terima kasih!');
+                $('rw-streak-txt').textContent = tr('{0} hari', streakDays);
+                const days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+                $('rw-streak').innerHTML = days.map((d, i) => `<span class="${i < streakDays ? 'on' : ''}${i === 6 ? ' bonus' : ''}"><i class="ph-bold ${i < streakDays ? 'ph-check' : (i === 6 ? 'ph-gift' : 'ph-circle')}" aria-hidden="true"></i><small>${tr(d)}</small></span>`).join('');
+                $('rw-missions').innerHTML = missions.map(m => {
+                    const done = m.prog >= m.goal;
+                    return `<li class="bp-mission${done ? ' done' : ''}"><span class="bp-row-icon" aria-hidden="true"><i class="ph-bold ${done ? 'ph-check' : m.icon}"></i></span>
+                        <span class="bp-row-main"><b>${escapeHTML(tr(m.t))}</b><span class="bp-meter bp-meter-sm" aria-hidden="true"><span style="width:${m.prog / m.goal * 100}%"></span></span><small>${m.prog}/${m.goal}</small></span>
+                        <span class="bp-chip ${done ? 'bp-chip-ok' : 'bp-chip-brass'}">${done ? tr('Selesai') : '+' + m.pts}</span></li>`;
+                }).join('');
+                $('rw-vouchers').innerHTML = vouchers.map((v, i) => `<button type="button" class="bp-voucher" onclick="${NS}redeem(${i})" ${points < v.cost ? 'disabled' : ''}>
+                    <i class="ph-bold ${v.icon}" aria-hidden="true"></i><b>${escapeHTML(tr(v.t))}</b><small class="bp-num">${v.cost.toLocaleString('id-ID')} ${tr('poin')}</small></button>`).join('');
+            }
+            function redeem(i) {
+                const v = vouchers[i]; if (!v || points < v.cost) return;
+                points -= v.cost; const code = 'BP-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+                toast(tr('Voucher aktif: {0} · kode {1}', tr(v.t), code), 'ph-ticket', 'text-emerald-400');
+                logActivity('Tukar poin', tr(v.t)); renderRewards(); updateHomeExtras();
+            }
+            function shareReferral() {
+                const code = (currentUser && currentUser.bioId ? currentUser.bioId : '12345') + '-AJAK';
+                const done = () => toast(tr('Kode ajak teman {0} disalin', code), 'ph-user-plus', 'text-sky-400');
+                if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, done); else done();
+            }
+            function renderInsight() {
+                const total = Object.values(spend).reduce((a, b) => a + b, 0);
+                $('in-total').textContent = formatRp(total);
+                const d = Math.round((total - lastMonthSpend) / lastMonthSpend * 100);
+                $('in-delta').textContent = tr(d >= 0 ? '{0}% di atas bulan lalu' : '{0}% lebih hemat dari bulan lalu', Math.abs(d));
+                $('in-saved').textContent = formatRp(savedTotal);
+                const pct = Math.min(100, total / budget * 100);
+                $('in-budget-bar').style.width = pct + '%'; $('in-budget-bar').className = pct >= 90 ? 'is-bad' : pct >= 75 ? 'is-warn' : '';
+                $('in-budget-txt').textContent = tr('{0} dari anggaran {1} terpakai ({2}%). Sisa {3}.', formatRp(total), formatRp(budget), Math.round(pct), formatRp(Math.max(0, budget - total)));
+                const bars = (obj, el) => { const max = Math.max(...Object.values(obj), 1);
+                    $(el).innerHTML = Object.entries(obj).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<li><span class="bp-cat-top"><b>${escapeHTML(tr(k))}</b><span class="bp-num">${formatRp(v)}</span></span><span class="bp-meter bp-meter-sm" aria-hidden="true"><span style="width:${v / max * 100}%"></span></span></li>`).join(''); };
+                bars(spend, 'in-cats'); bars(spendByWallet, 'in-wallets');
+            }
+            function cycleBudget() { const opts = [3000000, 5000000, 7500000, 10000000]; budget = opts[(opts.indexOf(budget) + 1) % opts.length]; renderInsight(); toast(tr('Anggaran bulanan: {0}', formatRp(budget)), 'ph-chart-donut', 'text-sky-400'); }
+            function trackSpend(cat, wallet, amt) { spend[cat] = (spend[cat] || 0) + amt; spendByWallet[wallet] = (spendByWallet[wallet] || 0) + amt; }
+
+            // ==========================================
+            // PUSAT KEAMANAN
+            // ==========================================
+            function logActivity(title, sub) { activity.unshift([title, sub, tr('Baru saja')]); if (activity.length > 6) activity.pop(); }
+            function renderSecurity() {
+                $('sec-freeze').setAttribute('aria-checked', String(frozen));
+                $('sec-night').setAttribute('aria-checked', String(nightGuard));
+                $('sec-limit').textContent = txLimit ? formatRp(txLimit) : tr('Tanpa limit');
+                $('sec-activity').innerHTML = activity.map(([t, sub, when]) => `<li class="bp-tx"><span class="bp-row-main"><b>${escapeHTML(tr(t))}</b><small>${escapeHTML(sub)}</small></span><small class="bp-muted">${escapeHTML(when)}</small></li>`).join('');
+            }
+            function toggleFreeze() {
+                frozen = !frozen; logActivity(frozen ? 'BioID dikunci' : 'BioID dibuka', tr('Dari aplikasi BioPay'));
+                renderSecurity(); updateHomeExtras();
+                toast(frozen ? 'BioID dikunci. Pembayaran biometrik diblokir.' : 'BioID dibuka kembali.', frozen ? 'ph-lock' : 'ph-lock-open', frozen ? 'text-red-400' : 'text-emerald-400');
+            }
+            function cycleTxLimit() { txLimit = TX_LIMITS[(TX_LIMITS.indexOf(txLimit) + 1) % TX_LIMITS.length]; logActivity('Limit diubah', txLimit ? formatRp(txLimit) : tr('Tanpa limit')); renderSecurity(); toast(tr('Limit per transaksi: {0}', txLimit ? formatRp(txLimit) : tr('Tanpa limit')), 'ph-gauge', 'text-sky-400'); }
+            function toggleNightGuard() { nightGuard = !nightGuard; renderSecurity(); toast(nightGuard ? 'Mode malam aktif' : 'Mode malam mati', 'ph-moon', 'text-sky-400'); }
 
             async function goToScreen(screenId) {
                 screens.forEach(s => s.classList.remove('active'));
@@ -2634,14 +3105,32 @@
 
             function processPayment() {
                 if (!isScreenActive('screen-options')) return; // cegah double-click membayar 2x
-                if (walletBalances[currentWalletName] >= currentPaymentIDR) {
-                    walletBalances[currentWalletName] -= currentPaymentIDR;
+                const lim = effectiveLimit();
+                if (frozen) { toast('BioID sedang dikunci. Buka kunci di Pengaturan.', 'ph-lock', 'text-red-500'); return; }
+                if (lim && currentPaymentIDR > lim) { toast(tr('Melebihi limit per transaksi ({0}).', formatRp(lim)), 'ph-gauge', 'text-red-500'); return; }
+                const W = payWallet;
+                if (walletBalances[W] >= currentPaymentIDR) {
+                    walletBalances[W] -= currentPaymentIDR;
                     const merchantName = $('payment-merchant-name').innerText;
                     const formattedCur = isTouristTransaction ? currentForeignTotal : `Rp ${currentPaymentIDR.toLocaleString('id-ID')}`;
-                    addBiopayHistory(merchantName, "Pembayaran Ritel", formattedCur, true);
+                    // hadiah: cashback / poin ganda / bebas biaya kurs dari wallet terpilih
+                    const pk = perkOf(W, currentPaymentIDR, isTouristTransaction);
+                    let earned = Math.max(1, Math.floor(currentPaymentIDR / 1000)); if (pk.kind === 'pts') earned *= 2;
+                    let reward = tr('+{0} BioPoin', earned.toLocaleString('id-ID'));
+                    if (pk.kind === 'cash' && pk.val > 0) { walletBalances[W] += pk.val; reward += ' · ' + tr('cashback {0}', formatRp(pk.val)); }
+                    if (pk.kind === 'fx' && pk.val > 0) reward += ' · ' + tr('hemat biaya kurs {0}', formatRp(pk.val));
+                    if (pk.kind !== 'pts') savedTotal += pk.val; else savedTotal += Math.round(earned / 2);
+                    points += earned;
+                    addBiopayHistory(merchantName, "Pembayaran Ritel", formattedCur, true, W);
+                    trackSpend(payCategory, W, currentPaymentIDR);
+                    if (!paidToday) { paidToday = true; if (streakDays < 7) streakDays++; if (streakDays === 7) { points += 200; reward += ' · ' + tr('bonus beruntun +200'); } }
+                    progressMission('pay3'); if (isTouristTransaction) progressMission('intl'); if (smartRoute && pk.val > 0) progressMission('route');
+                    logActivity('Pembayaran di terminal', `${merchantName} · ${W}`);
+                    const rw = $('success-reward'); rw.textContent = reward; rw.classList.remove('hidden');
+                    updateHomeExtras();
 
                     updateBalanceDisplay();
-                    syncWalletUI(currentWalletName); 
+                    syncWalletUI(W); 
                     showScreen('screen-success');
                 
                     setTimeout(() => {
@@ -2650,7 +3139,7 @@
                             $('refund-txt-total').innerText = currentForeignTotal;
                             $('refund-txt-vat').innerText = currentForeignVat;
                             $('refund-txt-idr').innerText = `Rp ${currentVatIDR.toLocaleString('id-ID')}`;
-                            $('refund-txt-wallet').innerText = currentWalletName;
+                            $('refund-txt-wallet').innerText = W;
                             goToScreen('screen-tax-refund');
                         } else { goToScreen('screen-start'); }
                     }, 2000);
@@ -2664,7 +3153,8 @@
             }
 
             function switchTab(tabName) {
-                const tabs = ['home', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'sharing', 'pengaturan'];
+                const tabs = ['home', 'hadiah', 'insight', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'sharing', 'pengaturan'];
+                if (tabName === 'hadiah') renderRewards(); if (tabName === 'insight') renderInsight(); if (tabName === 'pengaturan') renderSecurity();
                 tabs.forEach(tab => {
                     const nav = $(`nav-${tab}`), content = $(`tab-${tab}`);
                     if (nav) nav.setAttribute('aria-selected', String(tab === tabName));
@@ -2783,6 +3273,7 @@
                 if(walletBalances[currentWalletName] >= amt) { 
                     walletBalances[currentWalletName] -= amt;
                     addBiopayHistory(`Bayar Tagihan ${name}`, "Billing Otomatis", `Rp ${amt.toLocaleString('id-ID')}`, true);
+                    trackSpend('Tagihan', currentWalletName, amt); points += Math.floor(amt / 1000); progressMission('bill');
                     updateBalanceDisplay(); syncWalletUI(currentWalletName);
                     toast(`Tagihan ${name} lunas`, 'ph-receipt', 'text-emerald-400'); 
                 } else toast('Saldo tidak cukup', 'ph-warning', 'text-red-500');
@@ -2833,11 +3324,11 @@
                 if (!active || active.hidden) { toast('Pilih wallet terlebih dahulu', 'ph-warning', 'text-red-500'); return; }
                 const { name, abbr, color } = active.dataset;
                 if (walletBalances[name] !== undefined) { toast('Wallet sudah terhubung', 'ph-info', 'text-sky-400'); closeModal('modal-add-wallet'); return; }
-                walletBalances[name] = 1000000000;
+                walletBalances[name] = 500000;
                 const elId = 'bal-' + name.replace(/\s/g, '');
                 const html = `<button type="button" class="wallet-card bp-wallet" aria-pressed="false" onclick="${NS}setMainWallet(this, '${name}')">
                         <span class="bp-logo" style="background:${color}" aria-hidden="true">${abbr}</span>
-                        <span class="bp-row-main"><b>${name}</b><small id="${sid(elId)}" class="bp-num">Saldo: Rp 1.000.000.000</small></span>
+                        <span class="bp-row-main"><b>${name}</b><small id="${sid(elId)}" class="bp-num">Saldo: Rp 500.000</small></span>
                         <span class="status-container"><span class="bp-chip bp-chip-ok">Baru</span></span>
                     </button>`;
                 $('wallet-list-container').insertAdjacentHTML('beforeend', html);
@@ -2878,7 +3369,7 @@
                     if (r === 'cancelled' || token !== sharingScanToken) return;
                     sharingCamera = stopSpecificCamera(sharingCamera);
                     closeModal('modal-sharing-scan'); 
-                    addSharingMemberToList(tempSharingName, tempSharingRole); 
+                    addSharingMemberToList(tempSharingName, tempSharingRole); progressMission('family'); 
                 });
             }
             function cancelSharingScan() {
@@ -3082,7 +3573,8 @@
             new MutationObserver(muts => { if (lang === 'ID') return; muts.forEach(m => m.addedNodes.forEach(translateTree)); }).observe(root, { childList: true, subtree: true });
             renderRegisterOptions();
             renderUser();
-            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
+            updateHomeExtras();
+            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, toggleSmartRoute, pickRoute, renderRoute, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
         }
 
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error
@@ -4114,14 +4606,152 @@
         // ==========================================
         // PITCH: bahasa EN/ID dan tombol "Try it" yang membawa ke perangkat yang tepat
         // ==========================================
+        // ==========================================
+        // HALAMAN MITRA: simulasi pendapatan & sandbox API (semua simulasi)
+        // ==========================================
+        function partnerSim() {
+            const u = +document.getElementById('ps-u').value, f = +document.getElementById('ps-f').value, t = +document.getElementById('ps-t').value;
+            const rp = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+            const short = n => n >= 1e9 ? 'Rp ' + (n / 1e9).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + (document.documentElement.dataset.pitchLang === 'id' ? ' miliar' : ' bn') : n >= 1e6 ? 'Rp ' + (n / 1e6).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + (document.documentElement.dataset.pitchLang === 'id' ? ' juta' : ' m') : rp(n);
+            document.getElementById('ps-u-out').textContent = u.toLocaleString('id-ID');
+            document.getElementById('ps-f-out').textContent = f;
+            document.getElementById('ps-t-out').textContent = rp(t);
+            const gmv = u * f * t;
+            document.getElementById('ps-gmv').textContent = short(gmv);
+            document.getElementById('ps-rev').textContent = short(gmv * 0.005);
+            document.getElementById('ps-cac').textContent = short(u * 0.2 * 50000);
+        }
+        let sbRun = 0;
+        async function partnerSandbox() {
+            const run = ++sbRun, log = document.getElementById('sb-log');
+            const wallet = document.getElementById('sb-wallet').value, amt = Math.max(1000, parseInt(document.getElementById('sb-amt').value) || 0);
+            const id = 'ch_' + Math.random().toString(36).slice(2, 10), slug = wallet.toLowerCase().replace(/[^a-z]+/g, '_').replace(/^_|_$/g, '');
+            const wait = ms => new Promise(r => setTimeout(r, ms));
+            const esc = x => String(x).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+            log.innerHTML = ''; let ms = 0;
+            const step = async (dt, title, body, cls = 't') => { await wait(450); if (run !== sbRun) throw 0; ms += dt; log.insertAdjacentHTML('beforeend', `<li><span class="${cls}">+${ms} ms · ${esc(title)}</span>${body ? `<pre>${esc(JSON.stringify(body, null, 2))}</pre>` : ''}</li>`); log.scrollTop = log.scrollHeight; };
+            try {
+                await step(0, 'Terminal → BioPay  POST /v1/charges', { amount: amt, currency: 'IDR', merchant_id: 'mrc_indomaret_0042', auth: { face: 'verified', palm: 'verified', liveness: 'pass' } });
+                await step(180, 'BioPay: BioID matched · Smart Route → ' + wallet, { customer: 'bio_12345', route: slug, reason: 'linked_primary_wallet' });
+                await step(40, 'BioPay → ' + wallet + '  webhook charge.authorize', { type: 'charge.authorize', data: { id, amount: amt, customer_ref: 'cus_' + slug + '_8841', merchant: 'Indomaret Point 0042' } });
+                await step(220, wallet + ' → BioPay  200 OK', { decision: 'approve' });
+                await step(60, 'BioPay → ' + wallet + '  webhook charge.succeeded', { type: 'charge.succeeded', data: { id, amount: amt, fee: { mdr: Math.round(amt * 0.007), wallet_share: Math.round(amt * 0.005), biopay_share: Math.round(amt * 0.002) } } });
+                await step(0, 'Paid in ' + ms + ' ms (simulated). Receipt printed at the terminal.', null, 'ok');
+            } catch (e) { /* run digantikan */ }
+        }
+        partnerSim();
         function setPitchLang(lang) {
             document.documentElement.setAttribute('data-pitch-lang', lang);
             document.querySelectorAll('.pt-lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
             try { localStorage.setItem('biopay-pitch-lang', lang); } catch (e) {}
+            if (typeof partnerSim === 'function' && document.getElementById('ps-u')) partnerSim();
         }
         try { const saved = localStorage.getItem('biopay-pitch-lang'); if (saved === 'id' || saved === 'en') setPitchLang(saved); } catch (e) {}
         // Satu perangkat tampil dalam satu waktu (tab)
-        const DEVICES = ['terminal', 'kasku', 'lintas'];
+        // ==========================================
+        // POV 4: ATM TANPA KARTU (konsep). Kamera & deteksi wajah/telapak sungguhan; saldo & uang simulasi.
+        // ==========================================
+        const ATM = (() => {
+            const el = () => document.getElementById('atm-screen');
+            const toast = (m, i, c) => showToast(m, i, c, 4);
+            const rp = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+            let cam = null, run = 0, timer = null, left = 120, user = null, amount = 0, view = 'welcome';
+            const SRC = [
+                { id: 'bank', name: 'Rekening bank', sub: '•••• 4821', bal: 8240000 },
+                { id: 'kasku', name: 'E-wallet Kasku', sub: 'utama', bal: 1150000 },
+                { id: 'dana', name: 'DANA', sub: 'terhubung', bal: 2450000 }
+            ];
+            let src = 'bank';
+            const cur = () => SRC.find(x => x.id === src);
+            function stopCam() { cam = stopSpecificCamera(cam); }
+            function stopTimer() { clearInterval(timer); timer = null; }
+            function startTimer() {
+                stopTimer(); left = 120;
+                timer = setInterval(() => { left--; const t = document.getElementById('atm-timer'); if (t) t.textContent = `Sesi aman · ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`; if (left <= 0) { stopTimer(); toast('Sesi habis. Silakan scan ulang.', 'ph-timer', 'text-amber-400'); reset(); } }, 1000);
+            }
+            function sensor(on) { document.getElementById('atm-sensor').classList.toggle('on', on); }
+            function notes(out) { document.getElementById('atm-notes').classList.toggle('out', out); }
+            const head = () => `<div class="atm-head"><p class="atm-p">Halo, <b>${escapeHTML(user ? user.name.split(' ')[0] : 'Ikbal')}</b> · BioID terverifikasi</p><span class="atm-timer" id="atm-timer">Sesi aman · ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}</span></div>`;
+            function render(v) {
+                view = v; const S = el();
+                if (v === 'welcome') {
+                    S.innerHTML = `<div class="atm-big"><p class="atm-h">Selamat datang</p><p class="atm-p">ATM ini terhubung ke BioPay. Tidak perlu kartu atau PIN.<br>Uang diambil dari rekening atau e-wallet yang sudah kamu hubungkan.</p>
+                        <button type="button" class="bp-btn bp-btn-primary" style="max-width:340px" onclick="ATM.start()"><i class="ph-bold ph-scan-smiley" aria-hidden="true"></i> Mulai: lihat ke kamera</button>
+                        <p class="bp-fine">Belum punya BioID? Daftar di terminal BioPay (perangkat pertama) atau di aplikasi.</p></div>`;
+                } else if (v === 'face' || v === 'palm') {
+                    S.innerHTML = `<div class="atm-steps"><span class="${v === 'face' ? 'on' : 'ok'}">1 · Wajah</span><span class="${v === 'palm' ? 'on' : ''}">2 · Telapak tangan</span><span>3 · Masuk BioPay</span></div>
+                        <p class="atm-h">${v === 'face' ? 'Lihat ke kamera ATM' : 'Tunjukkan telapak tangan'}</p>
+                        <p class="atm-p">${v === 'face' ? 'Pemeriksaan kedalaman 3D memastikan ini orang sungguhan, bukan foto.' : 'Faktor kedua. Tanpa telapak tangan, ATM tidak akan terbuka. Di ATM sungguhan, telapak diletakkan di sensor di bawah layar.'}</p>
+                        <div class="bp-vf"><span class="bp-vf-ghost" aria-hidden="true"><i class="ph ${v === 'face' ? 'ph-user-focus' : 'ph-hand-palm'}"></i></span><video id="atm-video" autoplay muted playsinline></video><span class="bp-corners" aria-hidden="true"></span><div class="scanner-line"></div><p class="bp-vf-status">Menyiapkan kamera…</p></div>
+                        <div class="atm-actions"><button type="button" class="bp-btn bp-btn-secondary" onclick="ATM.reset()">Batal</button></div>`;
+                } else if (v === 'home') {
+                    S.innerHTML = `${head()}<p class="atm-h">Kamu di halaman BioPay</p><p class="bp-section-title">Sumber dana</p>
+                        <div class="atm-src" role="radiogroup" aria-label="Sumber dana">${SRC.map(x => `<button type="button" role="radio" aria-checked="${x.id === src}" onclick="ATM.pickSrc('${x.id}')"><b>${x.name} <span class="bp-muted" style="font-weight:500">${x.sub}</span></b><small>${rp(x.bal)}</small></button>`).join('')}</div>
+                        <p class="bp-section-title">Pilih transaksi</p>
+                        <div class="atm-grid">
+                            <button type="button" onclick="ATM.go('amount')"><i class="ph-bold ph-money" aria-hidden="true"></i>Tarik tunai</button>
+                            <button type="button" onclick="ATM.go('deposit')"><i class="ph-bold ph-download-simple" aria-hidden="true"></i>Setor tunai</button>
+                            <button type="button" onclick="ATM.go('balance')"><i class="ph-bold ph-wallet" aria-hidden="true"></i>Cek saldo</button>
+                            <button type="button" onclick="ATM.soon('Transfer')"><i class="ph-bold ph-paper-plane-tilt" aria-hidden="true"></i>Transfer</button>
+                            <button type="button" onclick="ATM.soon('Bayar tagihan')"><i class="ph-bold ph-receipt" aria-hidden="true"></i>Bayar tagihan</button>
+                            <button type="button" onclick="ATM.soon('Top up e-wallet')"><i class="ph-bold ph-arrow-circle-up" aria-hidden="true"></i>Top up e-wallet</button>
+                        </div>
+                        <div class="atm-actions"><button type="button" class="bp-btn bp-btn-secondary" onclick="ATM.finish()"><i class="ph-bold ph-sign-out" aria-hidden="true"></i> Keluar</button></div>`;
+                } else if (v === 'amount') {
+                    const opts = [100000, 200000, 300000, 500000, 1000000, 1500000];
+                    S.innerHTML = `${head()}<p class="atm-h">Tarik tunai</p><p class="atm-p">Dari <b>${cur().name} ${cur().sub}</b> · saldo ${rp(cur().bal)} · biaya Rp 0 di ATM mitra</p>
+                        <div class="atm-grid">${opts.map(a => `<button type="button" class="${a === amount ? 'sel' : ''}" onclick="ATM.pickAmount(${a})">${rp(a)}</button>`).join('')}</div>
+                        <div class="atm-actions"><button type="button" class="bp-btn bp-btn-secondary" onclick="ATM.go('home')">Kembali</button><button type="button" class="bp-btn bp-btn-primary" ${amount ? '' : 'disabled'} onclick="ATM.withdraw()"><i class="ph-bold ph-check" aria-hidden="true"></i> Tarik ${amount ? rp(amount) : ''}</button></div>`;
+                } else if (v === 'dispense') {
+                    S.innerHTML = `<div class="atm-big"><span class="mark wait" aria-hidden="true"><i class="ph-bold ph-arrow-down"></i></span><p class="atm-h">Silakan ambil uang Anda</p><p class="atm-p">${rp(amount)} keluar dari slot di bawah layar.</p>
+                        <button type="button" class="bp-btn bp-btn-primary" style="max-width:320px" onclick="ATM.taken()"><i class="ph-bold ph-hand-grabbing" aria-hidden="true"></i> Uang sudah diambil</button></div>`;
+                } else if (v === 'balance') {
+                    S.innerHTML = `${head()}<p class="atm-h">Saldo kamu</p><div class="atm-rcpt">${SRC.map(x => `<div><span>${x.name} ${x.sub}</span><b class="bp-num">${rp(x.bal)}</b></div>`).join('')}<div style="border-top:1px solid var(--line);padding-top:6px"><span>Total semua sumber</span><b class="bp-num">${rp(SRC.reduce((a, x) => a + x.bal, 0))}</b></div></div>
+                        <p class="bp-fine">BioPay menampilkan saldo langsung dari bank dan e-wallet mitra. BioPay sendiri tidak menyimpan uang.</p>
+                        <div class="atm-actions"><button type="button" class="bp-btn bp-btn-secondary" onclick="ATM.go('home')">Kembali</button></div>`;
+                } else if (v === 'deposit') {
+                    S.innerHTML = `${head()}<p class="atm-h">Setor tunai</p><p class="atm-p">Masukkan uang ke slot. Dana masuk ke <b>${cur().name} ${cur().sub}</b>.</p>
+                        <div class="atm-actions"><button type="button" class="bp-btn bp-btn-secondary" onclick="ATM.go('home')">Kembali</button><button type="button" class="bp-btn bp-btn-primary" onclick="ATM.deposit()"><i class="ph-bold ph-download-simple" aria-hidden="true"></i> Simulasikan setor Rp 500.000</button></div>`;
+                } else if (v === 'done') {
+                    const ref = 'ATM' + Date.now().toString().slice(-8);
+                    S.innerHTML = `<div class="atm-big"><span class="mark" aria-hidden="true"><i class="ph-bold ph-check"></i></span><p class="atm-h">Transaksi selesai</p>
+                        <div class="atm-rcpt"><div><span>Tarik tunai</span><b class="bp-num">${rp(amount)}</b></div><div><span>Sumber dana</span><b>${cur().name} ${cur().sub}</b></div><div><span>Sisa saldo</span><b class="bp-num">${rp(cur().bal)}</b></div><div><span>Biaya</span><b class="bp-num">Rp 0</b></div><div><span>Referensi</span><b class="bp-num">${ref}</b></div></div>
+                        <p class="atm-p"><i class="ph-bold ph-bell-ringing" aria-hidden="true"></i> Notifikasi & struk digital terkirim ke ponsel.</p>
+                        <div class="atm-actions" style="width:100%;max-width:420px"><button type="button" class="bp-btn bp-btn-secondary" onclick="ATM.go('home')">Transaksi lain</button><button type="button" class="bp-btn bp-btn-primary" onclick="ATM.finish()">Selesai</button></div></div>`;
+                }
+            }
+            async function scan(kind, token) {
+                const v = kind === 'face' ? 'face' : 'palm';
+                render(v); sensor(kind === 'hand');
+                const prev = cam; cam = await requestCameraAccess('atm-video', 'user'); stopSpecificCamera(prev);
+                if (token !== run) { cam = stopSpecificCamera(cam); return 'cancelled'; }
+                return scanBiometric({ videoId: 'atm-video', kind, cancelled: () => token !== run || view !== v });
+            }
+            async function start() {
+                const token = ++run; user = (typeof ACCOUNTS !== 'undefined' && ACCOUNTS.matchFace && ACCOUNTS.matchFace()) || null;
+                const f = await scan('face', token); if (f === 'cancelled' || token !== run) return;
+                toast('Wajah dikenali. Sekarang telapak tangan.', 'ph-scan-smiley', 'text-sky-400');
+                const h = await scan('hand', token); if (h === 'cancelled' || token !== run) return;
+                sensor(false); stopCam(); amount = 0; startTimer(); render('home');
+                toast('Masuk ke BioPay. Pilih sumber dana dan transaksi.', 'ph-sign-in', 'text-emerald-400');
+            }
+            function reset() { run++; stopCam(); stopTimer(); sensor(false); notes(false); amount = 0; render('welcome'); }
+            function go(v) { if (v !== 'amount') amount = 0; render(v); }
+            function pickSrc(id) { src = id; render('home'); }
+            function pickAmount(a) { amount = a; render('amount'); }
+            function withdraw() {
+                if (!amount) return;
+                if (amount > cur().bal) { toast('Saldo sumber dana tidak cukup', 'ph-warning', 'text-red-500'); return; }
+                cur().bal -= amount; render('dispense'); setTimeout(() => notes(true), 300);
+            }
+            function taken() { notes(false); render('done'); }
+            function deposit() { cur().bal += 500000; toast(`Rp 500.000 masuk ke ${cur().name}`, 'ph-download-simple', 'text-emerald-400'); render('balance'); }
+            function soon(name) { toast(`${name} di ATM: tersedia di versi produk`, 'ph-info', 'text-sky-400'); }
+            function finish() { toast('Sesi ditutup. Sampai jumpa!', 'ph-hand-waving', 'text-sky-400'); reset(); }
+            render('welcome');
+            return { start, reset, go, pickSrc, pickAmount, withdraw, taken, deposit, soon, finish, stop: () => { if (view !== 'welcome' || cam) reset(); } };
+        })();
+        const DEVICES = ['terminal', 'kasku', 'lintas', 'atm'];
         function selectDevice(kind, focus = false) {
             DEVICES.forEach(k => {
                 const on = k === kind, tab = document.getElementById('dev-tab-' + k);
@@ -4129,6 +4759,7 @@
                 document.getElementById('pov-' + k).hidden = !on;
             });
             if (focus) document.getElementById('dev-tab-' + kind).focus();
+            if (kind !== 'atm' && typeof ATM !== 'undefined') ATM.stop();
         }
         document.querySelector('.pt-tabs').addEventListener('keydown', e => {
             const cur = DEVICES.indexOf(document.querySelector('.pt-tabs [aria-selected="true"]').dataset.dev);
@@ -4138,7 +4769,7 @@
         });
         function pitchTry(kind) {
             selectDevice(kind);
-            const el = document.getElementById({ terminal: 'biopay-device', kasku: 'ewallet-device', lintas: 'travel-device' }[kind]);
+            const el = document.getElementById({ terminal: 'biopay-device', kasku: 'ewallet-device', lintas: 'travel-device', atm: 'atm-device' }[kind]);
             document.getElementById('demo').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
             el.classList.remove('pov-focus'); void el.offsetWidth; el.classList.add('pov-focus');
             setTimeout(() => {

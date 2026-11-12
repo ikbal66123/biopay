@@ -19,8 +19,15 @@ This repository is an interactive prototype that runs entirely in the browser, a
 | **POV 1** | Shopper at a store | BioPay terminal: face scan, then palm scan, then a receipt. Foreign merchants trigger automatic FX conversion and a tourist VAT-refund receipt. After payment, the dashboard shows wallets, history, a Bio-Pass travel credential, and family sharing with daily limits. |
 | **POV 2** | Merchant | *Kasku* e-wallet (fictional): tap **BioPay → Tagih Pelanggan**, enter an amount, scan the customer's face and palm, and the money lands in the merchant's balance. Also: QRIS, top up, transfer, bill payments. |
 | **POV 3** | Traveler | *Lintas* travel app (fictional): search flights, hotels, trains or attractions, fill in passenger details and add-ons, apply a promo code, then pay with **BioPay** (face + palm), the in-app balance, or a virtual account. You get an e-ticket with a booking code; orders can be cancelled with a refund. The same three BioPay merchant features as POV 2 are built in. |
+| **POV 4** | Cash user | *Cardless ATM* (concept): scan face and palm with the live camera, land on your BioPay page on the ATM screen, pick a funding source (bank account or e-wallet), then withdraw, deposit or check balances. No card, no PIN. |
 
 **Accounts:** on the terminal's start screen, **Daftar BioID** creates an account in four steps: details (nationality, ID document type and number validated per country, e.g. 16-digit NIK for an Indonesian KTP; mobile number with a country-code picker, stored in E.164 format; explicit biometric consent), a photo of the ID document (camera capture inside a card frame, or upload; resized before storage and checked on-device for a face photo), face enrollment and palm enrollment. It then issues a BioID; **Masuk** signs in with email or phone plus password, or with your face. The dashboard, Bio-Pass and its passport MRZ line follow the signed-in account, and **Pengaturan** has sign-out and *delete account & biometric data*. Demo account: `ikbal@biopay.id` / `biopay123`.
+
+**Smart Route:** on the payment screen BioPay lists every linked wallet and bank and picks the best one automatically (enough balance, plus that wallet's promo: cashback, double points or no FX fee for foreign merchants). The shopper can override it. This is the "bridge" model in action: BioPay holds no money, it routes each payment to the wallet the customer already uses.
+
+**Rewards, insights and security (BioPay dashboard):** *Hadiah* has BioPoints with tiers, a weekly streak, missions (e.g. pay 3 times, pay a bill, add a family member), vouchers to redeem and an invite code. *Insight* shows monthly spending by category and by funding source against an editable budget. *Pengaturan → Pusat keamanan* can lock the BioID in one tap, set a per-payment limit and a night-time limit, and lists recent activity; the payment screen enforces all three.
+
+**For partners:** the landing page has a section for e-wallets, banks and PayLater providers: why integrate, a revenue simulator, a simulated API sandbox that shows the request, the `charge.authorize` webhook and the result, and the three-step integration with sample webhook code (concept API, not a live service).
 
 **Language:** the terminal's start screen has an Indonesian / English / Japanese switch that translates the BioPay app (start, sign-up, sign-in, payment flow and dashboard); each BioPay instance keeps its own language.
 
@@ -34,7 +41,7 @@ The landing section at the top of the page has **Try it** buttons that jump stra
 |---|---|
 | Live camera feed on every scan screen | Identity matching: every face resolves to the demo user |
 | On-device detection that a face or a hand is actually in front of the camera ([MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision/face_detector)); the scan only passes once it is seen steadily for about 1.5 s | 3D liveness depth sensing and palm-vein reading |
-| All UI flows, validation, state, and calculations (FX, VAT, promos, refunds) | Balances, payments, settlement, bookings |
+| All UI flows, validation, state, and calculations (FX, VAT, promos, refunds, Smart Route choice, points) | Balances, payments, settlement, bookings, wallet promos, the partner API and the ATM |
 | Sign-up and sign-in with validation; passwords stored as salted SHA-256 hashes | Account storage: `localStorage` in this browser instead of a server |
 
 No image or biometric data leaves the device. If the camera is blocked, or the detection model cannot load, scans fall back to a clearly labelled simulation mode so the demo never gets stuck.
