@@ -271,6 +271,31 @@
         .bp-cat-list { list-style: none; margin: 0; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); }
         .bp-cat-top { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
         .bp-cat-top b { font-weight: 600; }
+        .bp-ai-card { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 12px 16px; border: 1px solid #C9D3E6; border-radius: var(--r-card); background: #EEF3FB; text-align: left; font: inherit; color: var(--text); cursor: pointer; }
+        .bp-ai-ico { flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+        .bp-fin-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+        .bp-fin-sum div { padding: 12px 14px; border-radius: var(--r-card); background: var(--card); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .bp-fin-sum span { font: 600 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+        .bp-fin-sum b { font-size: 17px; font-weight: 600; color: var(--ink); }
+        .bp-fin-sum div:last-child { background: var(--ink); border-color: var(--ink); } .bp-fin-sum div:last-child span { color: rgba(255,255,255,.65); } .bp-fin-sum div:last-child b { color: #fff; }
+        .bp-ai { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: var(--r-card); border: 1px solid #C9D3E6; background: #F6F8FC; }
+        .bp-ai-head { display: flex; align-items: center; gap: 10px; }
+        .bp-ai-log { display: flex; flex-direction: column; gap: 8px; max-height: 260px; min-height: 120px; overflow-y: auto; padding: 4px 2px; }
+        .bp-ai-msg { margin: 0; max-width: 88%; padding: 10px 12px; border-radius: 14px 14px 14px 4px; background: #fff; border: 1px solid var(--line); font-size: 14px; line-height: 1.5; color: var(--text); align-self: flex-start; }
+        .bp-ai-msg.me { align-self: flex-end; border-radius: 14px 14px 4px 14px; background: var(--ink); border-color: var(--ink); color: #fff; }
+        .bp-ai-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+        .bp-ai-chips button { flex: none; min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid #C9D3E6; background: #fff; color: var(--navy); font: 500 13px var(--font-sans); cursor: pointer; }
+        .bp-ai-form { display: flex; gap: 8px; }
+        .bp-ai-form .bp-input { flex: 1; min-width: 0; }
+        .bp-ai-send { flex: none; width: 48px; padding: 0; }
+        .bp-cat-list .bp-meter-budget > span { background: var(--ok); }
+        .bp-cat-list .bp-meter-budget > span.is-warn { background: #D97706; } .bp-cat-list .bp-meter-budget > span.is-bad { background: var(--danger); }
+        .bp-goal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+        .bp-goal { display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: var(--r-card); background: var(--card); border: 1px solid var(--line); }
+        .bp-goal-top { display: flex; align-items: center; gap: 8px; font-size: 14px; } .bp-goal-top i { color: var(--brass); font-size: 18px; }
+        .bp-goal-amt { font-size: 16px; font-weight: 600; } .bp-goal-amt small { font-size: 12px; color: var(--muted); font-weight: 400; }
+        .bp-goal .bp-link { align-self: flex-start; }
+        @media (max-width: 520px) { .bp-fin-sum { grid-template-columns: 1fr; } }
         .bp-chip-bad { background: #FDECEA; color: var(--danger); }
         .bp-bad-text { color: var(--danger) !important; }
 
@@ -1382,6 +1407,7 @@
                             <button type="button" role="tab" aria-selected="true" id="nav-home" onclick="switchTab('home')" class="bp-tab"><i class="ph ph-house" aria-hidden="true"></i><span data-i18n="nav-home">Home</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-hadiah" onclick="switchTab('hadiah')" class="bp-tab"><i class="ph ph-gift" aria-hidden="true"></i><span>Hadiah</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-insight" onclick="switchTab('insight')" class="bp-tab"><i class="ph ph-chart-donut" aria-hidden="true"></i><span>Insight</span></button>
+                            <button type="button" role="tab" aria-selected="false" id="nav-keuangan" onclick="switchTab('keuangan')" class="bp-tab"><i class="ph ph-piggy-bank" aria-hidden="true"></i><span>Keuangan</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-operasional" onclick="switchTab('operasional')" class="bp-tab"><i class="ph ph-sliders-horizontal" aria-hidden="true"></i><span data-i18n="nav-op">Operasional</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-travel" onclick="switchTab('travel')" class="bp-tab"><i class="ph ph-airplane-tilt" aria-hidden="true"></i><span data-i18n="nav-travel">Travel</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-wallets" onclick="switchTab('wallets')" class="bp-tab"><i class="ph ph-wallet" aria-hidden="true"></i><span data-i18n="nav-wallets">Wallets</span></button>
@@ -1424,6 +1450,12 @@
                                 <button type="button" onclick="showExchangeModal()" class="bp-qa bp-qa-accent"><i class="ph ph-currency-circle-dollar" aria-hidden="true"></i><span id="txt-exchange" data-i18n="text-exchange">Tukar<br>Valas</span></button>
                             </div>
 
+                            <button type="button" class="bp-ai-card" onclick="switchTab('keuangan')">
+                                <span class="bp-ai-ico" aria-hidden="true"><i class="ph-fill ph-sparkle"></i></span>
+                                <span class="bp-row-main"><b>Asisten Keuangan</b><small id="home-ai-tip">Catat pengeluaran cukup dengan mengetik, misalnya “makan siang 35rb”</small></span>
+                                <i class="ph-bold ph-caret-right bp-muted" aria-hidden="true"></i>
+                            </button>
+
                             <button type="button" class="bp-reward-card" onclick="switchTab('hadiah')">
                                 <span class="bp-reward-ico" aria-hidden="true"><i class="ph-fill ph-coins"></i></span>
                                 <span class="bp-row-main"><b><span id="home-points" class="bp-num">1.240</span> BioPoin · <span id="home-tier">Silver</span></b><small id="home-mission">2 misi menunggu · beruntun 4 hari</small></span>
@@ -1465,6 +1497,44 @@
                                     <span class="bp-row-main"><b>Kode <span class="bp-num" data-user="bioId">12345</span>-AJAK</b><small>Kamu dan temanmu masing-masing dapat 500 poin setelah transaksi pertamanya</small></span>
                                     <i class="ph-bold ph-copy bp-muted" aria-hidden="true"></i>
                                 </button>
+                            </div>
+                        </section>
+
+                        <!-- Tab: Keuangan (pengelola keuangan + asisten) -->
+                        <section id="tab-keuangan" class="bp-panel hidden">
+                            <div class="bp-fin-sum">
+                                <div><span>Pemasukan</span><b id="fin-in" class="bp-num">Rp 0</b></div>
+                                <div><span>Pengeluaran</span><b id="fin-out" class="bp-num">Rp 0</b></div>
+                                <div><span>Sisa bulan ini</span><b id="fin-left" class="bp-num">Rp 0</b></div>
+                            </div>
+
+                            <div class="bp-ai">
+                                <div class="bp-ai-head"><span class="bp-ai-ico" aria-hidden="true"><i class="ph-fill ph-sparkle"></i></span><span class="bp-row-main"><b>Asisten Keuangan</b><small>Berjalan di perangkat · tidak mengirim datamu ke mana pun</small></span></div>
+                                <div id="ai-log" class="bp-ai-log" role="log" aria-live="polite"></div>
+                                <div id="ai-chips" class="bp-ai-chips"></div>
+                                <form class="bp-ai-form" onsubmit="askAssistant(event)">
+                                    <label class="sr-only" for="ai-input">Tulis pesan untuk asisten</label>
+                                    <input id="ai-input" class="bp-input" type="text" autocomplete="off" placeholder="Contoh: kopi 28rb, bonus 1,2jt, nabung liburan 200rb">
+                                    <button type="submit" class="bp-btn bp-btn-primary bp-ai-send" aria-label="Kirim"><i class="ph-bold ph-paper-plane-right" aria-hidden="true"></i></button>
+                                </form>
+                            </div>
+
+                            <div class="bp-section">
+                                <p class="bp-section-title">Anggaran per kategori</p>
+                                <ul id="fin-budgets" class="bp-cat-list"></ul>
+                            </div>
+                            <div class="bp-section">
+                                <div class="bp-section-head"><p class="bp-section-title">Kantong tabungan</p><button type="button" class="bp-link" onclick="aiQuick('buat kantong dana pendidikan 3jt')"><i class="ph-bold ph-plus" aria-hidden="true"></i> Kantong baru</button></div>
+                                <div id="fin-goals" class="bp-goal-grid"></div>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Tagihan mendatang</p>
+                                <ul id="fin-upcoming" class="bp-list"></ul>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Catatan terakhir</p>
+                                <ul id="fin-records" class="bp-list"></ul>
+                                <p class="bp-fine">Pembayaran lewat BioPay tercatat otomatis. Transaksi tunai atau di luar BioPay bisa dicatat lewat asisten.</p>
                             </div>
                         </section>
 
@@ -3021,6 +3091,142 @@
                 bars(spend, 'in-cats'); bars(spendByWallet, 'in-wallets');
             }
             function cycleBudget() { const opts = [3000000, 5000000, 7500000, 10000000]; budget = opts[(opts.indexOf(budget) + 1) % opts.length]; renderInsight(); toast(tr('Anggaran bulanan: {0}', formatRp(budget)), 'ph-chart-donut', 'text-sky-400'); }
+            // ==========================================
+            // KEUANGAN & ASISTEN (berbasis aturan, berjalan di perangkat)
+            // ==========================================
+            let monthIncome = 7500000;
+            const catBudget = { 'Makan & kopi': 1000000, 'Belanja & minimarket': 1500000, 'Transportasi': 400000, 'Tagihan': 1200000, 'Travel': 1500000, 'Lainnya': 500000 };
+            const goals = [{ name: 'Dana darurat', target: 10000000, saved: 3200000, icon: 'ph-lifebuoy' }, { name: 'Liburan Bali', target: 5000000, saved: 1250000, icon: 'ph-island' }];
+            const upcoming = [['Listrik PLN', 20, 350000, 'ph-lightning'], ['Internet rumah', 25, 375000, 'ph-wifi-high'], ['Cicilan PayLater', 28, 450000, 'ph-calendar-check']];
+            const records = [
+                { t: 'Gaji bulan ini', cat: 'Pemasukan', amt: 7500000, type: 'in', when: 'Tgl 1' },
+                { t: 'Makan siang warteg', cat: 'Makan & kopi', amt: 25000, type: 'out', when: 'Kemarin' },
+                { t: 'Bensin motor', cat: 'Transportasi', amt: 40000, type: 'out', when: 'Kemarin' }
+            ];
+            const chat = [{ me: false, txt: 'Halo! Aku asisten keuanganmu. Ketik pengeluaran seperti “makan siang 35rb” dan aku catat. Kamu juga bisa tanya “sisa anggaran?”, “pengeluaran makan bulan ini?”, “nabung liburan 200rb”, atau “tips hemat”.' }];
+            const CAT_WORDS = [
+                ['Makan & kopi', /(makan|kopi|ngopi|sarapan|siang|malam|jajan|warteg|resto|bakso|nasi|snack|minum|boba)/],
+                ['Transportasi', /(bensin|ojek|ojol|grab|gojek|taksi|parkir|tol|krl|mrt|bus|kereta lokal|transport)/],
+                ['Tagihan', /(listrik|pln|pulsa|internet|wifi|air|pdam|bpjs|tagihan|cicilan|kos|sewa)/],
+                ['Belanja & minimarket', /(belanja|indomaret|alfamart|minimarket|sabun|baju|sepatu|shopee|tokopedia|pasar)/],
+                ['Travel', /(tiket|hotel|pesawat|liburan|travel|penginapan)/]
+            ];
+            const lc = x => x.toLowerCase();
+            const fmtShort = n => n >= 1e6 ? 'Rp ' + (n / 1e6).toLocaleString('id-ID', { maximumFractionDigits: 2 }) + ' jt' : formatRp(n);
+            function parseAmt(text) {
+                const t = lc(text).replace(/rp\.?\s*/g, '');
+                const m = t.match(/(\d+(?:[.,]\d+)*)\s*(ribu|rb|k|juta|jt)?(?![a-z])/);
+                if (!m) return 0;
+                const raw = m[1], unit = m[2] || '';
+                let n;
+                if (/^\d{1,3}(\.\d{3})+$/.test(raw)) n = +raw.replace(/\./g, '');
+                else n = parseFloat(raw.replace(',', '.'));
+                const mul = { ribu: 1e3, rb: 1e3, k: 1e3, juta: 1e6, jt: 1e6 }[unit] || 1;
+                return Math.round(n * mul);
+            }
+            function guessCat(text) { const t = lc(text); for (const [c, re] of CAT_WORDS) if (re.test(t)) return c; return 'Lainnya'; }
+            function titleOf(text) {
+                let t = text.replace(/rp\.?\s*[\d.,]+\s*(ribu|rb|k|juta|jt)?/ig, '').replace(/[\d.,]+\s*(ribu|rb|k|juta|jt)\b/ig, '').replace(/\b\d[\d.,]*\b/g, '')
+                    .replace(/\b(catat|tolong|aku|saya|tadi|barusan|habis|bayar|beli|buat|untuk|sebesar|seharga|pengeluaran|keluar)\b/ig, '').replace(/\s+/g, ' ').trim();
+                return t ? t.charAt(0).toUpperCase() + t.slice(1) : 'Pengeluaran';
+            }
+            const spentTotal = () => Object.values(spend).reduce((a, b) => a + b, 0);
+            function budgetLine(cat) {
+                const used = spend[cat] || 0, cap = catBudget[cat];
+                if (!cap) return `${tr(cat)}: ${formatRp(used)} bulan ini.`;
+                const pct = Math.round(used / cap * 100);
+                return `${tr(cat)}: ${formatRp(used)} dari ${formatRp(cap)} (${pct}%)` + (pct >= 100 ? ' · sudah lewat anggaran.' : pct >= 80 ? ` · tinggal ${formatRp(cap - used)}, hati-hati.` : ` · sisa ${formatRp(cap - used)}.`);
+            }
+            function findGoal(text) { const t = lc(text); return goals.find(g => lc(g.name).split(' ').some(w => w.length > 3 && t.includes(w))); }
+            function reply(text) {
+                const t = lc(text.trim()), amt = parseAmt(t);
+                if (!t) return 'Ketik sesuatu, misalnya “kopi 28rb”.';
+                if (!amt && /^(halo|hai|hi|hello|pagi|selamat|terima kasih|makasih|thanks)/.test(t)) return /(terima kasih|makasih|thanks)/.test(t) ? 'Sama-sama! Aku di sini kalau mau catat atau cek keuangan lagi.' : `Halo! Bulan ini sisa uangmu ${formatRp(monthIncome - spentTotal())}. Mau catat pengeluaran atau cek anggaran?`;
+                if (/^(bantu|help|\?|apa yang bisa|bisa apa)/.test(t)) return 'Aku bisa: (1) mencatat pengeluaran: “bakso 20rb”; (2) mencatat pemasukan: “gaji masuk 7,5jt”; (3) menabung: “nabung liburan 200rb” atau “buat kantong laptop 8jt”; (4) menjawab “sisa anggaran?”, “pengeluaran makan bulan ini?”, “tagihan bulan ini?”; (5) “tips hemat”; (6) “hapus catatan terakhir”.';
+                if (/hapus (catatan )?terakhir|batal(kan)? catatan/.test(t)) {
+                    const r = records.find(x => x.manual); if (!r) return 'Belum ada catatan manual yang bisa dihapus.';
+                    records.splice(records.indexOf(r), 1);
+                    if (r.type === 'out') { spend[r.cat] = Math.max(0, (spend[r.cat] || 0) - r.amt); spendByWallet['Tunai & lainnya'] = Math.max(0, (spendByWallet['Tunai & lainnya'] || 0) - r.amt); } else monthIncome -= r.amt;
+                    return `Catatan “${r.t}” (${formatRp(r.amt)}) sudah dihapus.`;
+                }
+                if (/(nabung|menabung|tabung|celengan|kantong|target)/.test(t)) {
+                    const g = findGoal(t);
+                    if (/(buat|bikin|tambah kantong|kantong baru)/.test(t) || !g) {
+                        if (!amt) return 'Berapa targetnya? Contoh: “buat kantong laptop 8jt”.';
+                        const nm = titleOf(text.replace(/\b(buat|bikin|kantong|tabungan|nabung|menabung|target|baru)\b/ig, '')) || 'Tabungan baru';
+                        goals.push({ name: nm, target: amt, saved: 0, icon: 'ph-piggy-bank' });
+                        const perMonth = Math.ceil(amt / 6 / 10000) * 10000;
+                        return `Kantong “${nm}” dibuat dengan target ${formatRp(amt)}. Kalau menabung ${formatRp(perMonth)} per bulan, target tercapai dalam 6 bulan.`;
+                    }
+                    if (!amt) return `Kantong “${g.name}”: ${formatRp(g.saved)} dari ${formatRp(g.target)}. Mau tambah berapa?`;
+                    g.saved += amt; points += 10;
+                    const pct = Math.min(100, Math.round(g.saved / g.target * 100));
+                    return `${formatRp(amt)} masuk ke kantong “${g.name}”. Sekarang ${formatRp(g.saved)} (${pct}%)` + (pct >= 100 ? '. Target tercapai, selamat!' : `, kurang ${formatRp(g.target - g.saved)}.`) + ' +10 BioPoin untuk kebiasaan menabung.';
+                }
+                if (amt && /(gaji|terima|diterima|dapat|pemasukan|masuk|bonus|thr|transferan|dibayar klien|freelance)/.test(t)) {
+                    monthIncome += amt; records.unshift({ t: titleOf(text) || 'Pemasukan', cat: 'Pemasukan', amt, type: 'in', when: tr('Baru saja'), manual: true });
+                    return `Pemasukan ${formatRp(amt)} dicatat. Total pemasukan bulan ini ${formatRp(monthIncome)}. Mau sisihkan 10% (${formatRp(Math.round(amt * 0.1))}) ke dana darurat? Ketik “nabung darurat ${Math.round(amt * 0.1 / 1000)}rb”.`;
+                }
+                if (amt) {
+                    const cat = guessCat(t), name = titleOf(text);
+                    records.unshift({ t: name, cat, amt, type: 'out', when: tr('Baru saja'), manual: true });
+                    spend[cat] = (spend[cat] || 0) + amt; spendByWallet['Tunai & lainnya'] = (spendByWallet['Tunai & lainnya'] || 0) + amt;
+                    return `Dicatat: ${name}, ${formatRp(amt)} (${tr(cat)}). ${budgetLine(cat)}`;
+                }
+                if (/(sisa|anggaran|budget)/.test(t)) {
+                    const over = Object.keys(catBudget).filter(c => (spend[c] || 0) >= catBudget[c] * 0.8);
+                    const left = monthIncome - spentTotal();
+                    return `Sisa uang bulan ini ${formatRp(left)} dari pemasukan ${formatRp(monthIncome)}. ` + (over.length ? 'Perlu diperhatikan: ' + over.map(budgetLine).join(' ') : 'Semua kategori masih di bawah 80% anggaran. Bagus!');
+                }
+                if (/(tagihan|jatuh tempo|bayar apa)/.test(t)) {
+                    const sum = upcoming.reduce((a, u) => a + u[2], 0);
+                    return 'Tagihan mendatang: ' + upcoming.map(u => `${u[0]} tgl ${u[1]} (${formatRp(u[2])})`).join(', ') + `. Totalnya ${formatRp(sum)}; siapkan saldo di dompet utama.`;
+                }
+                if (/(tips|hemat|saran|boros)/.test(t)) {
+                    const top = Object.entries(spend).sort((a, b) => b[1] - a[1])[0];
+                    const tips = [`Pengeluaran terbesarmu ${tr(top[0])} (${formatRp(top[1])}). Coba batasi 10% bulan depan, hematnya sekitar ${formatRp(Math.round(top[1] * 0.1))}.`];
+                    if ((spend['Makan & kopi'] || 0) > 500000) tips.push('Kopi dan jajan bisa dihemat dengan bawa bekal 2 hari seminggu.');
+                    tips.push('Nyalakan Smart Route supaya setiap pembayaran otomatis ambil cashback atau bebas biaya.');
+                    tips.push('Pakai aturan 50/30/20: 50% kebutuhan, 30% keinginan, 20% tabungan.');
+                    return tips.join(' ');
+                }
+                if (/(ringkas|laporan|rekap|bulan ini|total|berapa|pengeluaran)/.test(t)) {
+                    const named = CAT_WORDS.find(([, re]) => re.test(t));
+                    if (named) return budgetLine(named[0]);
+                    const top = Object.entries(spend).sort((a, b) => b[1] - a[1]).slice(0, 3);
+                    return `Bulan ini: pemasukan ${formatRp(monthIncome)}, pengeluaran ${formatRp(spentTotal())}, sisa ${formatRp(monthIncome - spentTotal())}. Terbesar: ` + top.map(([c, v]) => `${tr(c)} ${fmtShort(v)}`).join(', ') + '.';
+                }
+                return 'Maaf, aku belum paham. Coba “kopi 28rb”, “sisa anggaran?”, “nabung liburan 200rb”, atau ketik “bantu”.';
+            }
+            function renderChat() {
+                const log = $('ai-log');
+                log.innerHTML = chat.map(m => `<p class="bp-ai-msg${m.me ? ' me' : ''}">${escapeHTML(m.txt)}</p>`).join('');
+                log.scrollTop = log.scrollHeight;
+                const chips = ['makan siang 35rb', 'bonus freelance 1,2jt', 'nabung liburan 200rb', 'sisa anggaran?', 'tagihan bulan ini?', 'tips hemat'];
+                $('ai-chips').innerHTML = chips.map(c => `<button type="button" onclick="${NS}aiQuick('${c}')">${escapeHTML(c)}</button>`).join('');
+            }
+            function aiQuick(text) { chat.push({ me: true, txt: text }); chat.push({ me: false, txt: reply(text) }); renderFinance(); }
+            function askAssistant(e) {
+                if (e) e.preventDefault();
+                const inp = $('ai-input'), text = inp.value.trim(); if (!text) return;
+                inp.value = ''; aiQuick(text); inp.focus();
+            }
+            function addToGoal(i) { const g = goals[i]; if (!g) return; aiQuick(`nabung ${g.name.toLowerCase()} 100rb`); }
+            function renderFinance() {
+                const out = spentTotal();
+                $('fin-in').textContent = fmtShort(monthIncome); $('fin-out').textContent = fmtShort(out);
+                const left = monthIncome - out; $('fin-left').textContent = fmtShort(left); $('fin-left').classList.toggle('bp-bad-text', left < 0);
+                $('fin-budgets').innerHTML = Object.keys(catBudget).map(c => {
+                    const used = spend[c] || 0, pct = Math.min(100, used / catBudget[c] * 100), cls = pct >= 100 ? 'is-bad' : pct >= 80 ? 'is-warn' : '';
+                    return `<li><span class="bp-cat-top"><b>${escapeHTML(tr(c))}</b><span class="bp-num">${fmtShort(used)} / ${fmtShort(catBudget[c])}</span></span><span class="bp-meter bp-meter-sm bp-meter-budget" aria-hidden="true"><span class="${cls}" style="width:${pct}%"></span></span></li>`;
+                }).join('');
+                $('fin-goals').innerHTML = goals.map((g, i) => { const pct = Math.min(100, g.saved / g.target * 100);
+                    return `<div class="bp-goal"><span class="bp-goal-top"><i class="ph-bold ${g.icon}" aria-hidden="true"></i><b>${escapeHTML(g.name)}</b></span><span class="bp-num bp-goal-amt">${fmtShort(g.saved)} <small>/ ${fmtShort(g.target)}</small></span>
+                        <span class="bp-meter bp-meter-sm" aria-hidden="true"><span style="width:${pct}%"></span></span><button type="button" class="bp-link" onclick="${NS}addToGoal(${i})"><i class="ph-bold ph-plus" aria-hidden="true"></i> Rp 100.000</button></div>`; }).join('');
+                $('fin-upcoming').innerHTML = upcoming.map(u => `<li class="bp-tx"><span class="bp-tx-icon" aria-hidden="true"><i class="ph-bold ${u[3]}"></i></span><span class="bp-row-main"><b>${escapeHTML(u[0])}</b><small>Jatuh tempo tgl ${u[1]} · pengingat 3 hari sebelumnya</small></span><span class="bp-tx-amt"><b class="bp-num">${formatRp(u[2])}</b></span></li>`).join('');
+                $('fin-records').innerHTML = records.slice(0, 6).map(r => `<li class="bp-tx"><span class="bp-tx-icon ${r.type === 'in' ? 'in' : ''}" aria-hidden="true"><i class="ph-bold ${r.type === 'in' ? 'ph-arrow-down-left' : 'ph-arrow-up-right'}"></i></span><span class="bp-row-main"><b>${escapeHTML(r.t)}</b><small>${escapeHTML(r.when)} · ${escapeHTML(tr(r.cat))}${r.manual ? ' · dicatat asisten' : ''}</small></span><span class="bp-tx-amt"><b class="bp-num ${r.type === 'in' ? 'pos' : ''}">${r.type === 'in' ? '+' : '-'}${formatRp(r.amt)}</b></span></li>`).join('');
+                renderChat(); updateHomeExtras();
+            }
             function trackSpend(cat, wallet, amt) { spend[cat] = (spend[cat] || 0) + amt; spendByWallet[wallet] = (spendByWallet[wallet] || 0) + amt; }
 
             // ==========================================
@@ -3153,8 +3359,8 @@
             }
 
             function switchTab(tabName) {
-                const tabs = ['home', 'hadiah', 'insight', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'sharing', 'pengaturan'];
-                if (tabName === 'hadiah') renderRewards(); if (tabName === 'insight') renderInsight(); if (tabName === 'pengaturan') renderSecurity();
+                const tabs = ['home', 'hadiah', 'insight', 'keuangan', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'sharing', 'pengaturan'];
+                if (tabName === 'hadiah') renderRewards(); if (tabName === 'insight') renderInsight(); if (tabName === 'keuangan') renderFinance(); if (tabName === 'pengaturan') renderSecurity();
                 tabs.forEach(tab => {
                     const nav = $(`nav-${tab}`), content = $(`tab-${tab}`);
                     if (nav) nav.setAttribute('aria-selected', String(tab === tabName));
@@ -3574,7 +3780,7 @@
             renderRegisterOptions();
             renderUser();
             updateHomeExtras();
-            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, toggleSmartRoute, pickRoute, renderRoute, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
+            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, toggleSmartRoute, pickRoute, renderRoute, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
         }
 
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error

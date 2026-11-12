@@ -27,6 +27,8 @@ This repository is an interactive prototype that runs entirely in the browser, a
 
 **Rewards, insights and security (BioPay dashboard):** *Hadiah* has BioPoints with tiers, a weekly streak, missions (e.g. pay 3 times, pay a bill, add a family member), vouchers to redeem and an invite code. *Insight* shows monthly spending by category and by funding source against an editable budget. *Pengaturan → Pusat keamanan* can lock the BioID in one tap, set a per-payment limit and a night-time limit, and lists recent activity; the payment screen enforces all three.
 
+**Money management with an assistant (BioPay dashboard → *Keuangan*):** monthly income, spending and what is left; budgets per category (green, orange near the limit, red when over); savings pockets with progress; upcoming bills; and a chat assistant. Type plain Indonesian such as `makan siang 35rb`, `bonus freelance 1,2jt`, `nabung liburan 200rb`, `buat kantong laptop 8jt`, `sisa anggaran?`, `tagihan bulan ini?`, `tips hemat` or `hapus catatan terakhir`: it records the entry, picks the category, updates the budgets and answers from your data. BioPay payments are recorded automatically. The assistant in this prototype is rule-based and runs entirely in the browser (no data leaves the device); a production version could use a language model for free-form questions.
+
 **For partners:** the landing page has a section for e-wallets, banks and PayLater providers: why integrate, a revenue simulator, a simulated API sandbox that shows the request, the `charge.authorize` webhook and the result, and the three-step integration with sample webhook code (concept API, not a live service).
 
 **Language:** the terminal's start screen has an Indonesian / English / Japanese switch that translates the BioPay app (start, sign-up, sign-in, payment flow and dashboard); each BioPay instance keeps its own language.
@@ -41,7 +43,7 @@ The landing section at the top of the page has **Try it** buttons that jump stra
 |---|---|
 | Live camera feed on every scan screen | Identity matching: every face resolves to the demo user |
 | On-device detection that a face or a hand is actually in front of the camera ([MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision/face_detector)); the scan only passes once it is seen steadily for about 1.5 s | 3D liveness depth sensing and palm-vein reading |
-| All UI flows, validation, state, and calculations (FX, VAT, promos, refunds, Smart Route choice, points) | Balances, payments, settlement, bookings, wallet promos, the partner API and the ATM |
+| All UI flows, validation, state, and calculations (FX, VAT, promos, refunds, Smart Route choice, points, budgets, assistant parsing) | Balances, payments, settlement, bookings, wallet promos, the partner API and the ATM |
 | Sign-up and sign-in with validation; passwords stored as salted SHA-256 hashes | Account storage: `localStorage` in this browser instead of a server |
 
 No image or biometric data leaves the device. If the camera is blocked, or the detection model cannot load, scans fall back to a clearly labelled simulation mode so the demo never gets stuck.
