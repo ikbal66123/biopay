@@ -285,6 +285,14 @@
         .bp-ai-msg.me { align-self: flex-end; border-radius: 14px 14px 4px 14px; background: var(--ink); border-color: var(--ink); color: #fff; }
         .bp-ai-chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
         .bp-ai-chips button { flex: none; min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid #C9D3E6; background: #fff; color: var(--navy); font: 500 13px var(--font-sans); cursor: pointer; }
+        .bp-voice { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 12px; background: #fff; border: 1px solid #C9D3E6; }
+        .bp-voice-btn { flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 0; background: var(--navy); color: #fff; font: 600 13px var(--font-sans); cursor: pointer; }
+        .bp-voice-btn i { font-size: 18px; }
+        .bp-voice-btn[aria-pressed="true"] { background: var(--danger); }
+        .bp-voice-btn[aria-pressed="true"] i { animation: atmPulse 1s ease-in-out infinite; }
+        .bp-voice .bp-row-main small { color: var(--muted); }
+        .bp-ai-chips button.is-voice { color: #fff; background: var(--navy); border-color: var(--navy); display: inline-flex; align-items: center; gap: 6px; }
+        .bp-src-auto { color: var(--ok); font-weight: 600; } .bp-src-voice { color: var(--navy); font-weight: 600; } .bp-src-man { color: var(--brass-text); font-weight: 600; }
         .bp-ai-form { display: flex; gap: 8px; }
         .bp-ai-form .bp-input { flex: 1; min-width: 0; }
         .bp-ai-send { flex: none; width: 48px; padding: 0; }
@@ -1509,7 +1517,11 @@
                             </div>
 
                             <div class="bp-ai">
-                                <div class="bp-ai-head"><span class="bp-ai-ico" aria-hidden="true"><i class="ph-fill ph-sparkle"></i></span><span class="bp-row-main"><b>Asisten Keuangan</b><small>Berjalan di perangkat · tidak mengirim datamu ke mana pun</small></span></div>
+                                <div class="bp-ai-head"><span class="bp-ai-ico" aria-hidden="true"><i class="ph-fill ph-sparkle"></i></span><span class="bp-row-main"><b>Asisten Keuangan</b><small>Ketik atau panggil “BioPay” dengan suara</small></span></div>
+                                <div class="bp-voice">
+                                    <button type="button" id="voice-btn" class="bp-voice-btn" aria-pressed="false" onclick="toggleVoice()"><i class="ph-bold ph-microphone" aria-hidden="true"></i><span id="voice-btn-txt">Dengarkan “BioPay”</span></button>
+                                    <span class="bp-row-main"><b id="voice-state">Mikrofon mati</b><small id="voice-last">Nyalakan, lalu ucapkan: “BioPay, kopi dua ribu”</small></span>
+                                </div>
                                 <div id="ai-log" class="bp-ai-log" role="log" aria-live="polite"></div>
                                 <div id="ai-chips" class="bp-ai-chips"></div>
                                 <form class="bp-ai-form" onsubmit="askAssistant(event)">
@@ -1534,7 +1546,8 @@
                             <div class="bp-section">
                                 <p class="bp-section-title">Catatan terakhir</p>
                                 <ul id="fin-records" class="bp-list"></ul>
-                                <p class="bp-fine">Pembayaran lewat BioPay tercatat otomatis. Transaksi tunai atau di luar BioPay bisa dicatat lewat asisten.</p>
+                                <p class="bp-fine">Suara: selama halaman ini terbuka, BioPay mendengarkan kata “BioPay” lalu mencatat perintahnya beserta jamnya. Pengenalan suara memakai layanan browser (di Chrome, audio diproses server Google). Di aplikasi asli, deteksi kata “BioPay” berjalan di chip ponsel saat layar terkunci, seperti asisten suara bawaan; saat ponsel benar-benar mati, tidak ada perangkat yang bisa mendengar.</p>
+                                <p class="bp-fine">Semua transaksi BioPay (bayar, transfer, tarik tunai, tagihan, top up) masuk otomatis lengkap dengan jamnya. Transaksi tunai bisa dicatat lewat asisten, diketik atau diucapkan.</p>
                             </div>
                         </section>
 
@@ -2844,6 +2857,7 @@
             const isScreenActive = id => { const el = $(id); return !!el && el.classList.contains('active'); };
             function closeAllModals() { root.querySelectorAll('[id^="modal-"]').forEach(m => m.classList.add('hidden')); }
             function stopCameras() {
+                try { if (listening) stopVoice(); } catch (e) { /* belum diinisialisasi */ }
                 cameraStream = stopSpecificCamera(cameraStream); qrCamera = stopSpecificCamera(qrCamera);
                 tfCamera = stopSpecificCamera(tfCamera); sharingCamera = stopSpecificCamera(sharingCamera);
                 tfScanToken++; sharingScanToken++;
@@ -2897,11 +2911,22 @@
             // ==========================================
             // FUNGSI MANDIRI POV 1 (BIOPAY KIRI)
             // ==========================================
-            function addBiopayHistory(title, subtitle, amountStr, isExpense = true, wallet = currentWalletName) {
+            function addBiopayHistory(title, subtitle, amountStr, isExpense = true, wallet = currentWalletName, meta = {}) {
+                // Semua transaksi BioPay otomatis masuk ke tab Keuangan (dengan jam), tanpa dicatat manual
+                const now = new Date();
+                const idr = meta.idr != null ? meta.idr : (/^Rp/.test(amountStr) ? parseInt(amountStr.replace(/\D/g, ''), 10) || 0 : 0);
+                const flow = meta.flow || (/^(Top Up|Tukar Valas)/.test(title) ? 'move' : isExpense ? 'out' : 'in');
+                const cat = meta.cat || (/Tagihan/.test(title) ? 'Tagihan' : /^(Transfer|Tarik Tunai)/.test(title) ? 'Transfer & tunai' : flow === 'in' ? 'Pemasukan' : flow === 'move' ? 'Pindah dana' : 'Lainnya');
+                if (idr > 0) {
+                    records.unshift({ t: title, cat, amt: idr, type: flow, ts: now, auto: true, wallet });
+                    if (flow === 'out') trackSpend(cat, wallet, idr);
+                    if (flow === 'in') monthIncome += idr;
+                    if (isScreenActive('screen-dashboard') && !$('tab-keuangan').classList.contains('hidden')) renderFinance();
+                }
                 const bpHtml = `
                     <li class="bp-tx">
                         <span class="bp-tx-icon ${isExpense ? '' : 'in'}" aria-hidden="true"><i class="ph-bold ${isExpense ? 'ph-arrow-up-right' : 'ph-arrow-down-left'}"></i></span>
-                        <span class="bp-row-main"><b>${escapeHTML(title)}</b><small>Baru saja · ${escapeHTML(wallet)}</small></span>
+                        <span class="bp-row-main"><b>${escapeHTML(title)}</b><small>${fmtWhen(now)} · ${escapeHTML(wallet)}</small></span>
                         <span class="bp-tx-amt"><b class="bp-num ${isExpense ? '' : 'pos'}">${isExpense ? '-' : '+'}${escapeHTML(amountStr)}</b><small>${escapeHTML(subtitle)}</small></span>
                     </li>`;
                 $('riwayat-biopay-list').insertAdjacentHTML('afterbegin', bpHtml);
@@ -3098,11 +3123,19 @@
             const catBudget = { 'Makan & kopi': 1000000, 'Belanja & minimarket': 1500000, 'Transportasi': 400000, 'Tagihan': 1200000, 'Travel': 1500000, 'Lainnya': 500000 };
             const goals = [{ name: 'Dana darurat', target: 10000000, saved: 3200000, icon: 'ph-lifebuoy' }, { name: 'Liburan Bali', target: 5000000, saved: 1250000, icon: 'ph-island' }];
             const upcoming = [['Listrik PLN', 20, 350000, 'ph-lightning'], ['Internet rumah', 25, 375000, 'ph-wifi-high'], ['Cicilan PayLater', 28, 450000, 'ph-calendar-check']];
+            const daysAgo = (d, h, m) => { const x = new Date(); x.setDate(x.getDate() - d); x.setHours(h, m, 0, 0); return x; };
             const records = [
-                { t: 'Gaji bulan ini', cat: 'Pemasukan', amt: 7500000, type: 'in', when: 'Tgl 1' },
-                { t: 'Makan siang warteg', cat: 'Makan & kopi', amt: 25000, type: 'out', when: 'Kemarin' },
-                { t: 'Bensin motor', cat: 'Transportasi', amt: 40000, type: 'out', when: 'Kemarin' }
+                { t: 'Bensin motor', cat: 'Transportasi', amt: 40000, type: 'out', ts: daysAgo(1, 17, 40), manual: true },
+                { t: 'Makan siang warteg', cat: 'Makan & kopi', amt: 25000, type: 'out', ts: daysAgo(1, 12, 15), manual: true },
+                { t: 'US Retail Coffee (USA)', cat: 'Makan & kopi', amt: 72000, type: 'out', ts: daysAgo(2, 8, 5), auto: true, wallet: 'DANA' },
+                { t: 'Gaji bulan ini', cat: 'Pemasukan', amt: 7500000, type: 'in', ts: (() => { const x = new Date(); x.setDate(1); x.setHours(8, 0, 0, 0); return x; })(), manual: true }
             ];
+            function fmtWhen(d) {
+                const t = new Date(d), now = new Date(), hm = `${String(t.getHours()).padStart(2, '0')}.${String(t.getMinutes()).padStart(2, '0')}`;
+                const day = x => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime(), diff = Math.round((day(now) - day(t)) / 864e5);
+                if (diff === 0) return tr('Hari ini') + ' ' + hm; if (diff === 1) return tr('Kemarin') + ' ' + hm;
+                return t.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) + ' ' + hm;
+            }
             const chat = [{ me: false, txt: 'Halo! Aku asisten keuanganmu. Ketik pengeluaran seperti “makan siang 35rb” dan aku catat. Kamu juga bisa tanya “sisa anggaran?”, “pengeluaran makan bulan ini?”, “nabung liburan 200rb”, atau “tips hemat”.' }];
             const CAT_WORDS = [
                 ['Makan & kopi', /(makan|kopi|ngopi|sarapan|siang|malam|jajan|warteg|resto|bakso|nasi|snack|minum|boba)/],
@@ -3112,11 +3145,12 @@
                 ['Travel', /(tiket|hotel|pesawat|liburan|travel|penginapan)/]
             ];
             const lc = x => x.toLowerCase();
+            const clock = () => { const d = new Date(); return `pukul ${String(d.getHours()).padStart(2, '0')}.${String(d.getMinutes()).padStart(2, '0')}`; };
             const fmtShort = n => n >= 1e6 ? 'Rp ' + (n / 1e6).toLocaleString('id-ID', { maximumFractionDigits: 2 }) + ' jt' : formatRp(n);
             function parseAmt(text) {
                 const t = lc(text).replace(/rp\.?\s*/g, '');
                 const m = t.match(/(\d+(?:[.,]\d+)*)\s*(ribu|rb|k|juta|jt)?(?![a-z])/);
-                if (!m) return 0;
+                if (!m) return wordsToNum(t);
                 const raw = m[1], unit = m[2] || '';
                 let n;
                 if (/^\d{1,3}(\.\d{3})+$/.test(raw)) n = +raw.replace(/\./g, '');
@@ -3124,9 +3158,25 @@
                 const mul = { ribu: 1e3, rb: 1e3, k: 1e3, juta: 1e6, jt: 1e6 }[unit] || 1;
                 return Math.round(n * mul);
             }
+            // "dua puluh lima ribu" -> 25000 (hasil pengenalan suara sering berupa kata)
+            function wordsToNum(t) {
+                const D = { nol: 0, satu: 1, dua: 2, tiga: 3, empat: 4, lima: 5, enam: 6, tujuh: 7, delapan: 8, sembilan: 9 };
+                let total = 0, small = 0, last = 0, any = false;
+                for (const w of t.split(/[^a-z]+/)) {
+                    if (w in D) { last = D[w]; any = true; }
+                    else if (w === 'sepuluh') { small += 10; any = true; } else if (w === 'sebelas') { small += 11; any = true; }
+                    else if (w === 'belas') { small += last + 10; last = 0; } else if (w === 'puluh') { small += last * 10; last = 0; }
+                    else if (w === 'seratus') { small += 100; any = true; } else if (w === 'ratus') { small += last * 100; last = 0; }
+                    else if (w === 'seribu') { total += 1000; any = true; } else if (w === 'ribu') { total += (small + last || 1) * 1000; small = last = 0; }
+                    else if (w === 'sejuta') { total += 1e6; any = true; } else if (w === 'juta') { total += (small + last || 1) * 1e6; small = last = 0; }
+                    else if (w === 'setengah') { last = 0.5; any = true; }
+                }
+                return any ? Math.round(total + small + last) : 0;
+            }
             function guessCat(text) { const t = lc(text); for (const [c, re] of CAT_WORDS) if (re.test(t)) return c; return 'Lainnya'; }
             function titleOf(text) {
-                let t = text.replace(/rp\.?\s*[\d.,]+\s*(ribu|rb|k|juta|jt)?/ig, '').replace(/[\d.,]+\s*(ribu|rb|k|juta|jt)\b/ig, '').replace(/\b\d[\d.,]*\b/g, '')
+                const NW = /\b(nol|satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh|sebelas|belas|puluh|seratus|ratus|seribu|ribu|sejuta|juta|setengah|rupiah)\b/ig;
+                let t = text.replace(NW, ' ').replace(/rp\.?\s*[\d.,]+\s*(ribu|rb|k|juta|jt)?/ig, '').replace(/[\d.,]+\s*(ribu|rb|k|juta|jt)\b/ig, '').replace(/\b\d[\d.,]*\b/g, '')
                     .replace(/\b(catat|tolong|aku|saya|tadi|barusan|habis|bayar|beli|buat|untuk|sebesar|seharga|pengeluaran|keluar)\b/ig, '').replace(/\s+/g, ' ').trim();
                 return t ? t.charAt(0).toUpperCase() + t.slice(1) : 'Pengeluaran';
             }
@@ -3144,7 +3194,7 @@
                 if (!amt && /^(halo|hai|hi|hello|pagi|selamat|terima kasih|makasih|thanks)/.test(t)) return /(terima kasih|makasih|thanks)/.test(t) ? 'Sama-sama! Aku di sini kalau mau catat atau cek keuangan lagi.' : `Halo! Bulan ini sisa uangmu ${formatRp(monthIncome - spentTotal())}. Mau catat pengeluaran atau cek anggaran?`;
                 if (/^(bantu|help|\?|apa yang bisa|bisa apa)/.test(t)) return 'Aku bisa: (1) mencatat pengeluaran: “bakso 20rb”; (2) mencatat pemasukan: “gaji masuk 7,5jt”; (3) menabung: “nabung liburan 200rb” atau “buat kantong laptop 8jt”; (4) menjawab “sisa anggaran?”, “pengeluaran makan bulan ini?”, “tagihan bulan ini?”; (5) “tips hemat”; (6) “hapus catatan terakhir”.';
                 if (/hapus (catatan )?terakhir|batal(kan)? catatan/.test(t)) {
-                    const r = records.find(x => x.manual); if (!r) return 'Belum ada catatan manual yang bisa dihapus.';
+                    const r = records.find(x => x.manual || x.voice); if (!r) return 'Belum ada catatan manual yang bisa dihapus.';
                     records.splice(records.indexOf(r), 1);
                     if (r.type === 'out') { spend[r.cat] = Math.max(0, (spend[r.cat] || 0) - r.amt); spendByWallet['Tunai & lainnya'] = Math.max(0, (spendByWallet['Tunai & lainnya'] || 0) - r.amt); } else monthIncome -= r.amt;
                     return `Catatan “${r.t}” (${formatRp(r.amt)}) sudah dihapus.`;
@@ -3164,14 +3214,14 @@
                     return `${formatRp(amt)} masuk ke kantong “${g.name}”. Sekarang ${formatRp(g.saved)} (${pct}%)` + (pct >= 100 ? '. Target tercapai, selamat!' : `, kurang ${formatRp(g.target - g.saved)}.`) + ' +10 BioPoin untuk kebiasaan menabung.';
                 }
                 if (amt && /(gaji|terima|diterima|dapat|pemasukan|masuk|bonus|thr|transferan|dibayar klien|freelance)/.test(t)) {
-                    monthIncome += amt; records.unshift({ t: titleOf(text) || 'Pemasukan', cat: 'Pemasukan', amt, type: 'in', when: tr('Baru saja'), manual: true });
-                    return `Pemasukan ${formatRp(amt)} dicatat. Total pemasukan bulan ini ${formatRp(monthIncome)}. Mau sisihkan 10% (${formatRp(Math.round(amt * 0.1))}) ke dana darurat? Ketik “nabung darurat ${Math.round(amt * 0.1 / 1000)}rb”.`;
+                    monthIncome += amt; records.unshift({ t: titleOf(text) || 'Pemasukan', cat: 'Pemasukan', amt, type: 'in', ts: new Date(), manual: true });
+                    return `${clock()} · Pemasukan ${formatRp(amt)} dicatat. Total pemasukan bulan ini ${formatRp(monthIncome)}. Mau sisihkan 10% (${formatRp(Math.round(amt * 0.1))}) ke dana darurat? Ketik “nabung darurat ${Math.round(amt * 0.1 / 1000)}rb”.`;
                 }
                 if (amt) {
                     const cat = guessCat(t), name = titleOf(text);
-                    records.unshift({ t: name, cat, amt, type: 'out', when: tr('Baru saja'), manual: true });
+                    records.unshift({ t: name, cat, amt, type: 'out', ts: new Date(), manual: true });
                     spend[cat] = (spend[cat] || 0) + amt; spendByWallet['Tunai & lainnya'] = (spendByWallet['Tunai & lainnya'] || 0) + amt;
-                    return `Dicatat: ${name}, ${formatRp(amt)} (${tr(cat)}). ${budgetLine(cat)}`;
+                    return `Dicatat ${clock()}: ${name}, ${formatRp(amt)} (${tr(cat)}). ${budgetLine(cat)}`;
                 }
                 if (/(sisa|anggaran|budget)/.test(t)) {
                     const over = Object.keys(catBudget).filter(c => (spend[c] || 0) >= catBudget[c] * 0.8);
@@ -3198,12 +3248,59 @@
                 }
                 return 'Maaf, aku belum paham. Coba “kopi 28rb”, “sisa anggaran?”, “nabung liburan 200rb”, atau ketik “bantu”.';
             }
+            // ==========================================
+            // SUARA: kata panggil "BioPay" (Web Speech API, selama halaman terbuka)
+            // ==========================================
+            let rec = null, listening = false, wakeUntil = 0;
+            const WAKE = /\b(bio\s*-?\s*(pay|pei|pe|pai|fay|fey|bay)|biopay|biopei|biope|bayo\s*pay|vio\s*pay)\b[\s,.:!-]*/i;
+            function renderVoice() {
+                const b = $('voice-btn'); if (!b) return;
+                b.setAttribute('aria-pressed', String(listening));
+                $('voice-btn-txt').textContent = listening ? tr('Berhenti mendengarkan') : tr('Dengarkan “BioPay”');
+                $('voice-state').textContent = listening ? tr('Mendengarkan… ucapkan “BioPay, …”') : tr('Mikrofon mati');
+            }
+            function say(text) {
+                try { if (!window.speechSynthesis) return; const first = text.split(/(?<=\.)\s/)[0]; const u = new SpeechSynthesisUtterance(first.length < 200 ? first : first.slice(0, 200)); u.lang = 'id-ID'; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {}
+            }
+            function onHeard(raw) {
+                const txt = String(raw || '').trim(); if (!txt) return;
+                $('voice-last').textContent = '“' + txt + '”';
+                const m = txt.match(WAKE);
+                let cmd = null;
+                if (m) cmd = txt.slice(m.index + m[0].length).trim();
+                else if (Date.now() < wakeUntil) cmd = txt;
+                if (cmd === null) return;
+                if (!cmd) { wakeUntil = Date.now() + 8000; chat.push({ me: false, txt: 'Ya? Aku mendengarkan.' }); renderFinance(); say('Ya?'); return; }
+                wakeUntil = 0;
+                const before = records.length;
+                chat.push({ me: true, txt: '🎙 ' + cmd });
+                const r = reply(cmd);
+                if (records.length > before && records[0].manual) { records[0].voice = true; records[0].manual = false; }
+                chat.push({ me: false, txt: r }); renderFinance(); say(r);
+                if ($('tab-keuangan').classList.contains('hidden') || !isScreenActive('screen-dashboard')) toast(tr('BioPay mendengar: {0}', cmd), 'ph-microphone', 'text-sky-400');
+            }
+            function startVoice() {
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SR) { toast('Browser ini belum mendukung suara. Pakai Chrome atau Edge, atau coba tombol simulasi.', 'ph-microphone-slash', 'text-amber-400'); return; }
+                if (window.__bpVoiceStop && window.__bpVoiceStop !== stopVoice) window.__bpVoiceStop();
+                rec = new SR(); rec.lang = 'id-ID'; rec.continuous = true; rec.interimResults = false;
+                rec.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++) if (e.results[i].isFinal) onHeard(e.results[i][0].transcript); };
+                rec.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') { toast('Izin mikrofon ditolak atau mikrofon tidak ada', 'ph-microphone-slash', 'text-red-500'); stopVoice(); } };
+                rec.onend = () => { if (listening && rec) { try { rec.start(); } catch (e) {} } };
+                try { rec.start(); listening = true; window.__bpVoiceStop = stopVoice; toast('Mendengarkan. Ucapkan “BioPay, kopi dua ribu”.', 'ph-microphone', 'text-emerald-400'); } catch (e) { listening = false; }
+                renderVoice();
+            }
+            function stopVoice() { listening = false; wakeUntil = 0; if (rec) { rec.onend = null; try { rec.stop(); } catch (e) {} rec = null; } if (window.__bpVoiceStop === stopVoice) window.__bpVoiceStop = null; renderVoice(); }
+            function toggleVoice() { if (listening) stopVoice(); else startVoice(); }
+            function simulateVoice(text) { onHeard(text); }
             function renderChat() {
                 const log = $('ai-log');
                 log.innerHTML = chat.map(m => `<p class="bp-ai-msg${m.me ? ' me' : ''}">${escapeHTML(m.txt)}</p>`).join('');
                 log.scrollTop = log.scrollHeight;
                 const chips = ['makan siang 35rb', 'bonus freelance 1,2jt', 'nabung liburan 200rb', 'sisa anggaran?', 'tagihan bulan ini?', 'tips hemat'];
-                $('ai-chips').innerHTML = chips.map(c => `<button type="button" onclick="${NS}aiQuick('${c}')">${escapeHTML(c)}</button>`).join('');
+                const voice = ['BioPay, kopi 2000', 'BioPay, parkir lima ribu'];
+                $('ai-chips').innerHTML = voice.map(c => `<button type="button" class="is-voice" onclick="${NS}simulateVoice('${c}')" title="Simulasi suara"><i class="ph-bold ph-microphone" aria-hidden="true"></i> “${escapeHTML(c)}”</button>`).join('')
+                    + chips.map(c => `<button type="button" onclick="${NS}aiQuick('${c}')">${escapeHTML(c)}</button>`).join('');
             }
             function aiQuick(text) { chat.push({ me: true, txt: text }); chat.push({ me: false, txt: reply(text) }); renderFinance(); }
             function askAssistant(e) {
@@ -3224,7 +3321,9 @@
                     return `<div class="bp-goal"><span class="bp-goal-top"><i class="ph-bold ${g.icon}" aria-hidden="true"></i><b>${escapeHTML(g.name)}</b></span><span class="bp-num bp-goal-amt">${fmtShort(g.saved)} <small>/ ${fmtShort(g.target)}</small></span>
                         <span class="bp-meter bp-meter-sm" aria-hidden="true"><span style="width:${pct}%"></span></span><button type="button" class="bp-link" onclick="${NS}addToGoal(${i})"><i class="ph-bold ph-plus" aria-hidden="true"></i> Rp 100.000</button></div>`; }).join('');
                 $('fin-upcoming').innerHTML = upcoming.map(u => `<li class="bp-tx"><span class="bp-tx-icon" aria-hidden="true"><i class="ph-bold ${u[3]}"></i></span><span class="bp-row-main"><b>${escapeHTML(u[0])}</b><small>Jatuh tempo tgl ${u[1]} · pengingat 3 hari sebelumnya</small></span><span class="bp-tx-amt"><b class="bp-num">${formatRp(u[2])}</b></span></li>`).join('');
-                $('fin-records').innerHTML = records.slice(0, 6).map(r => `<li class="bp-tx"><span class="bp-tx-icon ${r.type === 'in' ? 'in' : ''}" aria-hidden="true"><i class="ph-bold ${r.type === 'in' ? 'ph-arrow-down-left' : 'ph-arrow-up-right'}"></i></span><span class="bp-row-main"><b>${escapeHTML(r.t)}</b><small>${escapeHTML(r.when)} · ${escapeHTML(tr(r.cat))}${r.manual ? ' · dicatat asisten' : ''}</small></span><span class="bp-tx-amt"><b class="bp-num ${r.type === 'in' ? 'pos' : ''}">${r.type === 'in' ? '+' : '-'}${formatRp(r.amt)}</b></span></li>`).join('');
+                $('fin-records').innerHTML = records.slice(0, 8).map(r => { const ic = r.type === 'in' ? 'ph-arrow-down-left' : r.type === 'move' ? 'ph-arrows-left-right' : 'ph-arrow-up-right';
+                    const src = r.auto ? `<span class="bp-src-auto">${tr('otomatis')} · ${escapeHTML(r.wallet || '')}</span>` : r.voice ? `<span class="bp-src-voice">${tr('suara')}</span>` : `<span class="bp-src-man">${tr('asisten')}</span>`;
+                    return `<li class="bp-tx"><span class="bp-tx-icon ${r.type === 'in' ? 'in' : ''}" aria-hidden="true"><i class="ph-bold ${ic}"></i></span><span class="bp-row-main"><b>${escapeHTML(r.t)}</b><small>${escapeHTML(fmtWhen(r.ts))} · ${escapeHTML(tr(r.cat))} · ${src}</small></span><span class="bp-tx-amt"><b class="bp-num ${r.type === 'in' ? 'pos' : ''}">${r.type === 'in' ? '+' : r.type === 'move' ? '' : '-'}${formatRp(r.amt)}</b></span></li>`; }).join('');
                 renderChat(); updateHomeExtras();
             }
             function trackSpend(cat, wallet, amt) { spend[cat] = (spend[cat] || 0) + amt; spendByWallet[wallet] = (spendByWallet[wallet] || 0) + amt; }
@@ -3327,8 +3426,7 @@
                     if (pk.kind === 'fx' && pk.val > 0) reward += ' · ' + tr('hemat biaya kurs {0}', formatRp(pk.val));
                     if (pk.kind !== 'pts') savedTotal += pk.val; else savedTotal += Math.round(earned / 2);
                     points += earned;
-                    addBiopayHistory(merchantName, "Pembayaran Ritel", formattedCur, true, W);
-                    trackSpend(payCategory, W, currentPaymentIDR);
+                    addBiopayHistory(merchantName, "Pembayaran Ritel", formattedCur, true, W, { idr: currentPaymentIDR, cat: payCategory });
                     if (!paidToday) { paidToday = true; if (streakDays < 7) streakDays++; if (streakDays === 7) { points += 200; reward += ' · ' + tr('bonus beruntun +200'); } }
                     progressMission('pay3'); if (isTouristTransaction) progressMission('intl'); if (smartRoute && pk.val > 0) progressMission('route');
                     logActivity('Pembayaran di terminal', `${merchantName} · ${W}`);
@@ -3479,7 +3577,7 @@
                 if(walletBalances[currentWalletName] >= amt) { 
                     walletBalances[currentWalletName] -= amt;
                     addBiopayHistory(`Bayar Tagihan ${name}`, "Billing Otomatis", `Rp ${amt.toLocaleString('id-ID')}`, true);
-                    trackSpend('Tagihan', currentWalletName, amt); points += Math.floor(amt / 1000); progressMission('bill');
+                    points += Math.floor(amt / 1000); progressMission('bill');
                     updateBalanceDisplay(); syncWalletUI(currentWalletName);
                     toast(`Tagihan ${name} lunas`, 'ph-receipt', 'text-emerald-400'); 
                 } else toast('Saldo tidak cukup', 'ph-warning', 'text-red-500');
@@ -3780,7 +3878,7 @@
             renderRegisterOptions();
             renderUser();
             updateHomeExtras();
-            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, toggleSmartRoute, pickRoute, renderRoute, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
+            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, toggleSmartRoute, pickRoute, renderRoute, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, toggleVoice, simulateVoice, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
         }
 
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error
