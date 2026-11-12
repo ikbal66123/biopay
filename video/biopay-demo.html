@@ -67,7 +67,7 @@
     .flow .step.ok i { color: var(--ok); }
 
     /* S4 3D */
-    #s4 { background: #E9ECF0; }
+    #s4, #s10 { background: #E9ECF0; }
     #three { position: absolute; inset: 0; width: 1280px; height: 720px; display: block; }
     .cap { position: absolute; left: 48px; bottom: 44px; display: flex; align-items: center; gap: 16px; padding: 16px 24px 16px 16px; background: rgba(11,18,32,.88); color: #fff; border-radius: 18px; max-width: 760px; backdrop-filter: blur(6px); }
     .cap .chip { flex: none; padding: 8px 12px; border-radius: 10px; background: #E8B04A; color: var(--night); font: 600 15px var(--mono); letter-spacing: .06em; }
@@ -87,8 +87,8 @@
     #s6 svg { position: absolute; inset: 0; }
     #s6 .side { position: absolute; left: 96px; top: 96px; width: 360px; }
     .node rect { fill: #fff; stroke: #CBD2DB; }
-    .node text { font-family: var(--sans); font-size: 19px; font-weight: 600; fill: var(--ink); }
-    .node .sub { font-size: 14px; font-weight: 400; fill: var(--muted); }
+    .node text { font-family: var(--sans); font-size: 17px; font-weight: 600; fill: var(--ink); }
+    .node .sub { font-size: 13px; font-weight: 400; fill: var(--muted); }
 
     /* S7 keunggulan */
     #s7 .pad { justify-content: flex-start; padding-top: 60px; }
@@ -104,6 +104,21 @@
     #s8 .url { margin-top: 34px; display: inline-flex; align-items: center; gap: 12px; padding: 16px 22px; border-radius: 14px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); font: 600 24px var(--mono); color: #fff; }
     #s8 .fine { position: absolute; left: 96px; bottom: 48px; font-size: 16px; color: rgba(255,255,255,.55); }
 
+    /* ATM & tambahan */
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .chips span { padding: 10px 16px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 18px; font-weight: 500; color: var(--ink-2); }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+    .colh { margin: 0 0 14px; font: 600 15px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+    .steps li { display: flex; gap: 16px; align-items: flex-start; padding: 15px 18px; background: #fff; border: 1px solid var(--line); border-radius: 16px; }
+    .steps .n { flex: none; width: 38px; height: 38px; border-radius: 11px; background: var(--ink); color: #fff; font: 600 17px/38px var(--mono); text-align: center; }
+    .steps.sec i { flex: none; width: 38px; height: 38px; border-radius: 11px; background: #E7F4EC; color: var(--ok); font-size: 22px; display: flex; align-items: center; justify-content: center; }
+    .steps b { display: block; font-size: 20px; line-height: 1.3; }
+    .steps li > span > span { display: block; margin-top: 2px; font-size: 16px; color: var(--muted); line-height: 1.4; }
+    .adv li { padding: 13px 18px; }
+    .adv { gap: 10px 20px; margin-top: 24px; }
+    #s7 .pad { padding-top: 48px; }
+    .adv b { font-size: 19px; } .adv span { font-size: 15px; } .adv li.hero b { font-size: 23px; }
     .progress { position: absolute; left: 0; bottom: 0; height: 4px; background: var(--brass); z-index: 20; }
     #controls { display: flex; align-items: center; gap: 12px; color: #fff; font: 500 14px var(--sans); }
     #controls button { min-width: 44px; min-height: 40px; border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.08); color: #fff; border-radius: 10px; font: 600 14px var(--sans); cursor: pointer; padding: 0 14px; }
@@ -165,59 +180,132 @@
         <div class="cap" id="cap"><span class="chip" id="cap-chip">KASIR</span><span><b id="cap-title">-</b><small id="cap-sub">-</small></span></div>
     </section>
 
-    <!-- 5. Fitur -->
-    <section class="scene" id="s5" data-a="63" data-b="83">
+    <!-- 4b. ATM tanpa kartu: pengantar -->
+    <section class="scene" id="s9" data-a="63" data-b="74">
         <div class="pad">
-            <p class="eyebrow" data-in="63.3">Fitur BioPay</p>
-            <h2 class="h2" data-in="63.6" style="max-width: none">Satu identitas, banyak cara bayar.</h2>
+            <p class="eyebrow" data-in="63.3">BioPay di ATM</p>
+            <h2 class="h2" data-in="63.6" style="max-width: none">Tarik tunai tanpa kartu.</h2>
+            <p class="lead" data-in="64.3" style="max-width: 46ch">ATM yang terhubung ke BioPay tidak butuh kartu atau PIN. Scan wajah dan telapak tangan, lalu kamu langsung masuk ke halaman BioPay di layar ATM.</p>
+            <div class="flow" style="margin-top: 38px">
+                <span class="step" data-in="65.6"><i class="ph-bold ph-scan-smiley"></i> Scan wajah</span>
+                <span class="arrow" data-in="66.2"></span>
+                <span class="step" data-in="66.6"><i class="ph-bold ph-hand-palm"></i> Scan telapak</span>
+                <span class="arrow" data-in="67.2"></span>
+                <span class="step" data-in="67.6"><i class="ph-bold ph-sign-in"></i> Masuk BioPay</span>
+                <span class="arrow" data-in="68.2"></span>
+                <span class="step ok" data-in="68.6"><i class="ph-bold ph-money"></i> Ambil uang</span>
+            </div>
+            <div class="chips" data-in="69.6"><span>Tarik tunai</span><span>Setor tunai</span><span>Transfer</span><span>Cek saldo</span><span>Bayar tagihan</span><span>Top up e-wallet</span></div>
+        </div>
+    </section>
+
+    <!-- 4c. Demo 3D ATM -->
+    <section class="scene" id="s10" data-a="74" data-b="112">
+        <div class="s4-title">Contoh pemakaian · ATM tanpa kartu</div>
+        <div class="cap" id="cap2"><span class="chip" id="cap2-chip">ATM</span><span><b id="cap2-title">-</b><small id="cap2-sub">-</small></span></div>
+    </section>
+
+    <!-- 5. Fitur -->
+    <section class="scene" id="s5" data-a="112" data-b="132">
+        <div class="pad">
+            <p class="eyebrow" data-in="112.3">Fitur BioPay</p>
+            <h2 class="h2" data-in="112.6" style="max-width: none">Satu identitas, banyak cara bayar.</h2>
             <div class="grid">
-                <div class="feat" data-in="64.6"><i class="ph-bold ph-storefront"></i><b>Bayar di terminal toko</b><span>Wajah + telapak di kasir, struk langsung tercetak.</span></div>
-                <div class="feat" data-in="66.0"><i class="ph-bold ph-device-mobile"></i><b>Tagih dari ponsel merchant</b><span>Pedagang kecil cukup pakai HP, tanpa mesin EDC.</span></div>
-                <div class="feat" data-in="67.4"><i class="ph-bold ph-airplane-tilt"></i><b>Checkout di aplikasi</b><span>Aplikasi travel & belanja bisa menambah tombol BioPay.</span></div>
-                <div class="feat" data-in="68.8"><i class="ph-bold ph-receipt"></i><b>Bayar tagihan</b><span>Pilih QRIS, BioPay, atau transfer bank virtual account.</span></div>
-                <div class="feat" data-in="70.2"><i class="ph-bold ph-currency-circle-dollar"></i><b>Kurs otomatis untuk turis</b><span>Bayar merchant asing dari saldo rupiah, plus struk tax refund.</span></div>
-                <div class="feat" data-in="71.6"><i class="ph-bold ph-identification-card"></i><b>Bio-Pass</b><span>Kredensial perjalanan digital untuk imigrasi dan check-in hotel.</span></div>
-                <div class="feat" data-in="73.0"><i class="ph-bold ph-users-three"></i><b>Sharing keluarga</b><span>Anggota bayar dengan biometrik sendiri, dengan limit harian.</span></div>
-                <div class="feat" data-in="74.4"><i class="ph-bold ph-shield-check"></i><b>Daftar dengan dokumen</b><span>KTP/paspor, rekam wajah & telapak, persetujuan data jelas.</span></div>
+                <div class="feat" data-in="113.6"><i class="ph-bold ph-storefront"></i><b>Bayar di terminal toko</b><span>Wajah + telapak di kasir, struk langsung tercetak.</span></div>
+                <div class="feat" data-in="115.0"><i class="ph-bold ph-device-mobile"></i><b>Tagih dari ponsel merchant</b><span>Pedagang kecil cukup pakai HP, tanpa mesin EDC.</span></div>
+                <div class="feat" data-in="116.4"><i class="ph-bold ph-airplane-tilt"></i><b>Checkout di aplikasi</b><span>Aplikasi travel & belanja bisa menambah tombol BioPay.</span></div>
+                <div class="feat" data-in="117.8"><i class="ph-bold ph-receipt"></i><b>Bayar tagihan</b><span>Pilih QRIS, BioPay, atau transfer bank virtual account.</span></div>
+                <div class="feat" data-in="119.2"><i class="ph-bold ph-currency-circle-dollar"></i><b>Kurs otomatis untuk turis</b><span>Bayar merchant asing dari saldo rupiah, plus struk tax refund.</span></div>
+                <div class="feat" data-in="120.6"><i class="ph-bold ph-identification-card"></i><b>Bio-Pass</b><span>Kredensial perjalanan digital untuk imigrasi dan check-in hotel.</span></div>
+                <div class="feat" data-in="122.0"><i class="ph-bold ph-users-three"></i><b>Sharing keluarga</b><span>Anggota bayar dengan biometrik sendiri, dengan limit harian.</span></div>
+                <div class="feat" data-in="123.4"><i class="ph-bold ph-shield-check"></i><b>Daftar dengan dokumen</b><span>KTP/paspor, rekam wajah & telapak, persetujuan data jelas.</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5b. Di mana saja -->
+    <section class="scene" id="s11" data-a="132" data-b="150">
+        <div class="pad">
+            <p class="eyebrow" data-in="132.3">Dipakai di mana saja</p>
+            <h2 class="h2" data-in="132.6" style="max-width: none">Satu scan untuk kebutuhan sehari-hari.</h2>
+            <div class="grid">
+                <div class="feat" data-in="133.6"><i class="ph-bold ph-money"></i><b>ATM tanpa kartu</b><span>Tarik & setor tunai, transfer, cek saldo tanpa kartu dan PIN.</span></div>
+                <div class="feat" data-in="135.0"><i class="ph-bold ph-train"></i><b>Transportasi umum</b><span>Gerbang stasiun & bus: scan, lewat, tarif terpotong otomatis.</span></div>
+                <div class="feat" data-in="136.4"><i class="ph-bold ph-airplane-takeoff"></i><b>Bandara & hotel</b><span>Bio-Pass untuk check-in, boarding, dan bayar di bandara.</span></div>
+                <div class="feat" data-in="137.8"><i class="ph-bold ph-gas-pump"></i><b>SPBU & parkir</b><span>Bayar bensin dan parkir tanpa mencari dompet.</span></div>
+                <div class="feat" data-in="139.2"><i class="ph-bold ph-first-aid-kit"></i><b>Rumah sakit & apotek</b><span>Identitas pasien dan pembayaran dalam satu scan.</span></div>
+                <div class="feat" data-in="140.6"><i class="ph-bold ph-shopping-cart"></i><b>Belanja online</b><span>Konfirmasi bayar lewat kamera HP atau laptop, tanpa OTP.</span></div>
+                <div class="feat" data-in="142.0"><i class="ph-bold ph-student"></i><b>Kantin sekolah & kampus</b><span>Anak bayar sendiri dengan limit dari orang tua.</span></div>
+                <div class="feat" data-in="143.4"><i class="ph-bold ph-paper-plane-tilt"></i><b>Kirim uang</b><span>Transfer ke teman, keluarga, atau rekening bank mana pun.</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5c. Daftar & keamanan -->
+    <section class="scene" id="s12" data-a="150" data-b="168">
+        <div class="pad" style="justify-content: flex-start; padding-top: 64px">
+            <p class="eyebrow" data-in="150.3">Daftar & keamanan</p>
+            <h2 class="h2" data-in="150.6" style="max-width: none">Daftar sekali, aman setiap hari.</h2>
+            <div class="two">
+                <div>
+                    <p class="colh" data-in="151.4">Cara daftar (sekitar 3 menit)</p>
+                    <ol class="steps">
+                        <li data-in="152.0"><span class="n">1</span><span><b>Isi data & pilih negara</b><span>Nama, email, nomor HP dengan kode negara.</span></span></li>
+                        <li data-in="153.0"><span class="n">2</span><span><b>Foto dokumen identitas</b><span>KTP, paspor, atau ID negara asal.</span></span></li>
+                        <li data-in="154.0"><span class="n">3</span><span><b>Rekam wajah & telapak tangan</b><span>Langsung dari kamera, di aplikasi atau terminal.</span></span></li>
+                        <li data-in="155.0"><span class="n">4</span><span><b>Hubungkan e-wallet & rekening</b><span>Pilih sumber dana utama; bisa diganti kapan saja.</span></span></li>
+                    </ol>
+                </div>
+                <div>
+                    <p class="colh" data-in="156.4">Yang menjaga uangmu</p>
+                    <ul class="steps sec">
+                        <li data-in="157.0"><i class="ph-bold ph-mask-happy"></i><span><b>Anti foto & anti topeng</b><span>Pemeriksaan liveness 3D memastikan orang sungguhan.</span></span></li>
+                        <li data-in="158.0"><i class="ph-bold ph-lock-key"></i><span><b>Template terenkripsi, bukan foto</b><span>Data biometrik tidak bisa diubah kembali jadi gambar.</span></span></li>
+                        <li data-in="159.0"><i class="ph-bold ph-bell-ringing"></i><span><b>Limit & notifikasi real-time</b><span>Setiap transaksi langsung muncul di ponsel.</span></span></li>
+                        <li data-in="160.0"><i class="ph-bold ph-trash"></i><span><b>Bekukan atau hapus BioID</b><span>Kendali penuh di tangan pengguna (UU PDP).</span></span></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- 6. Jembatan -->
-    <section class="scene" id="s6" data-a="83" data-b="98">
+    <section class="scene" id="s6" data-a="168" data-b="183">
         <svg id="hub" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true"></svg>
         <div class="side">
-            <p class="eyebrow" data-in="83.3">Bukan dompet baru</p>
-            <h2 class="h2" data-in="83.6" style="font-size: 46px">BioPay adalah jembatan.</h2>
-            <p class="lead" data-in="84.4" style="font-size: 22px">Satu wajah dan satu telapak tangan terhubung ke e-wallet, m-banking, rekening bank, QRIS, dan PayLater yang sudah dipakai orang setiap hari.</p>
+            <p class="eyebrow" data-in="168.3">Bukan dompet baru</p>
+            <h2 class="h2" data-in="168.6" style="font-size: 46px">BioPay adalah jembatan.</h2>
+            <p class="lead" data-in="169.4" style="font-size: 22px">Satu wajah dan satu telapak tangan terhubung ke e-wallet, m-banking, rekening bank, ATM, QRIS, dan PayLater yang sudah dipakai orang setiap hari.</p>
         </div>
     </section>
 
     <!-- 7. Keunggulan -->
-    <section class="scene dark" id="s7" data-a="98" data-b="114">
+    <section class="scene dark" id="s7" data-a="183" data-b="200">
         <div class="pad">
-            <p class="eyebrow" data-in="98.3">Keunggulan BioPay</p>
-            <h2 class="h2" data-in="98.6" style="max-width: none; font-size: 46px">Kenapa BioPay berbeda.</h2>
+            <p class="eyebrow" data-in="183.3">Keunggulan BioPay</p>
+            <h2 class="h2" data-in="183.6" style="max-width: none; font-size: 46px">Kenapa BioPay berbeda.</h2>
             <ul class="adv">
-                <li class="hero" data-in="99.6"><span class="n">1</span><span><b>Tidak berjalan sendiri: jembatan untuk semua e-wallet, m-banking & bank</b><span>Pengguna tidak perlu pindah dompet. Merchant cukup satu integrasi untuk menerima semuanya.</span></span></li>
-                <li data-in="101.2"><span class="n">2</span><span><b>Dua faktor biometrik</b><span>Wajah saja tidak pernah bisa memindahkan uang; telapak tangan wajib.</span></span></li>
-                <li data-in="102.6"><span class="n">3</span><span><b>Tanpa kartu, tanpa ponsel</b><span>Baterai habis atau HP tertinggal tetap bisa bayar.</span></span></li>
-                <li data-in="104.0"><span class="n">4</span><span><b>Merchant tanpa mesin mahal</b><span>Mulai dari ponsel, naik ke terminal saat usaha tumbuh.</span></span></li>
-                <li data-in="105.4"><span class="n">5</span><span><b>Ramah wisatawan</b><span>Kurs otomatis, struk tax refund, dan Bio-Pass.</span></span></li>
-                <li data-in="106.8"><span class="n">6</span><span><b>Privasi sejak awal</b><span>Persetujuan eksplisit, data bisa dihapus kapan saja (UU PDP).</span></span></li>
-                <li data-in="108.2"><span class="n">7</span><span><b>Satu identitas untuk semuanya</b><span>Belanja, tagihan, travel, dan keluarga dalam satu BioID.</span></span></li>
+                <li class="hero" data-in="184.6"><span class="n">1</span><span><b>Tidak berjalan sendiri: jembatan untuk semua e-wallet, m-banking & bank</b><span>Pengguna tidak perlu pindah dompet. Merchant cukup satu integrasi untuk menerima semuanya.</span></span></li>
+                <li data-in="186.2"><span class="n">2</span><span><b>Dua faktor biometrik</b><span>Wajah saja tidak pernah bisa memindahkan uang; telapak tangan wajib.</span></span></li>
+                <li data-in="187.6"><span class="n">3</span><span><b>Tanpa kartu, tanpa ponsel</b><span>Baterai habis atau HP tertinggal tetap bisa bayar.</span></span></li>
+                <li data-in="189.0"><span class="n">4</span><span><b>Merchant tanpa mesin mahal</b><span>Mulai dari ponsel, naik ke terminal saat usaha tumbuh.</span></span></li>
+                <li data-in="190.4"><span class="n">5</span><span><b>Ramah wisatawan</b><span>Kurs otomatis, struk tax refund, dan Bio-Pass.</span></span></li>
+                <li data-in="191.8"><span class="n">6</span><span><b>Privasi sejak awal</b><span>Persetujuan eksplisit, data bisa dihapus kapan saja (UU PDP).</span></span></li>
+                <li data-in="193.2"><span class="n">7</span><span><b>Satu identitas untuk semuanya</b><span>Belanja, tagihan, travel, dan keluarga dalam satu BioID.</span></span></li>
+                <li data-in="194.6"><span class="n">8</span><span><b>ATM tanpa kartu</b><span>Bebas skimming, kartu tertelan, atau lupa PIN.</span></span></li>
+                <li data-in="196.0"><span class="n">9</span><span><b>Dipakai di mana saja</b><span>Toko, ATM, transportasi, rumah sakit, sampai belanja online.</span></span></li>
             </ul>
         </div>
     </section>
 
     <!-- 8. Penutup -->
-    <section class="scene dark" id="s8" data-a="114" data-b="121">
+    <section class="scene dark" id="s8" data-a="200" data-b="207">
         <div class="pad">
-            <p class="eyebrow" data-in="114.3">BioPay</p>
-            <h1 class="h1" data-in="114.6">Satu wajah.<br>Semua dompet.</h1>
-            <div data-in="115.8"><span class="url"><i class="ph-bold ph-globe-simple"></i> ikbal66123.github.io/biopay</span></div>
+            <p class="eyebrow" data-in="200.3">BioPay</p>
+            <h1 class="h1" data-in="200.6">Satu wajah.<br>Semua dompet.</h1>
+            <div data-in="201.8"><span class="url"><i class="ph-bold ph-globe-simple"></i> ikbal66123.github.io/biopay</span></div>
         </div>
-        <p class="fine" data-in="116.4">Prototipe. Semua transaksi dalam video ini disimulasikan. Nama mitra hanya ilustrasi.</p>
+        <p class="fine" data-in="202.4">Prototipe. Semua transaksi disimulasikan; ATM dan skenario "di mana saja" adalah gambaran produk. Nama mitra hanya ilustrasi.</p>
     </section>
 
     <div class="progress" id="progress"></div>
@@ -225,15 +313,15 @@
 </div>
 <div id="controls">
     <button type="button" id="play" aria-label="Putar atau jeda">Jeda</button>
-    <input type="range" id="seek" min="0" max="121" step="0.04" value="0" aria-label="Posisi video">
-    <span id="clock">0:00 / 2:01</span>
+    <input type="range" id="seek" min="0" max="207" step="0.04" value="0" aria-label="Posisi video">
+    <span id="clock">0:00 / 3:27</span>
 </div>
 
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
 <script type="module">
 import * as THREE from 'three';
 
-const DUR = 121;
+const DUR = 207;
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const smooth = x => { x = clamp(x); return x * x * (3 - 2 * x); };
 const prog = (t, a, b) => smooth((t - a) / (b - a));
@@ -257,20 +345,20 @@ function render2D(t) {
 const hub = document.getElementById('hub');
 const NODES = [
     ['E-wallet', 'saldo dompet digital'], ['Mobile banking', 'rekening tabungan'], ['Kartu debit & kredit', 'jaringan kartu'], ['QRIS', 'standar QR nasional'],
-    ['PayLater', 'cicilan & kredit'], ['Merchant & kasir', 'terminal dan ponsel'], ['Aplikasi travel & belanja', 'checkout di aplikasi'], ['Tagihan bulanan', 'listrik, internet, BPJS']
+    ['PayLater', 'cicilan & kredit'], ['Merchant & kasir', 'terminal dan ponsel'], ['Travel & belanja', 'checkout di aplikasi'], ['Tagihan bulanan', 'listrik, internet, BPJS'], ['ATM & tarik tunai', 'tanpa kartu & PIN']
 ];
 const C = { x: 880, y: 372 };
-const nodePos = NODES.map((_, i) => { const a = -Math.PI / 2 + i * (Math.PI * 2 / NODES.length); return { x: C.x + Math.cos(a) * 270 * 1.02, y: C.y + Math.sin(a) * 250 }; });
+const nodePos = NODES.map((_, i) => { const a = -Math.PI / 2 + i * (Math.PI * 2 / NODES.length); return { x: C.x + Math.cos(a) * 290, y: C.y + Math.sin(a) * 272 }; });
 hub.innerHTML = nodePos.map((p, i) => `<line id="ln${i}" x1="${C.x}" y1="${C.y}" x2="${p.x}" y2="${p.y}" stroke="#B9C1CC" stroke-width="2" stroke-dasharray="320" stroke-dashoffset="320"/>`).join('')
     + nodePos.map((p, i) => `<circle id="pl${i}" r="6" fill="#C8892A" opacity="0"/>`).join('')
-    + nodePos.map((p, i) => { const w = 226, h = 64; return `<g class="node" id="nd${i}" opacity="0" transform="translate(${p.x - w / 2},${p.y - h / 2})"><rect width="${w}" height="${h}" rx="14"/><text x="16" y="28">${NODES[i][0]}</text><text class="sub" x="16" y="49">${NODES[i][1]}</text></g>`; }).join('')
+    + nodePos.map((p, i) => { const w = 188, h = 62; return `<g class="node" id="nd${i}" opacity="0" transform="translate(${p.x - w / 2},${p.y - h / 2})"><rect width="${w}" height="${h}" rx="14"/><text x="16" y="28">${NODES[i][0]}</text><text class="sub" x="16" y="49">${NODES[i][1]}</text></g>`; }).join('')
     + `<g id="core" opacity="0"><circle cx="${C.x}" cy="${C.y}" r="86" fill="#0F1B2D"/><circle cx="${C.x}" cy="${C.y}" r="86" fill="none" stroke="#E8B04A" stroke-width="3" id="core-ring"/><text x="${C.x}" y="${C.y - 4}" text-anchor="middle" font-family="IBM Plex Sans" font-weight="700" font-size="30" fill="#fff">BioPay</text><text x="${C.x}" y="${C.y + 24}" text-anchor="middle" font-family="IBM Plex Mono" font-size="14" fill="#E8B04A" letter-spacing="2">WAJAH + TELAPAK</text></g>`;
 function renderHub(t) {
-    if (t < 82.5 || t > 98.5) return;
-    document.getElementById('core').setAttribute('opacity', prog(t, 85, 85.8));
+    if (t < 167.5 || t > 183.5) return;
+    document.getElementById('core').setAttribute('opacity', prog(t, 170, 170.8));
     document.getElementById('core-ring').setAttribute('r', 86 + 6 * Math.sin(t * 3));
     nodePos.forEach((p, i) => {
-        const t0 = 86 + i * 0.6;
+        const t0 = 171 + i * 0.55;
         document.getElementById('ln' + i).setAttribute('stroke-dashoffset', 320 * (1 - prog(t, t0, t0 + 0.8)));
         document.getElementById('nd' + i).setAttribute('opacity', prog(t, t0 + 0.4, t0 + 1));
         const pl = document.getElementById('pl' + i), live = t > t0 + 1;
@@ -293,7 +381,7 @@ scene.fog = new THREE.Fog('#E6E9EE', 9, 18);
 const cam = new THREE.PerspectiveCamera(38, 1280 / 720, 0.05, 50);
 scene.add(new THREE.HemisphereLight('#ffffff', '#B8C0CC', 1.4));
 const sun = new THREE.DirectionalLight('#ffffff', 2.2); sun.position.set(3, 6, 4); sun.castShadow = true;
-sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4 }); scene.add(sun);
+sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4 }); scene.add(sun); scene.add(sun.target);
 const mat = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.75, metalness: 0.05, ...o });
 const add = (geo, m, x, y, z, parent = scene) => { const me = new THREE.Mesh(geo, m); me.position.set(x, y, z); me.castShadow = true; me.receiveShadow = true; parent.add(me); return me; };
 
@@ -349,7 +437,7 @@ function ik(S, T, L1, L2, pole) {
     const elbow = S.clone().add(dir.clone().applyAxisAngle(axis, a).multiplyScalar(L1));
     return { elbow, end: S.clone().add(dir.multiplyScalar(dist)) };
 }
-function pose({ walk = 0, reach = 0, headPitch = 0 }) {
+function pose({ walk = 0, reach = 0, headPitch = 0, tgt = V(-0.12, 1.16, 0.46), flat = 1 }) {
     const sw = Math.sin(walk) * 0.42 * (walk ? 1 : 0), bend = Math.max(0, Math.sin(walk + 1.2)) * 0.5, bend2 = Math.max(0, Math.sin(walk + 1.2 + Math.PI)) * 0.5;
     const Lup = 0.3, Llo = 0.28, Lth = 0.43, Lsh = 0.43;
     [[-1, sw, bend, limbs.lt, limbs.ls, footL], [1, -sw, bend2, limbs.rt, limbs.rs, footR]].forEach(([s, a, k, th, sh, ft]) => {
@@ -360,13 +448,12 @@ function pose({ walk = 0, reach = 0, headPitch = 0 }) {
     const eL = SL.clone().add(swingVec(Lup, -sw * 0.8)), wL = eL.clone().add(swingVec(Llo, -sw * 0.8 + 0.25));
     place(limbs.lu, SL, eL); place(limbs.ll, eL, wL); handL.position.copy(wL).add(swingVec(0.05, -sw * 0.8 + 0.25)); handL.quaternion.copy(limbs.ll.quaternion);
     const restE = SR.clone().add(swingVec(Lup, sw * 0.8)), restW = restE.clone().add(swingVec(Llo, sw * 0.8 + 0.25));
-    const tgt = V(-0.12, 1.16, 0.46);
     const solved = ik(SR, tgt, Lup, Llo, V(1, -0.4, 0));
     const eR = restE.clone().lerp(solved.elbow, reach), wR = restW.clone().lerp(solved.end, reach);
     place(limbs.ru, SR, eR); place(limbs.rl, eR, wR);
     const fdir = wR.clone().sub(eR).normalize();
     handR.position.copy(wR).add(fdir.clone().multiplyScalar(0.055)); handR.quaternion.setFromUnitVectors(UP, fdir);
-    handR.rotateX(-Math.PI / 2 * reach);
+    handR.rotateX(-Math.PI / 2 * reach * flat);
     headG.rotation.x = headPitch;
 }
 
@@ -430,7 +517,8 @@ function render3D(t) {
     if (t < 32) { const k = prog(t, 27, 32); pos = start.clone().lerp(stop, k); walk = k < 1 ? (t - 27) * 6.2 : 0; face = Math.atan2(stop.x - start.x, stop.z - start.z); if (k > 0.85) face = lerp(face, Math.PI, (k - 0.85) / 0.15); }
     else if (t < 56) pos = stop.clone();
     else { const k = prog(t, 56.5, 62.5); pos = stop.clone().lerp(away, k); walk = t > 56.5 && k < 1 ? (t - 56.5) * 6.2 : 0; face = lerp(Math.PI, Math.atan2(away.x - stop.x, away.z - stop.z), prog(t, 56, 57)); }
-    person.position.copy(pos); person.rotation.y = face;
+    person.position.copy(pos); person.rotation.y = face; cash.visible = false;
+    sun.position.set(3, 6, 4); sun.target.position.set(0, 0, 0); beam.position.set(0.12, 1.11, 0.5); palmLine.position.x = 0.12; palmLine.position.y = 1.14;
     const reach = t < 41 ? 0 : t < 43 ? prog(t, 41, 42.6) : t < 50.5 ? 1 : 1 - prog(t, 50.5, 52);
     pose({ walk, reach, headPitch: t > 33 && t < 41 ? 0.04 : t >= 41 && t < 56 ? 0.14 : 0 });
     // efek wajah
@@ -452,8 +540,143 @@ function render3D(t) {
     const cap = document.getElementById('cap'), since = t - c[0]; cap.style.opacity = clamp(since / 0.5); cap.style.transform = `translateY(${(1 - clamp(since / 0.5)) * 14}px)`;
 }
 
+// ---------- ATM tanpa kartu (di area lain dunia yang sama, x = 10) ----------
+const AX = 10;
+const roundRect = (g, x, y, w, h, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
+add(new THREE.BoxGeometry(3.2, 2.9, 0.06), mat('#1C2B44'), AX + 0.55, 1.45, -1.66);
+const sign = document.createElement('canvas'); sign.width = 1024; sign.height = 160; { const g = sign.getContext('2d');
+    g.fillStyle = '#1C2B44'; g.fillRect(0, 0, 1024, 160); g.fillStyle = '#fff'; g.font = '700 84px "IBM Plex Sans", sans-serif'; g.fillText('ATM', 40, 112);
+    g.fillStyle = '#E8B04A'; roundRect(g, 260, 42, 470, 78, 20); g.fill(); g.fillStyle = '#0B1220'; g.font = '600 40px "IBM Plex Mono", monospace'; g.fillText('BioPay Ready', 292, 96);
+    g.fillStyle = 'rgba(255,255,255,.75)'; g.font = '400 30px "IBM Plex Sans", sans-serif'; g.fillText('tanpa kartu', 770, 96); }
+const signTex = new THREE.CanvasTexture(sign); signTex.colorSpace = THREE.SRGBColorSpace;
+add(new THREE.PlaneGeometry(2.4, 0.375), new THREE.MeshBasicMaterial({ map: signTex }), AX + 0.55, 2.45, -1.62);
+add(new THREE.PlaneGeometry(2.6, 2.2), mat('#C9CFD8'), AX + 0.55, 0.002, -0.4).rotation.x = -Math.PI / 2;
+const atmScr = document.createElement('canvas'); atmScr.width = 768; atmScr.height = 528; const actx = atmScr.getContext('2d');
+const atmTex = new THREE.CanvasTexture(atmScr); atmTex.colorSpace = THREE.SRGBColorSpace;
+function buildATM(x, tex) {
+    const body = mat('#D5DAE1', { metalness: 0.35, roughness: 0.45 }), dark = mat('#1F2937', { roughness: 0.4 });
+    add(new THREE.BoxGeometry(0.92, 1.78, 0.9), body, x, 0.89, -1.05);
+    add(new THREE.BoxGeometry(0.92, 0.12, 0.12), mat('#1C2B44'), x, 1.72, -0.56);
+    const panel = new THREE.Group(); panel.position.set(x, 1.36, -0.53); panel.rotation.x = -0.22; scene.add(panel);
+    add(new THREE.BoxGeometry(0.72, 0.5, 0.03), dark, 0, 0, 0, panel);
+    add(new THREE.PlaneGeometry(0.66, 0.453), new THREE.MeshBasicMaterial(tex ? { map: tex } : { color: '#25344D' }), 0, 0, 0.016, panel);
+    add(new THREE.CircleGeometry(0.012, 20), new THREE.MeshBasicMaterial({ color: '#7DD3FC' }), 0, 0.3, 0.0, panel).position.z = 0.03;
+    add(new THREE.BoxGeometry(0.92, 0.06, 0.26), body, x, 1.02, -0.48);
+    add(new THREE.BoxGeometry(0.2, 0.03, 0.16), dark, x + 0.12, 1.065, -0.46);
+    add(new THREE.BoxGeometry(0.28, 0.035, 0.03), mat('#111827'), x - 0.05, 1.17, -0.585);
+    return panel;
+}
+buildATM(AX, atmTex); buildATM(AX + 1.1, null);
+const atmGlow = add(new THREE.PlaneGeometry(0.16, 0.12), new THREE.MeshBasicMaterial({ color: '#E8B04A', transparent: true, opacity: 0.35 }), AX + 0.12, 1.082, -0.46);
+atmGlow.rotation.x = -Math.PI / 2;
+const cash = new THREE.Group(); scene.add(cash);
+for (let i = 0; i < 4; i++) add(new THREE.BoxGeometry(0.15, 0.003, 0.075), mat(i % 2 ? '#C94A5A' : '#D85F6E', { roughness: 0.8 }), 0, i * 0.004, 0, cash).rotation.y = (i - 1.5) * 0.03;
+const atmLabels = [['Tarik tunai', 'ph-money'], ['Setor tunai', ''], ['Transfer', ''], ['Cek saldo', ''], ['Bayar tagihan', ''], ['Top up e-wallet', '']];
+let lastAtm = '';
+function drawATM(state, p = 0) {
+    const key = state + Math.round(p * 20); if (key === lastAtm) return; lastAtm = key;
+    const g = actx, W = 768, H = 528; g.textAlign = 'left';
+    const hdr = (txt) => { g.fillStyle = '#0F1B2D'; g.fillRect(0, 0, W, 64); g.fillStyle = '#E8B04A'; g.font = '700 30px "IBM Plex Sans"'; g.fillText('BioPay', 28, 42); g.fillStyle = 'rgba(255,255,255,.8)'; g.font = '500 22px "IBM Plex Mono"'; g.textAlign = 'right'; g.fillText(txt, W - 28, 41); g.textAlign = 'left'; };
+    const T = (t, x, y, f, c) => { g.fillStyle = c; g.font = f; g.fillText(t, x, y); };
+    const bar = (k, col) => { g.fillStyle = '#E1E5EB'; g.fillRect(48, 300, W - 96, 16); g.fillStyle = col; g.fillRect(48, 300, (W - 96) * k, 16); };
+    g.fillStyle = '#F5F6F8'; g.fillRect(0, 0, W, H);
+    if (state === 'welcome') { hdr('ATM · tanpa kartu'); T('Selamat datang', 48, 160, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Tidak perlu kartu atau PIN.', 48, 210, '400 28px "IBM Plex Sans"', '#566173');
+        g.fillStyle = '#0F1B2D'; roundRect(g, 48, 290, W - 96, 96, 18); g.fill(); T('Lihat ke kamera untuk masuk', 140, 350, '600 32px "IBM Plex Sans"', '#fff'); }
+    if (state === 'face') { hdr('Langkah 1 / 2'); T('Memindai wajah…', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Pemeriksaan kedalaman 3D', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(p, '#C8892A'); }
+    if (state === 'faceok') { hdr('Langkah 2 / 2'); T('Wajah dikenali', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Letakkan telapak tangan di sensor', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(1, '#0F7B4F'); T('Sensor di bawah layar  ↓', 48, 390, '600 30px "IBM Plex Sans"', '#0F1B2D'); }
+    if (state === 'palm') { hdr('Langkah 2 / 2'); T('Memindai telapak…', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Pola vena · faktor kedua', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(p, '#C8892A'); }
+    if (state === 'home' || state === 'amount') {
+        hdr('Sesi aman · 02:00'); T('Halo, Ikbal', 40, 116, '700 38px "IBM Plex Sans"', '#0F1B2D');
+        T('Sumber dana', 40, 156, '600 18px "IBM Plex Mono"', '#566173');
+        [['Rekening bank', '•••• 4821', 'Rp 8.240.000'], ['E-wallet Kasku', 'utama', 'Rp 1.150.000']].forEach(([a, b, c], i) => {
+            const x = 40 + i * 350; g.fillStyle = '#fff'; g.strokeStyle = i === 0 ? '#0F1B2D' : '#DCE1E8'; g.lineWidth = i === 0 ? 3 : 2; roundRect(g, x, 170, 336, 84, 14); g.fill(); g.stroke();
+            T(a + '  ' + b, x + 18, 204, '600 21px "IBM Plex Sans"', '#0F1B2D'); T(c, x + 18, 238, '500 21px "IBM Plex Mono"', '#566173'); });
+        if (state === 'home') {
+            atmLabels.forEach(([l], i) => { const x = 40 + (i % 3) * 232, y = 278 + Math.floor(i / 3) * 112, on = i === 0 && p > 0.6;
+                g.fillStyle = on ? '#0F1B2D' : '#fff'; g.strokeStyle = '#DCE1E8'; g.lineWidth = 2; roundRect(g, x, y, 220, 98, 16); g.fill(); g.stroke();
+                T(l, x + 20, y + 58, '600 25px "IBM Plex Sans"', on ? '#fff' : '#0F1B2D'); });
+        } else {
+            T('Tarik tunai · pilih nominal', 40, 296, '600 22px "IBM Plex Mono"', '#566173');
+            ['Rp 100.000', 'Rp 200.000', 'Rp 300.000', 'Rp 500.000', 'Rp 1.000.000', 'Lainnya'].forEach((l, i) => { const x = 40 + (i % 3) * 232, y = 312 + Math.floor(i / 3) * 100, on = i === 3 && p > 0.45;
+                g.fillStyle = on ? '#0F1B2D' : '#fff'; g.strokeStyle = '#DCE1E8'; g.lineWidth = 2; roundRect(g, x, y, 220, 86, 16); g.fill(); g.stroke();
+                T(l, x + 20, y + 54, '600 26px "IBM Plex Sans"', on ? '#fff' : '#0F1B2D'); });
+        }
+    }
+    if (state === 'dispense' || state === 'done') {
+        hdr(state === 'done' ? 'Sesi ditutup' : 'Memproses');
+        g.fillStyle = state === 'done' ? '#E7F4EC' : '#FFF7E8'; g.fillRect(0, 64, W, H - 64);
+        g.fillStyle = state === 'done' ? '#0F7B4F' : '#C8892A'; g.beginPath(); g.arc(W / 2, 176, 60, 0, 7); g.fill();
+        g.strokeStyle = '#fff'; g.lineWidth = 11; g.lineCap = 'round'; g.beginPath();
+        if (state === 'done') { g.moveTo(W / 2 - 26, 176); g.lineTo(W / 2 - 6, 196); g.lineTo(W / 2 + 28, 158); } else { g.moveTo(W / 2, 150); g.lineTo(W / 2, 200); g.moveTo(W / 2 - 18, 184); g.lineTo(W / 2, 202); g.lineTo(W / 2 + 18, 184); }
+        g.stroke(); g.textAlign = 'center';
+        T(state === 'done' ? 'Transaksi selesai' : 'Silakan ambil uang Anda', W / 2, 300, '700 44px "IBM Plex Sans"', '#0F1B2D');
+        T('Tarik tunai Rp 500.000 · Rekening •••• 4821', W / 2, 348, '400 26px "IBM Plex Sans"', '#566173');
+        if (state === 'done') T('Notifikasi & struk digital terkirim ke ponsel', W / 2, 392, '400 26px "IBM Plex Sans"', '#566173');
+        g.textAlign = 'left';
+    }
+    atmTex.needsUpdate = true;
+}
+const CAMK2 = [
+    [74, V(AX + 3.2, 2.3, 4.8), V(AX, 1.1, -0.3)], [78, V(AX + 1.9, 1.9, 2.8), V(AX, 1.3, -0.4)], [79.6, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)],
+    [80.6, V(AX + 0.3, 1.67, -0.45), V(AX, 1.62, 0.3)], [85, V(AX + 0.3, 1.67, -0.45), V(AX, 1.62, 0.3)], [86.4, V(AX + 0.85, 1.42, 0.3), V(AX + 0.08, 1.1, -0.45)],
+    [91.6, V(AX + 0.85, 1.42, 0.3), V(AX + 0.08, 1.1, -0.45)], [93, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)], [100.6, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)],
+    [102, V(AX + 1.0, 1.45, 0.2), V(AX + 0.02, 1.18, -0.5)], [106.6, V(AX + 1.0, 1.45, 0.2), V(AX + 0.02, 1.18, -0.5)], [109, V(AX + 3.4, 2.4, 5.2), V(AX, 1.0, -0.2)], [112.5, V(AX + 4, 2.6, 6), V(AX, 1.0, -0.2)]
+];
+const CAPS2 = [
+    [74, 'ATM', 'Datang ke ATM tanpa kartu', 'ATM sudah terhubung ke BioPay; dompet dan kartu tetap di rumah'],
+    [80, 'LANGKAH 1', 'Scan wajah di kamera ATM', 'Pemeriksaan kedalaman 3D memastikan ini orang sungguhan'],
+    [85.6, 'LANGKAH 2', 'Scan telapak tangan', 'Faktor kedua; tanpa ini ATM tidak akan terbuka'],
+    [92, 'MASUK', 'Langsung masuk ke halaman BioPay', 'Pilih sumber dana: rekening bank atau e-wallet yang terhubung'],
+    [96.5, 'TARIK TUNAI', 'Pilih nominal Rp 500.000', 'Juga bisa setor tunai, transfer, cek saldo, dan bayar tagihan'],
+    [101, 'AMBIL UANG', 'Uang keluar tanpa kartu', 'Tidak ada kartu yang bisa tertelan, hilang, atau di-skimming'],
+    [107, 'SELESAI', 'Notifikasi langsung masuk ke ponsel', 'Sesi ATM tertutup otomatis setelah transaksi']
+];
+function caption(list, id, t) {
+    let c = list[0]; list.forEach(x => { if (t >= x[0]) c = x; });
+    document.getElementById(id + '-chip').textContent = c[1]; document.getElementById(id + '-title').textContent = c[2]; document.getElementById(id + '-sub').textContent = c[3];
+    const el = document.getElementById(id), since = t - c[0]; el.style.opacity = clamp(since / 0.5); el.style.transform = `translateY(${(1 - clamp(since / 0.5)) * 14}px)`;
+}
+function renderATM(t) {
+    const start = V(AX - 2.8, 0, 3.0), stop = V(AX, 0, 0), away = V(AX - 3.0, 0, 3.4);
+    let walk = 0, pos, face = Math.PI;
+    if (t < 78.5) { const k = prog(t, 74, 78.5); pos = start.clone().lerp(stop, k); walk = k < 1 ? (t - 74) * 6.2 : 0; face = Math.atan2(stop.x - start.x, stop.z - start.z); if (k > 0.85) face = lerp(face, Math.PI, (k - 0.85) / 0.15); }
+    else if (t < 107.5) pos = stop.clone();
+    else { const k = prog(t, 108, 112); pos = stop.clone().lerp(away, k); walk = t > 108 && k < 1 ? (t - 108) * 6.2 : 0; face = lerp(Math.PI, Math.atan2(away.x - stop.x, away.z - stop.z), prog(t, 107.5, 108.5)); }
+    person.position.copy(pos); person.rotation.y = face;
+    // tangan: telapak ke sensor (85.8-92), lalu ambil uang (102.6-106)
+    const palmR = t < 85.8 ? 0 : t < 91.4 ? prog(t, 85.8, 87.2) : 1 - prog(t, 91.4, 92.8);
+    const cashR = t < 102.6 ? 0 : t < 104.4 ? prog(t, 102.6, 104.2) : t < 107.6 ? 1 - 0.5 * prog(t, 104.6, 105.8) : 0.5 - 0.5 * prog(t, 107.6, 108.6);
+    const tgt = cashR > 0 ? V(-0.03, 1.19, 0.47) : V(-0.12, 1.16, 0.46);
+    pose({ walk, reach: Math.max(palmR, cashR), tgt, flat: cashR > 0 ? 0.25 : 1, headPitch: t > 79 && t < 85.5 ? 0.04 : t >= 85.5 && t < 107 ? 0.12 : 0 });
+    // uang: keluar dari slot, lalu ikut tangan
+    const out = prog(t, 101, 102.4);
+    if (t < 104.4) { cash.position.set(AX - 0.05, 1.165, -0.62 + 0.12 * out); cash.rotation.set(0, 0, 0); cash.visible = t > 100.8; }
+    else { cash.position.copy(handR.position).add(V(0, -0.01, 0)); cash.quaternion.copy(handR.quaternion); cash.rotateX(Math.PI / 2); cash.visible = t < 110; }
+    // efek scan
+    const fOn = t > 80.4 && t < 84.8 ? Math.min(1, (t - 80.4) / 0.4, (84.8 - t) / 0.4) : 0;
+    faceGrid.material.opacity = 0.55 * fOn; faceGrid.rotation.y = t * 0.8; faceRing.material.opacity = fOn; faceRing.position.y = Math.sin((t - 80) * 2.4) * 0.12;
+    const pOn = t > 87.2 && t < 91.2 ? Math.min(1, (t - 87.2) / 0.4, (91.2 - t) / 0.4) : 0;
+    beam.position.set(AX + 0.12, 1.12, -0.46); palmLine.position.set(AX + 0.12, 1.15, -0.46 + Math.sin((t - 87) * 3) * 0.06);
+    beam.material.opacity = 0.25 * pOn; palmLine.material.opacity = pOn; atmGlow.material.opacity = 0.25 + 0.5 * pOn;
+    // layar ATM
+    if (t < 80.4) drawATM('welcome'); else if (t < 84.6) drawATM('face', prog(t, 80.4, 84.6)); else if (t < 87.2) drawATM('faceok');
+    else if (t < 91.4) drawATM('palm', prog(t, 87.2, 91.4)); else if (t < 97) drawATM('home', prog(t, 92, 97)); else if (t < 101) drawATM('amount', prog(t, 97, 101));
+    else if (t < 106.4) drawATM('dispense'); else drawATM('done');
+    sun.position.set(AX + 3, 6, 4); sun.target.position.set(AX, 0, -0.4);
+    let i = 0; while (i < CAMK2.length - 2 && t > CAMK2[i + 1][0]) i++;
+    const [t0, p0, l0] = CAMK2[i], [t1, p1, l1] = CAMK2[i + 1], k = prog(t, t0, t1);
+    cam.position.copy(p0).lerp(p1, k); cam.lookAt(l0.clone().lerp(l1, k));
+    renderer.render(scene, cam);
+    caption(CAPS2, 'cap2', t);
+}
+
 // ---------- Pemutar ----------
-function renderAt(t) { t = clamp(t, 0, DUR); render2D(t); if (t > 26.4 && t < 63.6) render3D(t); }
+const s4el = document.getElementById('s4'), s10el = document.getElementById('s10');
+function renderAt(t) {
+    t = clamp(t, 0, DUR); render2D(t);
+    if (t > 26.4 && t < 63.6) { if (canvas.parentNode !== s4el) s4el.prepend(canvas); render3D(t); }
+    else if (t > 73.4 && t < 112.6) { if (canvas.parentNode !== s10el) s10el.prepend(canvas); renderATM(t); }
+}
 window.__DUR = DUR;
 window.__renderAt = t => { renderAt(t); return true; };
 const stage = document.getElementById('stage'), wrap = document.getElementById('stage-wrap');
