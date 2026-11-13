@@ -23,7 +23,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         res.writeHead(200, { 'content-type': f.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/octet-stream' }); fs.createReadStream(f).pipe(res);
     }).listen(0);
     const base = `http://127.0.0.1:${server.address().port}/index.html`;
-    const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] });
+    const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined, args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream=device-count=2'] });
     const ctx = await browser.newContext({ viewport: { width: 1300, height: 950 }, permissions: ['camera'] });
     const requested = [];
     await ctx.route('**/*', r => {
@@ -137,6 +137,20 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         await page.click('.pt-hero .pt-btn-primary');
         for (let i = 0; i < 6; i++) await page.click('#pt-tour-next');
         assert(await page.evaluate(() => document.getElementById('pt-tour').hidden), 'tour did not close');
+    });
+
+    await test('camera flip: every scan view can switch front / back camera', async () => {
+        await page.click('#dev-tab-terminal');
+        await page.evaluate(() => openQR('scan'));
+        await page.waitForSelector('#modal-scan-qr .cam-flip', { timeout: 10000 });
+        eq(await page.getAttribute('#video-qr', 'data-facing'), 'environment', 'QR starts on back camera');
+        eq(await page.evaluate(() => getComputedStyle(document.getElementById('video-qr')).transform), 'none', 'back camera not mirrored');
+        await page.click('#modal-scan-qr .cam-flip'); await page.waitForTimeout(400);
+        eq(await page.getAttribute('#video-qr', 'data-facing'), 'user', 'flipped to front camera');
+        assert(/matrix\(-1/.test(await page.evaluate(() => getComputedStyle(document.getElementById('video-qr')).transform)), 'front camera should be mirrored');
+        assert(await page.evaluate(() => !!document.getElementById('video-qr').srcObject), 'no stream after flip');
+        await page.evaluate(() => closeScanQRModal());
+        assert(await page.evaluate(() => !document.getElementById('video-qr').srcObject), 'stream not released after close');
     });
 
     await test('phone width: no horizontal scroll', async () => {

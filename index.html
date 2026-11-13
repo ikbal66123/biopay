@@ -175,6 +175,11 @@
         .bp-vf-square { aspect-ratio: 1; max-width: min(100%, 360px); }
         .bp-vf-sq { width: min(260px, 100%); aspect-ratio: 1; }
         .bp-vf video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        .cam-flip { position: absolute; z-index: 35; right: 10px; top: 42px; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; background: rgba(11,18,32,.66); color: #fff; font: 600 12px var(--font-sans); cursor: pointer; backdrop-filter: blur(4px); }
+        .cam-flip i { font-size: 18px; }
+        .cam-flip:disabled { opacity: .5; }
+        .cam-flip-out { position: static; margin: -18px auto 14px; background: #0F1B2D; border-color: #0F1B2D; }
+        [data-cam="off"] > .cam-flip, [data-cam="idle"] > .cam-flip { display: none; }
         .bp-vf-ghost { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.16); font-size: 120px; }
         .bp-corners { position: absolute; inset: 16px; pointer-events: none; --c: rgba(255,255,255,.9); --l: 26px; --w: 2px; z-index: 2;
             background:
@@ -2573,7 +2578,7 @@
         // kamera benar-benar mengirim gambar. Status tampil di viewfinder lewat atribut data-cam.
         // ==========================================
         const CAM = { streams: {}, pending: {}, users: {}, timers: {}, warned: false };
-        function camPov(el) { return el && el.closest('#travel-device') ? 3 : el && el.closest('#ewallet-device') ? 2 : 1; }
+        function camPov(el) { return el && el.closest('#atm-device') ? 4 : el && el.closest('#travel-device') ? 3 : el && el.closest('#ewallet-device') ? 2 : 1; }
         function camMark(video, st) { if (video && video.parentElement) video.parentElement.setAttribute('data-cam', st); }
         function camErrorText(err) {
             if (!window.isSecureContext) return 'Kamera butuh koneksi aman (HTTPS atau file lokal).';
@@ -2594,6 +2599,35 @@
             }
             return CAM.pending[facing];
         }
+        // ---------- Ganti kamera depan / belakang di semua layar scan ----------
+        function setFacing(video, facing) {
+            video.dataset.facing = facing;
+            video.style.transform = facing === 'environment' ? 'none' : ''; // kamera depan tampil seperti cermin, belakang tidak
+            const b = video._flipBtn; if (b) { b.setAttribute('aria-label', facing === 'user' ? 'Ganti ke kamera belakang' : 'Ganti ke kamera depan'); b.title = b.getAttribute('aria-label'); }
+        }
+        function ensureFlipButton(video) {
+            if (!video || video._flipBtn) { if (video && video._flipBtn) video._flipBtn.hidden = false; return; }
+            const box = video.parentElement; if (!box) return;
+            const b = document.createElement('button');
+            b.type = 'button'; b.className = 'cam-flip'; b.innerHTML = '<i class="ph-bold ph-camera-rotate" aria-hidden="true"></i><span>Balik</span>';
+            b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); flipCamera(video); });
+            if (box.classList.contains('bp-vf')) box.appendChild(b);
+            else { b.classList.add('cam-flip-out'); box.insertAdjacentElement('afterend', b); }
+            video._flipBtn = b; setFacing(video, video.dataset.facing || 'user');
+        }
+        async function flipCamera(video) {
+            const next = (video.dataset.facing || 'user') === 'user' ? 'environment' : 'user';
+            const b = video._flipBtn; if (b) b.disabled = true;
+            try {
+                let devices = [];
+                try { devices = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput'); } catch (e) {}
+                if (devices.length === 1) { showToast('Perangkat ini hanya punya satu kamera', 'ph-camera', 'text-amber-400', camPov(video)); return; }
+                const h = await requestCameraAccess(video.id, next);
+                if (!h) return;
+                const old = video._flipHandle; video._flipHandle = h; if (old) old.release();
+                showToast(next === 'user' ? 'Kamera depan' : 'Kamera belakang', 'ph-camera-rotate', 'text-sky-400', camPov(video));
+            } finally { if (b) b.disabled = false; }
+        }
         async function requestCameraAccess(videoId, facing = 'user') {
             const video = document.getElementById(videoId);
             camMark(video, 'connecting');
@@ -2604,6 +2638,7 @@
                 CAM.users[facing] = (CAM.users[facing] || 0) + 1;
                 if (video) {
                     video.muted = true; video.srcObject = stream;
+                    setFacing(video, facing);
                     // Tunggu frame pertama (maks. 3 detik) supaya scan dihitung sejak gambar kamera muncul
                     await Promise.race([
                         new Promise(r => video.readyState >= 2 ? r() : video.addEventListener('loadeddata', r, { once: true })),
@@ -2611,11 +2646,13 @@
                     ]);
                     video.play().catch(() => {});
                     camMark(video, 'live');
+                    ensureFlipButton(video);
                     loadBioModel('face'); setTimeout(() => loadBioModel('hand'), 800);
                 }
                 CAM.warned = false;
                 let released = false;
                 return {
+                    video, facing,
                     release() {
                         if (released) return; released = true;
                         if (video && video.srcObject === stream) { video.srcObject = null; camMark(video, 'idle'); }
@@ -2914,6 +2951,9 @@
         function isScreenActive(id) { const el = document.getElementById(id); return !!el && el.classList.contains('active'); }
 
         function stopSpecificCamera(handle) {
+            // Lepas juga kamera hasil tombol "ganti kamera" di video yang sama
+            const v = handle && handle.video;
+            if (v && v._flipHandle && v._flipHandle !== handle) { const f = v._flipHandle; v._flipHandle = null; f.release(); }
             if (handle && handle.release) handle.release();
             return null;
         }
