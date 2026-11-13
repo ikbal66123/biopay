@@ -320,6 +320,19 @@
         .bp-qr-cap { font: 600 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: #E8B04A; }
         .bp-qr-code { font-size: 18px; letter-spacing: .08em; }
         .bp-qr-row { display: flex; gap: 8px; } .bp-qr-row .bp-input { flex: 1; min-width: 0; }
+        /* QR di Kasku & Lintas */
+        .kitqr-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 12px; background: #F1F5F9; }
+        .kitqr-tabs button { min-height: 40px; border: 0; border-radius: 9px; background: none; color: #64748B; font: 700 12px var(--font-sans); display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; }
+        .kitqr-tabs button[aria-selected="true"] { background: #fff; color: #0F172A; box-shadow: 0 1px 2px rgba(15,23,42,.12); }
+        .kitqr-canvas { width: 200px; height: 200px; image-rendering: pixelated; }
+        .kitqr-paycard { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px; border-radius: 14px; background: #0F172A; color: #fff; text-align: center; }
+        .kitqr-cap { margin: 0; font: 600 11px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: #FBBF24; }
+        .kitqr-qrwrap { position: relative; border-radius: 10px; overflow: hidden; }
+        .kitqr-used { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.82); font: 700 16px var(--font-sans); color: #B91C1C; }
+        .kitqr-code { margin: 0; font: 600 17px var(--font-mono); letter-spacing: .08em; }
+        .kitqr-note { margin: 0; font-size: 12px; color: rgba(255,255,255,.75); }
+        .kitqr-cashier { display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 12px; border: 1px dashed #94A3B8; background: #F8FAFC; text-align: left; }
+        .kitqr-cashier-head { margin: 0; font: 700 12px var(--font-sans); color: #0F172A; }
         .bp-chip-bad { background: #FDECEA; color: var(--danger); }
         .bp-bad-text { color: var(--danger) !important; }
 
@@ -2025,7 +2038,7 @@
                         <div class="flex justify-between items-center mb-5">
                             <div class="flex items-center gap-1.5 text-white font-bold text-lg">
                                 <div id="ewallet-logo" class="w-10 h-10 bg-white text-[#118EEA] rounded-full items-center justify-center font-bold text-xs hidden">K</div>
-                                <span class="text-xs mr-1 font-semibold tracking-wide opacity-90">kasku ·</span><span class="text-xs mr-1 font-normal opacity-80">Rp</span><span id="ewallet-balance-text">1.000.000.000</span>
+                                <span class="text-xs mr-1 font-semibold tracking-wide opacity-90">kasku ·</span><span class="text-xs mr-1 font-normal opacity-80">Rp</span><span id="ewallet-balance-text">1.850.000</span>
                                 <i id="ewallet-eye-icon" onclick="toggleEwalletBalance()" class="ph-bold ph-eye-slash text-sm opacity-80 cursor-pointer ml-1"></i>
                             </div>
                             <div class="flex items-center gap-2 text-white">
@@ -2185,7 +2198,7 @@
                                         <span id="ewallet-service-walletname" class="text-slate-700 text-xs font-bold">Kasku</span>
                                     </div>
                                 </div>
-                                <p id="ewallet-service-bal" class="text-right text-gray-400 text-[11px] mt-1">Saldo: Rp 1.000.000.000</p>
+                                <p id="ewallet-service-bal" class="text-right text-gray-400 text-[11px] mt-1">Saldo: Rp 1.850.000</p>
                             </div>
                             
                             <button id="btn-ewallet-pay" class="w-full bg-[#118EEA] hover:bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 transition-transform active:scale-95 flex justify-center items-center gap-2 cursor-pointer text-sm">
@@ -2234,7 +2247,7 @@
                                     <i class="ph-bold ph-scan"></i> Tagih Pelanggan (BioPay)
                                 </button>
                                 <button onclick="closeEwalletModal('modal-biopay-options'); showEwalletMinta();" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 transition-colors text-sm">
-                                    <i class="ph-bold ph-qr-code"></i> Tampilkan QRIS Saya
+                                    <i class="ph-bold ph-qr-code"></i> QR · Scan, QR Saya, QR Bayar
                                 </button>
                                 <button onclick="openBioPayInPOV2()" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 transition-colors text-sm">
                                     <i class="ph-bold ph-app-window"></i> Masuk ke BioPay
@@ -2243,16 +2256,56 @@
                         </div>
                     </div>
 
-                    <!-- E-Wallet Minta / QRIS Modal -->
+                    <!-- QR: Scan · QR Saya · QR Bayar -->
                     <div id="modal-ewallet-minta" class="hidden absolute inset-0 bg-black/80 z-[60] flex items-center justify-center p-4">
-                        <div class="bg-white w-full max-w-[280px] rounded-2xl p-5 flex flex-col items-center text-center animation-slide-up shadow-2xl">
-                            <h3 class="text-slate-800 font-bold text-sm mb-1">Minta Dana / QRIS Saya</h3>
-                            <p class="text-slate-500 text-xs mb-4">Tunjukkan kode ini ke pengirim</p>
-                            <canvas class="bp-qr mb-3" width="180" height="180" aria-label="Kode QRIS e-wallet Ikbal Habibi"></canvas>
-                            <p id="kit-qris-name" class="text-slate-800 font-bold text-xs">Ikbal Habibi</p>
-                            <p id="kit-qris-number" class="text-slate-400 text-xs mb-4 font-mono">0812-3456-7890</p>
-                            <button onclick="copyQrisNumber()" class="w-full bg-blue-50 text-[#118EEA] py-2.5 rounded-xl font-bold text-xs mb-2 border border-blue-100">Salin Nomor</button>
-                            <button onclick="closeEwalletModal('modal-ewallet-minta')" class="w-full bg-[#118EEA] text-white py-2.5 rounded-xl font-bold text-xs">Tutup</button>
+                        <div class="kitqr bg-white w-full max-w-[360px] max-h-full overflow-y-auto rounded-2xl p-4 flex flex-col gap-3 animation-slide-up shadow-2xl">
+                            <div class="flex items-center justify-between"><h3 class="text-slate-800 font-bold text-sm">QR</h3><button onclick="closeKitQR()" class="text-gray-400 hover:text-gray-600" aria-label="Tutup"><i class="ph-bold ph-x text-lg"></i></button></div>
+                            <div class="kitqr-tabs" role="tablist" aria-label="Mode QR">
+                                <button type="button" role="tab" id="kitqr-tab-scan" aria-selected="true" onclick="kitQRTab('scan')"><i class="ph-bold ph-scan"></i> Scan</button>
+                                <button type="button" role="tab" id="kitqr-tab-mine" aria-selected="false" onclick="kitQRTab('mine')"><i class="ph-bold ph-qr-code"></i> QR Saya</button>
+                                <button type="button" role="tab" id="kitqr-tab-pay" aria-selected="false" onclick="kitQRTab('pay')"><i class="ph-bold ph-barcode"></i> QR Bayar</button>
+                            </div>
+
+                            <div id="kitqr-view-scan" class="flex flex-col gap-3">
+                                <p class="text-slate-500 text-xs text-center">Scan QR orang atau toko untuk membayar mereka.</p>
+                                <div class="bp-vf bp-vf-sq self-center"><video id="kitqr-video" autoplay muted playsinline></video><span class="bp-corners" aria-hidden="true"></span><div class="scanner-line"></div><p id="kitqr-status" class="bp-vf-status">Menyiapkan kamera…</p></div>
+                                <button onclick="kitQRSimScan()" class="w-full bg-slate-50 text-slate-700 py-2.5 rounded-xl font-bold text-xs border border-slate-200"><i class="ph-bold ph-storefront"></i> Simulasikan scan QR toko</button>
+                            </div>
+
+                            <div id="kitqr-view-confirm" class="hidden flex flex-col gap-3">
+                                <div class="rounded-xl border border-slate-200 p-3 text-left"><p id="kitqr-to-name" class="text-slate-800 font-bold text-sm">-</p><p id="kitqr-to-sub" class="text-slate-500 text-xs">-</p></div>
+                                <label class="text-left text-xs font-bold text-slate-600" for="kitqr-amount">Nominal (Rp)</label>
+                                <input id="kitqr-amount" type="number" inputmode="numeric" min="1" placeholder="Contoh: 25000" class="w-full border border-slate-300 rounded-xl px-3 py-3 text-sm font-mono">
+                                <p id="kitqr-bal" class="text-slate-500 text-xs text-left">-</p>
+                                <div id="kitqr-face-box" class="bp-vf bp-vf-sq self-center hidden"><video id="kitqr-face-video" autoplay muted playsinline></video><span class="bp-corners" aria-hidden="true"></span><div class="scanner-line"></div><p class="bp-vf-status">Lihat ke kamera…</p></div>
+                                <button id="kitqr-pay-btn" onclick="kitQRPay()" class="w-full bg-[#118EEA] text-white py-3 rounded-xl font-bold text-sm"><i class="ph-bold ph-scan-smiley"></i> Bayar · konfirmasi wajah</button>
+                                <button onclick="kitQRTab('scan')" class="w-full bg-slate-50 text-slate-700 py-2.5 rounded-xl font-bold text-xs border border-slate-200">Scan ulang</button>
+                            </div>
+
+                            <div id="kitqr-view-mine" class="hidden flex flex-col items-center gap-2 text-center">
+                                <p class="text-slate-500 text-xs">Tunjukkan ke pengirim untuk menerima uang</p>
+                                <canvas id="kitqr-mine-canvas" class="kitqr-canvas" width="220" height="220" aria-label="QR untuk menerima uang"></canvas>
+                                <p id="kit-qris-name" class="text-slate-800 font-bold text-xs">Ikbal Habibi</p>
+                                <p id="kit-qris-number" class="text-slate-400 text-xs font-mono">0812-3456-7890</p>
+                                <button onclick="copyQrisNumber()" class="w-full bg-blue-50 text-[#118EEA] py-2.5 rounded-xl font-bold text-xs border border-blue-100">Salin Nomor</button>
+                                <button onclick="kitQRSimIncoming()" class="w-full bg-slate-50 text-slate-700 py-2.5 rounded-xl font-bold text-xs border border-slate-200"><i class="ph-bold ph-arrow-down-left"></i> Simulasikan ada yang bayar Rp 50.000</button>
+                            </div>
+
+                            <div id="kitqr-view-pay" class="hidden flex flex-col gap-3">
+                                <div class="kitqr-paycard">
+                                    <p class="kitqr-cap">Tunjukkan ke kasir / HP orang lain</p>
+                                    <div class="kitqr-qrwrap"><canvas id="kitqr-pay-canvas" class="kitqr-canvas" width="220" height="220" aria-label="QR bayar sekali pakai"></canvas><span id="kitqr-used" class="kitqr-used hidden">Sudah dipakai</span></div>
+                                    <p id="kitqr-pay-code" class="kitqr-code">-</p>
+                                    <p id="kitqr-pay-note" class="kitqr-note">Berlaku untuk 1 kali pembayaran</p>
+                                </div>
+                                <button onclick="kitQRNewPay()" class="w-full bg-[#118EEA] text-white py-3 rounded-xl font-bold text-sm"><i class="ph-bold ph-arrows-clockwise"></i> Buat QR Bayar baru</button>
+                                <div class="kitqr-cashier">
+                                    <p class="kitqr-cashier-head"><i class="ph-bold ph-device-mobile"></i> Simulasi: HP kasir / orang lain</p>
+                                    <p class="text-slate-500 text-xs">Setelah QR di atas di-scan, mereka mengetik nominal lalu menarik pembayaran.</p>
+                                    <div class="flex gap-2"><input id="kitqr-cashier-amount" type="number" inputmode="numeric" min="1" placeholder="Nominal, mis. 35000" class="flex-1 min-w-0 border border-slate-300 rounded-xl px-3 py-2.5 text-sm font-mono"><button onclick="kitQRCashier()" class="bg-slate-800 text-white px-3 rounded-xl font-bold text-xs whitespace-nowrap">Scan & tarik</button></div>
+                                </div>
+                                <p id="kitqr-pay-bal" class="text-slate-500 text-xs text-center">-</p>
+                            </div>
                         </div>
                     </div>
 
@@ -2860,7 +2913,7 @@
         // ==========================================
         // STATE STANDALONE: POV 2 (E-WALLET KANAN)
         // ==========================================
-        let ewalletBalance = 1000000000;
+        let ewalletBalance = 1850000;
         let activeEwalletCost = 0;
         let activeEwalletService = "";
 
@@ -4265,7 +4318,7 @@
         // KOMPONEN BIOPAY MERCHANT (Tagih pelanggan, QRIS saya, Masuk ke BioPay)
         // Dipakai POV 2 (e-wallet) dan POV 3 (travel) dengan perilaku yang sama persis.
         // ==========================================
-        function createMerchantKit({ suffix, pov, appWrapperId, bioWrapperId, bp, onReceive, receiveNote }) {
+        function createMerchantKit({ suffix, pov, appWrapperId, bioWrapperId, bp, onReceive, receiveNote, onPay = () => false, getBalance = () => 0, appLabel = 'e-wallet' }) {
             const $ = id => document.getElementById(id + suffix);
             const toast = (m, i, c) => showToast(m, i, c, pov);
             const statusInitial = $('tagih-scan-status').className;
@@ -4330,7 +4383,76 @@
                 $('modal-tagih-hand').classList.add('hidden');
             }
             function finishTagihFlow() { $('modal-tagih-success').classList.add('hidden'); }
-            function showEwalletMinta() { $('modal-ewallet-minta').classList.remove('hidden'); }
+            // ---------- QR: Scan · QR Saya · QR Bayar (sekali pakai) ----------
+            let kqView = 'scan', kqRun = 0, kqCam = null, kqTarget = null, kqToken = '', kqUsed = false;
+            const rpx = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
+            function kqStopCam() { kqCam = stopSpecificCamera(kqCam); }
+            function kqShow(v) {
+                kqView = v; kqRun++; kqStopCam();
+                ['scan', 'confirm', 'mine', 'pay'].forEach(x => $('kitqr-view-' + x).classList.toggle('hidden', x !== v));
+                ['scan', 'mine', 'pay'].forEach(x => $('kitqr-tab-' + x).setAttribute('aria-selected', String(x === v || (v === 'confirm' && x === 'scan'))));
+                if (v === 'scan') {
+                    const run = kqRun; $('kitqr-status').textContent = 'Menyiapkan kamera…';
+                    requestCameraAccess('kitqr-video' + suffix, 'environment').then(cam => {
+                        if (run !== kqRun || $('modal-ewallet-minta').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
+                        kqCam = cam;
+                        if (!cam) { $('kitqr-status').textContent = 'Kamera tidak tersedia · pakai simulasi'; return; }
+                        qrScanLoop($('kitqr-video'), $('kitqr-status'), () => run === kqRun && kqView === 'scan', kqRead);
+                    });
+                } else if (v === 'confirm') {
+                    const t = kqTarget || { name: '-', sub: '', amt: 0 };
+                    $('kitqr-to-name').textContent = t.name; $('kitqr-to-sub').textContent = t.sub;
+                    $('kitqr-amount').value = t.amt || ''; $('kitqr-amount').readOnly = !!t.amt;
+                    $('kitqr-bal').textContent = 'Saldo ' + appLabel + ': ' + rpx(getBalance());
+                    $('kitqr-face-box').classList.add('hidden'); $('kitqr-pay-btn').disabled = false;
+                } else if (v === 'mine') {
+                    qrDraw($('kitqr-mine-canvas'), `BIOPAY:PAY?to=${encodeURIComponent($('kit-qris-number').textContent.replace(/\D/g, ''))}&name=${encodeURIComponent($('kit-qris-name').textContent.split(' · ')[0])}`, 30 + pov);
+                } else if (v === 'pay') {
+                    if (!kqToken) kitQRNewPay(true); else kqPayRender();
+                }
+            }
+            function kqRead(raw) { kqTarget = qrParse(raw); toast('QR terbaca: ' + kqTarget.name, 'ph-qr-code', 'text-sky-400'); kqShow('confirm'); }
+            function kqPayRender() {
+                qrDraw($('kitqr-pay-canvas'), `BIOPAY:CPM?token=${kqToken}&app=${encodeURIComponent(appLabel)}`, 50 + pov);
+                $('kitqr-pay-code').textContent = kqToken.replace(/(\d{4})(?=\d)/g, '$1 ');
+                $('kitqr-used').classList.toggle('hidden', !kqUsed);
+                $('kitqr-pay-canvas').style.opacity = kqUsed ? '.25' : '1';
+                $('kitqr-pay-note').textContent = kqUsed ? 'Kode ini sudah dipakai. Buat QR Bayar baru.' : 'Berlaku untuk 1 kali pembayaran';
+                $('kitqr-pay-bal').textContent = 'Saldo ' + appLabel + ': ' + rpx(getBalance());
+            }
+            function kitQRNewPay(silent) {
+                kqToken = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b % 10).join(''); kqUsed = false;
+                kqPayRender(); if (!silent) toast('QR Bayar baru dibuat · kode lama tidak berlaku', 'ph-arrows-clockwise', 'text-sky-400');
+            }
+            function kitQRCashier() {
+                const amt = parseInt($('kitqr-cashier-amount').value, 10);
+                if (kqUsed) { toast('QR ini sudah dipakai. Buat QR Bayar baru.', 'ph-warning', 'text-amber-500'); return; }
+                if (!(amt > 0)) { toast('Kasir belum mengisi nominal', 'ph-warning', 'text-red-500'); return; }
+                if (!onPay(amt, 'Bayar ke kasir (QR Bayar)', 'Kode ' + kqToken.slice(-4))) { toast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); return; }
+                kqUsed = true; $('kitqr-cashier-amount').value = ''; kqPayRender();
+                toast(`${rpx(amt)} ditarik kasir dari saldo ${appLabel}`, 'ph-check-circle', 'text-emerald-400');
+            }
+            function kitQRSimScan() { kqRead(qrSampleQRIS('Warung Bu Sri', 'Jakarta')); }
+            function kitQRSimIncoming() { onReceive(50000); toast('Rp 50.000 masuk lewat QR Saya', 'ph-arrow-down-left', 'text-emerald-400'); }
+            async function kitQRPay() {
+                const t = kqTarget; if (!t) return;
+                const amt = parseInt($('kitqr-amount').value, 10);
+                if (!(amt > 0)) { toast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
+                if (getBalance() < amt) { toast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); return; }
+                const run = ++kqRun; $('kitqr-pay-btn').disabled = true; $('kitqr-face-box').classList.remove('hidden');
+                const cam = await requestCameraAccess('kitqr-face-video' + suffix, 'user');
+                if (run !== kqRun) { stopSpecificCamera(cam); return; }
+                kqCam = cam;
+                const r = await scanBiometric({ videoId: 'kitqr-face-video' + suffix, kind: 'face', cancelled: () => run !== kqRun || $('modal-ewallet-minta').classList.contains('hidden') });
+                kqStopCam();
+                if (r === 'cancelled' || run !== kqRun) return;
+                if (!onPay(amt, t.name, t.kind === 'qris' ? 'Bayar QRIS' : 'Bayar lewat QR')) { toast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); return; }
+                toast(`${rpx(amt)} terbayar ke ${t.name}`, 'ph-check-circle', 'text-emerald-400');
+                closeKitQR();
+            }
+            function kitQRTab(v) { kqShow(v); }
+            function closeKitQR() { kqRun++; kqStopCam(); closeEwalletModal('modal-ewallet-minta'); }
+            function showEwalletMinta() { $('modal-ewallet-minta').classList.remove('hidden'); kqShow('scan'); }
             function copyQrisNumber() { copyToClipboard($('kit-qris-number').textContent.replace(/\D/g, ''), 'Nomor QRIS', pov); }
             function openBioPayInPOV2() {
                 closeEwalletModal('modal-biopay-options');
@@ -4347,7 +4469,7 @@
                 document.getElementById(bioWrapperId).classList.remove('flex');
                 document.getElementById(appWrapperId).classList.remove('hidden');
             }
-            return { toast, closeEwalletModal, showBioPayOptions, openTagihInput, startTagihFaceScan, startTagihHandScan, closeTagihFlow, finishTagihFlow, showEwalletMinta, copyQrisNumber, openBioPayInPOV2, closeBioPayInPOV2 };
+            return { toast, closeEwalletModal, showBioPayOptions, openTagihInput, startTagihFaceScan, startTagihHandScan, closeTagihFlow, finishTagihFlow, showEwalletMinta, copyQrisNumber, kitQRTab, kitQRSimScan, kitQRPay, kitQRSimIncoming, kitQRNewPay, kitQRCashier, closeKitQR, openBioPayInPOV2, closeBioPayInPOV2 };
         }
 
         // Template komponen merchant diambil sebelum ada interaksi (untuk disalin ke POV 3)
@@ -4355,11 +4477,66 @@
 
         const MK2 = createMerchantKit({
             suffix: '', pov: 2, appWrapperId: 'ewallet-wrapper', bioWrapperId: 'biopay-wrapper-p2', bp: BP2,
-            onReceive: amt => { ewalletBalance += amt; addEwalletHistory('Menerima Pembayaran', 'Dari Pelanggan (BioPay)', amt.toLocaleString('id-ID'), false); updateEwalletStandaloneDisplay(); }
+            onReceive: amt => { ewalletBalance += amt; addEwalletHistory('Menerima Pembayaran', 'Dari Pelanggan (BioPay)', amt.toLocaleString('id-ID'), false); updateEwalletStandaloneDisplay(); },
+            onPay: (amt, title, sub) => { if (ewalletBalance < amt) return false; ewalletBalance -= amt; addEwalletHistory(title, sub, amt.toLocaleString('id-ID'), true); updateEwalletStandaloneDisplay(); return true; },
+            getBalance: () => ewalletBalance, appLabel: 'Kasku'
         });
         // handler onclick POV 2 memanggil nama global (closeEwalletModal global tetap dipakai modal e-wallet lain)
         const { toast: _mk2Toast, closeEwalletModal: _mk2Close, ...MK2_GLOBALS } = MK2;
         Object.assign(window, MK2_GLOBALS);
+
+        // ==========================================
+        // QR bersama: gambar QR asli, baca QRIS/BioPay, pemindai kamera
+        // ==========================================
+        function qrDraw(canvas, text, seed) {
+            try {
+                if (typeof qrcode !== 'function') throw 0;
+                const q = qrcode(0, 'M'); q.addData(text); q.make();
+                const n = q.getModuleCount(), ctx = canvas.getContext('2d'), size = canvas.width, quiet = 2, cell = size / (n + quiet * 2);
+                ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size); ctx.fillStyle = '#0F1B2D';
+                for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) ctx.fillRect(Math.floor((c + quiet) * cell), Math.floor((r + quiet) * cell), Math.ceil(cell), Math.ceil(cell));
+            } catch (e) { drawFakeQR(canvas, seed || 7); }
+        }
+        function qrParse(raw) {
+            const txt = String(raw || '').trim();
+            if (/^BIOPAY:/i.test(txt)) {
+                const u = new URLSearchParams(txt.split('?')[1] || '');
+                return { name: u.get('name') || 'Pengguna BioPay', sub: 'QR BioPay · ' + (u.get('to') || '-'), amt: +u.get('amt') || 0, kind: 'biopay' };
+            }
+            if (/^000201/.test(txt)) {
+                const tags = {}; let k = 0;
+                while (k + 4 <= txt.length) { const id = txt.substr(k, 2), len = parseInt(txt.substr(k + 2, 2), 10); if (isNaN(len)) break; tags[id] = txt.substr(k + 4, len); k += 4 + len; }
+                return { name: tags['59'] || 'Merchant QRIS', sub: 'QRIS' + (tags['60'] ? ' · ' + tags['60'] : ''), amt: Math.round(+tags['54'] || 0), kind: 'qris' };
+            }
+            return { name: 'Penerima QR', sub: 'QR: ' + txt.slice(0, 32), amt: 0, kind: 'other' };
+        }
+        function qrSampleQRIS(name = 'Warung Bu Sri', city = 'Jakarta', amt = 0) {
+            const tlv = (id, v) => id + String(v.length).padStart(2, '0') + v;
+            return tlv('00', '01') + tlv('01', amt ? '12' : '11') + tlv('26', tlv('00', 'ID.CO.QRIS.WWW') + tlv('02', 'ID1024000000001')) + tlv('52', '5411') + tlv('53', '360') + (amt ? tlv('54', String(amt)) : '') + tlv('58', 'ID') + tlv('59', name) + tlv('60', city) + '6304ABCD';
+        }
+        function qrLoadReader() {
+            if (window.jsQR) return Promise.resolve(window.jsQR);
+            if (!window.__jsqrLoading) window.__jsqrLoading = new Promise(res => { const sc = document.createElement('script'); sc.src = 'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js'; sc.onload = () => res(window.jsQR || null); sc.onerror = () => res(null); document.head.appendChild(sc); });
+            return window.__jsqrLoading;
+        }
+        async function qrScanLoop(video, statusEl, alive, onRead) {
+            let detector = null;
+            try { if ('BarcodeDetector' in window) detector = new BarcodeDetector({ formats: ['qr_code'] }); } catch (e) {}
+            const decode = detector ? null : await qrLoadReader();
+            if (!detector && !decode) { statusEl.textContent = 'Pembaca QR tidak tersedia · pakai simulasi'; return; }
+            statusEl.textContent = 'Mencari kode QR…';
+            const cv = document.createElement('canvas'), cx = cv.getContext('2d', { willReadFrequently: true });
+            while (alive()) {
+                await new Promise(r => setTimeout(r, 350));
+                if (!alive() || !video.srcObject || video.readyState < 2) continue;
+                let raw = null;
+                try {
+                    if (detector) { const r = await detector.detect(video); if (r && r[0]) raw = r[0].rawValue; }
+                    else { const w = 480, h = Math.round(480 * video.videoHeight / video.videoWidth) || 360; cv.width = w; cv.height = h; cx.drawImage(video, 0, 0, w, h); const r = decode(cx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' }); if (r) raw = r.data; }
+                } catch (e) {}
+                if (raw && alive()) { onRead(raw); return; }
+            }
+        }
 
         // QR dekoratif (pola tetap, bukan QR asli) untuk semua <canvas class="bp-qr">
         function drawFakeQR(canvas, seed = 7) {
@@ -4889,7 +5066,9 @@
         document.getElementById('kit-qris-number-p3').textContent = '9360-0812-3456-7890';
         const MK3 = createMerchantKit({
             suffix: '-p3', pov: 3, appWrapperId: 'travel-wrapper', bioWrapperId: 'biopay-wrapper-p3', bp: BP3,
-            onReceive: amt => TV.receive(amt), receiveNote: 'Dana dari pelanggan telah masuk ke saldo Lintas Pay Anda.'
+            onReceive: amt => TV.receive(amt), receiveNote: 'Dana dari pelanggan telah masuk ke saldo Lintas Pay Anda.',
+            onPay: (amt, title) => { if (TV.state.balance < amt) return false; TV.state.balance -= amt; TV.addHistory(title, amt, false, false); return true; },
+            getBalance: () => TV.state.balance, appLabel: 'Lintas Pay'
         });
         document.querySelectorAll('#travel-device canvas.bp-qr').forEach((c, i) => drawFakeQR(c, 40 + i));
 
