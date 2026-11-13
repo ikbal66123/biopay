@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BioPay Ecosystem</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js" defer></script>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
@@ -304,6 +305,21 @@
         .bp-goal-amt { font-size: 16px; font-weight: 600; } .bp-goal-amt small { font-size: 12px; color: var(--muted); font-weight: 400; }
         .bp-goal .bp-link { align-self: flex-start; }
         @media (max-width: 520px) { .bp-fin-sum { grid-template-columns: 1fr; } }
+        .bp-qr-dialog { max-width: 400px; }
+        .bp-seg.bp-seg-3 { grid-template-columns: repeat(3, 1fr); }
+        .bp-seg.bp-seg-3 button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; }
+        .bp-qr-view { display: flex; flex-direction: column; gap: 12px; }
+        .bp-qr-view .bp-vf-sq { align-self: center; }
+        .bp-center-text { text-align: center; }
+        .bp-qr-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px; border-radius: 14px; border: 1px solid var(--line); background: #fff; text-align: center; }
+        .bp-qr-card small { color: var(--muted); font-size: 12px; }
+        .bp-qr-big { width: 220px; height: 220px; image-rendering: pixelated; }
+        .bp-qr-card-ink { background: var(--ink); border-color: var(--ink); color: #fff; }
+        .bp-qr-card-ink small { color: rgba(255,255,255,.75); }
+        .bp-qr-card-ink .bp-qr-big { border-radius: 10px; }
+        .bp-qr-cap { font: 600 12px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: #E8B04A; }
+        .bp-qr-code { font-size: 18px; letter-spacing: .08em; }
+        .bp-qr-row { display: flex; gap: 8px; } .bp-qr-row .bp-input { flex: 1; min-width: 0; }
         .bp-chip-bad { background: #FDECEA; color: var(--danger); }
         .bp-bad-text { color: var(--danger) !important; }
 
@@ -1451,7 +1467,7 @@
                             </div>
 
                             <div class="bp-qa-grid">
-                                <button type="button" onclick="showScanQRModal()" class="bp-qa"><i class="ph ph-qr-code" aria-hidden="true"></i><span id="txt-scan-pay" data-i18n="text-scan-pay">Scan<br>Bayar</span></button>
+                                <button type="button" onclick="openQR('scan')" class="bp-qa"><i class="ph ph-qr-code" aria-hidden="true"></i><span>QR<br>Scan & Bayar</span></button>
                                 <button type="button" onclick="showWithdrawModal()" class="bp-qa"><i class="ph ph-money" aria-hidden="true"></i><span id="txt-withdraw" data-i18n="text-withdraw">Tarik<br>Tunai</span></button>
                                 <button type="button" onclick="showReceiveModal()" class="bp-qa"><i class="ph ph-hand-coins" aria-hidden="true"></i><span id="txt-request" data-i18n="text-request">Minta<br>Dana</span></button>
                                 <button type="button" onclick="showBillsModal()" class="bp-qa"><i class="ph ph-receipt" aria-hidden="true"></i><span id="txt-bills" data-i18n="text-bills">Tagihan<br>Bulanan</span></button>
@@ -1823,14 +1839,63 @@
                 </div>
 
                 <!-- Scan QR -->
-                <div id="modal-scan-qr" class="bp-modal bp-modal-dark hidden" role="dialog" aria-modal="true" aria-labelledby="h-scan-qr">
-                    <h3 id="h-scan-qr" class="bp-dark-title">Arahkan kamera ke kode QR</h3>
-                    <div class="bp-vf bp-vf-sq">
-                        <video id="video-qr" autoplay muted playsinline></video>
-                        <span class="bp-corners" aria-hidden="true"></span>
-                        <div class="scanner-line"></div>
+                <div id="modal-scan-qr" class="bp-modal hidden" role="dialog" aria-modal="true" aria-labelledby="h-qr">
+                    <div class="bp-dialog bp-qr-dialog">
+                        <div class="bp-dialog-head"><h3 id="h-qr">QR</h3><button type="button" class="bp-icon-btn" aria-label="Tutup" onclick="closeScanQRModal()"><i class="ph-bold ph-x" aria-hidden="true"></i></button></div>
+                        <div class="bp-seg bp-seg-3" role="tablist" aria-label="Menu QR">
+                            <button type="button" role="tab" id="qr-tab-scan" aria-selected="true" onclick="qrTab('scan')"><i class="ph-bold ph-scan" aria-hidden="true"></i> Scan</button>
+                            <button type="button" role="tab" id="qr-tab-mine" aria-selected="false" onclick="qrTab('mine')"><i class="ph-bold ph-qr-code" aria-hidden="true"></i> QR Saya</button>
+                            <button type="button" role="tab" id="qr-tab-pay" aria-selected="false" onclick="qrTab('pay')"><i class="ph-bold ph-barcode" aria-hidden="true"></i> QR Bayar</button>
+                        </div>
+
+                        <!-- Scan QR orang / toko untuk membayar -->
+                        <div id="qr-view-scan" class="bp-qr-view">
+                            <p class="bp-fine bp-center-text">Arahkan kamera ke QR toko (QRIS) atau QR BioPay teman untuk membayar.</p>
+                            <div class="bp-vf bp-vf-sq">
+                                <video id="video-qr" autoplay muted playsinline></video>
+                                <span class="bp-corners" aria-hidden="true"></span>
+                                <div class="scanner-line"></div>
+                                <p id="qr-scan-status" class="bp-vf-status">Menyiapkan kamera…</p>
+                            </div>
+                            <button type="button" class="bp-btn bp-btn-secondary" onclick="qrSimScan()"><i class="ph-bold ph-storefront" aria-hidden="true"></i> Simulasikan scan QR toko</button>
+                        </div>
+
+                        <!-- Konfirmasi bayar setelah scan -->
+                        <div id="qr-view-confirm" class="bp-qr-view hidden">
+                            <div class="bp-card bp-card-pad"><span class="bp-row-icon" aria-hidden="true"><i class="ph-bold ph-storefront"></i></span><span class="bp-row-main"><b id="qr-to-name">-</b><small id="qr-to-sub">-</small></span></div>
+                            <div class="bp-field"><label for="qr-amount">Nominal (Rp)</label><input id="qr-amount" class="bp-input bp-num" type="number" inputmode="numeric" min="1" placeholder="Contoh: 25000"></div>
+                            <div class="bp-field"><label for="qr-wallet">Bayar pakai</label><select id="qr-wallet" class="bp-input"></select></div>
+                            <div id="qr-face-box" class="bp-vf bp-vf-sq hidden"><video id="video-qr-face" autoplay muted playsinline></video><span class="bp-corners" aria-hidden="true"></span><div class="scanner-line"></div><p class="bp-vf-status">Lihat ke kamera…</p></div>
+                            <button type="button" id="qr-pay-btn" class="bp-btn bp-btn-ok" onclick="qrPay()"><i class="ph-bold ph-scan-smiley" aria-hidden="true"></i> Bayar · konfirmasi wajah</button>
+                            <button type="button" class="bp-btn bp-btn-secondary" onclick="qrTab('scan')">Scan ulang</button>
+                        </div>
+
+                        <!-- QR Saya: untuk menerima uang -->
+                        <div id="qr-view-mine" class="bp-qr-view hidden">
+                            <div class="bp-qr-card">
+                                <canvas id="qr-mine-canvas" class="bp-qr-big" width="240" height="240" aria-label="QR BioPay untuk menerima uang"></canvas>
+                                <b data-user="name">Ikbal Habibi</b>
+                                <small>BioID #<span data-user="bioId">12345</span> · terima ke <span id="qr-mine-wallet">DANA</span></small>
+                                <span id="qr-mine-amt" class="bp-chip bp-chip-brass hidden"></span>
+                            </div>
+                            <div class="bp-qr-row"><input id="qr-mine-input" class="bp-input bp-num" type="number" inputmode="numeric" min="1" placeholder="Nominal (opsional)"><button type="button" class="bp-btn bp-btn-secondary bp-btn-auto" onclick="qrMineAmount()">Atur</button></div>
+                            <p class="bp-fine bp-center-text">Tunjukkan ke pengirim. Mereka scan dari aplikasi BioPay, lalu uang masuk ke dompet utamamu.</p>
+                            <button type="button" class="bp-btn bp-btn-secondary" onclick="qrSimIncoming()"><i class="ph-bold ph-arrow-down-left" aria-hidden="true"></i> Simulasikan ada yang bayar</button>
+                        </div>
+
+                        <!-- QR Bayar: ditunjukkan ke kasir -->
+                        <div id="qr-view-pay" class="bp-qr-view hidden">
+                            <div class="bp-qr-card bp-qr-card-ink">
+                                <span class="bp-qr-cap">Tunjukkan ke kasir</span>
+                                <canvas id="qr-pay-canvas" class="bp-qr-big" width="240" height="240" aria-label="QR pembayaran untuk discan kasir"></canvas>
+                                <span id="qr-pay-code" class="bp-num bp-qr-code">-</span>
+                                <small><i class="ph-bold ph-timer" aria-hidden="true"></i> Berganti dalam <b id="qr-pay-timer" class="bp-num">60</b> detik</small>
+                            </div>
+                            <div class="bp-field"><label for="qr-pay-wallet">Sumber dana</label><select id="qr-pay-wallet" class="bp-input" onchange="qrPayRefresh()"></select></div>
+                            <p class="bp-fine bp-center-text">Kode ini hanya berlaku 60 detik dan sekali pakai, jadi aman kalau difoto orang.</p>
+                            <button type="button" class="bp-btn bp-btn-secondary" onclick="qrSimCashier()"><i class="ph-bold ph-cash-register" aria-hidden="true"></i> Simulasikan kasir scan</button>
+                        </div>
                     </div>
-                    <button type="button" onclick="closeScanQRModal()" class="bp-btn bp-btn-paper bp-btn-auto"><i class="ph-bold ph-x" aria-hidden="true"></i> Tutup</button>
                 </div>
 
                 <!-- Receive -->
@@ -2858,6 +2923,7 @@
             function closeAllModals() { root.querySelectorAll('[id^="modal-"]').forEach(m => m.classList.add('hidden')); }
             function stopCameras() {
                 try { if (listening) stopVoice(); } catch (e) { /* belum diinisialisasi */ }
+                try { qrRun++; clearInterval(qrPayTimer); qrPayTimer = null; } catch (e) {}
                 cameraStream = stopSpecificCamera(cameraStream); qrCamera = stopSpecificCamera(qrCamera);
                 tfCamera = stopSpecificCamera(tfCamera); sharingCamera = stopSpecificCamera(sharingCamera);
                 tfScanToken++; sharingScanToken++;
@@ -3141,7 +3207,7 @@
                 ['Makan & kopi', /(makan|kopi|ngopi|sarapan|siang|malam|jajan|warteg|resto|bakso|nasi|snack|minum|boba)/],
                 ['Transportasi', /(bensin|ojek|ojol|grab|gojek|taksi|parkir|tol|krl|mrt|bus|kereta lokal|transport)/],
                 ['Tagihan', /(listrik|pln|pulsa|internet|wifi|air|pdam|bpjs|tagihan|cicilan|kos|sewa)/],
-                ['Belanja & minimarket', /(belanja|indomaret|alfamart|minimarket|sabun|baju|sepatu|shopee|tokopedia|pasar)/],
+                ['Belanja & minimarket', /(belanja|warung|toko|indomaret|alfamart|minimarket|sabun|baju|sepatu|shopee|tokopedia|pasar)/],
                 ['Travel', /(tiket|hotel|pesawat|liburan|travel|penginapan)/]
             ];
             const lc = x => x.toLowerCase();
@@ -3477,7 +3543,7 @@
         
             function showTopUpModal() { $('topup-amount').value = ''; $('modal-topup').classList.remove('hidden'); }
             function showWithdrawModal() { $('withdraw-amount').value = ''; $('modal-withdraw').classList.remove('hidden'); }
-            function showReceiveModal() { $('modal-receive').classList.remove('hidden'); }
+            function showReceiveModal() { openQR('mine'); }
             function showBillsModal() { $('modal-bills').classList.remove('hidden'); }
             function showLanguageModal() { $('modal-language').classList.remove('hidden'); }
         
@@ -3493,13 +3559,157 @@
                 updateExchangeRate(); $('modal-exchange').classList.remove('hidden'); 
             }
 
-            async function showScanQRModal() { 
-                $('modal-scan-qr').classList.remove('hidden'); 
-                const cam = await requestCameraAccess(sid('video-qr'), 'environment');
-                if ($('modal-scan-qr').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
-                qrCamera = cam;
+            // ==========================================
+            // QR: Scan (bayar ke orang/toko) · QR Saya (terima) · QR Bayar (ditunjukkan ke kasir)
+            // ==========================================
+            let qrView = 'scan', qrRun = 0, qrTarget = null, qrMineAmt = 0, qrPayTimer = null, qrPayLeft = 60, qrPayToken = '';
+            const QR_VIEWS = ['scan', 'confirm', 'mine', 'pay'];
+            function drawRealQR(canvas, text, seed) {
+                try {
+                    if (typeof qrcode !== 'function') throw 0;
+                    const q = qrcode(0, 'M'); q.addData(text); q.make();
+                    const n = q.getModuleCount(), ctx = canvas.getContext('2d'), size = canvas.width, quiet = 2, cell = size / (n + quiet * 2);
+                    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size); ctx.fillStyle = '#0F1B2D';
+                    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) ctx.fillRect(Math.floor((c + quiet) * cell), Math.floor((r + quiet) * cell), Math.ceil(cell), Math.ceil(cell));
+                } catch (e) { drawFakeQR(canvas, seed || 7); }
             }
-            function closeScanQRModal() { qrCamera = stopSpecificCamera(qrCamera); closeModal('modal-scan-qr'); }
+            function walletOptions(sel) { return Object.keys(walletBalances).map(w => `<option value="${escapeHTML(w)}" ${w === sel ? 'selected' : ''}>${escapeHTML(w)} · ${formatRp(walletBalances[w])}</option>`).join(''); }
+            // Baca isi QR: QRIS (format EMVCo, tag 59 = nama merchant, 54 = nominal) atau QR BioPay
+            function parseQR(raw) {
+                const txt = String(raw || '').trim();
+                if (/^BIOPAY:/i.test(txt)) {
+                    const u = new URLSearchParams(txt.split('?')[1] || '');
+                    return { name: u.get('name') || 'Pengguna BioPay', sub: 'QR BioPay · BioID ' + (u.get('to') || '-'), amt: +u.get('amt') || 0, kind: 'biopay' };
+                }
+                if (/^000201/.test(txt)) {
+                    const tags = {}; let k = 0;
+                    while (k + 4 <= txt.length) { const id = txt.substr(k, 2), len = parseInt(txt.substr(k + 2, 2), 10); if (isNaN(len)) break; tags[id] = txt.substr(k + 4, len); k += 4 + len; }
+                    return { name: tags['59'] || 'Merchant QRIS', sub: 'QRIS' + (tags['60'] ? ' · ' + tags['60'] : ''), amt: Math.round(+tags['54'] || 0), kind: 'qris' };
+                }
+                return { name: 'Penerima QR', sub: 'QR tidak dikenal: ' + txt.slice(0, 32), amt: 0, kind: 'other' };
+            }
+            async function loadJsQR() {
+                if (window.jsQR) return window.jsQR;
+                if (!window.__jsqrLoading) window.__jsqrLoading = new Promise(res => { const sc = document.createElement('script'); sc.src = 'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js'; sc.onload = () => res(window.jsQR || null); sc.onerror = () => res(null); document.head.appendChild(sc); });
+                return window.__jsqrLoading;
+            }
+            async function scanLoop(token) {
+                const video = $('video-qr'), status = $('qr-scan-status');
+                let detector = null;
+                try { if ('BarcodeDetector' in window) detector = new BarcodeDetector({ formats: ['qr_code'] }); } catch (e) { detector = null; }
+                const decode = detector ? null : await loadJsQR();
+                if (!detector && !decode) { status.textContent = tr('Pembaca QR tidak tersedia · pakai simulasi'); return; }
+                status.textContent = tr('Mencari kode QR…');
+                const cv = document.createElement('canvas'), cx = cv.getContext('2d', { willReadFrequently: true });
+                while (token === qrRun && qrView === 'scan') {
+                    await new Promise(r => setTimeout(r, 350));
+                    if (token !== qrRun || !video.srcObject || video.readyState < 2) continue;
+                    let raw = null;
+                    try {
+                        if (detector) { const r = await detector.detect(video); if (r && r[0]) raw = r[0].rawValue; }
+                        else { const w = 480, h = Math.round(480 * video.videoHeight / video.videoWidth) || 360; cv.width = w; cv.height = h; cx.drawImage(video, 0, 0, w, h); const r = decode(cx.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' }); if (r) raw = r.data; }
+                    } catch (e) {}
+                    if (raw && token === qrRun) { onQRRead(raw); return; }
+                }
+            }
+            function onQRRead(raw) {
+                qrTarget = parseQR(raw);
+                toast(tr('QR terbaca: {0}', qrTarget.name), 'ph-qr-code', 'text-sky-400');
+                showQRView('confirm');
+            }
+            function stopQRCams() { qrCamera = stopSpecificCamera(qrCamera); clearInterval(qrPayTimer); qrPayTimer = null; }
+            function showQRView(v) {
+                qrView = v; qrRun++;
+                QR_VIEWS.forEach(x => $('qr-view-' + x).classList.toggle('hidden', x !== v));
+                ['scan', 'mine', 'pay'].forEach(x => $('qr-tab-' + x).setAttribute('aria-selected', String(x === v || (v === 'confirm' && x === 'scan'))));
+                stopQRCams();
+                if (v === 'scan') {
+                    const token = qrRun; $('qr-scan-status').textContent = tr('Menyiapkan kamera…');
+                    requestCameraAccess(sid('video-qr'), 'environment').then(cam => {
+                        if (token !== qrRun || $('modal-scan-qr').classList.contains('hidden')) { stopSpecificCamera(cam); return; }
+                        qrCamera = cam;
+                        if (!cam) { $('qr-scan-status').textContent = tr('Kamera tidak tersedia · pakai simulasi'); return; }
+                        scanLoop(token);
+                    });
+                } else if (v === 'confirm') {
+                    const t = qrTarget || { name: '-', sub: '', amt: 0 };
+                    $('qr-to-name').textContent = t.name; $('qr-to-sub').textContent = t.sub;
+                    $('qr-amount').value = t.amt || ''; $('qr-amount').readOnly = !!t.amt;
+                    $('qr-wallet').innerHTML = walletOptions(currentWalletName);
+                    $('qr-face-box').classList.add('hidden'); $('qr-pay-btn').disabled = false;
+                    if (!t.amt) setTimeout(() => $('qr-amount').focus(), 50);
+                } else if (v === 'mine') {
+                    renderMineQR();
+                } else if (v === 'pay') {
+                    $('qr-pay-wallet').innerHTML = walletOptions(currentWalletName);
+                    qrPayRefresh();
+                    qrPayTimer = setInterval(() => { qrPayLeft--; if (qrPayLeft <= 0) qrPayRefresh(); else $('qr-pay-timer').textContent = qrPayLeft; }, 1000);
+                }
+            }
+            function renderMineQR() {
+                const u = currentUser || { name: 'Ikbal Habibi', bioId: '12345' };
+                const text = `BIOPAY:PAY?to=${encodeURIComponent(u.bioId || '12345')}&name=${encodeURIComponent(u.name || 'Pengguna BioPay')}` + (qrMineAmt ? `&amt=${qrMineAmt}` : '');
+                drawRealQR($('qr-mine-canvas'), text, 11);
+                $('qr-mine-wallet').textContent = currentWalletName;
+                $('qr-mine-amt').textContent = qrMineAmt ? tr('Minta {0}', formatRp(qrMineAmt)) : ''; $('qr-mine-amt').classList.toggle('hidden', !qrMineAmt);
+            }
+            function qrMineAmount() { const v = parseInt($('qr-mine-input').value, 10); qrMineAmt = v > 0 ? v : 0; renderMineQR(); toast(qrMineAmt ? tr('QR diatur untuk {0}', formatRp(qrMineAmt)) : 'Nominal dikosongkan', 'ph-qr-code', 'text-sky-400'); }
+            function qrSimIncoming() {
+                const amt = qrMineAmt || 50000, from = ['Rina', 'Budi Santoso', 'Pak Darto'][Math.floor(Math.random() * 3)];
+                walletBalances[currentWalletName] += amt;
+                addBiopayHistory(`Terima dari ${from}`, 'Lewat QR BioPay', formatRp(amt), false, currentWalletName, { idr: amt, flow: 'in', cat: 'Pemasukan' });
+                updateBalanceDisplay(); syncWalletUI(currentWalletName);
+                toast(tr('{0} masuk dari {1}', formatRp(amt), from), 'ph-arrow-down-left', 'text-emerald-400');
+            }
+            function qrPayRefresh() {
+                qrPayLeft = 60; $('qr-pay-timer').textContent = qrPayLeft;
+                qrPayToken = Array.from(crypto.getRandomValues(new Uint8Array(6)), b => (b % 10)).join('') + Array.from(crypto.getRandomValues(new Uint8Array(6)), b => (b % 10)).join('');
+                $('qr-pay-code').textContent = qrPayToken.replace(/(\d{4})(?=\d)/g, '$1 ');
+                drawRealQR($('qr-pay-canvas'), `BIOPAY:CPM?token=${qrPayToken}&src=${encodeURIComponent($('qr-pay-wallet').value || currentWalletName)}`, 23);
+            }
+            function qrSimCashier() {
+                const W = $('qr-pay-wallet').value || currentWalletName, amt = [18500, 23500, 42000, 67800][Math.floor(Math.random() * 4)];
+                if (frozen) { toast('BioID sedang dikunci. Buka kunci di Pengaturan.', 'ph-lock', 'text-red-500'); return; }
+                if (walletBalances[W] < amt) { toast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); return; }
+                walletBalances[W] -= amt;
+                addBiopayHistory('Indomaret Point', 'QR Bayar · dipindai kasir', formatRp(amt), true, W, { idr: amt, cat: 'Belanja & minimarket' });
+                points += Math.max(1, Math.floor(amt / 1000)); updateHomeExtras();
+                updateBalanceDisplay(); syncWalletUI(W);
+                toast(tr('Kasir menarik {0} dari {1}', formatRp(amt), W), 'ph-check-circle', 'text-emerald-400');
+                qrPayRefresh();
+            }
+            function qrSimScan() {
+                // Contoh QRIS statis (format EMVCo) untuk demo; nama & kota dibaca dari tag 59/60
+                const tlv = (id, v) => id + String(v.length).padStart(2, '0') + v;
+                onQRRead(tlv('00', '01') + tlv('01', '11') + tlv('26', tlv('00', 'ID.CO.QRIS.WWW') + tlv('02', 'ID1024000000001')) + tlv('52', '5411') + tlv('53', '360') + tlv('58', 'ID') + tlv('59', 'Warung Bu Sri') + tlv('60', 'Jakarta') + '6304ABCD');
+            }
+            async function qrPay() {
+                const t = qrTarget; if (!t) return;
+                const amt = parseInt($('qr-amount').value, 10), W = $('qr-wallet').value;
+                if (!(amt > 0)) { toast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
+                if (frozen) { toast('BioID sedang dikunci. Buka kunci di Pengaturan.', 'ph-lock', 'text-red-500'); return; }
+                const lim = effectiveLimit(); if (lim && amt > lim) { toast(tr('Melebihi limit per transaksi ({0}).', formatRp(lim)), 'ph-gauge', 'text-red-500'); return; }
+                if (walletBalances[W] < amt) { toast('Saldo tidak cukup', 'ph-warning', 'text-red-500'); return; }
+                // Konfirmasi dengan wajah (bukan PIN)
+                const token = ++qrRun, btn = $('qr-pay-btn'); btn.disabled = true;
+                $('qr-face-box').classList.remove('hidden');
+                const cam = await requestCameraAccess(sid('video-qr-face'), 'user');
+                if (token !== qrRun) { stopSpecificCamera(cam); return; }
+                qrCamera = cam;
+                const r = await scanBiometric({ t: tr, videoId: sid('video-qr-face'), kind: 'face', cancelled: () => token !== qrRun || $('modal-scan-qr').classList.contains('hidden') });
+                qrCamera = stopSpecificCamera(qrCamera);
+                if (r === 'cancelled' || token !== qrRun) return;
+                walletBalances[W] -= amt;
+                addBiopayHistory(t.name, t.kind === 'qris' ? 'Bayar QRIS' : 'Bayar lewat QR', formatRp(amt), true, W, { idr: amt, cat: t.kind === 'biopay' ? 'Transfer & tunai' : guessCat(t.name) });
+                points += Math.max(1, Math.floor(amt / 1000)); updateHomeExtras();
+                updateBalanceDisplay(); syncWalletUI(W);
+                toast(tr('{0} terbayar ke {1}', formatRp(amt), t.name), 'ph-check-circle', 'text-emerald-400');
+                closeScanQRModal();
+            }
+            function qrTab(v) { showQRView(v); }
+            function openQR(v = 'scan') { $('modal-scan-qr').classList.remove('hidden'); showQRView(v); }
+            function showScanQRModal() { openQR('scan'); }
+            function closeScanQRModal() { qrRun++; stopQRCams(); closeModal('modal-scan-qr'); }
 
             function processTopUp() {
                 const amt = parseInt($('topup-amount').value);
@@ -3882,7 +4092,7 @@
             renderRegisterOptions();
             renderUser();
             updateHomeExtras();
-            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, toggleSmartRoute, pickRoute, renderRoute, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, toggleVoice, simulateVoice, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
+            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, openQR, qrTab, qrSimScan, qrPay, qrMineAmount, qrSimIncoming, qrPayRefresh, qrSimCashier, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, toggleSmartRoute, pickRoute, renderRoute, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, toggleVoice, simulateVoice, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
         }
 
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error
