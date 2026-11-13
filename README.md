@@ -60,11 +60,23 @@ Open `index.html` directly in Chrome or Edge, or serve the folder:
 python3 -m http.server 8000
 ```
 
-Then visit http://localhost:8000. Browsers only allow camera access on `https://`, `localhost` or local files. An internet connection is needed for Tailwind CSS, fonts, icons and the detection models (all loaded from CDNs).
+Then visit http://localhost:8000. Browsers only allow camera access on `https://`, `localhost` or local files. An internet connection is needed for fonts, icons, the QR libraries and the detection models (loaded from CDNs).
+
+## Tests
+
+End-to-end tests drive the real page in Chromium (checkout and Smart Route, sign-in, Keuangan and the assistant, voice wake word, QR scan / QR Saya / QR Bayar in BioPay, Kasku and Lintas, the cardless ATM, the partner sandbox, the guided tour, and phone width). They run on every push via GitHub Actions.
+
+```bash
+npm install
+npx playwright install chromium
+npm test
+```
+
+Styles are prebuilt Tailwind CSS embedded in `index.html` (no in-browser Tailwind compiler). After adding new Tailwind classes, run `python3 tools/build-css.py` (needs Node.js).
 
 ## How it is built
 
-A single HTML file with plain JavaScript, Tailwind CSS (CDN), Phosphor icons and IBM Plex type. The main pieces:
+A single HTML file with plain JavaScript, prebuilt Tailwind CSS (inline), Phosphor icons and IBM Plex type. The main pieces:
 
 - **`createBioPay(suffix, pov, ns)`**: the whole BioPay terminal app as a factory. It runs three times: on the POV 1 terminal and inside the POV 2 and POV 3 apps. The copies are generated from the POV 1 markup at load time (IDs get a suffix and handlers point at the right instance), so all three always look and behave the same.
 - **`createMerchantKit(...)`**: the merchant features (charge a customer, show QRIS, open BioPay), shared by POV 2 and POV 3 in the same way.

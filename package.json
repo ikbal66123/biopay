@@ -1,0 +1,14 @@
+{
+  "name": "biopay-prototype",
+  "private": true,
+  "description": "BioPay browser prototype: build helpers and end-to-end tests",
+  "scripts": {
+    "test": "node tests/run.js",
+    "build:css": "python3 tools/build-css.py"
+  },
+  "devDependencies": {
+    "jsqr": "1.4.0",
+    "playwright": "1.49.1",
+    "qrcode-generator": "1.4.4"
+  }
+}
