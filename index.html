@@ -1546,7 +1546,7 @@
                             <div class="bp-section">
                                 <p class="bp-section-title">Catatan terakhir</p>
                                 <ul id="fin-records" class="bp-list"></ul>
-                                <p class="bp-fine">Suara: selama halaman ini terbuka, BioPay mendengarkan kata “BioPay” lalu mencatat perintahnya beserta jamnya. Pengenalan suara memakai layanan browser (di Chrome, audio diproses server Google). Di aplikasi asli, deteksi kata “BioPay” berjalan di chip ponsel saat layar terkunci, seperti asisten suara bawaan; saat ponsel benar-benar mati, tidak ada perangkat yang bisa mendengar.</p>
+                                <p class="bp-fine">Suara di versi web: BioPay mendengarkan kata “BioPay” selama halaman terbuka dan menjaga layar tetap menyala, karena browser mematikan mikrofon saat layar sleep. Pengenalan suara memakai layanan browser (di Chrome, audio diproses server Google). Di aplikasi asli, BioPay tetap mendengar saat HP sleep: Android memakai layanan latar dengan pendeteksi kata “BioPay” di perangkat; iPhone lewat Siri, misalnya “Hey Siri, BioPay catat kopi 2000”.</p>
                                 <p class="bp-fine">Semua transaksi BioPay (bayar, transfer, tarik tunai, tagihan, top up) masuk otomatis lengkap dengan jamnya. Transaksi tunai bisa dicatat lewat asisten, diketik atau diucapkan.</p>
                             </div>
                         </section>
@@ -3251,7 +3251,11 @@
             // ==========================================
             // SUARA: kata panggil "BioPay" (Web Speech API, selama halaman terbuka)
             // ==========================================
-            let rec = null, listening = false, wakeUntil = 0;
+            let rec = null, listening = false, wakeUntil = 0, wakeLock = null;
+            // Jaga layar tetap menyala selama mode dengar aktif (browser mematikan mikrofon saat layar sleep)
+            async function holdScreen() { try { if (listening && navigator.wakeLock && document.visibilityState === 'visible' && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch (e) { wakeLock = null; } }
+            function releaseScreen() { try { if (wakeLock) wakeLock.release(); } catch (e) {} wakeLock = null; }
+            document.addEventListener('visibilitychange', () => { if (listening && document.visibilityState === 'visible') { holdScreen(); if (rec) { try { rec.start(); } catch (e) {} } } });
             const WAKE = /\b(bio\s*-?\s*(pay|pei|pe|pai|fay|fey|bay)|biopay|biopei|biope|bayo\s*pay|vio\s*pay)\b[\s,.:!-]*/i;
             function renderVoice() {
                 const b = $('voice-btn'); if (!b) return;
@@ -3287,10 +3291,10 @@
                 rec.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++) if (e.results[i].isFinal) onHeard(e.results[i][0].transcript); };
                 rec.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') { toast('Izin mikrofon ditolak atau mikrofon tidak ada', 'ph-microphone-slash', 'text-red-500'); stopVoice(); } };
                 rec.onend = () => { if (listening && rec) { try { rec.start(); } catch (e) {} } };
-                try { rec.start(); listening = true; window.__bpVoiceStop = stopVoice; toast('Mendengarkan. Ucapkan “BioPay, kopi dua ribu”.', 'ph-microphone', 'text-emerald-400'); } catch (e) { listening = false; }
+                try { rec.start(); listening = true; window.__bpVoiceStop = stopVoice; holdScreen(); toast('Mendengarkan. Layar dijaga tetap menyala. Ucapkan “BioPay, kopi dua ribu”.', 'ph-microphone', 'text-emerald-400'); } catch (e) { listening = false; }
                 renderVoice();
             }
-            function stopVoice() { listening = false; wakeUntil = 0; if (rec) { rec.onend = null; try { rec.stop(); } catch (e) {} rec = null; } if (window.__bpVoiceStop === stopVoice) window.__bpVoiceStop = null; renderVoice(); }
+            function stopVoice() { listening = false; wakeUntil = 0; releaseScreen(); if (rec) { rec.onend = null; try { rec.stop(); } catch (e) {} rec = null; } if (window.__bpVoiceStop === stopVoice) window.__bpVoiceStop = null; renderVoice(); }
             function toggleVoice() { if (listening) stopVoice(); else startVoice(); }
             function simulateVoice(text) { onHeard(text); }
             function renderChat() {
