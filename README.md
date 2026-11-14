@@ -8,7 +8,7 @@ This repository is an interactive prototype that runs entirely in the browser, a
 
 **Live demo:** https://ikbal66123.github.io/biopay/ (open in Chrome, Edge or Safari and allow camera access)
 
-**Video (3.5 min, Indonesian narration and on-screen text; covers store checkout, cardless ATM withdrawal, use cases, sign-up & security, and the bridge model):** [`video/biopay-demo.mp4`](video/biopay-demo.mp4) · interactive version: [`video/biopay-demo.html`](video/biopay-demo.html) · voice-over script: [`video/naskah-voiceover.md`](video/naskah-voiceover.md)
+**Video (3.5 min, narrated):** English [`video/biopay-demo-en.mp4`](video/biopay-demo-en.mp4) · Indonesian [`video/biopay-demo.mp4`](video/biopay-demo.mp4) · interactive versions [`biopay-demo-en.html`](video/biopay-demo-en.html), [`biopay-demo.html`](video/biopay-demo.html) · scripts [`voiceover-script-en.md`](video/voiceover-script-en.md), [`naskah-voiceover.md`](video/naskah-voiceover.md)
 
 ---
 

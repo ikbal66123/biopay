@@ -477,7 +477,7 @@ function drawScreen(state, p = 0) {
     const title = (t, y = 140) => { g.fillStyle = '#0F1B2D'; g.font = '700 40px "IBM Plex Sans", sans-serif'; g.fillText(t, 40, y); };
     const sub = (t, y = 184) => { g.fillStyle = '#566173'; g.font = '400 24px "IBM Plex Sans", sans-serif'; g.fillText(t, 40, y); };
     const bar = (k, col = '#0F1B2D') => { g.fillStyle = '#E1E5EB'; g.fillRect(40, 250, W - 80, 14); g.fillStyle = col; g.fillRect(40, 250, (W - 80) * k, 14); };
-    if (state === 'idle') { title('Total Rp 85.000'); sub('Indomie, kopi susu, roti tawar'); g.fillStyle = '#0F1B2D'; g.fillRect(40, 300, W - 80, 70); g.fillStyle = '#fff'; g.font = '600 26px "IBM Plex Sans"'; g.fillText('Lihat ke kamera untuk bayar', 150, 344); }
+    if (state === 'idle') { title('Total Rp 85.000'); sub('Mi instan, kopi susu, roti tawar'); g.fillStyle = '#0F1B2D'; g.fillRect(40, 300, W - 80, 70); g.fillStyle = '#fff'; g.font = '600 26px "IBM Plex Sans"'; g.fillText('Lihat ke kamera untuk bayar', 150, 344); }
     if (state === 'face') { title('Memindai wajah…'); sub('Pemeriksaan kedalaman 3D'); bar(p, '#C8892A'); }
     if (state === 'faceok') { title('Halo, Ikbal'); sub('BioID 12345 · kecocokan 99,2%'); bar(1, '#0F7B4F'); g.fillStyle = '#0F1B2D'; g.font = '600 26px "IBM Plex Sans"'; g.fillText('Tunjukkan telapak tangan →', 40, 330); }
     if (state === 'palm') { title('Memindai telapak…'); sub('Pola vena · faktor kedua'); bar(p, '#C8892A'); }

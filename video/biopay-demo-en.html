@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BioPay · Video Demo</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+    /* Film 1280x720 berbasis timeline: setiap frame ditentukan oleh waktu t (detik), bukan oleh kecepatan komputer. */
+    :root {
+        --ink: #0F1B2D; --ink-2: #26364F; --brass: #C8892A; --brass-deep: #A16207; --paper: #F5F6F8; --line: #DCE1E8;
+        --muted: #566173; --ok: #0F7B4F; --night: #0B1220;
+        --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        --mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #05080F; color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; overflow: hidden; }
+    #stage-wrap { width: min(100vw, calc((100vh - 64px) * 16 / 9)); aspect-ratio: 16 / 9; position: relative; }
+    #stage { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; overflow: hidden; background: var(--paper); }
+    body.capture { background: var(--paper); display: block; }
+    body.capture #stage-wrap { width: 1280px; }
+    body.capture #controls { display: none; }
+
+    .scene { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
+    .pad { position: absolute; inset: 0; padding: 72px 96px; display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow { margin: 0 0 18px; font: 600 15px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--brass-deep); }
+    .h1 { margin: 0; font-weight: 700; font-size: 76px; line-height: 1.02; letter-spacing: -.035em; color: var(--ink); }
+    .h2 { margin: 0; font-weight: 700; font-size: 52px; line-height: 1.06; letter-spacing: -.03em; color: var(--ink); max-width: 18ch; }
+    .lead { margin: 22px 0 0; font-size: 26px; line-height: 1.45; color: #3B475A; max-width: 34ch; }
+    .dark { background: var(--night); color: #fff; }
+    .dark .h1, .dark .h2 { color: #fff; }
+    .dark .lead { color: rgba(255,255,255,.78); }
+    .dark .eyebrow { color: #E8B04A; }
+
+    /* S1 intro */
+    #s1 { background: var(--night); }
+    #s1 .mark { width: 120px; height: 120px; border-radius: 28px; background: #121C2E; position: relative; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 64px; margin-bottom: 36px; }
+    #s1 .mark .corner { position: absolute; inset: 16px; --c: #E8B04A; background:
+        linear-gradient(var(--c),var(--c)) top left/22px 3px, linear-gradient(var(--c),var(--c)) top left/3px 22px,
+        linear-gradient(var(--c),var(--c)) top right/22px 3px, linear-gradient(var(--c),var(--c)) top right/3px 22px,
+        linear-gradient(var(--c),var(--c)) bottom left/22px 3px, linear-gradient(var(--c),var(--c)) bottom left/3px 22px,
+        linear-gradient(var(--c),var(--c)) bottom right/22px 3px, linear-gradient(var(--c),var(--c)) bottom right/3px 22px; background-repeat: no-repeat; }
+    #s1 .mark .line { position: absolute; left: 18px; right: 18px; height: 3px; background: #E8B04A; }
+    #s1 .word { font-size: 112px; font-weight: 700; letter-spacing: -.045em; color: #fff; margin: 0; line-height: 1; }
+    #s1 .tag { margin: 22px 0 0; font-size: 30px; color: rgba(255,255,255,.8); }
+
+    /* S2 masalah */
+    #s2 .pad { flex-direction: row; align-items: center; gap: 64px; }
+    #s2 .col { flex: 1; }
+    .problems { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; width: 520px; flex: none; }
+    .problems li { display: flex; align-items: center; gap: 18px; padding: 20px 22px; background: #fff; border: 1px solid var(--line); border-radius: 18px; font-size: 22px; font-weight: 500; color: var(--ink); }
+    .problems i { flex: none; width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: #FDECEA; color: #B42318; }
+    .problems small { display: block; font-size: 16px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+
+    /* S3 apa itu */
+    #s3 .pad { align-items: flex-start; }
+    .flow { display: flex; align-items: center; gap: 18px; margin-top: 46px; }
+    .flow .step { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-radius: 18px; background: #fff; border: 1px solid var(--line); font-size: 24px; font-weight: 600; }
+    .flow .step i { font-size: 32px; color: var(--brass-deep); }
+    .flow .arrow { width: 56px; height: 2px; background: #B9C1CC; position: relative; }
+    .flow .arrow::after { content: ''; position: absolute; right: -2px; top: -5px; border: 6px solid transparent; border-left: 9px solid #B9C1CC; }
+    .flow .step.ok { background: #E7F4EC; border-color: #BFE3CD; color: var(--ok); }
+    .flow .step.ok i { color: var(--ok); }
+
+    /* S4 3D */
+    #s4, #s10 { background: #E9ECF0; }
+    #three { position: absolute; inset: 0; width: 1280px; height: 720px; display: block; }
+    .cap { position: absolute; left: 48px; bottom: 44px; display: flex; align-items: center; gap: 16px; padding: 16px 24px 16px 16px; background: rgba(11,18,32,.88); color: #fff; border-radius: 18px; max-width: 760px; backdrop-filter: blur(6px); }
+    .cap .chip { flex: none; padding: 8px 12px; border-radius: 10px; background: #E8B04A; color: var(--night); font: 600 15px var(--mono); letter-spacing: .06em; }
+    .cap b { font-size: 26px; font-weight: 600; display: block; }
+    .cap small { display: block; font-size: 18px; color: rgba(255,255,255,.75); margin-top: 2px; }
+    .s4-title { position: absolute; left: 48px; top: 40px; font: 600 15px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); background: rgba(255,255,255,.8); padding: 8px 12px; border-radius: 10px; }
+
+    /* S5 fitur */
+    #s5 .pad { justify-content: flex-start; padding-top: 64px; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 34px; }
+    .feat { padding: 22px; background: #fff; border: 1px solid var(--line); border-radius: 20px; min-height: 196px; display: flex; flex-direction: column; gap: 10px; }
+    .feat i { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: var(--ink); color: #fff; }
+    .feat b { font-size: 21px; line-height: 1.25; }
+    .feat span { font-size: 16px; line-height: 1.45; color: var(--muted); }
+
+    /* S6 jembatan */
+    #s6 svg { position: absolute; inset: 0; }
+    #s6 .side { position: absolute; left: 96px; top: 96px; width: 360px; }
+    .node rect { fill: #fff; stroke: #CBD2DB; }
+    .node text { font-family: var(--sans); font-size: 17px; font-weight: 600; fill: var(--ink); }
+    .node .sub { font-size: 13px; font-weight: 400; fill: var(--muted); }
+
+    /* S7 keunggulan */
+    #s7 .pad { justify-content: flex-start; padding-top: 60px; }
+    .adv { list-style: none; margin: 30px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+    .adv li { display: flex; gap: 16px; align-items: flex-start; padding: 18px 20px; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); }
+    .adv .n { flex: none; width: 40px; height: 40px; border-radius: 11px; background: #E8B04A; color: var(--night); font: 600 18px/40px var(--mono); text-align: center; }
+    .adv b { display: block; font-size: 21px; color: #fff; line-height: 1.3; }
+    .adv span { display: block; margin-top: 4px; font-size: 16px; line-height: 1.45; color: rgba(255,255,255,.72); }
+    .adv li.hero { grid-column: 1 / -1; background: rgba(232,176,74,.12); border-color: rgba(232,176,74,.45); }
+    .adv li.hero b { font-size: 25px; }
+
+    /* S8 outro */
+    #s8 .url { margin-top: 34px; display: inline-flex; align-items: center; gap: 12px; padding: 16px 22px; border-radius: 14px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); font: 600 24px var(--mono); color: #fff; }
+    #s8 .fine { position: absolute; left: 96px; bottom: 48px; font-size: 16px; color: rgba(255,255,255,.55); }
+
+    /* ATM & tambahan */
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .chips span { padding: 10px 16px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 18px; font-weight: 500; color: var(--ink-2); }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+    .colh { margin: 0 0 14px; font: 600 15px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+    .steps li { display: flex; gap: 16px; align-items: flex-start; padding: 15px 18px; background: #fff; border: 1px solid var(--line); border-radius: 16px; }
+    .steps .n { flex: none; width: 38px; height: 38px; border-radius: 11px; background: var(--ink); color: #fff; font: 600 17px/38px var(--mono); text-align: center; }
+    .steps.sec i { flex: none; width: 38px; height: 38px; border-radius: 11px; background: #E7F4EC; color: var(--ok); font-size: 22px; display: flex; align-items: center; justify-content: center; }
+    .steps b { display: block; font-size: 20px; line-height: 1.3; }
+    .steps li > span > span { display: block; margin-top: 2px; font-size: 16px; color: var(--muted); line-height: 1.4; }
+    .adv li { padding: 13px 18px; }
+    .adv { gap: 10px 20px; margin-top: 24px; }
+    #s7 .pad { padding-top: 48px; }
+    .adv b { font-size: 19px; } .adv span { font-size: 15px; } .adv li.hero b { font-size: 23px; }
+    .progress { position: absolute; left: 0; bottom: 0; height: 4px; background: var(--brass); z-index: 20; }
+    #controls { display: flex; align-items: center; gap: 12px; color: #fff; font: 500 14px var(--sans); }
+    #controls button { min-width: 44px; min-height: 40px; border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.08); color: #fff; border-radius: 10px; font: 600 14px var(--sans); cursor: pointer; padding: 0 14px; }
+    #controls input { width: min(60vw, 640px); accent-color: #E8B04A; }
+    #controls span { font-family: var(--mono); min-width: 96px; }
+    #controls button:focus-visible, #controls input:focus-visible { outline: 2px solid #E8B04A; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div id="stage-wrap">
+<div id="stage" aria-live="off">
+
+    <!-- 1. Pembuka -->
+    <section class="scene" id="s1" data-a="0" data-b="7">
+        <div class="pad">
+            <div class="mark" data-in="0.3"><span class="corner"></span><i class="ph-bold ph-scan-smiley"></i><span class="line" id="s1-line"></span></div>
+            <p class="word" data-in="0.8">BioPay</p>
+            <p class="tag" data-in="1.6">Pay with your face and palm. No card. No phone.</p>
+        </div>
+    </section>
+
+    <!-- 2. Masalah -->
+    <section class="scene" id="s2" data-a="7" data-b="17">
+        <div class="pad">
+            <div class="col">
+                <p class="eyebrow" data-in="7.3">The problem</p>
+                <h2 class="h2" data-in="7.6">Paying at the till is still a hassle.</h2>
+                <p class="lead" data-in="8.2">Every store accepts different apps, and all of them depend on the phone or card you carry.</p>
+            </div>
+            <ul class="problems">
+                <li data-in="9.2"><i class="ph-bold ph-stack"></i><span>Too many apps & QR codes<small>Switching e-wallets to find enough balance</small></span></li>
+                <li data-in="10.4"><i class="ph-bold ph-battery-warning"></i><span>Phone dead or no signal<small>Payments fail at the till</small></span></li>
+                <li data-in="11.6"><i class="ph-bold ph-credit-card"></i><span>Cards forgotten or lost<small>Risk of misuse by others</small></span></li>
+                <li data-in="12.8"><i class="ph-bold ph-airplane-tilt"></i><span>Tourists struggle with FX & tax<small>Foreign card fees, manual tax refunds</small></span></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 3. What BioPay is -->
+    <section class="scene" id="s3" data-a="17" data-b="27">
+        <div class="pad">
+            <p class="eyebrow" data-in="17.3">What BioPay is</p>
+            <h2 class="h2" data-in="17.6">Two-factor biometric checkout.</h2>
+            <p class="lead" data-in="18.3" style="max-width: 40ch">Your face says who you are, your palm confirms. The money comes from the e-wallet or bank account you already have.</p>
+            <div class="flow">
+                <span class="step" data-in="20.0"><i class="ph-bold ph-scan-smiley"></i> Face</span>
+                <span class="arrow" data-in="20.8"></span>
+                <span class="step" data-in="21.4"><i class="ph-bold ph-hand-palm"></i> Palm</span>
+                <span class="arrow" data-in="22.2"></span>
+                <span class="step ok" data-in="22.8"><i class="ph-bold ph-check-circle"></i> Paid</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Demo 3D -->
+    <section class="scene" id="s4" data-a="27" data-b="63">
+        <canvas id="three" width="1280" height="720"></canvas>
+        <div class="s4-title">In use · Store checkout</div>
+        <div class="cap" id="cap"><span class="chip" id="cap-chip">CHECKOUT</span><span><b id="cap-title">-</b><small id="cap-sub">-</small></span></div>
+    </section>
+
+    <!-- 4b. Cardless ATM: pengantar -->
+    <section class="scene" id="s9" data-a="63" data-b="74">
+        <div class="pad">
+            <p class="eyebrow" data-in="63.3">BioPay at the ATM</p>
+            <h2 class="h2" data-in="63.6" style="max-width: none">Cash without a card.</h2>
+            <p class="lead" data-in="64.3" style="max-width: 46ch">An ATM connected to BioPay needs no card or PIN. Scan your face and palm and you land on your BioPay page on the ATM screen.</p>
+            <div class="flow" style="margin-top: 38px">
+                <span class="step" data-in="65.6"><i class="ph-bold ph-scan-smiley"></i> Face scan</span>
+                <span class="arrow" data-in="66.2"></span>
+                <span class="step" data-in="66.6"><i class="ph-bold ph-hand-palm"></i> Palm scan</span>
+                <span class="arrow" data-in="67.2"></span>
+                <span class="step" data-in="67.6"><i class="ph-bold ph-sign-in"></i> Open BioPay</span>
+                <span class="arrow" data-in="68.2"></span>
+                <span class="step ok" data-in="68.6"><i class="ph-bold ph-money"></i> Take cash</span>
+            </div>
+            <div class="chips" data-in="69.6"><span>Withdraw cash</span><span>Deposit cash</span><span>Transfer</span><span>Check balance</span><span>Pay bills</span><span>Top up e-wallet</span></div>
+        </div>
+    </section>
+
+    <!-- 4c. Demo 3D ATM -->
+    <section class="scene" id="s10" data-a="74" data-b="112">
+        <div class="s4-title">In use · Cardless ATM</div>
+        <div class="cap" id="cap2"><span class="chip" id="cap2-chip">ATM</span><span><b id="cap2-title">-</b><small id="cap2-sub">-</small></span></div>
+    </section>
+
+    <!-- 5. Fitur -->
+    <section class="scene" id="s5" data-a="112" data-b="132">
+        <div class="pad">
+            <p class="eyebrow" data-in="112.3">BioPay features</p>
+            <h2 class="h2" data-in="112.6" style="max-width: none">One identity, many ways to pay.</h2>
+            <div class="grid">
+                <div class="feat" data-in="113.6"><i class="ph-bold ph-storefront"></i><b>Pay at store terminals</b><span>Face + palm at the till, receipt printed instantly.</span></div>
+                <div class="feat" data-in="115.0"><i class="ph-bold ph-device-mobile"></i><b>Charge from a merchant phone</b><span>Small merchants just need a phone, no card machine.</span></div>
+                <div class="feat" data-in="116.4"><i class="ph-bold ph-airplane-tilt"></i><b>In-app checkout</b><span>Travel and shopping apps can add a BioPay button.</span></div>
+                <div class="feat" data-in="117.8"><i class="ph-bold ph-receipt"></i><b>Pay bills</b><span>Pick QRIS, BioPay or a bank virtual account.</span></div>
+                <div class="feat" data-in="119.2"><i class="ph-bold ph-currency-circle-dollar"></i><b>Automatic FX for tourists</b><span>Pay foreign merchants from a rupiah balance, with a tax-refund receipt.</span></div>
+                <div class="feat" data-in="120.6"><i class="ph-bold ph-identification-card"></i><b>Bio-Pass</b><span>Digital travel credential for immigration and hotel check-in.</span></div>
+                <div class="feat" data-in="122.0"><i class="ph-bold ph-users-three"></i><b>Family sharing</b><span>Family members pay with their own biometrics, with daily limits.</span></div>
+                <div class="feat" data-in="123.4"><i class="ph-bold ph-shield-check"></i><b>Sign up with an ID</b><span>ID or passport, face & palm enrollment, clear data consent.</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5b. Di mana saja -->
+    <section class="scene" id="s11" data-a="132" data-b="150">
+        <div class="pad">
+            <p class="eyebrow" data-in="132.3">Use it anywhere</p>
+            <h2 class="h2" data-in="132.6" style="max-width: none">One scan for everyday life.</h2>
+            <div class="grid">
+                <div class="feat" data-in="133.6"><i class="ph-bold ph-money"></i><b>Cardless ATM</b><span>Withdraw and deposit cash, transfer, check balances: no card, no PIN.</span></div>
+                <div class="feat" data-in="135.0"><i class="ph-bold ph-train"></i><b>Public transit</b><span>Station and bus gates: scan, walk through, fare charged automatically.</span></div>
+                <div class="feat" data-in="136.4"><i class="ph-bold ph-airplane-takeoff"></i><b>Airports & hotels</b><span>Bio-Pass for check-in, boarding and airport payments.</span></div>
+                <div class="feat" data-in="137.8"><i class="ph-bold ph-gas-pump"></i><b>Fuel & parking</b><span>Pay for fuel and parking without digging for a wallet.</span></div>
+                <div class="feat" data-in="139.2"><i class="ph-bold ph-first-aid-kit"></i><b>Hospitals & pharmacies</b><span>Patient identity and payment in one scan.</span></div>
+                <div class="feat" data-in="140.6"><i class="ph-bold ph-shopping-cart"></i><b>Online shopping</b><span>Confirm payments with a phone or laptop camera, no OTP.</span></div>
+                <div class="feat" data-in="142.0"><i class="ph-bold ph-student"></i><b>School & campus canteens</b><span>Kids pay on their own, within limits set by parents.</span></div>
+                <div class="feat" data-in="143.4"><i class="ph-bold ph-paper-plane-tilt"></i><b>Send money</b><span>Transfer to friends, family or any bank account.</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5c. Sign-up & security -->
+    <section class="scene" id="s12" data-a="150" data-b="168">
+        <div class="pad" style="justify-content: flex-start; padding-top: 64px">
+            <p class="eyebrow" data-in="150.3">Sign-up & security</p>
+            <h2 class="h2" data-in="150.6" style="max-width: none">Sign up once, safe every day.</h2>
+            <div class="two">
+                <div>
+                    <p class="colh" data-in="151.4">Sign up (about 3 minutes)</p>
+                    <ol class="steps">
+                        <li data-in="152.0"><span class="n">1</span><span><b>Enter details & country</b><span>Name, email, phone number with country code.</span></span></li>
+                        <li data-in="153.0"><span class="n">2</span><span><b>Photograph your ID</b><span>National ID, passport or home-country ID.</span></span></li>
+                        <li data-in="154.0"><span class="n">3</span><span><b>Enroll face & palm</b><span>Straight from the camera, in the app or at a terminal.</span></span></li>
+                        <li data-in="155.0"><span class="n">4</span><span><b>Link e-wallets & bank accounts</b><span>Pick a main funding source; change it anytime.</span></span></li>
+                    </ol>
+                </div>
+                <div>
+                    <p class="colh" data-in="156.4">What protects your money</p>
+                    <ul class="steps sec">
+                        <li data-in="157.0"><i class="ph-bold ph-mask-happy"></i><span><b>Photo- and mask-proof</b><span>3D liveness checks confirm a real person.</span></span></li>
+                        <li data-in="158.0"><i class="ph-bold ph-lock-key"></i><span><b>Encrypted templates, not photos</b><span>Biometric data can’t be turned back into an image.</span></span></li>
+                        <li data-in="159.0"><i class="ph-bold ph-bell-ringing"></i><span><b>Limits & real-time alerts</b><span>Every transaction shows up on your phone instantly.</span></span></li>
+                        <li data-in="160.0"><i class="ph-bold ph-trash"></i><span><b>Freeze or delete your BioID</b><span>Users stay in full control (data protection law).</span></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Jembatan -->
+    <section class="scene" id="s6" data-a="168" data-b="183">
+        <svg id="hub" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true"></svg>
+        <div class="side">
+            <p class="eyebrow" data-in="168.3">Not another wallet</p>
+            <h2 class="h2" data-in="168.6" style="font-size: 46px">BioPay is a bridge.</h2>
+            <p class="lead" data-in="169.4" style="font-size: 22px">One face and one palm connect to the e-wallets, mobile banking, bank accounts, ATMs, QRIS and PayLater people already use every day.</p>
+        </div>
+    </section>
+
+    <!-- 7. Keunggulan -->
+    <section class="scene dark" id="s7" data-a="183" data-b="200">
+        <div class="pad">
+            <p class="eyebrow" data-in="183.3">BioPay advantages</p>
+            <h2 class="h2" data-in="183.6" style="max-width: none; font-size: 46px">Why BioPay is different.</h2>
+            <ul class="adv">
+                <li class="hero" data-in="184.6"><span class="n">1</span><span><b>Not a silo: a bridge to every e-wallet, mobile bank & bank</b><span>Users keep their wallets. Merchants integrate once to accept them all.</span></span></li>
+                <li data-in="186.2"><span class="n">2</span><span><b>Two biometric factors</b><span>A face alone can never move money; the palm is required.</span></span></li>
+                <li data-in="187.6"><span class="n">3</span><span><b>No card, no phone</b><span>Dead battery or phone left at home? You can still pay.</span></span></li>
+                <li data-in="189.0"><span class="n">4</span><span><b>No expensive hardware for merchants</b><span>Start with a phone, add a terminal as the business grows.</span></span></li>
+                <li data-in="190.4"><span class="n">5</span><span><b>Built for tourists</b><span>Automatic FX, tax-refund receipts and Bio-Pass.</span></span></li>
+                <li data-in="191.8"><span class="n">6</span><span><b>Privacy by design</b><span>Explicit consent; data can be deleted anytime.</span></span></li>
+                <li data-in="193.2"><span class="n">7</span><span><b>One identity for everything</b><span>Shopping, bills, travel and family in one BioID.</span></span></li>
+                <li data-in="194.6"><span class="n">8</span><span><b>Cardless ATM</b><span>No skimming, swallowed cards or forgotten PINs.</span></span></li>
+                <li data-in="196.0"><span class="n">9</span><span><b>Use it anywhere</b><span>Stores, ATMs, transit, hospitals, even online shopping.</span></span></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 8. Penutup -->
+    <section class="scene dark" id="s8" data-a="200" data-b="207">
+        <div class="pad">
+            <p class="eyebrow" data-in="200.3">BioPay</p>
+            <h1 class="h1" data-in="200.6">One face.<br>Every wallet.</h1>
+            <div data-in="201.8"><span class="url"><i class="ph-bold ph-globe-simple"></i> ikbal66123.github.io/biopay</span></div>
+        </div>
+        <p class="fine" data-in="202.4">Prototype. All transactions are simulated; the ATM and "use it anywhere" scenarios show the intended product. All partner names are fictional.</p>
+    </section>
+
+    <div class="progress" id="progress"></div>
+</div>
+</div>
+<div id="controls">
+    <button type="button" id="play" aria-label="Play or pause">Pause</button>
+    <input type="range" id="seek" min="0" max="207" step="0.04" value="0" aria-label="Video position">
+    <span id="clock">0:00 / 3:27</span>
+</div>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+<script type="module">
+import * as THREE from 'three';
+
+const DUR = 207;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const smooth = x => { x = clamp(x); return x * x * (3 - 2 * x); };
+const prog = (t, a, b) => smooth((t - a) / (b - a));
+const lerp = (a, b, k) => a + (b - a) * k;
+
+// ---------- Adegan 2D ----------
+const scenes = [...document.querySelectorAll('.scene')].map(el => ({ el, a: +el.dataset.a, b: +el.dataset.b }));
+const ins = [...document.querySelectorAll('[data-in]')].map(el => ({ el, t: +el.dataset.in }));
+function render2D(t) {
+    scenes.forEach(s => {
+        const o = t < s.a || t > s.b ? 0 : Math.min(1, (t - s.a) / 0.5, (s.b - t) / 0.5);
+        s.el.style.opacity = o; s.el.style.visibility = o > 0 ? 'visible' : 'hidden';
+    });
+    ins.forEach(({ el, t: t0 }) => { const k = prog(t, t0, t0 + 0.7); el.style.opacity = k; el.style.transform = `translateY(${(1 - k) * 18}px)`; });
+    document.getElementById('s1-line').style.top = (18 + 84 * (0.5 + 0.5 * Math.sin(t * 2.2))) + 'px';
+    document.getElementById('progress').style.width = (t / DUR * 100) + '%';
+    renderHub(t);
+}
+
+// ---------- Diagram jembatan ----------
+const hub = document.getElementById('hub');
+const NODES = [
+    ['E-wallet', 'digital wallet balance'], ['Mobile banking', 'savings accounts'], ['Debit & credit cards', 'card networks'], ['QRIS', 'national QR standard'],
+    ['PayLater', 'instalments & credit'], ['Merchants & tills', 'terminals and phones'], ['Travel & shopping', 'in-app checkout'], ['Monthly bills', 'electricity, internet, health insurance'], ['ATM & cash withdrawal', 'no card & PIN']
+];
+const C = { x: 880, y: 372 };
+const nodePos = NODES.map((_, i) => { const a = -Math.PI / 2 + i * (Math.PI * 2 / NODES.length); return { x: C.x + Math.cos(a) * 290, y: C.y + Math.sin(a) * 272 }; });
+hub.innerHTML = nodePos.map((p, i) => `<line id="ln${i}" x1="${C.x}" y1="${C.y}" x2="${p.x}" y2="${p.y}" stroke="#B9C1CC" stroke-width="2" stroke-dasharray="320" stroke-dashoffset="320"/>`).join('')
+    + nodePos.map((p, i) => `<circle id="pl${i}" r="6" fill="#C8892A" opacity="0"/>`).join('')
+    + nodePos.map((p, i) => { const w = 188, h = 62; return `<g class="node" id="nd${i}" opacity="0" transform="translate(${p.x - w / 2},${p.y - h / 2})"><rect width="${w}" height="${h}" rx="14"/><text x="16" y="28">${NODES[i][0]}</text><text class="sub" x="16" y="49">${NODES[i][1]}</text></g>`; }).join('')
+    + `<g id="core" opacity="0"><circle cx="${C.x}" cy="${C.y}" r="86" fill="#0F1B2D"/><circle cx="${C.x}" cy="${C.y}" r="86" fill="none" stroke="#E8B04A" stroke-width="3" id="core-ring"/><text x="${C.x}" y="${C.y - 4}" text-anchor="middle" font-family="IBM Plex Sans" font-weight="700" font-size="30" fill="#fff">BioPay</text><text x="${C.x}" y="${C.y + 24}" text-anchor="middle" font-family="IBM Plex Mono" font-size="14" fill="#E8B04A" letter-spacing="2">FACE + PALM</text></g>`;
+function renderHub(t) {
+    if (t < 167.5 || t > 183.5) return;
+    document.getElementById('core').setAttribute('opacity', prog(t, 170, 170.8));
+    document.getElementById('core-ring').setAttribute('r', 86 + 6 * Math.sin(t * 3));
+    nodePos.forEach((p, i) => {
+        const t0 = 171 + i * 0.55;
+        document.getElementById('ln' + i).setAttribute('stroke-dashoffset', 320 * (1 - prog(t, t0, t0 + 0.8)));
+        document.getElementById('nd' + i).setAttribute('opacity', prog(t, t0 + 0.4, t0 + 1));
+        const pl = document.getElementById('pl' + i), live = t > t0 + 1;
+        const k = ((t - t0) * 0.6 + i * 0.13) % 1, inward = i % 2 === 0;
+        const f = inward ? 1 - k : k;
+        pl.setAttribute('cx', lerp(C.x, p.x, f)); pl.setAttribute('cy', lerp(C.y, p.y, f));
+        pl.setAttribute('opacity', live ? 0.9 : 0);
+    });
+}
+
+// ---------- Adegan 3D ----------
+const canvas = document.getElementById('three');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(1280, 720, false);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#E6E9EE');
+scene.fog = new THREE.Fog('#E6E9EE', 9, 18);
+const cam = new THREE.PerspectiveCamera(38, 1280 / 720, 0.05, 50);
+scene.add(new THREE.HemisphereLight('#ffffff', '#B8C0CC', 1.4));
+const sun = new THREE.DirectionalLight('#ffffff', 2.2); sun.position.set(3, 6, 4); sun.castShadow = true;
+sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4 }); scene.add(sun); scene.add(sun.target);
+const mat = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.75, metalness: 0.05, ...o });
+const add = (geo, m, x, y, z, parent = scene) => { const me = new THREE.Mesh(geo, m); me.position.set(x, y, z); me.castShadow = true; me.receiveShadow = true; parent.add(me); return me; };
+
+// Toko
+add(new THREE.PlaneGeometry(40, 40), mat('#DDE1E7'), 0, 0, 0).rotation.x = -Math.PI / 2;
+const wall = add(new THREE.PlaneGeometry(40, 8), mat('#F1F2F4'), 0, 4, -2.2);
+for (let s = 0; s < 3; s++) {
+    const shelf = new THREE.Group(); shelf.position.set(-3.4 + s * 3.4, 0, -1.9); scene.add(shelf);
+    add(new THREE.BoxGeometry(2.6, 2.2, 0.45), mat('#C9CFD8'), 0, 1.1, 0, shelf);
+    const cols = ['#D97706', '#0F766E', '#B91C1C', '#1E3A8A', '#7C3AED', '#CA8A04', '#0E7490'];
+    for (let r = 0; r < 4; r++) for (let k = 0; k < 7; k++) add(new THREE.BoxGeometry(0.26, 0.32, 0.18), mat(cols[(k + r * 2 + s) % 7], { roughness: 0.6 }), -1.05 + k * 0.35, 0.35 + r * 0.5, 0.25, shelf);
+}
+// Meja kasir + terminal BioPay
+add(new THREE.BoxGeometry(1.6, 1.0, 0.6), mat('#2B3445'), 0, 0.5, 0.3);
+add(new THREE.BoxGeometry(1.64, 0.04, 0.64), mat('#F4F5F7'), 0, 1.02, 0.3);
+const stand = add(new THREE.CylinderGeometry(0.03, 0.05, 0.28, 16), mat('#9AA3AF', { metalness: 0.6, roughness: 0.3 }), 0, 1.18, 0.12);
+const head = new THREE.Group(); head.position.set(0, 1.42, 0.12); head.rotation.x = -0.18; scene.add(head);
+add(new THREE.BoxGeometry(0.5, 0.36, 0.04), mat('#111827', { roughness: 0.4 }), 0, 0, 0, head);
+const scr = document.createElement('canvas'); scr.width = 640; scr.height = 448; const sctx = scr.getContext('2d');
+const scrTex = new THREE.CanvasTexture(scr); scrTex.colorSpace = THREE.SRGBColorSpace;
+const screen = add(new THREE.PlaneGeometry(0.46, 0.32), new THREE.MeshBasicMaterial({ map: scrTex }), 0, 0, 0.0215, head);
+add(new THREE.BoxGeometry(0.18, 0.035, 0.035), mat('#1F2937'), 0, 0.2, 0.01, head);
+const lens = add(new THREE.CircleGeometry(0.011, 20), new THREE.MeshBasicMaterial({ color: '#7DD3FC' }), 0, 0.2, 0.029, head);
+const sensor = add(new THREE.BoxGeometry(0.2, 0.03, 0.16), mat('#111827', { roughness: 0.3 }), 0.12, 1.055, 0.5);
+const sensorGlow = add(new THREE.PlaneGeometry(0.16, 0.12), new THREE.MeshBasicMaterial({ color: '#E8B04A', transparent: true, opacity: 0.35 }), 0.12, 1.072, 0.5);
+sensorGlow.rotation.x = -Math.PI / 2;
+
+// Orang (dibangun dari bentuk dasar; tungkai mengikuti posisi sendi)
+const person = new THREE.Group(); scene.add(person);
+const skin = mat('#C58C6A', { roughness: 0.6 }), shirt = mat('#2F6F8F'), pants = mat('#2B3445'), shoe = mat('#1F2937'), hair = mat('#2A1E17', { roughness: 0.9 });
+const torso = add(new THREE.CapsuleGeometry(0.16, 0.36, 6, 16), shirt, 0, 1.24, 0, person); torso.scale.set(1.25, 1, 0.75);
+const pelvis = add(new THREE.SphereGeometry(0.17, 20, 16), pants, 0, 0.98, 0, person); pelvis.scale.set(1.1, 0.6, 0.8);
+add(new THREE.CylinderGeometry(0.045, 0.05, 0.08, 12), skin, 0, 1.52, 0, person);
+const headG = new THREE.Group(); headG.position.set(0, 1.63, 0); person.add(headG);
+const headM = add(new THREE.SphereGeometry(0.105, 28, 22), skin, 0, 0, 0, headG); headM.scale.set(0.95, 1.08, 1);
+const hairM = add(new THREE.SphereGeometry(0.112, 28, 22, 0, Math.PI * 2, 0, Math.PI * 0.42), hair, 0, 0.01, -0.012, headG); hairM.scale.set(1, 1.1, 1.06); hairM.rotation.x = -0.55;
+const hairBack = add(new THREE.SphereGeometry(0.108, 24, 18, Math.PI * 0.15, Math.PI * 0.7, Math.PI * 0.3, Math.PI * 0.45), hair, 0, 0.0, -0.006, headG); hairBack.rotation.y = Math.PI; hairBack.scale.set(1, 1.08, 1.04);
+[-0.036, 0.036].forEach(x => { add(new THREE.SphereGeometry(0.012, 12, 10), mat('#FFFFFF', { roughness: 0.3 }), x, 0.018, 0.093, headG); add(new THREE.SphereGeometry(0.0075, 10, 8), mat('#1B1B1B'), x, 0.018, 0.103, headG); add(new THREE.BoxGeometry(0.03, 0.006, 0.01), hair, x, 0.042, 0.097, headG); });
+add(new THREE.SphereGeometry(0.014, 12, 10), skin, 0, -0.008, 0.105, headG);
+add(new THREE.BoxGeometry(0.036, 0.006, 0.01), mat('#8A4B3A'), 0, -0.045, 0.094, headG);
+const seg = (r, len, m) => { const me = add(new THREE.CapsuleGeometry(r, len, 6, 12), m, 0, 0, 0, person); me.userData.len = len; return me; };
+const limbs = { lu: seg(0.05, 0.25, shirt), ll: seg(0.042, 0.23, skin), ru: seg(0.05, 0.25, shirt), rl: seg(0.042, 0.23, skin),
+    lt: seg(0.07, 0.36, pants), ls: seg(0.055, 0.36, pants), rt: seg(0.07, 0.36, pants), rs: seg(0.055, 0.36, pants) };
+const handL = add(new THREE.BoxGeometry(0.075, 0.1, 0.028), skin, 0, 0, 0, person), handR = add(new THREE.BoxGeometry(0.075, 0.1, 0.028), skin, 0, 0, 0, person);
+const footL = add(new THREE.BoxGeometry(0.1, 0.07, 0.24), shoe, 0, 0, 0, person), footR = add(new THREE.BoxGeometry(0.1, 0.07, 0.24), shoe, 0, 0, 0, person);
+const UP = new THREE.Vector3(0, 1, 0), V = (x, y, z) => new THREE.Vector3(x, y, z);
+function place(m, a, b) { const d = b.clone().sub(a); m.position.copy(a).add(b).multiplyScalar(0.5); m.quaternion.setFromUnitVectors(UP, d.normalize()); }
+const swingVec = (len, ang) => V(0, -len * Math.cos(ang), len * Math.sin(ang));
+function ik(S, T, L1, L2, pole) {
+    const d = T.clone().sub(S), dist = clamp(d.length(), 0.01, L1 + L2 - 0.001), dir = d.normalize();
+    const a = Math.acos(clamp((L1 * L1 + dist * dist - L2 * L2) / (2 * L1 * dist), -1, 1));
+    const axis = new THREE.Vector3().crossVectors(dir, pole).normalize();
+    const elbow = S.clone().add(dir.clone().applyAxisAngle(axis, a).multiplyScalar(L1));
+    return { elbow, end: S.clone().add(dir.multiplyScalar(dist)) };
+}
+function pose({ walk = 0, reach = 0, headPitch = 0, tgt = V(-0.12, 1.16, 0.46), flat = 1 }) {
+    const sw = Math.sin(walk) * 0.42 * (walk ? 1 : 0), bend = Math.max(0, Math.sin(walk + 1.2)) * 0.5, bend2 = Math.max(0, Math.sin(walk + 1.2 + Math.PI)) * 0.5;
+    const Lup = 0.3, Llo = 0.28, Lth = 0.43, Lsh = 0.43;
+    [[-1, sw, bend, limbs.lt, limbs.ls, footL], [1, -sw, bend2, limbs.rt, limbs.rs, footR]].forEach(([s, a, k, th, sh, ft]) => {
+        const hip = V(0.1 * s, 0.98, 0), knee = hip.clone().add(swingVec(Lth, a)), ank = knee.clone().add(swingVec(Lsh, a - k));
+        place(th, hip, knee); place(sh, knee, ank); ft.position.copy(ank).add(V(0, -0.03, 0.05)); ft.rotation.set(0, 0, 0);
+    });
+    const SL = V(0.215, 1.44, 0), SR = V(-0.215, 1.44, 0);
+    const eL = SL.clone().add(swingVec(Lup, -sw * 0.8)), wL = eL.clone().add(swingVec(Llo, -sw * 0.8 + 0.25));
+    place(limbs.lu, SL, eL); place(limbs.ll, eL, wL); handL.position.copy(wL).add(swingVec(0.05, -sw * 0.8 + 0.25)); handL.quaternion.copy(limbs.ll.quaternion);
+    const restE = SR.clone().add(swingVec(Lup, sw * 0.8)), restW = restE.clone().add(swingVec(Llo, sw * 0.8 + 0.25));
+    const solved = ik(SR, tgt, Lup, Llo, V(1, -0.4, 0));
+    const eR = restE.clone().lerp(solved.elbow, reach), wR = restW.clone().lerp(solved.end, reach);
+    place(limbs.ru, SR, eR); place(limbs.rl, eR, wR);
+    const fdir = wR.clone().sub(eR).normalize();
+    handR.position.copy(wR).add(fdir.clone().multiplyScalar(0.055)); handR.quaternion.setFromUnitVectors(UP, fdir);
+    handR.rotateX(-Math.PI / 2 * reach * flat);
+    headG.rotation.x = headPitch;
+}
+
+// Efek scan
+const faceGrid = new THREE.Mesh(new THREE.SphereGeometry(0.14, 18, 14), new THREE.MeshBasicMaterial({ color: '#E8B04A', wireframe: true, transparent: true, opacity: 0 }));
+headG.add(faceGrid);
+const faceRing = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.004, 8, 48), new THREE.MeshBasicMaterial({ color: '#E8B04A', transparent: true, opacity: 0 }));
+faceRing.rotation.x = Math.PI / 2; headG.add(faceRing);
+const beam = add(new THREE.CylinderGeometry(0.09, 0.07, 0.1, 24, 1, true), new THREE.MeshBasicMaterial({ color: '#E8B04A', transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }), 0.12, 1.11, 0.5);
+const palmLine = add(new THREE.PlaneGeometry(0.14, 0.006), new THREE.MeshBasicMaterial({ color: '#FDE68A', transparent: true, opacity: 0, side: THREE.DoubleSide }), 0.12, 1.14, 0.5);
+palmLine.rotation.x = -Math.PI / 2;
+
+// Layar terminal
+let lastScreen = '';
+function drawScreen(state, p = 0) {
+    const key = state + Math.round(p * 20); if (key === lastScreen) return; lastScreen = key;
+    const g = sctx, W = 640, H = 448;
+    g.fillStyle = '#F5F6F8'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#fff'; g.fillRect(0, 0, W, 44); g.fillStyle = '#566173'; g.font = '500 18px "IBM Plex Mono", monospace'; g.fillText('BioPay · TID 0042-JKT', 22, 29);
+    g.fillStyle = '#0F7B4F'; g.beginPath(); g.arc(W - 30, 22, 7, 0, 7); g.fill();
+    const title = (t, y = 140) => { g.fillStyle = '#0F1B2D'; g.font = '700 40px "IBM Plex Sans", sans-serif'; g.fillText(t, 40, y); };
+    const sub = (t, y = 184) => { g.fillStyle = '#566173'; g.font = '400 24px "IBM Plex Sans", sans-serif'; g.fillText(t, 40, y); };
+    const bar = (k, col = '#0F1B2D') => { g.fillStyle = '#E1E5EB'; g.fillRect(40, 250, W - 80, 14); g.fillStyle = col; g.fillRect(40, 250, (W - 80) * k, 14); };
+    if (state === 'idle') { title('Total Rp 85.000'); sub('Instant noodles, milk coffee, bread'); g.fillStyle = '#0F1B2D'; g.fillRect(40, 300, W - 80, 70); g.fillStyle = '#fff'; g.font = '600 26px "IBM Plex Sans"'; g.fillText('Look at the camera to pay', 150, 344); }
+    if (state === 'face') { title('Scanning face…'); sub('3D depth check'); bar(p, '#C8892A'); }
+    if (state === 'faceok') { title('Hi, Ikbal'); sub('BioID 12345 · 99.2% match'); bar(1, '#0F7B4F'); g.fillStyle = '#0F1B2D'; g.font = '600 26px "IBM Plex Sans"'; g.fillText('Show your palm →', 40, 330); }
+    if (state === 'palm') { title('Scanning palm…'); sub('Vein pattern · second factor'); bar(p, '#C8892A'); }
+    if (state === 'paid') {
+        g.fillStyle = '#E7F4EC'; g.fillRect(0, 44, W, H - 44);
+        g.fillStyle = '#0F7B4F'; g.beginPath(); g.arc(W / 2, 150, 54, 0, 7); g.fill();
+        g.strokeStyle = '#fff'; g.lineWidth = 10; g.lineCap = 'round'; g.beginPath(); g.moveTo(W / 2 - 24, 150); g.lineTo(W / 2 - 6, 168); g.lineTo(W / 2 + 26, 134); g.stroke();
+        g.textAlign = 'center'; g.fillStyle = '#0F1B2D'; g.font = '700 40px "IBM Plex Sans"'; g.fillText('Payment successful', W / 2, 260);
+        g.fillStyle = '#566173'; g.font = '400 24px "IBM Plex Sans"'; g.fillText('Rp 85.000 · from the main e-wallet', W / 2, 300); g.textAlign = 'left';
+    }
+    scrTex.needsUpdate = true;
+}
+
+// Kamera & timeline 3D
+const CAMK = [
+    [27, V(3.4, 2.3, 5.6), V(0, 1.1, 0.6)], [31, V(2.5, 1.9, 4.0), V(0, 1.25, 0.8)], [33.5, V(1.15, 1.72, 2.2), V(0, 1.55, 1.0)],
+    [35, V(0.3, 1.67, 0.4), V(0, 1.62, 1.0)], [41, V(0.3, 1.67, 0.4), V(0, 1.62, 1.0)], [43, V(0.85, 1.42, 1.25), V(0.08, 1.1, 0.55)],
+    [49, V(0.85, 1.42, 1.25), V(0.08, 1.1, 0.55)], [51, V(-0.95, 1.78, 1.55), V(0, 1.36, 0.12)], [55.5, V(-0.95, 1.78, 1.55), V(0, 1.36, 0.12)],
+    [59, V(3.6, 2.5, 6.2), V(0, 1.0, 0.4)], [63, V(4.2, 2.7, 7.0), V(0, 1.0, 0.4)]
+];
+function camAt(t) {
+    let i = 0; while (i < CAMK.length - 2 && t > CAMK[i + 1][0]) i++;
+    const [t0, p0, l0] = CAMK[i], [t1, p1, l1] = CAMK[i + 1], k = prog(t, t0, t1);
+    cam.position.copy(p0).lerp(p1, k); cam.lookAt(l0.clone().lerp(l1, k));
+}
+const CAPS = [
+    [27, 'CHECKOUT', 'A customer walks up to the till', 'Rp 85.000 of groceries, no card and no phone in hand'],
+    [33.5, 'STEP 1', 'Face recognised', 'The terminal camera checks 3D depth, then finds the BioID'],
+    [41, 'STEP 2', 'The palm confirms', 'Pola vena telapak sebagai faktor kedua; wajah saja tidak cukup'],
+    [49, 'PAID', 'Payment successful', 'Taken from the customer’s main e-wallet, receipt printed instantly'],
+    [55.5, 'DONE', 'Done in seconds', 'The customer never opens an app']
+];
+function render3D(t) {
+    // posisi & gaya jalan
+    const start = V(-3.2, 0, 4.2), stop = V(0, 0, 1.0), away = V(3.4, 0, 3.6);
+    let walk = 0, pos, face = Math.PI;
+    if (t < 32) { const k = prog(t, 27, 32); pos = start.clone().lerp(stop, k); walk = k < 1 ? (t - 27) * 6.2 : 0; face = Math.atan2(stop.x - start.x, stop.z - start.z); if (k > 0.85) face = lerp(face, Math.PI, (k - 0.85) / 0.15); }
+    else if (t < 56) pos = stop.clone();
+    else { const k = prog(t, 56.5, 62.5); pos = stop.clone().lerp(away, k); walk = t > 56.5 && k < 1 ? (t - 56.5) * 6.2 : 0; face = lerp(Math.PI, Math.atan2(away.x - stop.x, away.z - stop.z), prog(t, 56, 57)); }
+    person.position.copy(pos); person.rotation.y = face; cash.visible = false;
+    sun.position.set(3, 6, 4); sun.target.position.set(0, 0, 0); beam.position.set(0.12, 1.11, 0.5); palmLine.position.x = 0.12; palmLine.position.y = 1.14;
+    const reach = t < 41 ? 0 : t < 43 ? prog(t, 41, 42.6) : t < 50.5 ? 1 : 1 - prog(t, 50.5, 52);
+    pose({ walk, reach, headPitch: t > 33 && t < 41 ? 0.04 : t >= 41 && t < 56 ? 0.14 : 0 });
+    // efek wajah
+    const fOn = t > 35 && t < 40.5 ? Math.min(1, (t - 35) / 0.4, (40.5 - t) / 0.4) : 0;
+    faceGrid.material.opacity = 0.55 * fOn; faceGrid.rotation.y = t * 0.8;
+    faceRing.material.opacity = fOn; faceRing.position.y = Math.sin((t - 35) * 2.4) * 0.12;
+    const pOn = t > 43 && t < 48.5 ? Math.min(1, (t - 43) / 0.4, (48.5 - t) / 0.4) : 0;
+    beam.material.opacity = 0.25 * pOn; palmLine.material.opacity = pOn; palmLine.position.z = 0.5 + Math.sin((t - 43) * 3) * 0.06;
+    sensorGlow.material.opacity = 0.25 + 0.5 * pOn;
+    lens.material.color.set(fOn > 0 ? '#FDE68A' : '#7DD3FC');
+    // layar
+    if (t < 35) drawScreen('idle'); else if (t < 39.5) drawScreen('face', prog(t, 35, 39.5)); else if (t < 43) drawScreen('faceok');
+    else if (t < 48) drawScreen('palm', prog(t, 43, 48)); else drawScreen('paid');
+    camAt(t);
+    renderer.render(scene, cam);
+    // keterangan
+    let c = CAPS[0]; CAPS.forEach(x => { if (t >= x[0]) c = x; });
+    document.getElementById('cap-chip').textContent = c[1]; document.getElementById('cap-title').textContent = c[2]; document.getElementById('cap-sub').textContent = c[3];
+    const cap = document.getElementById('cap'), since = t - c[0]; cap.style.opacity = clamp(since / 0.5); cap.style.transform = `translateY(${(1 - clamp(since / 0.5)) * 14}px)`;
+}
+
+// ---------- Cardless ATM (di area lain dunia yang sama, x = 10) ----------
+const AX = 10;
+const roundRect = (g, x, y, w, h, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
+add(new THREE.BoxGeometry(3.2, 2.9, 0.06), mat('#1C2B44'), AX + 0.55, 1.45, -1.66);
+const sign = document.createElement('canvas'); sign.width = 1024; sign.height = 160; { const g = sign.getContext('2d');
+    g.fillStyle = '#1C2B44'; g.fillRect(0, 0, 1024, 160); g.fillStyle = '#fff'; g.font = '700 84px "IBM Plex Sans", sans-serif'; g.fillText('ATM', 40, 112);
+    g.fillStyle = '#E8B04A'; roundRect(g, 260, 42, 470, 78, 20); g.fill(); g.fillStyle = '#0B1220'; g.font = '600 40px "IBM Plex Mono", monospace'; g.fillText('BioPay Ready', 292, 96);
+    g.fillStyle = 'rgba(255,255,255,.75)'; g.font = '400 30px "IBM Plex Sans", sans-serif'; g.fillText('cardless', 770, 96); }
+const signTex = new THREE.CanvasTexture(sign); signTex.colorSpace = THREE.SRGBColorSpace;
+add(new THREE.PlaneGeometry(2.4, 0.375), new THREE.MeshBasicMaterial({ map: signTex }), AX + 0.55, 2.45, -1.62);
+add(new THREE.PlaneGeometry(2.6, 2.2), mat('#C9CFD8'), AX + 0.55, 0.002, -0.4).rotation.x = -Math.PI / 2;
+const atmScr = document.createElement('canvas'); atmScr.width = 768; atmScr.height = 528; const actx = atmScr.getContext('2d');
+const atmTex = new THREE.CanvasTexture(atmScr); atmTex.colorSpace = THREE.SRGBColorSpace;
+function buildATM(x, tex) {
+    const body = mat('#D5DAE1', { metalness: 0.35, roughness: 0.45 }), dark = mat('#1F2937', { roughness: 0.4 });
+    add(new THREE.BoxGeometry(0.92, 1.78, 0.9), body, x, 0.89, -1.05);
+    add(new THREE.BoxGeometry(0.92, 0.12, 0.12), mat('#1C2B44'), x, 1.72, -0.56);
+    const panel = new THREE.Group(); panel.position.set(x, 1.36, -0.53); panel.rotation.x = -0.22; scene.add(panel);
+    add(new THREE.BoxGeometry(0.72, 0.5, 0.03), dark, 0, 0, 0, panel);
+    add(new THREE.PlaneGeometry(0.66, 0.453), new THREE.MeshBasicMaterial(tex ? { map: tex } : { color: '#25344D' }), 0, 0, 0.016, panel);
+    add(new THREE.CircleGeometry(0.012, 20), new THREE.MeshBasicMaterial({ color: '#7DD3FC' }), 0, 0.3, 0.0, panel).position.z = 0.03;
+    add(new THREE.BoxGeometry(0.92, 0.06, 0.26), body, x, 1.02, -0.48);
+    add(new THREE.BoxGeometry(0.2, 0.03, 0.16), dark, x + 0.12, 1.065, -0.46);
+    add(new THREE.BoxGeometry(0.28, 0.035, 0.03), mat('#111827'), x - 0.05, 1.17, -0.585);
+    return panel;
+}
+buildATM(AX, atmTex); buildATM(AX + 1.1, null);
+const atmGlow = add(new THREE.PlaneGeometry(0.16, 0.12), new THREE.MeshBasicMaterial({ color: '#E8B04A', transparent: true, opacity: 0.35 }), AX + 0.12, 1.082, -0.46);
+atmGlow.rotation.x = -Math.PI / 2;
+const cash = new THREE.Group(); scene.add(cash);
+for (let i = 0; i < 4; i++) add(new THREE.BoxGeometry(0.15, 0.003, 0.075), mat(i % 2 ? '#C94A5A' : '#D85F6E', { roughness: 0.8 }), 0, i * 0.004, 0, cash).rotation.y = (i - 1.5) * 0.03;
+const atmLabels = [['Withdraw cash', 'ph-money'], ['Deposit cash', ''], ['Transfer', ''], ['Check balance', ''], ['Pay bills', ''], ['Top up e-wallet', '']];
+let lastAtm = '';
+function drawATM(state, p = 0) {
+    const key = state + Math.round(p * 20); if (key === lastAtm) return; lastAtm = key;
+    const g = actx, W = 768, H = 528; g.textAlign = 'left';
+    const hdr = (txt) => { g.fillStyle = '#0F1B2D'; g.fillRect(0, 0, W, 64); g.fillStyle = '#E8B04A'; g.font = '700 30px "IBM Plex Sans"'; g.fillText('BioPay', 28, 42); g.fillStyle = 'rgba(255,255,255,.8)'; g.font = '500 22px "IBM Plex Mono"'; g.textAlign = 'right'; g.fillText(txt, W - 28, 41); g.textAlign = 'left'; };
+    const T = (t, x, y, f, c) => { g.fillStyle = c; g.font = f; g.fillText(t, x, y); };
+    const bar = (k, col) => { g.fillStyle = '#E1E5EB'; g.fillRect(48, 300, W - 96, 16); g.fillStyle = col; g.fillRect(48, 300, (W - 96) * k, 16); };
+    g.fillStyle = '#F5F6F8'; g.fillRect(0, 0, W, H);
+    if (state === 'welcome') { hdr('ATM · cardless'); T('Welcome', 48, 160, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('No card or PIN needed.', 48, 210, '400 28px "IBM Plex Sans"', '#566173');
+        g.fillStyle = '#0F1B2D'; roundRect(g, 48, 290, W - 96, 96, 18); g.fill(); T('Look at the camera to sign in', 140, 350, '600 32px "IBM Plex Sans"', '#fff'); }
+    if (state === 'face') { hdr('Step 1 / 2'); T('Scanning face…', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('3D depth check', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(p, '#C8892A'); }
+    if (state === 'faceok') { hdr('Step 2 / 2'); T('Face recognised', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Place your palm on the sensor', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(1, '#0F7B4F'); T('Sensor below the screen  ↓', 48, 390, '600 30px "IBM Plex Sans"', '#0F1B2D'); }
+    if (state === 'palm') { hdr('Step 2 / 2'); T('Scanning palm…', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Vein pattern · second factor', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(p, '#C8892A'); }
+    if (state === 'home' || state === 'amount') {
+        hdr('Secure session · 02:00'); T('Hi, Ikbal', 40, 116, '700 38px "IBM Plex Sans"', '#0F1B2D');
+        T('Funding source', 40, 156, '600 18px "IBM Plex Mono"', '#566173');
+        [['Bank account', '•••• 4821', 'Rp 8.240.000'], ['Kasku e-wallet', 'main', 'Rp 1.150.000']].forEach(([a, b, c], i) => {
+            const x = 40 + i * 350; g.fillStyle = '#fff'; g.strokeStyle = i === 0 ? '#0F1B2D' : '#DCE1E8'; g.lineWidth = i === 0 ? 3 : 2; roundRect(g, x, 170, 336, 84, 14); g.fill(); g.stroke();
+            T(a + '  ' + b, x + 18, 204, '600 21px "IBM Plex Sans"', '#0F1B2D'); T(c, x + 18, 238, '500 21px "IBM Plex Mono"', '#566173'); });
+        if (state === 'home') {
+            atmLabels.forEach(([l], i) => { const x = 40 + (i % 3) * 232, y = 278 + Math.floor(i / 3) * 112, on = i === 0 && p > 0.6;
+                g.fillStyle = on ? '#0F1B2D' : '#fff'; g.strokeStyle = '#DCE1E8'; g.lineWidth = 2; roundRect(g, x, y, 220, 98, 16); g.fill(); g.stroke();
+                T(l, x + 20, y + 58, '600 25px "IBM Plex Sans"', on ? '#fff' : '#0F1B2D'); });
+        } else {
+            T('Withdraw cash · choose amount', 40, 296, '600 22px "IBM Plex Mono"', '#566173');
+            ['Rp 100.000', 'Rp 200.000', 'Rp 300.000', 'Rp 500.000', 'Rp 1.000.000', 'Other'].forEach((l, i) => { const x = 40 + (i % 3) * 232, y = 312 + Math.floor(i / 3) * 100, on = i === 3 && p > 0.45;
+                g.fillStyle = on ? '#0F1B2D' : '#fff'; g.strokeStyle = '#DCE1E8'; g.lineWidth = 2; roundRect(g, x, y, 220, 86, 16); g.fill(); g.stroke();
+                T(l, x + 20, y + 54, '600 26px "IBM Plex Sans"', on ? '#fff' : '#0F1B2D'); });
+        }
+    }
+    if (state === 'dispense' || state === 'done') {
+        hdr(state === 'done' ? 'Session closed' : 'Memproses');
+        g.fillStyle = state === 'done' ? '#E7F4EC' : '#FFF7E8'; g.fillRect(0, 64, W, H - 64);
+        g.fillStyle = state === 'done' ? '#0F7B4F' : '#C8892A'; g.beginPath(); g.arc(W / 2, 176, 60, 0, 7); g.fill();
+        g.strokeStyle = '#fff'; g.lineWidth = 11; g.lineCap = 'round'; g.beginPath();
+        if (state === 'done') { g.moveTo(W / 2 - 26, 176); g.lineTo(W / 2 - 6, 196); g.lineTo(W / 2 + 28, 158); } else { g.moveTo(W / 2, 150); g.lineTo(W / 2, 200); g.moveTo(W / 2 - 18, 184); g.lineTo(W / 2, 202); g.lineTo(W / 2 + 18, 184); }
+        g.stroke(); g.textAlign = 'center';
+        T(state === 'done' ? 'Transaction complete' : 'Please take your cash', W / 2, 300, '700 44px "IBM Plex Sans"', '#0F1B2D');
+        T('Withdrawal Rp 500.000 · Account •••• 4821', W / 2, 348, '400 26px "IBM Plex Sans"', '#566173');
+        if (state === 'done') T('Notification & digital receipt sent to the phone', W / 2, 392, '400 26px "IBM Plex Sans"', '#566173');
+        g.textAlign = 'left';
+    }
+    atmTex.needsUpdate = true;
+}
+const CAMK2 = [
+    [74, V(AX + 3.2, 2.3, 4.8), V(AX, 1.1, -0.3)], [78, V(AX + 1.9, 1.9, 2.8), V(AX, 1.3, -0.4)], [79.6, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)],
+    [80.6, V(AX + 0.3, 1.67, -0.45), V(AX, 1.62, 0.3)], [85, V(AX + 0.3, 1.67, -0.45), V(AX, 1.62, 0.3)], [86.4, V(AX + 0.85, 1.42, 0.3), V(AX + 0.08, 1.1, -0.45)],
+    [91.6, V(AX + 0.85, 1.42, 0.3), V(AX + 0.08, 1.1, -0.45)], [93, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)], [100.6, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)],
+    [102, V(AX + 1.0, 1.45, 0.2), V(AX + 0.02, 1.18, -0.5)], [106.6, V(AX + 1.0, 1.45, 0.2), V(AX + 0.02, 1.18, -0.5)], [109, V(AX + 3.4, 2.4, 5.2), V(AX, 1.0, -0.2)], [112.5, V(AX + 4, 2.6, 6), V(AX, 1.0, -0.2)]
+];
+const CAPS2 = [
+    [74, 'ATM', 'Walk up to the ATM without a card', 'ATM sudah terhubung ke BioPay; dompet dan kartu tetap di rumah'],
+    [80, 'STEP 1', 'Face scan at the ATM camera', 'A 3D depth check confirms a real person'],
+    [85.6, 'STEP 2', 'Palm scan', 'Faktor kedua; tanpa ini ATM tidak akan terbuka'],
+    [92, 'SIGNED IN', 'Straight into your BioPay page', 'Choose a funding source: a linked bank account or e-wallet'],
+    [96.5, 'WITHDRAW', 'Choose Rp 500.000', 'Also: deposit cash, transfer, check balances and pay bills'],
+    [101, 'TAKE CASH', 'Cash out, no card', 'No card to swallow, lose or skim'],
+    [107, 'DONE', 'Instant notification on the phone', 'The ATM session closes automatically afterwards']
+];
+function caption(list, id, t) {
+    let c = list[0]; list.forEach(x => { if (t >= x[0]) c = x; });
+    document.getElementById(id + '-chip').textContent = c[1]; document.getElementById(id + '-title').textContent = c[2]; document.getElementById(id + '-sub').textContent = c[3];
+    const el = document.getElementById(id), since = t - c[0]; el.style.opacity = clamp(since / 0.5); el.style.transform = `translateY(${(1 - clamp(since / 0.5)) * 14}px)`;
+}
+function renderATM(t) {
+    const start = V(AX - 2.8, 0, 3.0), stop = V(AX, 0, 0), away = V(AX - 3.0, 0, 3.4);
+    let walk = 0, pos, face = Math.PI;
+    if (t < 78.5) { const k = prog(t, 74, 78.5); pos = start.clone().lerp(stop, k); walk = k < 1 ? (t - 74) * 6.2 : 0; face = Math.atan2(stop.x - start.x, stop.z - start.z); if (k > 0.85) face = lerp(face, Math.PI, (k - 0.85) / 0.15); }
+    else if (t < 107.5) pos = stop.clone();
+    else { const k = prog(t, 108, 112); pos = stop.clone().lerp(away, k); walk = t > 108 && k < 1 ? (t - 108) * 6.2 : 0; face = lerp(Math.PI, Math.atan2(away.x - stop.x, away.z - stop.z), prog(t, 107.5, 108.5)); }
+    person.position.copy(pos); person.rotation.y = face;
+    // tangan: telapak ke sensor (85.8-92), lalu ambil uang (102.6-106)
+    const palmR = t < 85.8 ? 0 : t < 91.4 ? prog(t, 85.8, 87.2) : 1 - prog(t, 91.4, 92.8);
+    const cashR = t < 102.6 ? 0 : t < 104.4 ? prog(t, 102.6, 104.2) : t < 107.6 ? 1 - 0.5 * prog(t, 104.6, 105.8) : 0.5 - 0.5 * prog(t, 107.6, 108.6);
+    const tgt = cashR > 0 ? V(-0.03, 1.19, 0.47) : V(-0.12, 1.16, 0.46);
+    pose({ walk, reach: Math.max(palmR, cashR), tgt, flat: cashR > 0 ? 0.25 : 1, headPitch: t > 79 && t < 85.5 ? 0.04 : t >= 85.5 && t < 107 ? 0.12 : 0 });
+    // uang: keluar dari slot, lalu ikut tangan
+    const out = prog(t, 101, 102.4);
+    if (t < 104.4) { cash.position.set(AX - 0.05, 1.165, -0.62 + 0.12 * out); cash.rotation.set(0, 0, 0); cash.visible = t > 100.8; }
+    else { cash.position.copy(handR.position).add(V(0, -0.01, 0)); cash.quaternion.copy(handR.quaternion); cash.rotateX(Math.PI / 2); cash.visible = t < 110; }
+    // efek scan
+    const fOn = t > 80.4 && t < 84.8 ? Math.min(1, (t - 80.4) / 0.4, (84.8 - t) / 0.4) : 0;
+    faceGrid.material.opacity = 0.55 * fOn; faceGrid.rotation.y = t * 0.8; faceRing.material.opacity = fOn; faceRing.position.y = Math.sin((t - 80) * 2.4) * 0.12;
+    const pOn = t > 87.2 && t < 91.2 ? Math.min(1, (t - 87.2) / 0.4, (91.2 - t) / 0.4) : 0;
+    beam.position.set(AX + 0.12, 1.12, -0.46); palmLine.position.set(AX + 0.12, 1.15, -0.46 + Math.sin((t - 87) * 3) * 0.06);
+    beam.material.opacity = 0.25 * pOn; palmLine.material.opacity = pOn; atmGlow.material.opacity = 0.25 + 0.5 * pOn;
+    // layar ATM
+    if (t < 80.4) drawATM('welcome'); else if (t < 84.6) drawATM('face', prog(t, 80.4, 84.6)); else if (t < 87.2) drawATM('faceok');
+    else if (t < 91.4) drawATM('palm', prog(t, 87.2, 91.4)); else if (t < 97) drawATM('home', prog(t, 92, 97)); else if (t < 101) drawATM('amount', prog(t, 97, 101));
+    else if (t < 106.4) drawATM('dispense'); else drawATM('done');
+    sun.position.set(AX + 3, 6, 4); sun.target.position.set(AX, 0, -0.4);
+    let i = 0; while (i < CAMK2.length - 2 && t > CAMK2[i + 1][0]) i++;
+    const [t0, p0, l0] = CAMK2[i], [t1, p1, l1] = CAMK2[i + 1], k = prog(t, t0, t1);
+    cam.position.copy(p0).lerp(p1, k); cam.lookAt(l0.clone().lerp(l1, k));
+    renderer.render(scene, cam);
+    caption(CAPS2, 'cap2', t);
+}
+
+// ---------- Pemutar ----------
+const s4el = document.getElementById('s4'), s10el = document.getElementById('s10');
+function renderAt(t) {
+    t = clamp(t, 0, DUR); render2D(t);
+    if (t > 26.4 && t < 63.6) { if (canvas.parentNode !== s4el) s4el.prepend(canvas); render3D(t); }
+    else if (t > 73.4 && t < 112.6) { if (canvas.parentNode !== s10el) s10el.prepend(canvas); renderATM(t); }
+}
+window.__DUR = DUR;
+window.__renderAt = t => { renderAt(t); return true; };
+const stage = document.getElementById('stage'), wrap = document.getElementById('stage-wrap');
+function fit() { stage.style.transform = `scale(${wrap.clientWidth / 1280})`; }
+addEventListener('resize', fit); fit();
+let playing = !document.body.classList.contains('capture') && !new URLSearchParams(location.search).has('capture');
+if (new URLSearchParams(location.search).has('capture')) document.body.classList.add('capture');
+let t0 = performance.now(), offset = 0;
+const seek = document.getElementById('seek'), playBtn = document.getElementById('play'), clock = document.getElementById('clock');
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+function now() { return playing ? offset + (performance.now() - t0) / 1000 : offset; }
+playBtn.onclick = () => { if (playing) { offset = now(); playing = false; } else { if (offset >= DUR) offset = 0; t0 = performance.now(); playing = true; } playBtn.textContent = playing ? 'Pause' : 'Play'; };
+seek.oninput = () => { offset = +seek.value; t0 = performance.now(); renderAt(offset); };
+addEventListener('keydown', e => { if (e.code === 'Space' && e.target === document.body) { e.preventDefault(); playBtn.click(); } });
+function loop() {
+    if (!document.body.classList.contains('capture')) {
+        let t = now(); if (t >= DUR) { t = DUR; offset = DUR; playing = false; playBtn.textContent = 'Play'; }
+        renderAt(t); seek.value = t; clock.textContent = `${fmt(t)} / ${fmt(DUR)}`;
+        requestAnimationFrame(loop);
+    }
+}
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) { playing = false; playBtn.textContent = 'Play'; }
+renderAt(0); loop();
+window.__ready = true;
+</script>
+</body>
+</html>
