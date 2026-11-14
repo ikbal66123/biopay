@@ -47,6 +47,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
     await test('landing loads with inline CSS (no Tailwind CDN) and the customer quote', async () => {
         assert(!requested.some(u => u.includes('cdn.tailwindcss.com')), 'Tailwind CDN was requested');
         assert(await page.isVisible('#pt-quote'), 'quote not visible');
+        await page.waitForTimeout(300); eq(await page.getAttribute('#cloud-status', 'data-mode'), 'demo', 'demo mode without /api/config');
         eq(await page.locator('.pt-tabs [role="tab"]').count(), 4, 'device tabs');
     });
 

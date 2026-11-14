@@ -620,6 +620,8 @@
         .pt-tour-nav .pt-btn-primary { background: #E8B04A; color: var(--ink); }
         .tour-spot { outline: 3px solid #E8B04A !important; outline-offset: 4px; border-radius: 14px; transition: outline-color .2s; }
         @media (max-width: 640px) { .pt-tour { right: 16px; bottom: 16px; padding: 14px; } .pt-tour-text { font-size: 13px; } .pt-quote blockquote { font-size: 16px; } }
+        .pt-cloud { margin: 16px 0 0; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #566173; }
+        .pt-cloud[data-mode="cloud"] { color: #0F7B4F; font-weight: 600; }
         .pt-partner { width: 100%; max-width: 1240px; padding: 56px 8px 32px; display: flex; flex-direction: column; gap: 0; }
         .pt-h2 { margin: 0; font-size: 36px; line-height: 1.12; letter-spacing: -.025em; font-weight: 700; color: var(--ink); max-width: 22ch; }
         .pt-partner .pt-lead { max-width: 64ch; }
@@ -1067,6 +1069,7 @@
                 <blockquote><span lang="en">“With this I could earn more, because sometimes customers forget their phone and wallet, and the sale just doesn’t happen.”</span><span lang="id">“Dengan ini saya bisa lebih untung, soalnya kadang pembeli lupa bawa HP sama dompet dan belanjanya gak jadi.”</span></blockquote>
                 <figcaption><span lang="en">Shop owner, early interview in Indonesia · 7 of 7 people we spoke to (shop owners and residents) said they would use BioPay</span><span lang="id">Pemilik toko, wawancara awal di Indonesia · 7 dari 7 orang yang kami ajak bicara (pemilik toko dan warga) bilang mau memakai BioPay</span></figcaption>
             </figure>
+            <p id="cloud-status" class="pt-cloud" data-mode="demo"></p>
             <ol class="pt-flow" aria-label="How it works">
                 <li><i class="ph ph-scan-smiley" aria-hidden="true"></i><span lang="en">Face</span><span lang="id">Wajah</span></li>
                 <li aria-hidden="true" class="pt-flow-sep"></li>
@@ -2921,12 +2924,101 @@
                     const acct = { name: name.trim().replace(/\s+/g, ' '), email: email.trim().toLowerCase(), phone, country, docType, docLast4: docNumber.slice(-4), docKey, docPhoto, docFace, bioId, passport: `BIO-ID-${bioId}-${country}`, salt, hash: sha256Hex(salt + ':' + password), created: new Date().toISOString().slice(0, 10), faceEnrolled: true, palmEnrolled: true };
                     list.push(acct); last = acct.email; save(); return acct;
                 },
+                // Salinan lokal dari akun server (login di perangkat baru); dokumen identitas tetap tidak dibawa ke server
+                importCloud({ name, email, phone, country, bioId, password }) {
+                    const salt = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, '0')).join('');
+                    const id = bioId || String(10000 + Number(randDigits(5)) % 90000);
+                    const acct = { name: (name || email.split('@')[0]).trim(), email: email.trim().toLowerCase(), phone: phone || '', country: country || 'ID', docType: 'KTP', docLast4: '', bioId: id, passport: `BIO-ID-${id}-${country || 'ID'}`, salt, hash: sha256Hex(salt + ':' + password), cloud: true };
+                    list = list.filter(a => a.email !== acct.email); list.push(acct); last = acct.email; save(); return acct;
+                },
                 remove(acct) { if (!acct || acct.seed) return false; list = list.filter(a => a.email !== acct.email); if (last === acct.email) last = null; save(); return true; },
                 setActive(acct) { last = acct ? acct.email : null; save(); },
                 // Simulasi 1:N: wajah yang lolos deteksi dicocokkan ke akun terakhir yang aktif di perangkat ini
                 matchFace: () => list.find(a => a.email === last) || list.find(a => a.seed) || list[0] || null,
                 count: () => list.length
             };
+        })();
+        // ==========================================
+        // BIOCLOUD: backend sungguhan (Supabase + Sentry + struk email lewat Vercel API).
+        // Aktif hanya bila /api/config mengembalikan kunci (deploy Vercel). Di GitHub Pages atau file lokal
+        // tetap mode demo: semua data di browser ini. Tidak ada kunci rahasia di sisi browser.
+        // ==========================================
+        const BioCloud = (() => {
+            let client = null, session = null, cfg = null, mode = 'demo';
+            const loadScript = src => new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = src; sc.async = true; sc.crossOrigin = 'anonymous'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
+            const report = (e, where) => { console.warn('[BioCloud]', where, e); try { if (window.Sentry) Sentry.captureException(e, { tags: { where } }); } catch (x) {} };
+            function badge() {
+                const el = document.getElementById('cloud-status'); if (!el) return;
+                el.dataset.mode = mode;
+                el.innerHTML = mode === 'cloud'
+                    ? '<i class="ph-bold ph-cloud-check" aria-hidden="true"></i> <span lang="en">Connected: accounts and transactions sync securely to the server.</span><span lang="id">Terhubung: akun dan transaksi tersimpan aman di server.</span>'
+                    : '<i class="ph-bold ph-device-mobile" aria-hidden="true"></i> <span lang="en">Demo mode: everything stays in this browser.</span><span lang="id">Mode demo: semua data tetap di browser ini.</span>';
+            }
+            async function init() {
+                badge();
+                if (!/^https?:$/.test(location.protocol)) return;
+                try {
+                    const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 3500);
+                    const r = await fetch('/api/config', { cache: 'no-store', signal: ctrl.signal }); clearTimeout(t);
+                    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return;
+                    cfg = await r.json();
+                } catch (e) { return; }
+                if (cfg.sentryDsn) {
+                    loadScript('https://browser.sentry-cdn.com/8.42.0/bundle.min.js').then(() => {
+                        Sentry.init({ dsn: cfg.sentryDsn, environment: cfg.environment || 'production', sendDefaultPii: false, tracesSampleRate: 0,
+                            beforeSend(ev) { if (ev.user) delete ev.user.email; if (ev.request) delete ev.request.cookies; return ev; } });
+                    }).catch(e => console.warn('[BioCloud] Sentry tidak termuat', e));
+                }
+                if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
+                    try {
+                        await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js');
+                        client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true } });
+                        session = (await client.auth.getSession()).data.session;
+                        client.auth.onAuthStateChange((_ev, s) => { session = s; });
+                        mode = 'cloud'; badge();
+                    } catch (e) { report(e, 'init'); client = null; mode = 'demo'; badge(); }
+                }
+            }
+            async function signUp(reg) {
+                if (!client) return { skipped: true };
+                const { data, error } = await client.auth.signUp({ email: reg.email.trim().toLowerCase(), password: reg.password, options: { data: {
+                    full_name: reg.name, phone_e164: reg.phone, country_code: reg.country, language: 'id', biometric_consent: 'true', consent_version: '2026-11' } } });
+                if (error) { report(error, 'signUp'); return { error: error.message }; }
+                session = data.session || null;
+                return { needsConfirm: !data.session };
+            }
+            async function signIn(email, password) {
+                if (!client) return { skipped: true };
+                const { data, error } = await client.auth.signInWithPassword({ email: String(email).trim().toLowerCase(), password });
+                if (error) return { error: error.message };
+                session = data.session;
+                const { data: prof } = await client.from('profiles').select('full_name, phone_e164, country_code, bio_id').eq('id', data.user.id).maybeSingle();
+                return { user: data.user, profile: prof || {} };
+            }
+            async function signOut() { if (client && session) { try { await client.auth.signOut(); } catch (e) { report(e, 'signOut'); } session = null; } }
+            async function deleteAccount() {
+                if (!client || !session) return { skipped: true };
+                const { error } = await client.rpc('delete_my_account');
+                if (error) { report(error, 'deleteAccount'); return { error: error.message }; }
+                await signOut(); return { ok: true };
+            }
+            async function logTx(tx) {
+                if (!client || !session) return;
+                const row = { user_id: session.user.id, title: String(tx.title || 'Transaksi').slice(0, 160), category: tx.category || 'Lainnya', amount_idr: Math.round(tx.amount_idr),
+                    direction: tx.direction || 'out', channel: tx.channel || 'app', wallet_label: tx.wallet_label || null, reference: tx.reference || null, occurred_at: (tx.occurred_at || new Date()).toISOString() };
+                if (!(row.amount_idr > 0)) return;
+                const { error } = await client.from('transactions').insert(row);
+                if (error) report(error, 'logTx');
+            }
+            async function sendReceipt(tx) {
+                if (!client || !session) return false;
+                try {
+                    const r = await fetch('/api/receipt', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
+                        body: JSON.stringify({ title: tx.title, amount_idr: Math.round(tx.amount_idr), direction: tx.direction || 'out', wallet_label: tx.wallet_label, reference: tx.reference }) });
+                    return r.status === 202;
+                } catch (e) { report(e, 'receipt'); return false; }
+            }
+            return { init, signUp, signIn, signOut, deleteAccount, logTx, sendReceipt, report, get mode() { return mode; }, get signedIn() { return !!session; } };
         })();
         function userView(acct, lang = 'ID') {
             const c = countryBy(acct.country || 'ID'), dt = DOC_TYPES[acct.docType] || DOC_TYPES.KTP;
@@ -3103,6 +3195,7 @@
                 const flow = meta.flow || (/^(Top Up|Tukar Valas)/.test(title) ? 'move' : isExpense ? 'out' : 'in');
                 const cat = meta.cat || (/Tagihan/.test(title) ? 'Tagihan' : /^(Transfer|Tarik Tunai)/.test(title) ? 'Transfer & tunai' : flow === 'in' ? 'Pemasukan' : flow === 'move' ? 'Pindah dana' : 'Lainnya');
                 if (idr > 0) {
+                    BioCloud.logTx({ title, category: cat, amount_idr: idr, direction: flow, channel: meta.channel || (/^Top Up/.test(title) ? 'topup' : /^Tukar Valas/.test(title) ? 'fx' : /Tagihan/.test(title) ? 'bill' : /^(Transfer|Terima)/.test(title) ? 'transfer' : /^Tarik Tunai/.test(title) ? 'atm' : /QR/.test(subtitle) ? 'qr' : 'app'), wallet_label: wallet, occurred_at: now });
                     records.unshift({ t: title, cat, amt: idr, type: flow, ts: now, auto: true, wallet });
                     if (flow === 'out') trackSpend(cat, wallet, idr);
                     if (flow === 'in') monthIncome += idr;
@@ -3330,6 +3423,7 @@
                 ['Travel', /(tiket|hotel|pesawat|liburan|travel|penginapan)/]
             ];
             const lc = x => x.toLowerCase();
+            let replyChannel = 'manual';
             const clock = () => { const d = new Date(); return `pukul ${String(d.getHours()).padStart(2, '0')}.${String(d.getMinutes()).padStart(2, '0')}`; };
             const fmtShort = n => n >= 1e6 ? 'Rp ' + (n / 1e6).toLocaleString('id-ID', { maximumFractionDigits: 2 }) + ' jt' : formatRp(n);
             function parseAmt(text) {
@@ -3400,11 +3494,13 @@
                 }
                 if (amt && /(gaji|terima|diterima|dapat|pemasukan|masuk|bonus|thr|transferan|dibayar klien|freelance)/.test(t)) {
                     monthIncome += amt; records.unshift({ t: titleOf(text) || 'Pemasukan', cat: 'Pemasukan', amt, type: 'in', ts: new Date(), manual: true });
+                    BioCloud.logTx({ title: records[0].t, category: 'Pemasukan', amount_idr: amt, direction: 'in', channel: replyChannel });
                     return `${clock()} · Pemasukan ${formatRp(amt)} dicatat. Total pemasukan bulan ini ${formatRp(monthIncome)}. Mau sisihkan 10% (${formatRp(Math.round(amt * 0.1))}) ke dana darurat? Ketik “nabung darurat ${Math.round(amt * 0.1 / 1000)}rb”.`;
                 }
                 if (amt) {
                     const cat = guessCat(t), name = titleOf(text);
                     records.unshift({ t: name, cat, amt, type: 'out', ts: new Date(), manual: true });
+                    BioCloud.logTx({ title: name, category: cat, amount_idr: amt, direction: 'out', channel: replyChannel });
                     spend[cat] = (spend[cat] || 0) + amt; spendByWallet['Tunai & lainnya'] = (spendByWallet['Tunai & lainnya'] || 0) + amt;
                     return `Dicatat ${clock()}: ${name}, ${formatRp(amt)} (${tr(cat)}). ${budgetLine(cat)}`;
                 }
@@ -3463,7 +3559,7 @@
                 wakeUntil = 0;
                 const before = records.length;
                 chat.push({ me: true, txt: '🎙 ' + cmd });
-                const r = reply(cmd);
+                replyChannel = 'voice'; const r = reply(cmd); replyChannel = 'manual';
                 if (records.length > before && records[0].manual) { records[0].voice = true; records[0].manual = false; }
                 chat.push({ me: false, txt: r }); renderFinance(); say(r);
                 if ($('tab-keuangan').classList.contains('hidden') || !isScreenActive('screen-dashboard')) toast(tr('BioPay mendengar: {0}', cmd), 'ph-microphone', 'text-sky-400');
@@ -3615,7 +3711,8 @@
                     if (pk.kind === 'fx' && pk.val > 0) reward += ' · ' + tr('hemat biaya kurs {0}', formatRp(pk.val));
                     if (pk.kind !== 'pts') savedTotal += pk.val; else savedTotal += Math.round(earned / 2);
                     points += earned;
-                    addBiopayHistory(merchantName, "Pembayaran Ritel", formattedCur, true, W, { idr: currentPaymentIDR, cat: payCategory });
+                    addBiopayHistory(merchantName, "Pembayaran Ritel", formattedCur, true, W, { idr: currentPaymentIDR, cat: payCategory, channel: 'terminal' });
+                    BioCloud.sendReceipt({ title: merchantName, amount_idr: currentPaymentIDR, direction: 'out', wallet_label: W }).then(ok => { if (ok) toast('Struk dikirim ke email kamu', 'ph-envelope-simple', 'text-sky-400'); });
                     if (!paidToday) { paidToday = true; if (streakDays < 7) streakDays++; if (streakDays === 7) { points += 200; reward += ' · ' + tr('bonus beruntun +200'); } }
                     progressMission('pay3'); if (isTouristTransaction) progressMission('intl'); if (smartRoute && pk.val > 0) progressMission('route');
                     logActivity('Pembayaran di terminal', `${merchantName} · ${W}`);
@@ -4165,17 +4262,30 @@
             }
             function finishRegister() {
                 if (!pendingReg) return;
-                const acct = ACCOUNTS.create(pendingReg); pendingReg = null;
+                const reg = pendingReg, acct = ACCOUNTS.create(pendingReg); pendingReg = null;
                 setUser(acct);
+                BioCloud.signUp(reg).then(r => {
+                    if (r.skipped) return;
+                    if (r.error) toast(tr('Akun tersimpan di perangkat. Sinkron server gagal: {0}', r.error), 'ph-cloud-slash', 'text-amber-400');
+                    else toast(r.needsConfirm ? 'Cek email untuk verifikasi akun BioPay.' : 'Akun tersimpan aman di server.', 'ph-cloud-check', 'text-emerald-400');
+                });
                 $('reg-done-bioid').textContent = acct.bioId;
                 toast(tr('BioID {0} aktif. Selamat datang, {1}!', acct.bioId, acct.name.split(' ')[0]), 'ph-check-circle', 'text-emerald-400');
                 goToScreen('screen-register-done');
             }
             function openLogin() { $('login-id').value = ''; $('login-pass').value = ''; fieldError('login-id', ''); fieldError('login-pass', ''); goToScreen('screen-login'); }
-            function submitLogin() {
+            async function submitLogin() {
                 const id = $('login-id').value, pass = $('login-pass').value;
                 if (!fieldError('login-id', id.trim() ? '' : tr('Isi email atau nomor HP.')) | !fieldError('login-pass', pass ? '' : tr('Isi kata sandi.'))) return;
-                const acct = ACCOUNTS.find(id);
+                let acct = ACCOUNTS.find(id);
+                if (BioCloud.mode === 'cloud') {
+                    const email = acct ? acct.email : (/@/.test(id) ? id : '');
+                    if (email) {
+                        const r = await BioCloud.signIn(email, pass);
+                        if (r.user && !ACCOUNTS.verify(acct, pass)) acct = ACCOUNTS.importCloud({ name: r.profile.full_name, email, phone: r.profile.phone_e164, country: r.profile.country_code, bioId: r.profile.bio_id, password: pass });
+                        else if (r.error && /confirm/i.test(r.error)) { fieldError('login-pass', tr('Email belum diverifikasi. Cek kotak masuk email kamu.')); return; }
+                    }
+                }
                 if (!ACCOUNTS.verify(acct, pass)) { fieldError('login-id', ''); fieldError('login-pass', tr('Email/nomor HP atau kata sandi salah.')); $('login-pass').value = ''; $('login-pass').focus(); return; }
                 setUser(acct); $('login-pass').value = '';
                 toast(tr('Masuk sebagai {0}', acct.name), 'ph-user-check', 'text-emerald-400');
@@ -4190,7 +4300,7 @@
             function enterDashboard() { renderUser(); switchTab('home'); goToScreen('screen-dashboard'); }
             function logout() {
                 const name = currentUser ? currentUser.name : null;
-                currentUser = null; closeAllModals();
+                currentUser = null; closeAllModals(); BioCloud.signOut();
                 toast(name ? tr('{0} keluar. Sampai jumpa!', name) : tr('Sesi berakhir'), 'ph-sign-out', 'text-white');
                 switchTab('home'); goToScreen('screen-start');
             }
@@ -4203,6 +4313,7 @@
             function deleteAccount() {
                 const acct = currentUser || ACCOUNTS.matchFace();
                 ACCOUNTS.remove(acct); currentUser = null; closeModal('modal-delete-account'); renderUser();
+                BioCloud.deleteAccount().then(r => { if (r.error) toast(tr('Hapus data di server gagal: {0}. Coba lagi setelah masuk.', r.error), 'ph-cloud-slash', 'text-amber-400'); });
                 toast('Akun dan data biometrik dihapus.', 'ph-trash', 'text-red-400');
                 switchTab('home'); goToScreen('screen-start');
             }
@@ -5403,6 +5514,7 @@
             } catch (e) { /* run digantikan */ }
         }
         partnerSim();
+        BioCloud.init();
         // ==========================================
         // TUR TERPANDU 60 DETIK (inti produk untuk reviewer)
         // ==========================================

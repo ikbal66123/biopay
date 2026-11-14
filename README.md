@@ -62,6 +62,14 @@ python3 -m http.server 8000
 
 Then visit http://localhost:8000. Browsers only allow camera access on `https://`, `localhost` or local files. An internet connection is needed for fonts, icons, the QR libraries and the detection models (loaded from CDNs).
 
+## Backend (optional, switches on automatically)
+
+Without configuration the app runs in **demo mode**: everything stays in the browser, as on GitHub Pages. Deployed on **Vercel** with Supabase keys, it switches to **connected mode** (shown on the landing page): sign-up and sign-in go through **Supabase Auth**, every transaction is stored in Postgres, and receipts are emailed through **Resend**. **Sentry** tracks errors and **UptimeRobot** watches `/api/health`.
+
+- `supabase/migrations/`: schema with Row Level Security on every table (users only reach their own rows; the ledger is append-only except manual/voice notes; consent is recorded; `delete_my_account()` erases everything). Biometric images are never stored, only a reference to an encrypted template. `assistant_memory` uses pgvector for the finance assistant.
+- `api/`: `health` (uptime + Supabase check), `config` (public keys only), `receipt` (emails only the signed-in user's own address; rate-limited).
+- Step-by-step setup in Indonesian: [`docs/setup-infra.md`](docs/setup-infra.md). Variables: [`.env.example`](.env.example).
+
 ## Tests
 
 End-to-end tests drive the real page in Chromium (checkout and Smart Route, sign-in, Keuangan and the assistant, voice wake word, QR scan / QR Saya / QR Bayar in BioPay, Kasku and Lintas, the cardless ATM, the partner sandbox, the guided tour, and phone width). They run on every push via GitHub Actions.
