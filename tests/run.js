@@ -61,6 +61,32 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         assert(/BioPoin/.test(await page.textContent('#success-reward')), 'no reward line');
     });
 
+    await test('payment screen hides balances; priority order with fallback and "not enough" notice', async () => {
+        await page.evaluate(() => { showScreen('screen-start'); enterDashboard(); switchTab('wallets'); });
+        eq(await page.locator('#wallet-list-container .bp-wallet-row').count(), 3, 'wallet rows');
+        assert(/Utama/.test(await page.locator('#wallet-list-container .bp-wallet-row').first().innerText()), 'first wallet is Utama');
+        // empty the main wallet (simulation), then pay: should fall back to backup 1
+        await page.locator('#wallet-list-container .bp-sim button').first().click();
+        await page.evaluate(() => { generateRandomPayment(); showScreen('screen-options'); });
+        const route = await page.locator('#screen-options .bp-route').innerText();
+        assert(!/Rp\s?[\d.]{4,}/.test(route.replace(/\(maks Rp [\d.]+\)/g, '')), 'balances visible on payment screen: ' + route);
+        assert(/Dilewati/.test(route) && /tidak cukup/.test(await page.textContent('#route-why')), 'fallback not explained');
+        const before = await page.locator('.toast').count();
+        await page.click('#btn-confirm-payment'); await page.waitForTimeout(200);
+        assert(await page.locator('.toast', { hasText: 'Dipotong dari' }).count() >= 1, 'no fallback notification');
+        // empty every wallet: payment must be blocked with a clear notice
+        await page.evaluate(() => { showScreen('screen-start'); enterDashboard(); switchTab('wallets'); });
+        for (let i = 0; i < 3; i++) await page.locator('#wallet-list-container .bp-sim').nth(i).locator('button').first().click();
+        await page.evaluate(() => { generateRandomPayment(); showScreen('screen-options'); });
+        assert(await page.isDisabled('#btn-confirm-payment'), 'pay button should be disabled');
+        assert(/semua sumber dana/.test(await page.textContent('#route-why')), 'no "not enough anywhere" notice');
+        // refill for the following tests and move a wallet up
+        for (let i = 0; i < 3; i++) for (let k = 0; k < 6; k++) await page.evaluate(n => simFill(n), i);
+        await page.evaluate(() => { showScreen('screen-start'); enterDashboard(); switchTab('wallets'); moveWallet(1, -1); });
+        assert(/Utama/.test(await page.locator('#wallet-list-container .bp-wallet-row').first().innerText()), 'reorder');
+        await page.evaluate(() => showScreen('screen-start'));
+    });
+
     await test('sign in with the demo account', async () => {
         await page.evaluate(() => { showScreen('screen-start'); openLogin(); });
         await page.fill('#login-id', 'ikbal@biopay.id'); await page.fill('#login-pass', 'biopay123');
