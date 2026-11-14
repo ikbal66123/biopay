@@ -38,6 +38,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
     });
     let failed = 0; const t = async (name, f) => { try { await f(); console.log('  ok  ', name); } catch (e) { failed++; console.log('  FAIL', name, '\n      ', e.message); } };
     console.log('Cloud layer (simulated Supabase)');
+    await page.addInitScript(() => { try { localStorage.setItem('biopay-pitch-lang', 'id'); } catch (e) {} });
     await page.goto(base + '/index.html');
     await t('connects when /api/config has keys', async () => {
         await page.waitForFunction(() => document.getElementById('cloud-status').dataset.mode === 'cloud', null, { timeout: 8000 });

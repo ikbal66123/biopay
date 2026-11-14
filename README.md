@@ -35,9 +35,9 @@ This repository is an interactive prototype that runs entirely in the browser, a
 
 **Language:** the terminal's start screen has an Indonesian / English / Japanese switch that translates the BioPay app (start, sign-up, sign-in, payment flow and dashboard); each BioPay instance keeps its own language.
 
-**Bills in notifications:** Kasku and Lintas each have a bell with a badge for unpaid bills (electricity, internet, BPJS; hotel balance, PayLater). A bill can be paid with **QRIS** (dynamic QR with a 15-minute timer), **BioPay** (live face + palm scan) or **bank transfer** (pick BCA, BNI, BRI, Mandiri, CIMB Niaga, Permata or BSI to get a virtual account with instructions). Paid bills show a receipt with a reference number and land in the app's history; *Simulasikan tagihan baru masuk* adds a new bill for demos.
+**Bills in notifications:** Kasku and Lintas each have a bell with a badge for unpaid bills (electricity, internet, BPJS; hotel balance, PayLater). A bill can be paid with **QRIS** (dynamic QR with a 15-minute timer), **BioPay** (live face + palm scan) or **bank transfer** (pick one of seven fictional banks, e.g. Bank Arunika, to get a virtual account with instructions). Paid bills show a receipt with a reference number and land in the app's history; *Simulasikan tagihan baru masuk* adds a new bill for demos.
 
-The landing section at the top of the page has **Try it** buttons that jump straight into each flow. The apps' interface is in Bahasa Indonesia, the launch market. The landing section switches between English and Indonesian.
+The landing section at the top of the page has **Try it** buttons that jump straight into each flow. The EN/ID switch at the top translates everything: the landing page, the BioPay app, Kasku, Lintas, the ATM, bills, QR, and the money assistant (which also understands English, e.g. “coffee 28k”, “save for bali 200k”, “budget left?”). English is the default.
 
 ## What is real and what is simulated
 
@@ -50,7 +50,7 @@ The landing section at the top of the page has **Try it** buttons that jump stra
 
 No image or biometric data leaves the device. If the camera is blocked, or the detection model cannot load, scans fall back to a clearly labelled simulation mode so the demo never gets stuck.
 
-Kasku and Lintas are fictional brands. DANA, GoPay, BCA, Agoda and other names appear only to illustrate integrations; there is no affiliation.
+All wallet, bank, app and merchant names (Kasku, Lintas, Dompet Nusa, Kilat Pay, Bank Arunika, Toko Sinar Jaya and others) are fictional. Public standards and services such as QRIS, PLN and BPJS are named only to show how bills and payments work.
 
 ## Run it locally
 

@@ -33,6 +33,8 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         if (u.includes('jsqr@1.4.0/dist/jsQR.js')) return r.fulfill({ path: NM('jsqr/dist/jsQR.js'), contentType: 'application/javascript' });
         return r.abort();
     });
+    // Tests drive the Indonesian UI; a separate test checks English mode
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('lang-set')) { localStorage.setItem('biopay-pitch-lang', 'id'); sessionStorage.setItem('lang-set', '1'); } } catch (e) {} });
     // Fake microphone for the voice tests
     await ctx.addInitScript(() => {
         window.SpeechRecognition = window.webkitSpeechRecognition = class { constructor() { window.__rec = this; } start() {} stop() {}
@@ -152,6 +154,22 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         assert(await page.evaluate(() => !!document.getElementById('video-qr').srcObject), 'no stream after flip');
         await page.evaluate(() => closeScanQRModal());
         assert(await page.evaluate(() => !document.getElementById('video-qr').srcObject), 'stream not released after close');
+    });
+
+    await test('English mode: apps, ATM and BioPay switch language with the page', async () => {
+        await page.click('.pt-lang [data-lang="en"]'); await page.waitForTimeout(300);
+        await page.evaluate(() => selectDevice('kasku'));
+        assert(await page.locator('#ewallet-device', { hasText: 'Recent Activity' }).count() === 1, 'Kasku not in English');
+        await page.evaluate(() => selectDevice('lintas'));
+        assert(/Where to this week/.test(await page.locator('#travel-device').innerText()), 'Lintas not in English');
+        await page.evaluate(() => { selectDevice('atm'); ATM.reset(); });
+        assert(/Welcome/.test(await page.locator('#atm-device').innerText()), 'ATM not in English');
+        await page.evaluate(() => { selectDevice('terminal'); enterDashboard(); switchTab('keuangan'); aiQuick('coffee 28k'); });
+        assert(/Recorded .*Rp 28\.000 \(Food & coffee\)/.test(await page.locator('#ai-log .bp-ai-msg:not(.me)').last().innerText()), 'assistant not English');
+        await page.click('.pt-lang [data-lang="id"]'); await page.waitForTimeout(300);
+        await page.evaluate(() => selectDevice('kasku'));
+        assert(await page.locator('#ewallet-device', { hasText: 'Riwayat Terakhir' }).count() === 1, 'Kasku not back in Indonesian');
+        await page.evaluate(() => selectDevice('terminal'));
     });
 
     await test('phone width: no horizontal scroll', async () => {
