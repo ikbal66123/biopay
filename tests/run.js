@@ -164,7 +164,10 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         await page.click('#partners .pt-sb-row button'); await page.waitForTimeout(3200);
         eq(await page.locator('#sb-log li').count(), 6, 'sandbox log lines');
         await page.click('.pt-hero .pt-btn-primary');
-        for (let i = 0; i < 6; i++) await page.click('#pt-tour-next');
+        for (let i = 0; i < 4; i++) await page.click('#pt-tour-next');
+        const why = await page.textContent('#route-why');
+        assert(/Cadangan 1|Backup 1/.test(why), 'tour step 5 shows automatic fallback: ' + why);
+        for (let i = 0; i < 4; i++) await page.click('#pt-tour-next');
         assert(await page.evaluate(() => document.getElementById('pt-tour').hidden), 'tour did not close');
     });
 

@@ -3422,6 +3422,18 @@
             }
             function toggleSmartRoute() { smartRoute = !smartRoute; renderRoute(); toast(smartRoute ? 'Smart Route aktif' : 'Smart Route mati: dibayar sesuai urutan prioritas', 'ph-sparkle', 'text-amber-400'); }
             function pickRoute(name) { if (walletBalances[name] === undefined) return; smartRoute = false; manualPick = name; renderRoute(); }
+            // Tur demo: kosongkan wallet utama sementara untuk menunjukkan cadangan otomatis, lalu kembalikan
+            let tourSaved = null;
+            function tourFallbackDemo(on) {
+                if (on) {
+                    if (!tourSaved) tourSaved = { b: { ...walletBalances }, s: smartRoute, m: manualPick };
+                    smartRoute = false; manualPick = null; walletBalances[walletOrder[0]] = 0;
+                    generateRandomPayment(); showScreen('screen-options'); renderRoute(true); renderWalletList(); updateBalanceDisplay();
+                } else if (tourSaved) {
+                    Object.assign(walletBalances, tourSaved.b); smartRoute = tourSaved.s; manualPick = tourSaved.m; tourSaved = null;
+                    renderWalletList(); updateBalanceDisplay(); renderRoute(true);
+                }
+            }
 
             // ==========================================
             // BIOPOIN, MISI, BERUNTUN, INSIGHT
@@ -4434,7 +4446,7 @@
             renderRegisterOptions();
             renderUser();
             updateHomeExtras(); renderWalletList();
-            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, openQR, qrTab, qrSimScan, qrPay, qrMineAmount, qrSimIncoming, qrPayRefresh, qrSimCashier, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, moveWallet, simDrain, simFill, renderWalletList, toggleSmartRoute, pickRoute, renderRoute, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, toggleVoice, simulateVoice, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
+            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, openQR, qrTab, qrSimScan, qrPay, qrMineAmount, qrSimIncoming, qrPayRefresh, qrSimCashier, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, moveWallet, simDrain, simFill, renderWalletList, toggleSmartRoute, pickRoute, renderRoute, tourFallbackDemo, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, toggleVoice, simulateVoice, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
         }
 
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error
@@ -5631,17 +5643,37 @@
         // TUR TERPANDU 60 DETIK (inti produk untuk reviewer)
         // ==========================================
         const TOUR = [
-            { t: ['The problem', 'Masalahnya'], x: ['A shop owner told us customers sometimes forget both phone and wallet, and the sale is lost. BioPay needs neither: just a face and a palm.', 'Pemilik toko bercerita pembeli kadang lupa HP dan dompet, lalu belanjanya batal. BioPay tidak butuh keduanya, cukup wajah dan telapak tangan.'],
-              go: () => { try { BP1.stopCameras(); BP1.showScreen('screen-start'); } catch (e) {} return { el: document.getElementById('pt-quote') }; } },
-            { t: ['1 · Face, then palm', '1 · Wajah, lalu telapak'], x: ['Look at the camera, then show your palm. Detection runs live in your browser; without a camera the demo switches to simulation.', 'Lihat ke kamera, lalu tunjukkan telapak tangan. Deteksi berjalan langsung di browser; tanpa kamera, demo beralih ke simulasi.'],
+            { t: ['One face, every wallet', 'Satu wajah, semua dompet'],
+              x: ['Other biometric payments lock you into a single app. BioPay is the bridge: one face and palm connected to every e-wallet, mobile bank and bank you already use. We are not a rival to e-money. We are their partner.',
+                  'Biometrik pay lain mengunci kamu di satu aplikasi. BioPay adalah jembatannya: satu wajah dan telapak tangan yang terhubung ke semua e-wallet, m-banking, dan bank yang sudah kamu pakai. Kami bukan pesaing e-money, tapi mitra mereka.'],
+              go: () => { try { BP1.stopCameras(); BP1.showScreen('screen-start'); } catch (e) {} return { el: document.querySelector('#top .pt-h1') || document.getElementById('top') }; } },
+            { t: ['The problem is real', 'Masalahnya nyata'],
+              x: ['The goods are already scanned at the till, then the customer realises they left their wallet and phone at home. The sale is gone. Shop owners told us this happens again and again.',
+                  'Barang sudah di-scan di kasir, lalu pembeli sadar dompet dan HP-nya tertinggal di rumah. Penjualan pun hilang. Pemilik toko bercerita ini terjadi berulang kali.'],
+              go: () => ({ el: document.getElementById('pt-quote') }) },
+            { t: ['Face to identify, palm to confirm', 'Wajah mengenali, telapak mengonfirmasi'],
+              x: ['Look at the camera, then show your palm. Two factors, so a face alone can never pay. Detection runs live in your browser, and without a camera the demo switches to simulation.',
+                  'Lihat ke kamera, lalu tunjukkan telapak tangan. Dua lapis, jadi wajah saja tidak akan pernah bisa membayar. Deteksi berjalan langsung di browser, dan tanpa kamera demo beralih ke simulasi.'],
               go: () => { selectDevice('terminal'); BP1.stopCameras(); BP1.closeAllModals(); BP1.goToScreen('screen-face-scan'); return { el: document.getElementById('biopay-device') }; } },
-            { t: ['2 · Paid from the wallet you already use', '2 · Dibayar dari wallet yang sudah dipakai'], x: ['Smart Route lists every linked wallet and bank and picks the best one: enough balance plus that wallet’s promo. BioPay never holds the money.', 'Smart Route menampilkan semua wallet dan bank yang terhubung, lalu memilih yang paling untung. BioPay tidak pernah memegang uang.'],
+            { t: ['Paid from the wallet you already have', 'Dibayar dari dompet yang sudah kamu punya'],
+              x: ['No new wallet to top up. Every linked e-wallet and bank appears here, ranked Main, Backup 1, 2, 3. Balances stay hidden at the till, and BioPay never holds the money.',
+                  'Tidak perlu isi saldo dompet baru. Semua e-wallet dan bank yang terhubung muncul di sini, berurutan Utama, Cadangan 1, 2, 3. Saldo tidak ditampilkan di kasir, dan BioPay tidak pernah memegang uang.'],
               go: () => { selectDevice('terminal'); BP1.stopCameras(); BP1.generateRandomPayment(); BP1.showScreen('screen-options'); return { el: document.querySelector('#screen-options .bp-route') || document.getElementById('biopay-device') }; } },
-            { t: ['3 · Merchants need only a phone', '3 · Merchant cukup pakai HP'], x: ['Inside any wallet app: charge a customer by face + palm, show a QR, or let a cashier scan a one-time pay code. No terminal required to start.', 'Di dalam aplikasi wallet: tagih pelanggan dengan wajah + telapak, tampilkan QR, atau biarkan kasir scan kode bayar sekali pakai. Tidak perlu terminal untuk mulai.'],
+            { t: ['Main wallet empty? Still paid.', 'Saldo utama habis? Tetap terbayar.'],
+              x: ['We just emptied the main wallet. A single-wallet system would fail here and the customer walks away. BioPay skips it and pays from Backup 1 automatically. Nothing to carry, nothing to check.',
+                  'Saldo dompet utama barusan kami kosongkan. Sistem satu dompet akan gagal di sini, dan pembeli pergi. BioPay melewatinya dan otomatis membayar dari Cadangan 1. Tidak perlu membawa apa pun, tidak perlu mengecek apa pun.'],
+              go: () => { selectDevice('terminal'); BP1.stopCameras(); BP1.tourFallbackDemo(true); return { el: document.querySelector('#screen-options .bp-route') || document.getElementById('biopay-device') }; } },
+            { t: ['Shops only need a phone', 'Toko cukup pakai HP'],
+              x: ['Inside a partner wallet app, a shop can charge a customer by face and palm, show a QR, or let the cashier scan a one-time pay code. No new machine needed to start.',
+                  'Di dalam aplikasi wallet mitra, toko bisa menagih pelanggan lewat wajah dan telapak tangan, menampilkan QR, atau membiarkan kasir memindai kode bayar sekali pakai. Tidak perlu mesin baru untuk mulai.'],
               go: () => { BP1.stopCameras(); BP1.showScreen('screen-start'); selectDevice('kasku'); MK2.showBioPayOptions(); return { el: document.getElementById('ewallet-device') }; } },
-            { t: ['4 · Even cash, without a card', '4 · Bahkan tarik tunai tanpa kartu'], x: ['Concept: an ATM connected to BioPay. Face + palm opens your BioPay page on the ATM screen; pick a source and withdraw.', 'Konsep: ATM yang terhubung ke BioPay. Wajah + telapak membuka halaman BioPay di layar ATM; pilih sumber dana lalu tarik tunai.'],
+            { t: ['Cash without a card', 'Tarik tunai tanpa kartu'],
+              x: ['Concept: an ATM connected to BioPay. Face and palm open your BioPay page on the ATM screen. Choose a source, withdraw, and there is no card to lose or skim.',
+                  'Konsep: ATM yang terhubung ke BioPay. Wajah dan telapak tangan membuka halaman BioPay di layar ATM. Pilih sumber dana, tarik tunai, tanpa kartu yang bisa hilang atau digandakan.'],
               go: () => { document.getElementById('modal-biopay-options').classList.add('hidden'); selectDevice('atm'); return { el: document.getElementById('atm-device') }; } },
-            { t: ['5 · A bridge, not another wallet', '5 · Jembatan, bukan wallet baru'], x: ['E-wallets, banks and PayLater plug in once and get paid at every face. Try the revenue simulator and the API sandbox.', 'E-wallet, bank, dan PayLater cukup integrasi sekali lalu dibayar di setiap wajah. Coba simulasi pendapatan dan sandbox API-nya.'],
+            { t: ['Everyone wins by joining', 'Semua menang dengan bergabung'],
+              x: ['E-wallets and banks plug in once, with no biometric system to build and no race to win. Every new partner makes the network wider, so the more who join, the more everyone gains.',
+                  'E-wallet dan bank cukup terhubung sekali, tanpa membangun sistem biometrik sendiri dan tanpa perlu berlomba. Setiap mitra baru membuat jaringan makin luas, jadi semakin banyak yang bergabung, semakin besar untung semuanya.'],
               go: () => { selectDevice('terminal'); return { el: document.getElementById('partners'), block: 'start' }; } }
         ];
         let tourIdx = -1;
@@ -5650,6 +5682,7 @@
             document.querySelectorAll('.tour-spot').forEach(e => e.classList.remove('tour-spot'));
             tourIdx = Math.max(0, Math.min(TOUR.length - 1, i));
             const st = TOUR[tourIdx], L = tourLang();
+            try { BP1.tourFallbackDemo(false); } catch (e) {}
             let r = {}; try { r = st.go() || {}; } catch (e) {}
             if (r.el) { r.el.classList.add('tour-spot'); r.el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: r.block || 'center' }); }
             tourText();
@@ -5669,7 +5702,7 @@
         function endTour() {
             document.getElementById('pt-tour').hidden = true; tourIdx = -1;
             document.querySelectorAll('.tour-spot').forEach(e => e.classList.remove('tour-spot'));
-            try { BP1.stopCameras(); BP1.closeAllModals(); BP1.showScreen('screen-start'); document.getElementById('modal-biopay-options').classList.add('hidden'); } catch (e) {}
+            try { BP1.tourFallbackDemo(false); BP1.stopCameras(); BP1.closeAllModals(); BP1.showScreen('screen-start'); document.getElementById('modal-biopay-options').classList.add('hidden'); } catch (e) {}
         }
         addEventListener('keydown', e => { if (tourIdx < 0) return; if (e.key === 'Escape') endTour(); });
         // ==========================================
