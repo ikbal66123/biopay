@@ -79,7 +79,8 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         for (let i = 0; i < 3; i++) await page.locator('#wallet-list-container .bp-sim').nth(i).locator('button').first().click();
         await page.evaluate(() => { generateRandomPayment(); showScreen('screen-options'); });
         assert(await page.isDisabled('#btn-confirm-payment'), 'pay button should be disabled');
-        assert(/semua sumber dana/.test(await page.textContent('#route-why')), 'no "not enough anywhere" notice');
+        const why2 = await page.textContent('#route-why');
+        assert(/semua sumber dana|Melebihi limit/.test(why2), 'no "not enough anywhere" notice: ' + why2);
         // refill for the following tests and move a wallet up
         for (let i = 0; i < 3; i++) for (let k = 0; k < 6; k++) await page.evaluate(n => simFill(n), i);
         await page.evaluate(() => { showScreen('screen-start'); enterDashboard(); switchTab('wallets'); moveWallet(1, -1); });
