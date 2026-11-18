@@ -44,7 +44,7 @@ The landing section at the top of the page has **Try it** buttons that jump stra
 | Real | Simulated |
 |---|---|
 | Live camera feed on every scan screen | Identity matching: every face resolves to the demo user |
-| On-device detection that a face or a hand is actually in front of the camera ([MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision/face_detector)); the scan only passes once it is seen steadily for about 1.5 s | 3D liveness depth sensing and palm-vein reading |
+| On-device detection that a face or a hand is actually in front of the camera ([MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision/face_detector)); the scan only passes once it is seen steadily for about 1.5 s | camera-based liveness checks and palm-print matching |
 | All UI flows, validation, state, and calculations (FX, VAT, promos, refunds, Smart Route choice, points, budgets, assistant parsing) | Balances, payments, settlement, bookings, wallet promos, the partner API and the ATM |
 | Sign-up and sign-in with validation; passwords stored as salted SHA-256 hashes | Account storage: `localStorage` in this browser instead of a server |
 
@@ -94,7 +94,7 @@ A single HTML file with plain JavaScript, prebuilt Tailwind CSS (inline), Phosph
 ## Roadmap after the prototype
 
 1. 1:N face identification against enrolled BioIDs, with certified presentation-attack detection.
-2. Palm-vein capture on dedicated terminal hardware (near-infrared), with palm-print as the phone fallback.
+2. Palm-print matching from the ordinary phone, tablet or terminal camera, with no extra hardware.
 3. Wallet and bank integrations through the providers' merchant APIs, and QRIS interoperability.
 4. Consent, enrollment and data-protection flows that comply with Indonesia's personal data protection law (UU PDP).
 

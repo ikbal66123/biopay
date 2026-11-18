@@ -9,13 +9,13 @@ Video `biopay-demo.mp4` sudah berisi narasi suara Bahasa Indonesia (suara sintet
 | 0:17–0:27 | Apa itu BioPay | "BioPay adalah checkout biometrik dua faktor. Wajah untuk mengenali siapa kamu, telapak tangan untuk mengonfirmasi. Uangnya diambil dari e-wallet atau rekening bank yang sudah kamu punya." |
 | 0:27–0:33 | Demo 3D: datang ke kasir | "Lihat contohnya. Pelanggan datang ke kasir dengan belanjaan delapan puluh lima ribu rupiah, tanpa mengeluarkan apa pun dari saku." |
 | 0:33–0:41 | Demo 3D: scan wajah | "Langkah pertama, wajah. Kamera terminal memeriksa kedalaman tiga dimensi untuk memastikan ini orang sungguhan, lalu menemukan BioID-nya." |
-| 0:41–0:49 | Demo 3D: scan telapak | "Langkah kedua, telapak tangan. Pola pembuluh vena menjadi faktor kedua, jadi wajah saja tidak pernah cukup untuk memindahkan uang." |
+| 0:41–0:49 | Demo 3D: scan telapak | "Langkah kedua, arahkan telapak tangan ke kamera. Tanpa alat tambahan, dan wajah saja tidak cukup." |
 | 0:49–0:55 | Demo 3D: lunas | "Pembayaran berhasil, diambil dari e-wallet utama pelanggan, dan struk langsung tercetak." |
 | 0:55–1:03 | Demo 3D: selesai | "Selesai dalam hitungan detik, tanpa membuka aplikasi apa pun." |
 | 1:03–1:14 | ATM tanpa kartu | "BioPay juga bekerja di ATM. ATM yang terhubung ke BioPay tidak butuh kartu atau PIN. Scan wajah, scan telapak tangan, dan kamu langsung masuk ke halaman BioPay di layar ATM. Dari sana bisa tarik tunai, setor tunai, transfer, cek saldo, bayar tagihan, sampai top up e-wallet." |
 | 1:14–1:20 | Demo 3D ATM: datang | "Lihat contohnya. Pelanggan datang ke ATM tanpa membawa kartu." |
 | 1:20–1:26 | Demo 3D ATM: scan wajah | "Langkah pertama, lihat ke kamera ATM. Wajahnya diperiksa dalam tiga dimensi." |
-| 1:26–1:32 | Demo 3D ATM: scan telapak | "Langkah kedua, letakkan telapak tangan di sensor. Tanpa faktor kedua ini, ATM tidak akan terbuka." |
+| 1:26–1:32 | Demo 3D ATM: scan telapak | "Langkah kedua, telapak tangan ke kamera ATM. Tanpa ini, ATM tak terbuka." |
 | 1:32–1:37 | Demo 3D ATM: masuk BioPay | "Langsung masuk ke halaman BioPay. Pilih sumber dana, rekening bank atau e-wallet yang terhubung." |
 | 1:37–1:41 | Demo 3D ATM: pilih nominal | "Pilih tarik tunai lima ratus ribu rupiah." |
 | 1:41–1:47 | Demo 3D ATM: ambil uang | "Uang keluar. Tidak ada kartu yang bisa tertelan, hilang, atau di-skimming." |

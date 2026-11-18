@@ -502,7 +502,7 @@ add(new THREE.BoxGeometry(0.18, 0.035, 0.035), mat('#1F2937'), 0, 0.2, 0.01, hea
 const lens = add(new THREE.CircleGeometry(0.011, 20), new THREE.MeshBasicMaterial({ color: '#7DD3FC' }), 0, 0.2, 0.029, head);
 const sensor = add(new THREE.BoxGeometry(0.2, 0.03, 0.16), mat('#111827', { roughness: 0.3 }), 0.12, 1.055, 0.5);
 const sensorGlow = add(new THREE.PlaneGeometry(0.16, 0.12), new THREE.MeshBasicMaterial({ color: '#E8B04A', transparent: true, opacity: 0.35 }), 0.12, 1.072, 0.5);
-sensorGlow.rotation.x = -Math.PI / 2;
+sensorGlow.rotation.x = -Math.PI / 2; sensor.visible = false; sensorGlow.visible = false;
 
 // Orang (dibangun dari bentuk dasar; tungkai mengikuti posisi sendi)
 const person = new THREE.Group(); scene.add(person);
@@ -559,7 +559,8 @@ const faceRing = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.004, 8, 48), new
 faceRing.rotation.x = Math.PI / 2; headG.add(faceRing);
 const beam = add(new THREE.CylinderGeometry(0.09, 0.07, 0.1, 24, 1, true), new THREE.MeshBasicMaterial({ color: '#E8B04A', transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false }), 0.12, 1.11, 0.5);
 const palmLine = add(new THREE.PlaneGeometry(0.14, 0.006), new THREE.MeshBasicMaterial({ color: '#FDE68A', transparent: true, opacity: 0, side: THREE.DoubleSide }), 0.12, 1.14, 0.5);
-palmLine.rotation.x = -Math.PI / 2;
+palmLine.rotation.x = 0; const _hp = new THREE.Vector3();
+function palmSweep(t, on, t0) { handR.getWorldPosition(_hp); palmLine.position.set(_hp.x, _hp.y + Math.sin((t - t0) * 3) * 0.05, _hp.z + (person.rotation.y > 1.5 ? -0.03 : 0.03)); palmLine.material.opacity = on; beam.material.opacity = 0; }
 
 // Layar terminal
 let lastScreen = '';
@@ -574,8 +575,8 @@ function drawScreen(state, p = 0) {
     const bar = (k, col = '#0F1B2D') => { g.fillStyle = '#E1E5EB'; g.fillRect(40, 250, W - 80, 14); g.fillStyle = col; g.fillRect(40, 250, (W - 80) * k, 14); };
     if (state === 'idle') { title('Total Rp 85.000'); sub('Instant noodles, milk coffee, bread'); g.fillStyle = '#0F1B2D'; g.fillRect(40, 300, W - 80, 70); g.fillStyle = '#fff'; g.font = '600 26px "IBM Plex Sans"'; g.fillText('Look at the camera to pay', 150, 344); }
     if (state === 'face') { title('Scanning face…'); sub('3D depth check'); bar(p, '#C8892A'); }
-    if (state === 'faceok') { title('Hi, Ikbal'); sub('BioID 12345 · 99.2% match'); bar(1, '#0F7B4F'); g.fillStyle = '#0F1B2D'; g.font = '600 26px "IBM Plex Sans"'; g.fillText('Show your palm →', 40, 330); }
-    if (state === 'palm') { title('Scanning palm…'); sub('Vein pattern · second factor'); bar(p, '#C8892A'); }
+    if (state === 'faceok') { title('Hi, Ikbal'); sub('BioID 12345 · 99.2% match'); bar(1, '#0F7B4F'); g.fillStyle = '#0F1B2D'; g.font = '600 26px "IBM Plex Sans"'; g.fillText('Show your palm to the camera', 40, 330); }
+    if (state === 'palm') { title('Scanning palm…'); sub('Palm print · via the camera'); bar(p, '#C8892A'); }
     if (state === 'paid') {
         g.fillStyle = '#E7F4EC'; g.fillRect(0, 44, W, H - 44);
         g.fillStyle = '#0F7B4F'; g.beginPath(); g.arc(W / 2, 150, 54, 0, 7); g.fill();
@@ -589,8 +590,8 @@ function drawScreen(state, p = 0) {
 // Kamera & timeline 3D
 const CAMK = [
     [27, V(3.4, 2.3, 5.6), V(0, 1.1, 0.6)], [31, V(2.5, 1.9, 4.0), V(0, 1.25, 0.8)], [33.5, V(1.15, 1.72, 2.2), V(0, 1.55, 1.0)],
-    [35, V(0.3, 1.67, 0.4), V(0, 1.62, 1.0)], [41, V(0.3, 1.67, 0.4), V(0, 1.62, 1.0)], [43, V(0.85, 1.42, 1.25), V(0.08, 1.1, 0.55)],
-    [49, V(0.85, 1.42, 1.25), V(0.08, 1.1, 0.55)], [51, V(-0.95, 1.78, 1.55), V(0, 1.36, 0.12)], [55.5, V(-0.95, 1.78, 1.55), V(0, 1.36, 0.12)],
+    [35, V(0.3, 1.67, 0.4), V(0, 1.62, 1.0)], [41, V(0.3, 1.67, 0.4), V(0, 1.62, 1.0)], [43, V(0.8, 1.62, 1.2), V(0, 1.48, 0.35)],
+    [49, V(0.8, 1.62, 1.2), V(0, 1.48, 0.35)], [51, V(-0.95, 1.78, 1.55), V(0, 1.36, 0.12)], [55.5, V(-0.95, 1.78, 1.55), V(0, 1.36, 0.12)],
     [59, V(3.6, 2.5, 6.2), V(0, 1.0, 0.4)], [63, V(4.2, 2.7, 7.0), V(0, 1.0, 0.4)]
 ];
 function camAt(t) {
@@ -601,7 +602,7 @@ function camAt(t) {
 const CAPS = [
     [27, 'CHECKOUT', 'A customer walks up to the till', 'Rp 85.000 of groceries, no card and no phone in hand'],
     [33.5, 'STEP 1', 'Face recognised', 'The terminal camera checks 3D depth, then finds the BioID'],
-    [41, 'STEP 2', 'The palm confirms', 'Pola vena telapak sebagai faktor kedua; wajah saja tidak cukup'],
+    [41, 'STEP 2', 'The palm confirms', 'Show your palm to the camera. No extra device, and a face alone is never enough'],
     [49, 'PAID', 'Payment successful', 'Taken from the customer’s main e-wallet, receipt printed instantly'],
     [55.5, 'DONE', 'Done in seconds', 'The customer never opens an app']
 ];
@@ -615,15 +616,15 @@ function render3D(t) {
     person.position.copy(pos); person.rotation.y = face; cash.visible = false;
     sun.position.set(3, 6, 4); sun.target.position.set(0, 0, 0); beam.position.set(0.12, 1.11, 0.5); palmLine.position.x = 0.12; palmLine.position.y = 1.14;
     const reach = t < 41 ? 0 : t < 43 ? prog(t, 41, 42.6) : t < 50.5 ? 1 : 1 - prog(t, 50.5, 52);
-    pose({ walk, reach, headPitch: t > 33 && t < 41 ? 0.04 : t >= 41 && t < 56 ? 0.14 : 0 });
+    pose({ walk, reach, tgt: V(0.0, 1.5, 0.5), headPitch: t > 33 && t < 41 ? 0.04 : t >= 41 && t < 56 ? 0.06 : 0 });
     // efek wajah
     const fOn = t > 35 && t < 40.5 ? Math.min(1, (t - 35) / 0.4, (40.5 - t) / 0.4) : 0;
     faceGrid.material.opacity = 0.55 * fOn; faceGrid.rotation.y = t * 0.8;
     faceRing.material.opacity = fOn; faceRing.position.y = Math.sin((t - 35) * 2.4) * 0.12;
     const pOn = t > 43 && t < 48.5 ? Math.min(1, (t - 43) / 0.4, (48.5 - t) / 0.4) : 0;
-    beam.material.opacity = 0.25 * pOn; palmLine.material.opacity = pOn; palmLine.position.z = 0.5 + Math.sin((t - 43) * 3) * 0.06;
+    palmSweep(t, pOn, 43);
     sensorGlow.material.opacity = 0.25 + 0.5 * pOn;
-    lens.material.color.set(fOn > 0 ? '#FDE68A' : '#7DD3FC');
+    lens.material.color.set(fOn > 0 || pOn > 0 ? '#FDE68A' : '#7DD3FC');
     // layar
     if (t < 35) drawScreen('idle'); else if (t < 39.5) drawScreen('face', prog(t, 35, 39.5)); else if (t < 43) drawScreen('faceok');
     else if (t < 48) drawScreen('palm', prog(t, 43, 48)); else drawScreen('paid');
@@ -657,13 +658,12 @@ function buildATM(x, tex) {
     add(new THREE.PlaneGeometry(0.66, 0.453), new THREE.MeshBasicMaterial(tex ? { map: tex } : { color: '#25344D' }), 0, 0, 0.016, panel);
     add(new THREE.CircleGeometry(0.012, 20), new THREE.MeshBasicMaterial({ color: '#7DD3FC' }), 0, 0.3, 0.0, panel).position.z = 0.03;
     add(new THREE.BoxGeometry(0.92, 0.06, 0.26), body, x, 1.02, -0.48);
-    add(new THREE.BoxGeometry(0.2, 0.03, 0.16), dark, x + 0.12, 1.065, -0.46);
     add(new THREE.BoxGeometry(0.28, 0.035, 0.03), mat('#111827'), x - 0.05, 1.17, -0.585);
     return panel;
 }
 buildATM(AX, atmTex); buildATM(AX + 1.1, null);
 const atmGlow = add(new THREE.PlaneGeometry(0.16, 0.12), new THREE.MeshBasicMaterial({ color: '#E8B04A', transparent: true, opacity: 0.35 }), AX + 0.12, 1.082, -0.46);
-atmGlow.rotation.x = -Math.PI / 2;
+atmGlow.rotation.x = -Math.PI / 2; atmGlow.visible = false;
 const cash = new THREE.Group(); scene.add(cash);
 for (let i = 0; i < 4; i++) add(new THREE.BoxGeometry(0.15, 0.003, 0.075), mat(i % 2 ? '#C94A5A' : '#D85F6E', { roughness: 0.8 }), 0, i * 0.004, 0, cash).rotation.y = (i - 1.5) * 0.03;
 const atmLabels = [['Withdraw cash', 'ph-money'], ['Deposit cash', ''], ['Transfer', ''], ['Check balance', ''], ['Pay bills', ''], ['Top up e-wallet', '']];
@@ -678,8 +678,8 @@ function drawATM(state, p = 0) {
     if (state === 'welcome') { hdr('ATM · cardless'); T('Welcome', 48, 160, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('No card or PIN needed.', 48, 210, '400 28px "IBM Plex Sans"', '#566173');
         g.fillStyle = '#0F1B2D'; roundRect(g, 48, 290, W - 96, 96, 18); g.fill(); T('Look at the camera to sign in', 140, 350, '600 32px "IBM Plex Sans"', '#fff'); }
     if (state === 'face') { hdr('Step 1 / 2'); T('Scanning face…', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('3D depth check', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(p, '#C8892A'); }
-    if (state === 'faceok') { hdr('Step 2 / 2'); T('Face recognised', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Place your palm on the sensor', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(1, '#0F7B4F'); T('Sensor below the screen  ↓', 48, 390, '600 30px "IBM Plex Sans"', '#0F1B2D'); }
-    if (state === 'palm') { hdr('Step 2 / 2'); T('Scanning palm…', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Vein pattern · second factor', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(p, '#C8892A'); }
+    if (state === 'faceok') { hdr('Step 2 / 2'); T('Face recognised', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Show your palm to the camera', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(1, '#0F7B4F'); T('Sensor below the screen  ↓', 48, 390, '600 30px "IBM Plex Sans"', '#0F1B2D'); }
+    if (state === 'palm') { hdr('Step 2 / 2'); T('Scanning palm…', 48, 170, '700 50px "IBM Plex Sans"', '#0F1B2D'); T('Palm print · via the camera', 48, 220, '400 28px "IBM Plex Sans"', '#566173'); bar(p, '#C8892A'); }
     if (state === 'home' || state === 'amount') {
         hdr('Secure session · 02:00'); T('Hi, Ikbal', 40, 116, '700 38px "IBM Plex Sans"', '#0F1B2D');
         T('Funding source', 40, 156, '600 18px "IBM Plex Mono"', '#566173');
@@ -713,14 +713,14 @@ function drawATM(state, p = 0) {
 }
 const CAMK2 = [
     [74, V(AX + 3.2, 2.3, 4.8), V(AX, 1.1, -0.3)], [78, V(AX + 1.9, 1.9, 2.8), V(AX, 1.3, -0.4)], [79.6, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)],
-    [80.6, V(AX + 0.3, 1.67, -0.45), V(AX, 1.62, 0.3)], [85, V(AX + 0.3, 1.67, -0.45), V(AX, 1.62, 0.3)], [86.4, V(AX + 0.85, 1.42, 0.3), V(AX + 0.08, 1.1, -0.45)],
-    [91.6, V(AX + 0.85, 1.42, 0.3), V(AX + 0.08, 1.1, -0.45)], [93, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)], [100.6, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)],
+    [80.6, V(AX + 0.3, 1.67, -0.45), V(AX, 1.62, 0.3)], [85, V(AX + 0.3, 1.67, -0.45), V(AX, 1.62, 0.3)], [86.4, V(AX + 0.8, 1.62, 0.3), V(AX, 1.5, -0.45)],
+    [91.6, V(AX + 0.8, 1.62, 0.3), V(AX, 1.5, -0.45)], [93, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)], [100.6, V(AX + 0.62, 1.72, 0.22), V(AX - 0.03, 1.34, -0.6)],
     [102, V(AX + 1.0, 1.45, 0.2), V(AX + 0.02, 1.18, -0.5)], [106.6, V(AX + 1.0, 1.45, 0.2), V(AX + 0.02, 1.18, -0.5)], [109, V(AX + 3.4, 2.4, 5.2), V(AX, 1.0, -0.2)], [112.5, V(AX + 4, 2.6, 6), V(AX, 1.0, -0.2)]
 ];
 const CAPS2 = [
-    [74, 'ATM', 'Walk up to the ATM without a card', 'ATM sudah terhubung ke BioPay; dompet dan kartu tetap di rumah'],
+    [74, 'ATM', 'Walk up to the ATM without a card', 'The ATM is connected to BioPay; wallet and card stay at home'],
     [80, 'STEP 1', 'Face scan at the ATM camera', 'A 3D depth check confirms a real person'],
-    [85.6, 'STEP 2', 'Palm scan', 'Faktor kedua; tanpa ini ATM tidak akan terbuka'],
+    [85.6, 'STEP 2', 'Palm scan', 'Show your palm to the ATM camera. Without it, the ATM won’t open'],
     [92, 'SIGNED IN', 'Straight into your BioPay page', 'Choose a funding source: a linked bank account or e-wallet'],
     [96.5, 'WITHDRAW', 'Choose Rp 500.000', 'Also: deposit cash, transfer, check balances and pay bills'],
     [101, 'TAKE CASH', 'Cash out, no card', 'No card to swallow, lose or skim'],
@@ -741,7 +741,7 @@ function renderATM(t) {
     // tangan: telapak ke sensor (85.8-92), lalu ambil uang (102.6-106)
     const palmR = t < 85.8 ? 0 : t < 91.4 ? prog(t, 85.8, 87.2) : 1 - prog(t, 91.4, 92.8);
     const cashR = t < 102.6 ? 0 : t < 104.4 ? prog(t, 102.6, 104.2) : t < 107.6 ? 1 - 0.5 * prog(t, 104.6, 105.8) : 0.5 - 0.5 * prog(t, 107.6, 108.6);
-    const tgt = cashR > 0 ? V(-0.03, 1.19, 0.47) : V(-0.12, 1.16, 0.46);
+    const tgt = cashR > 0 ? V(-0.03, 1.19, 0.47) : V(0.0, 1.52, 0.36);
     pose({ walk, reach: Math.max(palmR, cashR), tgt, flat: cashR > 0 ? 0.25 : 1, headPitch: t > 79 && t < 85.5 ? 0.04 : t >= 85.5 && t < 107 ? 0.12 : 0 });
     // uang: keluar dari slot, lalu ikut tangan
     const out = prog(t, 101, 102.4);
@@ -751,8 +751,7 @@ function renderATM(t) {
     const fOn = t > 80.4 && t < 84.8 ? Math.min(1, (t - 80.4) / 0.4, (84.8 - t) / 0.4) : 0;
     faceGrid.material.opacity = 0.55 * fOn; faceGrid.rotation.y = t * 0.8; faceRing.material.opacity = fOn; faceRing.position.y = Math.sin((t - 80) * 2.4) * 0.12;
     const pOn = t > 87.2 && t < 91.2 ? Math.min(1, (t - 87.2) / 0.4, (91.2 - t) / 0.4) : 0;
-    beam.position.set(AX + 0.12, 1.12, -0.46); palmLine.position.set(AX + 0.12, 1.15, -0.46 + Math.sin((t - 87) * 3) * 0.06);
-    beam.material.opacity = 0.25 * pOn; palmLine.material.opacity = pOn; atmGlow.material.opacity = 0.25 + 0.5 * pOn;
+    palmSweep(t, pOn, 87);
     // layar ATM
     if (t < 80.4) drawATM('welcome'); else if (t < 84.6) drawATM('face', prog(t, 80.4, 84.6)); else if (t < 87.2) drawATM('faceok');
     else if (t < 91.4) drawATM('palm', prog(t, 87.2, 91.4)); else if (t < 97) drawATM('home', prog(t, 92, 97)); else if (t < 101) drawATM('amount', prog(t, 97, 101));

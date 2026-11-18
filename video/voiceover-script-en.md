@@ -9,13 +9,13 @@
 | 0:17–0:27 | What BioPay is | "BioPay is a two-factor biometric checkout. Your face says who you are, your palm confirms. The money comes from the e-wallet or bank account you already have." |
 | 0:27–0:33 | 3D store: arrival | "A customer walks up to the till with eighty-five thousand rupiah of groceries, and takes nothing out." |
 | 0:33–0:41 | 3D store: face | "Step one: the face. The terminal checks 3D depth, then finds the BioID." |
-| 0:41–0:49 | 3D store: palm | "Step two: the palm. The vein pattern is the second factor; a face alone is never enough." |
+| 0:41–0:49 | 3D store: palm | "Step two: show your palm to the camera. No extra device, and a face alone is never enough." |
 | 0:49–0:55 | 3D store: paid | "Payment done, taken from the customer's main e-wallet, and the receipt prints instantly." |
 | 0:55–1:03 | 3D store: done | "Done in seconds, without opening a single app." |
 | 1:03–1:14 | Cardless ATM | "BioPay works at ATMs too. No card, no PIN. Scan your face and palm, and you land on your BioPay page on the ATM screen." |
 | 1:14–1:20 | 3D ATM: arrival | "A customer walks up to the ATM without a card." |
 | 1:20–1:26 | 3D ATM: face | "Step one: look at the ATM camera." |
-| 1:26–1:32 | 3D ATM: palm | "Step two: palm on the sensor. Without it, the ATM won't open." |
+| 1:26–1:32 | 3D ATM: palm | "Step two: palm to the ATM camera. Without it, the ATM won't open." |
 | 1:32–1:37 | 3D ATM: BioPay page | "Straight into the BioPay page." |
 | 1:37–1:41 | 3D ATM: amount | "Withdraw cash: five hundred thousand rupiah." |
 | 1:41–1:47 | 3D ATM: cash | "Cash comes out. No card to swallow or skim." |

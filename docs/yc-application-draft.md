@@ -38,7 +38,7 @@ We start in Indonesia, where people already pay with many different e-wallets an
 ## Progress
 
 **How far along are you?**
-We have a working browser prototype covering the three flows above. It uses the device's real camera and runs on-device face and hand detection (MediaPipe), so a scan only passes when a face or palm is actually in front of the camera. Identity matching, palm-vein reading and money movement are simulated today.
+We have a working browser prototype covering the three flows above. It uses the device's real camera and runs on-device face and hand detection (MediaPipe), so a scan only passes when a face or palm is actually in front of the camera. Identity matching, palm-print matching and money movement are simulated today.
 **[TODO]** Add anything real: merchant conversations, letters of intent, pilots, waitlist sign-ups, hardware tests.
 
 **How many active users or customers do you have?** **[TODO]** (If none yet, say "None yet; prototype stage" and describe the next concrete step, for example "pilot with N merchants in [city] starting [month].")
