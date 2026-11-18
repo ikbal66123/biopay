@@ -125,6 +125,32 @@
     #controls input { width: min(60vw, 640px); accent-color: #E8B04A; }
     #controls span { font-family: var(--mono); min-width: 96px; }
     #controls button:focus-visible, #controls input:focus-visible { outline: 2px solid #E8B04A; outline-offset: 2px; }
+
+    /* v3: adegan baru */
+    .vs { display:grid; grid-template-columns:1fr 1fr; gap:26px; margin-top:26px; }
+    .vcol { border-radius:20px; padding:18px 20px; border:1px solid var(--line); }
+    .vcol.bad { background:#FBF5F5; } .vcol.good { background:#F1F8F3; }
+    .vh { margin:0 0 10px; font-size:24px; font-weight:700; }
+    .w { display:flex; justify-content:space-between; align-items:center; padding:9px 14px; margin-top:7px; border-radius:11px; background:#fff; border:1px solid var(--line); font-size:19px; }
+    .w small { font:600 12px var(--mono); letter-spacing:.06em; }
+    .w.empty { border-color:#F3C1C1; background:#FDF3F3; } .w.empty small { color:#B42318; }
+    .w.lock { opacity:.5; } .w.ok { border-color:#9BD3AE; background:#E7F4EC; } .w.ok small { color:var(--ok); }
+    .res { margin:12px 0 0; font-size:19px; font-weight:700; }
+    .bad .res { color:#B42318; } .good .res { color:var(--ok); }
+    .proof { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:34px; }
+    .pc { padding:24px 26px; background:#fff; border:1px solid var(--line); border-radius:20px; }
+    .pc .colh { margin-bottom:10px; color:var(--brass-deep); }
+    .pc b { display:block; font-size:25px; line-height:1.25; } .pc span { display:block; margin-top:10px; font-size:19px; line-height:1.45; color:var(--muted); }
+    .gold { margin:28px 0 0; font-size:25px; font-weight:700; color:var(--brass-deep); }
+    .dark .gold { color:#E8B04A; }
+    .flow .step span small { display:block; font-size:15px; font-weight:400; color:var(--muted); margin-top:2px; }
+    .nochip span { color:#B42318; border-color:#F3C1C1; background:#FDF3F3; }
+    .quote { margin-top:22px; padding:18px 22px; background:#fff; border:1px solid var(--line); border-left:4px solid var(--brass); border-radius:14px; }
+    .quote p { margin:0; font-size:22px; line-height:1.45; } .quote small { display:block; margin-top:8px; font:600 14px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+    .stills { display:flex; gap:16px; flex:none; } .stills img { width:200px; height:356px; object-fit:cover; border-radius:18px; border:1px solid var(--line); }
+    .wins { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:34px; }
+    .wc { padding:24px; border-radius:20px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); }
+    .wc b { display:block; font-size:26px; color:#fff; } .wc span { display:block; margin-top:8px; font-size:19px; line-height:1.45; color:rgba(255,255,255,.75); }
 </style>
 </head>
 <body>
@@ -136,7 +162,7 @@
         <div class="pad">
             <div class="mark" data-in="0.3"><span class="corner"></span><i class="ph-bold ph-scan-smiley"></i><span class="line" id="s1-line"></span></div>
             <p class="word" data-in="0.8">BioPay</p>
-            <p class="tag" data-in="1.6">Bayar dengan wajah dan telapak tangan. Tanpa kartu. Tanpa ponsel.</p>
+            <p class="tag" data-in="1.6">Satu wajah, semua dompet. Jembatan untuk semua e-money.</p>
         </div>
     </section>
 
@@ -205,64 +231,110 @@
         <div class="cap" id="cap2"><span class="chip" id="cap2-chip">ATM</span><span><b id="cap2-title">-</b><small id="cap2-sub">-</small></span></div>
     </section>
 
-    <!-- 5. Fitur -->
-    <section class="scene" id="s5" data-a="112" data-b="132">
+    <!-- 4d. Kelemahan berdiri sendiri -->
+    <section class="scene" id="f1" data-a="112" data-b="133">
+        <div class="pad" style="justify-content:flex-start;padding-top:56px">
+            <p class="eyebrow" data-in="112.3">Kelemahan berdiri sendiri</p>
+            <h2 class="h2" data-in="112.6" style="max-width:none;font-size:46px">Saldo ada, tapi tetap tidak bisa bayar.</h2>
+            <p class="lead" data-in="113.4" style="max-width:56ch;font-size:22px">Hanya E-money A yang punya biometrik pay. Saldonya habis, padahal E-money B, C, sampai Z masih ada saldo.</p>
+            <div class="vs">
+                <div class="vcol bad" data-in="115.5"><p class="vh">✗ Berdiri sendiri</p>
+                    <div class="w empty">E-money A <small>SALDO HABIS</small></div><div class="w lock">E-money B <small>ADA SALDO · TIDAK BISA DIPAKAI</small></div><div class="w lock">E-money C <small>ADA SALDO · TIDAK BISA DIPAKAI</small></div><div class="w lock">E-money D … Z <small>ADA SALDO · TIDAK BISA DIPAKAI</small></div>
+                    <p class="res" data-in="118">Transaksi gagal. Pembeli pergi.</p></div>
+                <div class="vcol good" data-in="122.5"><p class="vh">✓ Dengan BioPay</p>
+                    <div class="w empty">E-money A · utama <small>SALDO HABIS</small></div><div class="w ok" data-in="125.5">E-money B · cadangan 1 <small>OTOMATIS DIPAKAI</small></div><div class="w ">E-money C · cadangan 2 <small>SIAGA</small></div><div class="w ">E-money D … Z <small>SIAGA</small></div>
+                    <p class="res" data-in="127">Transaksi berhasil. Cukup wajah dan telapak.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4e. Bukti nyata -->
+    <section class="scene" id="f2" data-a="133" data-b="155">
         <div class="pad">
-            <p class="eyebrow" data-in="112.3">Fitur BioPay</p>
-            <h2 class="h2" data-in="112.6" style="max-width: none">Satu identitas, banyak cara bayar.</h2>
+            <p class="eyebrow" data-in="133.3">Bukti di dunia nyata</p>
+            <h2 class="h2" data-in="133.6" style="max-width:none">Berdiri sendiri, raksasa pun kalah.</h2>
+            <div class="proof">
+                <div class="pc" data-in="135.5"><p class="colh">China</p><b>Alipay dan WeChat Pay berjalan terpisah.</b><span>Wajah di satu sistem tidak bisa membayar dari dompet di sistem lain. QR sudah dijembatani, pembayaran wajah belum.</span></div>
+                <div class="pc" data-in="140.5"><p class="colh">Amerika Serikat</p><b>Amazon menghentikan Amazon One (2026).</b><span>Sedikit yang memakai, dan toko takut data pelanggan dipakai untuk menyaingi mereka.</span></div>
+            </div>
+            <p class="gold" data-in="148">BioPay netral. Bukan pesaing siapa pun, jadi semua mau bergabung.</p>
+        </div>
+    </section>
+
+    <!-- 4f. Turis -->
+    <section class="scene" id="f3" data-a="155" data-b="172">
+        <div class="pad">
+            <p class="eyebrow" data-in="155.3">Untuk turis</p>
+            <h2 class="h2" data-in="155.6" style="max-width:none">Tax refund otomatis, tanpa kertas.</h2>
+            <div class="flow" style="margin-top:40px">
+                <span class="step" data-in="156.6"><i class="ph-bold ph-wallet"></i><span>Bayar dari dompet sendiri<small>Dompet negara asal, kurs otomatis</small></span></span>
+                <span class="arrow" data-in="158.6"></span>
+                <span class="step" data-in="159.2"><i class="ph-bold ph-receipt"></i><span>Struk tercatat otomatis<small>Langsung terdaftar untuk tax refund</small></span></span>
+                <span class="arrow" data-in="162.6"></span>
+                <span class="step ok" data-in="163.2"><i class="ph-bold ph-airplane-takeoff"></i><span>Pajak kembali sendiri<small>Saat melewati autogate imigrasi</small></span></span>
+            </div>
+            <div class="chips nochip" data-in="166"><span><i class="ph-bold ph-x"></i> Tanpa formulir</span><span><i class="ph-bold ph-x"></i> Tanpa cap toko</span><span><i class="ph-bold ph-x"></i> Tanpa antre di bandara</span><span><i class="ph-bold ph-x"></i> Tanpa kertas</span></div>
+        </div>
+    </section>
+
+    <!-- 5. Fitur -->
+    <section class="scene" id="s5" data-a="172" data-b="192">
+        <div class="pad">
+            <p class="eyebrow" data-in="172.3">Fitur BioPay</p>
+            <h2 class="h2" data-in="172.6" style="max-width: none">Satu identitas, banyak cara bayar.</h2>
             <div class="grid">
-                <div class="feat" data-in="113.6"><i class="ph-bold ph-storefront"></i><b>Bayar di terminal toko</b><span>Wajah + telapak di kasir, struk langsung tercetak.</span></div>
-                <div class="feat" data-in="115.0"><i class="ph-bold ph-device-mobile"></i><b>Tagih dari ponsel merchant</b><span>Pedagang kecil cukup pakai HP, tanpa mesin EDC.</span></div>
-                <div class="feat" data-in="116.4"><i class="ph-bold ph-airplane-tilt"></i><b>Checkout di aplikasi</b><span>Aplikasi travel & belanja bisa menambah tombol BioPay.</span></div>
-                <div class="feat" data-in="117.8"><i class="ph-bold ph-receipt"></i><b>Bayar tagihan</b><span>Pilih QRIS, BioPay, atau transfer bank virtual account.</span></div>
-                <div class="feat" data-in="119.2"><i class="ph-bold ph-currency-circle-dollar"></i><b>Kurs otomatis untuk turis</b><span>Bayar merchant asing dari saldo rupiah, plus struk tax refund.</span></div>
-                <div class="feat" data-in="120.6"><i class="ph-bold ph-identification-card"></i><b>Bio-Pass</b><span>Kredensial perjalanan digital untuk imigrasi dan check-in hotel.</span></div>
-                <div class="feat" data-in="122.0"><i class="ph-bold ph-users-three"></i><b>Sharing keluarga</b><span>Anggota bayar dengan biometrik sendiri, dengan limit harian.</span></div>
-                <div class="feat" data-in="123.4"><i class="ph-bold ph-shield-check"></i><b>Daftar dengan dokumen</b><span>KTP/paspor, rekam wajah & telapak, persetujuan data jelas.</span></div>
+                <div class="feat" data-in="173.6"><i class="ph-bold ph-storefront"></i><b>Bayar di terminal toko</b><span>Wajah + telapak di kasir, struk langsung tercetak.</span></div>
+                <div class="feat" data-in="175"><i class="ph-bold ph-device-mobile"></i><b>Tagih dari ponsel merchant</b><span>Pedagang kecil cukup pakai HP, tanpa mesin EDC.</span></div>
+                <div class="feat" data-in="176.4"><i class="ph-bold ph-airplane-tilt"></i><b>Checkout di aplikasi</b><span>Aplikasi travel & belanja bisa menambah tombol BioPay.</span></div>
+                <div class="feat" data-in="177.8"><i class="ph-bold ph-receipt"></i><b>Bayar tagihan</b><span>Pilih QRIS, BioPay, atau transfer bank virtual account.</span></div>
+                <div class="feat" data-in="179.2"><i class="ph-bold ph-currency-circle-dollar"></i><b>Kurs otomatis untuk turis</b><span>Bayar merchant asing dari saldo rupiah, plus struk tax refund.</span></div>
+                <div class="feat" data-in="180.6"><i class="ph-bold ph-identification-card"></i><b>Bio-Pass</b><span>Kredensial perjalanan digital untuk imigrasi dan check-in hotel.</span></div>
+                <div class="feat" data-in="182"><i class="ph-bold ph-users-three"></i><b>Sharing keluarga</b><span>Anggota bayar dengan biometrik sendiri, dengan limit harian.</span></div>
+                <div class="feat" data-in="183.4"><i class="ph-bold ph-shield-check"></i><b>Daftar dengan dokumen</b><span>KTP/paspor, rekam wajah & telapak, persetujuan data jelas.</span></div>
             </div>
         </div>
     </section>
 
     <!-- 5b. Di mana saja -->
-    <section class="scene" id="s11" data-a="132" data-b="150">
+    <section class="scene" id="s11" data-a="192" data-b="210">
         <div class="pad">
-            <p class="eyebrow" data-in="132.3">Dipakai di mana saja</p>
-            <h2 class="h2" data-in="132.6" style="max-width: none">Satu scan untuk kebutuhan sehari-hari.</h2>
+            <p class="eyebrow" data-in="192.3">Dipakai di mana saja</p>
+            <h2 class="h2" data-in="192.6" style="max-width: none">Satu scan untuk kebutuhan sehari-hari.</h2>
             <div class="grid">
-                <div class="feat" data-in="133.6"><i class="ph-bold ph-money"></i><b>ATM tanpa kartu</b><span>Tarik & setor tunai, transfer, cek saldo tanpa kartu dan PIN.</span></div>
-                <div class="feat" data-in="135.0"><i class="ph-bold ph-train"></i><b>Transportasi umum</b><span>Gerbang stasiun & bus: scan, lewat, tarif terpotong otomatis.</span></div>
-                <div class="feat" data-in="136.4"><i class="ph-bold ph-airplane-takeoff"></i><b>Bandara & hotel</b><span>Bio-Pass untuk check-in, boarding, dan bayar di bandara.</span></div>
-                <div class="feat" data-in="137.8"><i class="ph-bold ph-gas-pump"></i><b>SPBU & parkir</b><span>Bayar bensin dan parkir tanpa mencari dompet.</span></div>
-                <div class="feat" data-in="139.2"><i class="ph-bold ph-first-aid-kit"></i><b>Rumah sakit & apotek</b><span>Identitas pasien dan pembayaran dalam satu scan.</span></div>
-                <div class="feat" data-in="140.6"><i class="ph-bold ph-shopping-cart"></i><b>Belanja online</b><span>Konfirmasi bayar lewat kamera HP atau laptop, tanpa OTP.</span></div>
-                <div class="feat" data-in="142.0"><i class="ph-bold ph-student"></i><b>Kantin sekolah & kampus</b><span>Anak bayar sendiri dengan limit dari orang tua.</span></div>
-                <div class="feat" data-in="143.4"><i class="ph-bold ph-paper-plane-tilt"></i><b>Kirim uang</b><span>Transfer ke teman, keluarga, atau rekening bank mana pun.</span></div>
+                <div class="feat" data-in="193.6"><i class="ph-bold ph-money"></i><b>ATM tanpa kartu</b><span>Tarik & setor tunai, transfer, cek saldo tanpa kartu dan PIN.</span></div>
+                <div class="feat" data-in="195"><i class="ph-bold ph-train"></i><b>Transportasi umum</b><span>Gerbang stasiun & bus: scan, lewat, tarif terpotong otomatis.</span></div>
+                <div class="feat" data-in="196.4"><i class="ph-bold ph-airplane-takeoff"></i><b>Bandara & hotel</b><span>Bio-Pass untuk check-in, boarding, dan bayar di bandara.</span></div>
+                <div class="feat" data-in="197.8"><i class="ph-bold ph-gas-pump"></i><b>SPBU & parkir</b><span>Bayar bensin dan parkir tanpa mencari dompet.</span></div>
+                <div class="feat" data-in="199.2"><i class="ph-bold ph-first-aid-kit"></i><b>Rumah sakit & apotek</b><span>Identitas pasien dan pembayaran dalam satu scan.</span></div>
+                <div class="feat" data-in="200.6"><i class="ph-bold ph-shopping-cart"></i><b>Belanja online</b><span>Konfirmasi bayar lewat kamera HP atau laptop, tanpa OTP.</span></div>
+                <div class="feat" data-in="202"><i class="ph-bold ph-student"></i><b>Kantin sekolah & kampus</b><span>Anak bayar sendiri dengan limit dari orang tua.</span></div>
+                <div class="feat" data-in="203.4"><i class="ph-bold ph-paper-plane-tilt"></i><b>Kirim uang</b><span>Transfer ke teman, keluarga, atau rekening bank mana pun.</span></div>
             </div>
         </div>
     </section>
 
     <!-- 5c. Daftar & keamanan -->
-    <section class="scene" id="s12" data-a="150" data-b="168">
+    <section class="scene" id="s12" data-a="210" data-b="228">
         <div class="pad" style="justify-content: flex-start; padding-top: 64px">
-            <p class="eyebrow" data-in="150.3">Daftar & keamanan</p>
-            <h2 class="h2" data-in="150.6" style="max-width: none">Daftar sekali, aman setiap hari.</h2>
+            <p class="eyebrow" data-in="210.3">Daftar & keamanan</p>
+            <h2 class="h2" data-in="210.6" style="max-width: none">Daftar sekali, aman setiap hari.</h2>
             <div class="two">
                 <div>
-                    <p class="colh" data-in="151.4">Cara daftar (sekitar 3 menit)</p>
+                    <p class="colh" data-in="211.4">Cara daftar (sekitar 3 menit)</p>
                     <ol class="steps">
-                        <li data-in="152.0"><span class="n">1</span><span><b>Isi data & pilih negara</b><span>Nama, email, nomor HP dengan kode negara.</span></span></li>
-                        <li data-in="153.0"><span class="n">2</span><span><b>Foto dokumen identitas</b><span>KTP, paspor, atau ID negara asal.</span></span></li>
-                        <li data-in="154.0"><span class="n">3</span><span><b>Rekam wajah & telapak tangan</b><span>Langsung dari kamera, di aplikasi atau terminal.</span></span></li>
-                        <li data-in="155.0"><span class="n">4</span><span><b>Hubungkan e-wallet & rekening</b><span>Pilih sumber dana utama; bisa diganti kapan saja.</span></span></li>
+                        <li data-in="212"><span class="n">1</span><span><b>Isi data & pilih negara</b><span>Nama, email, nomor HP dengan kode negara.</span></span></li>
+                        <li data-in="213"><span class="n">2</span><span><b>Foto dokumen identitas</b><span>KTP, paspor, atau ID negara asal.</span></span></li>
+                        <li data-in="214"><span class="n">3</span><span><b>Rekam wajah & telapak tangan</b><span>Langsung dari kamera, di aplikasi atau terminal.</span></span></li>
+                        <li data-in="215"><span class="n">4</span><span><b>Hubungkan e-wallet & rekening</b><span>Pilih sumber dana utama; bisa diganti kapan saja.</span></span></li>
                     </ol>
                 </div>
                 <div>
-                    <p class="colh" data-in="156.4">Yang menjaga uangmu</p>
+                    <p class="colh" data-in="216.4">Yang menjaga uangmu</p>
                     <ul class="steps sec">
-                        <li data-in="157.0"><i class="ph-bold ph-mask-happy"></i><span><b>Anti foto & anti topeng</b><span>Pemeriksaan liveness 3D memastikan orang sungguhan.</span></span></li>
-                        <li data-in="158.0"><i class="ph-bold ph-lock-key"></i><span><b>Template terenkripsi, bukan foto</b><span>Data biometrik tidak bisa diubah kembali jadi gambar.</span></span></li>
-                        <li data-in="159.0"><i class="ph-bold ph-bell-ringing"></i><span><b>Limit & notifikasi real-time</b><span>Setiap transaksi langsung muncul di ponsel.</span></span></li>
-                        <li data-in="160.0"><i class="ph-bold ph-trash"></i><span><b>Bekukan atau hapus BioID</b><span>Kendali penuh di tangan pengguna (UU PDP).</span></span></li>
+                        <li data-in="217"><i class="ph-bold ph-mask-happy"></i><span><b>Anti foto & anti topeng</b><span>Pemeriksaan liveness 3D memastikan orang sungguhan.</span></span></li>
+                        <li data-in="218"><i class="ph-bold ph-lock-key"></i><span><b>Template terenkripsi, bukan foto</b><span>Data biometrik tidak bisa diubah kembali jadi gambar.</span></span></li>
+                        <li data-in="219"><i class="ph-bold ph-bell-ringing"></i><span><b>Limit & notifikasi real-time</b><span>Setiap transaksi langsung muncul di ponsel.</span></span></li>
+                        <li data-in="220"><i class="ph-bold ph-trash"></i><span><b>Bekukan atau hapus BioID</b><span>Kendali penuh di tangan pengguna (UU PDP).</span></span></li>
                     </ul>
                 </div>
             </div>
@@ -270,42 +342,65 @@
     </section>
 
     <!-- 6. Jembatan -->
-    <section class="scene" id="s6" data-a="168" data-b="183">
+    <section class="scene" id="s6" data-a="228" data-b="243">
         <svg id="hub" width="1280" height="720" viewBox="0 0 1280 720" aria-hidden="true"></svg>
         <div class="side">
-            <p class="eyebrow" data-in="168.3">Bukan dompet baru</p>
-            <h2 class="h2" data-in="168.6" style="font-size: 46px">BioPay adalah jembatan.</h2>
-            <p class="lead" data-in="169.4" style="font-size: 22px">Satu wajah dan satu telapak tangan terhubung ke e-wallet, m-banking, rekening bank, ATM, QRIS, dan PayLater yang sudah dipakai orang setiap hari.</p>
+            <p class="eyebrow" data-in="228.3">Bukan dompet baru</p>
+            <h2 class="h2" data-in="228.6" style="font-size: 46px">BioPay adalah jembatan.</h2>
+            <p class="lead" data-in="229.4" style="font-size: 22px">Satu wajah dan satu telapak tangan terhubung ke e-wallet, m-banking, rekening bank, ATM, QRIS, dan PayLater yang sudah dipakai orang setiap hari.</p>
         </div>
     </section>
 
     <!-- 7. Keunggulan -->
-    <section class="scene dark" id="s7" data-a="183" data-b="200">
+    <section class="scene dark" id="s7" data-a="243" data-b="262">
         <div class="pad">
-            <p class="eyebrow" data-in="183.3">Keunggulan BioPay</p>
-            <h2 class="h2" data-in="183.6" style="max-width: none; font-size: 46px">Kenapa BioPay berbeda.</h2>
+            <p class="eyebrow" data-in="243.3">Keunggulan BioPay</p>
+            <h2 class="h2" data-in="243.6" style="max-width: none; font-size: 46px">Kenapa BioPay paling unggul.</h2>
             <ul class="adv">
-                <li class="hero" data-in="184.6"><span class="n">1</span><span><b>Tidak berjalan sendiri: jembatan untuk semua e-wallet, m-banking & bank</b><span>Pengguna tidak perlu pindah dompet. Merchant cukup satu integrasi untuk menerima semuanya.</span></span></li>
-                <li data-in="186.2"><span class="n">2</span><span><b>Dua faktor biometrik</b><span>Wajah saja tidak pernah bisa memindahkan uang; telapak tangan wajib.</span></span></li>
-                <li data-in="187.6"><span class="n">3</span><span><b>Tanpa kartu, tanpa ponsel</b><span>Baterai habis atau HP tertinggal tetap bisa bayar.</span></span></li>
-                <li data-in="189.0"><span class="n">4</span><span><b>Merchant tanpa mesin mahal</b><span>Mulai dari ponsel, naik ke terminal saat usaha tumbuh.</span></span></li>
-                <li data-in="190.4"><span class="n">5</span><span><b>Ramah wisatawan</b><span>Kurs otomatis, struk tax refund, dan Bio-Pass.</span></span></li>
-                <li data-in="191.8"><span class="n">6</span><span><b>Privasi sejak awal</b><span>Persetujuan eksplisit, data bisa dihapus kapan saja (UU PDP).</span></span></li>
-                <li data-in="193.2"><span class="n">7</span><span><b>Satu identitas untuk semuanya</b><span>Belanja, tagihan, travel, dan keluarga dalam satu BioID.</span></span></li>
-                <li data-in="194.6"><span class="n">8</span><span><b>ATM tanpa kartu</b><span>Bebas skimming, kartu tertelan, atau lupa PIN.</span></span></li>
-                <li data-in="196.0"><span class="n">9</span><span><b>Dipakai di mana saja</b><span>Toko, ATM, transportasi, rumah sakit, sampai belanja online.</span></span></li>
+                <li class="hero" data-in="244.6"><span class="n">1</span><span><b>Terhubung ke semua dompet</b><span>Pemain lain terkunci di satu dompet. BioPay jembatan untuk semua e-wallet, m-banking, dan bank. Bukan pesaing, tapi mitra.</span></span></li>
+                <li data-in="246.2"><span class="n">2</span><span><b>Disambut, bukan dilawan</b><span>Tidak ada perlombaan berdarah. Semua cukup bermitra.</span></span></li>
+                <li data-in="247.6"><span class="n">3</span><span><b>Jaringan makin kuat</b><span>Setiap mitra baru membuat BioPay makin berguna.</span></span></li>
+                <li data-in="249.0"><span class="n">4</span><span><b>Daftar sekali, satu alat</b><span>Tidak perlu daftar wajah di tiap aplikasi.</span></span></li>
+                <li data-in="250.4"><span class="n">5</span><span><b>Saldo tidak jadi masalah</b><span>Utama habis, otomatis pakai cadangan.</span></span></li>
+                <li data-in="251.8"><span class="n">6</span><span><b>Keamanan dua lapis</b><span>Wajah mengenali, telapak mengonfirmasi.</span></span></li>
+                <li data-in="253.2"><span class="n">7</span><span><b>Tidak memegang uang</b><span>Dana tetap di e-money dan bank berizin.</span></span></li>
+                <li data-in="254.6"><span class="n">8</span><span><b>Tanpa bawa apa pun</b><span>Di kasir, di aplikasi, bahkan ATM tanpa kartu.</span></span></li>
+                <li data-in="256.0"><span class="n">9</span><span><b>Siap lintas negara</b><span>Kurs otomatis dan tax refund tanpa kertas.</span></span></li>
             </ul>
         </div>
     </section>
 
-    <!-- 8. Penutup -->
-    <section class="scene dark" id="s8" data-a="200" data-b="207">
-        <div class="pad">
-            <p class="eyebrow" data-in="200.3">BioPay</p>
-            <h1 class="h1" data-in="200.6">Satu wajah.<br>Semua dompet.</h1>
-            <div data-in="201.8"><span class="url"><i class="ph-bold ph-globe-simple"></i> ikbal66123.github.io/biopay</span></div>
+        <!-- 7b. Wawancara -->
+    <section class="scene" id="f4" data-a="262" data-b="278">
+        <div class="pad" style="flex-direction:row;align-items:center;gap:56px">
+            <div style="flex:1">
+                <p class="eyebrow" data-in="262.3">Kata mereka</p>
+                <h2 class="h2" data-in="262.6">Dari wawancara langsung.</h2>
+                <div class="quote" data-in="264"><p>"Sering." Pembeli lupa bawa uang lalu tidak jadi beli. Tentang BioPay: "Ya, sangat membantu."</p><small>Penjual bakso</small></div>
+                <div class="quote" data-in="270"><p>"Tapi lebih modern lagi ya?" Seperti QRIS, tapi tanpa perlu membawa HP.</p><small>Pemilik laundry</small></div>
+            </div>
+            <div class="stills"><img src="interview-1.jpg" alt="" data-in="263.5"><img src="interview-2.jpg" alt="" data-in="269.5"></div>
         </div>
-        <p class="fine" data-in="202.4">Prototipe. Semua transaksi disimulasikan; ATM dan skenario "di mana saja" adalah gambaran produk. Nama mitra hanya ilustrasi.</p>
+    </section>
+
+    <!-- 7c. Semua menang -->
+    <section class="scene dark" id="f5" data-a="278" data-b="295">
+        <div class="pad">
+            <p class="eyebrow" data-in="278.3">Bukan pesaing, justru mitra</p>
+            <h2 class="h2" data-in="278.6" style="max-width:none">Semua menang dengan BioPay.</h2>
+            <div class="wins"><div class="wc" data-in="280.0"><b>Pembeli</b><span>Tidak perlu membawa uang, dompet, kartu, atau HP.</span></div><div class="wc" data-in="282.4"><b>Penjual</b><span>Tidak lagi kehilangan pelanggan yang lupa membawa apa pun.</span></div><div class="wc" data-in="284.8"><b>E-money dan bank</b><span>Tidak perlu berlomba membangun biometrik sendiri. Cukup bermitra.</span></div></div>
+            <p class="gold" data-in="289.5">Semakin banyak yang bergabung, semakin luas jaringannya. Yang berjalan sendiri akan tertinggal.</p>
+        </div>
+    </section>
+
+    <!-- 8. Penutup -->
+    <section class="scene dark" id="s8" data-a="295" data-b="302">
+        <div class="pad">
+            <p class="eyebrow" data-in="295.3">BioPay</p>
+            <h1 class="h1" data-in="295.6">Satu wajah.<br>Semua dompet.</h1>
+            <div data-in="296.8"><span class="url"><i class="ph-bold ph-globe-simple"></i> ikbal66123.github.io/biopay</span></div>
+        </div>
+        <p class="fine" data-in="297.4">Prototipe. Semua transaksi disimulasikan; ATM dan skenario "di mana saja" adalah gambaran produk. Nama mitra hanya ilustrasi.</p>
     </section>
 
     <div class="progress" id="progress"></div>
@@ -313,15 +408,15 @@
 </div>
 <div id="controls">
     <button type="button" id="play" aria-label="Putar atau jeda">Jeda</button>
-    <input type="range" id="seek" min="0" max="207" step="0.04" value="0" aria-label="Posisi video">
-    <span id="clock">0:00 / 3:27</span>
+    <input type="range" id="seek" min="0" max="302" step="0.04" value="0" aria-label="Posisi video">
+    <span id="clock">0:00 / 5:02</span>
 </div>
 
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
 <script type="module">
 import * as THREE from 'three';
 
-const DUR = 207;
+const DUR = 302;
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const smooth = x => { x = clamp(x); return x * x * (3 - 2 * x); };
 const prog = (t, a, b) => smooth((t - a) / (b - a));
@@ -354,11 +449,11 @@ hub.innerHTML = nodePos.map((p, i) => `<line id="ln${i}" x1="${C.x}" y1="${C.y}"
     + nodePos.map((p, i) => { const w = 188, h = 62; return `<g class="node" id="nd${i}" opacity="0" transform="translate(${p.x - w / 2},${p.y - h / 2})"><rect width="${w}" height="${h}" rx="14"/><text x="16" y="28">${NODES[i][0]}</text><text class="sub" x="16" y="49">${NODES[i][1]}</text></g>`; }).join('')
     + `<g id="core" opacity="0"><circle cx="${C.x}" cy="${C.y}" r="86" fill="#0F1B2D"/><circle cx="${C.x}" cy="${C.y}" r="86" fill="none" stroke="#E8B04A" stroke-width="3" id="core-ring"/><text x="${C.x}" y="${C.y - 4}" text-anchor="middle" font-family="IBM Plex Sans" font-weight="700" font-size="30" fill="#fff">BioPay</text><text x="${C.x}" y="${C.y + 24}" text-anchor="middle" font-family="IBM Plex Mono" font-size="14" fill="#E8B04A" letter-spacing="2">WAJAH + TELAPAK</text></g>`;
 function renderHub(t) {
-    if (t < 167.5 || t > 183.5) return;
-    document.getElementById('core').setAttribute('opacity', prog(t, 170, 170.8));
+    if (t < 227.5 || t > 243.5) return;
+    document.getElementById('core').setAttribute('opacity', prog(t, 230, 230.8));
     document.getElementById('core-ring').setAttribute('r', 86 + 6 * Math.sin(t * 3));
     nodePos.forEach((p, i) => {
-        const t0 = 171 + i * 0.55;
+        const t0 = 231 + i * 0.55;
         document.getElementById('ln' + i).setAttribute('stroke-dashoffset', 320 * (1 - prog(t, t0, t0 + 0.8)));
         document.getElementById('nd' + i).setAttribute('opacity', prog(t, t0 + 0.4, t0 + 1));
         const pl = document.getElementById('pl' + i), live = t > t0 + 1;

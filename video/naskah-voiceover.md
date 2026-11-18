@@ -1,10 +1,10 @@
-# Naskah voiceover · Video demo BioPay (3:27)
+# Naskah voiceover · Video demo BioPay (5:02)
 
 Video `biopay-demo.mp4` sudah berisi narasi suara Bahasa Indonesia (suara sintetis neural) dan musik latar; musik otomatis mengecil saat narator bicara. Narasi di video adalah versi ringkas dari naskah di bawah agar pas dengan durasi tiap adegan. Kalau mau memakai suara sendiri, rekam naskah ini mengikuti timecode lalu ganti audionya di aplikasi edit video (CapCut, InShot, Premiere, dan lain-lain).
 
 | Waktu | Adegan | Narasi |
 |---|---|---|
-| 0:00–0:07 | Pembuka | "Kenalkan BioPay. Bayar cukup dengan wajah dan telapak tangan. Tanpa kartu, tanpa ponsel." |
+| 0:00–0:07 | Pembuka | "Kenalkan BioPay. Satu wajah, semua dompet. Jembatan untuk semua e-money." |
 | 0:07–0:17 | Masalah | "Hari ini, bayar di kasir masih ribet. Kita pindah-pindah aplikasi dan kode QR, ponsel bisa mati atau tanpa sinyal, kartu bisa tertinggal, dan wisatawan harus repot dengan kurs dan pengembalian pajak." |
 | 0:17–0:27 | Apa itu BioPay | "BioPay adalah checkout biometrik dua faktor. Wajah untuk mengenali siapa kamu, telapak tangan untuk mengonfirmasi. Uangnya diambil dari e-wallet atau rekening bank yang sudah kamu punya." |
 | 0:27–0:33 | Demo 3D: datang ke kasir | "Lihat contohnya. Pelanggan datang ke kasir dengan belanjaan delapan puluh lima ribu rupiah, tanpa mengeluarkan apa pun dari saku." |
@@ -20,12 +20,17 @@ Video `biopay-demo.mp4` sudah berisi narasi suara Bahasa Indonesia (suara sintet
 | 1:37–1:41 | Demo 3D ATM: pilih nominal | "Pilih tarik tunai lima ratus ribu rupiah." |
 | 1:41–1:47 | Demo 3D ATM: ambil uang | "Uang keluar. Tidak ada kartu yang bisa tertelan, hilang, atau di-skimming." |
 | 1:47–1:52 | Demo 3D ATM: selesai | "Selesai. Notifikasi langsung masuk ke ponsel, dan sesi ATM tertutup otomatis." |
-| 1:52–2:12 | Fitur | "Satu identitas, banyak cara bayar. Bayar di terminal toko. Pedagang kecil bisa menagih pelanggan langsung dari ponselnya. Aplikasi travel dan belanja bisa menambahkan tombol BioPay. Tagihan bulanan bisa dibayar lewat QRIS, BioPay, atau transfer bank. Wisatawan mendapat kurs otomatis dan struk tax refund. Ada juga Bio-Pass untuk perjalanan, sharing saldo untuk keluarga dengan limit harian, dan pendaftaran dengan dokumen identitas." |
-| 2:12–2:30 | Di mana saja | "BioPay bisa dipakai di mana saja: ATM tanpa kartu, gerbang transportasi umum, bandara dan hotel, SPBU dan parkir, rumah sakit dan apotek, belanja online tanpa OTP, kantin sekolah dengan limit dari orang tua, sampai kirim uang ke siapa pun." |
-| 2:30–2:48 | Daftar & keamanan | "Daftarnya cukup sekali, sekitar tiga menit: isi data dan pilih negara, foto dokumen identitas, rekam wajah dan telapak tangan, lalu hubungkan e-wallet dan rekening bank. Keamanannya berlapis: pemeriksaan liveness anti foto dan anti topeng, data disimpan sebagai template terenkripsi bukan foto, limit dan notifikasi real-time, dan BioID bisa dibekukan atau dihapus kapan saja." |
-| 2:48–3:03 | Jembatan | "Yang paling penting: BioPay bukan dompet baru. BioPay adalah jembatan. Satu wajah dan satu telapak tangan terhubung ke e-wallet, mobile banking, kartu, QRIS, PayLater, ATM, merchant, aplikasi, sampai tagihan bulanan." |
-| 3:03–3:20 | Keunggulan | "Kenapa BioPay berbeda? Pertama, BioPay tidak berjalan sendiri. BioPay menjadi jembatan untuk semua e-wallet, m-banking, dan bank, jadi pengguna tidak perlu pindah dompet dan merchant cukup satu integrasi. Kedua, dua faktor biometrik. Ketiga, tanpa kartu dan tanpa ponsel. Keempat, merchant tidak butuh mesin mahal. Kelima, ramah wisatawan. Keenam, privasi sejak awal. Ketujuh, satu identitas untuk semuanya. Kedelapan, ATM tanpa kartu, bebas skimming. Dan kesembilan, bisa dipakai di mana saja." |
-| 3:20–3:27 | Penutup | "BioPay. Satu wajah, semua dompet. Coba demonya di ikbal66123 titik github titik io garis miring biopay." |
+| 1:52–2:13 | Saldo utama habis | "Di banyak tempat, biometrik pay hanya ada di satu e-money. Kalau saldonya habis, transaksi gagal, padahal di e-money lain saldonya masih ada. Di BioPay, kamu atur dompet utama dan cadangan. Saldo utama habis? BioPay otomatis memakai cadangan berikutnya, dan pembayaran tetap berhasil." |
+| 2:13–2:35 | Bukti di dunia nyata | "Ini sudah terjadi di dunia nyata. Di China, pembayaran wajah Alipay dan WeChat Pay berjalan terpisah. Di Amerika, Amazon menghentikan Amazon One tahun ini karena sedikit yang memakai, dan toko takut datanya dipakai untuk menyaingi mereka. Berdiri sendiri, raksasa pun kalah. BioPay netral, jadi semua mau bergabung." |
+| 2:35–2:52 | Turis: tax refund tanpa kertas | "Untuk turis, BioPay membayar dari dompet negara asal dengan kurs otomatis. Struknya langsung terdaftar untuk tax refund, tanpa formulir dan tanpa kertas. Saat melewati autogate imigrasi di bandara, pajaknya otomatis kembali ke dompet." |
+| 2:52–3:12 | Fitur | "Satu identitas, banyak cara bayar. Bayar di terminal toko. Pedagang kecil bisa menagih pelanggan langsung dari ponselnya. Aplikasi travel dan belanja bisa menambahkan tombol BioPay. Tagihan bulanan bisa dibayar lewat QRIS, BioPay, atau transfer bank. Wisatawan mendapat kurs otomatis dan struk tax refund. Ada juga Bio-Pass untuk perjalanan, sharing saldo untuk keluarga dengan limit harian, dan pendaftaran dengan dokumen identitas." |
+| 3:12–3:30 | Di mana saja | "BioPay bisa dipakai di mana saja: ATM tanpa kartu, gerbang transportasi umum, bandara dan hotel, SPBU dan parkir, rumah sakit dan apotek, belanja online tanpa OTP, kantin sekolah dengan limit dari orang tua, sampai kirim uang ke siapa pun." |
+| 3:30–3:48 | Daftar & keamanan | "Daftarnya cukup sekali, sekitar tiga menit: isi data dan pilih negara, foto dokumen identitas, rekam wajah dan telapak tangan, lalu hubungkan e-wallet dan rekening bank. Keamanannya berlapis: pemeriksaan liveness anti foto dan anti topeng, data disimpan sebagai template terenkripsi bukan foto, limit dan notifikasi real-time, dan BioID bisa dibekukan atau dihapus kapan saja." |
+| 3:48–4:03 | Jembatan | "Yang paling penting: BioPay bukan dompet baru. BioPay adalah jembatan. Satu wajah dan satu telapak tangan terhubung ke e-wallet, mobile banking, kartu, QRIS, PayLater, ATM, merchant, aplikasi, sampai tagihan bulanan." |
+| 4:03–4:22 | Keunggulan | "Kenapa BioPay paling unggul? Pemain lain berjalan sendiri. BioPay terhubung ke semua dompet, disambut bukan dilawan, dan jaringannya makin kuat setiap ada mitra baru. Daftar sekali, saldo tidak pernah jadi masalah, keamanan dua lapis, dan BioPay tidak pernah memegang uang." |
+| 4:22–4:38 | Kata mereka (wawancara) | "Kami sudah bertanya langsung ke pemilik usaha. Penjual bakso bilang, pembeli sering lupa bawa uang lalu tidak jadi beli, dan menurutnya BioPay sangat membantu. Pemilik laundry menyebut BioPay seperti QRIS, tapi lebih modern, karena tidak perlu membawa HP." |
+| 4:38–4:55 | Semua menang | "Dengan BioPay, semua menang. Pembeli tidak perlu membawa apa pun. Penjual tidak kehilangan pelanggan. E-money dan bank tidak perlu berlomba membangun biometrik sendiri, cukup bermitra. Semakin banyak yang bergabung, semakin luas jaringannya." |
+| 4:55–5:02 | Penutup | "BioPay. Satu wajah, semua dompet. Coba demonya di ikbal66123 titik github titik io garis miring biopay." |
 
 ## Catatan
 
