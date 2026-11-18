@@ -622,6 +622,7 @@
         .pt-foot .pt-note { background: transparent; border-color: #DDE2E9; }
         :root:not([data-pitch-lang="id"]) .pt-foot [lang="id"], :root:not([data-pitch-lang="id"]) .pt-partner [lang="id"] { display: none; }
         html[data-pitch-lang="id"] .pt-partner [lang="en"] { display: none; }
+        :root:not([data-pitch-lang="id"]) .pt-voices [lang="id"], html[data-pitch-lang="id"] .pt-voices [lang="en"] { display: none; }
         /* Kutipan pelanggan & tur terpandu */
         .pt-quote { margin: 26px 0 0; max-width: 62ch; padding: 16px 20px; border-left: 4px solid var(--brass); background: #fff; border-radius: 0 14px 14px 0; box-shadow: 0 1px 2px rgba(15,27,45,.05); }
         .pt-quote blockquote { margin: 0; font-size: 18px; line-height: 1.5; color: var(--ink); font-weight: 500; }
@@ -647,7 +648,7 @@
         .pt-vgrid { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
         .pt-vcard { flex: 1 1 260px; max-width: 320px; background: #fff; border: 1px solid #DCE1E8; border-radius: 16px; overflow: hidden; }
         .pt-vframe { position: relative; aspect-ratio: 9 / 16; background: #0B1220; }
-        .pt-vframe iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .pt-vframe video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; background: #0B1220; }
         .pt-vcap { padding: 12px 14px; font-size: 14px; line-height: 1.45; color: #3B475A; }
         .pt-vcap b { display: block; color: var(--ink); margin-bottom: 4px; }
         .pt-partner { width: 100%; max-width: 1240px; padding: 56px 8px 32px; display: flex; flex-direction: column; gap: 0; }
@@ -1111,12 +1112,12 @@
         <section class="pt-voices" id="voices" aria-labelledby="voices-title">
             <p class="pt-eyebrow"><span lang="en">Early interviews</span><span lang="id">Wawancara awal</span></p>
             <h2 class="pt-h2" id="voices-title"><span lang="en">Hear it from shop owners and customers.</span><span lang="id">Dengar langsung dari pemilik toko dan pelanggan.</span></h2>
-            <p class="pt-lead"><span lang="en">We asked people what they think of BioPay. Interviews are in Indonesian.</span><span lang="id">Kami menanyakan pendapat orang-orang tentang BioPay. Wawancara dalam bahasa Indonesia.</span></p>
+            <p class="pt-lead"><span lang="en">We asked people what they think of BioPay. Interviews are in Indonesian, with English subtitles.</span><span lang="id">Kami menanyakan pendapat orang-orang tentang BioPay. Wawancara dalam bahasa Indonesia, dengan subtitle bahasa Inggris.</span></p>
             <div class="pt-vgrid">
-                <figure class="pt-vcard"><div class="pt-vframe"><iframe src="https://www.youtube-nocookie.com/embed/vuk5ZJre4PI" title="BioPay interview 1" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-                    <figcaption class="pt-vcap"><b><span lang="en">Interview 1</span><span lang="id">Wawancara 1</span></b></figcaption></figure>
-                <figure class="pt-vcard"><div class="pt-vframe"><iframe src="https://www.youtube-nocookie.com/embed/4hpTcWcFKk8" title="BioPay interview 2" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-                    <figcaption class="pt-vcap"><b><span lang="en">Interview 2</span><span lang="id">Wawancara 2</span></b></figcaption></figure>
+                <figure class="pt-vcard"><div class="pt-vframe"><video src="video/interview-1.mp4" poster="video/interview-1.jpg" controls playsinline preload="none" aria-label="Interview with a meatball soup seller, English subtitles"></video></div>
+                    <figcaption class="pt-vcap"><b><span lang="en">Street food seller (bakso)</span><span lang="id">Penjual bakso</span></b><span lang="en">“Often.” Customers forget their money and don’t buy. On BioPay: “Yes, very helpful.”</span><span lang="id">“Sering.” Pembeli lupa bawa uang lalu tidak jadi beli. Tentang BioPay: “Ya, sangat membantu.”</span></figcaption></figure>
+                <figure class="pt-vcard"><div class="pt-vframe"><video src="video/interview-2.mp4" poster="video/interview-2.jpg" controls playsinline preload="none" aria-label="Interview with a laundry owner, English subtitles"></video></div>
+                    <figcaption class="pt-vcap"><b><span lang="en">Laundry owner</span><span lang="id">Pemilik laundry</span></b><span lang="en">Compares BioPay with QRIS, which still needs a phone: “But it’s even more modern, right?”</span><span lang="id">Membandingkan BioPay dengan QRIS yang tetap butuh HP: “Tapi lebih modern lagi ya?”</span></figcaption></figure>
             </div>
         </section>
 
