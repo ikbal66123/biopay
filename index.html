@@ -643,6 +643,13 @@
         @media (max-width: 640px) { .pt-tour { right: 16px; bottom: 16px; padding: 14px; } .pt-tour-text { font-size: 13px; } .pt-quote blockquote { font-size: 16px; } }
         .pt-cloud { margin: 16px 0 0; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #566173; }
         .pt-cloud[data-mode="cloud"] { color: #0F7B4F; font-weight: 600; }
+        .pt-voices { width: 100%; max-width: 1240px; padding: 40px 8px 8px; }
+        .pt-vgrid { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
+        .pt-vcard { flex: 1 1 260px; max-width: 320px; background: #fff; border: 1px solid #DCE1E8; border-radius: 16px; overflow: hidden; }
+        .pt-vframe { position: relative; aspect-ratio: 9 / 16; background: #0B1220; }
+        .pt-vframe iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .pt-vcap { padding: 12px 14px; font-size: 14px; line-height: 1.45; color: #3B475A; }
+        .pt-vcap b { display: block; color: var(--ink); margin-bottom: 4px; }
         .pt-partner { width: 100%; max-width: 1240px; padding: 56px 8px 32px; display: flex; flex-direction: column; gap: 0; }
         .pt-h2 { margin: 0; font-size: 36px; line-height: 1.12; letter-spacing: -.025em; font-weight: 700; color: var(--ink); max-width: 22ch; }
         .pt-partner .pt-lead { max-width: 64ch; }
@@ -1098,6 +1105,19 @@
                 <li aria-hidden="true" class="pt-flow-sep"></li>
                 <li><i class="ph ph-check-circle" aria-hidden="true"></i><span lang="en">Paid</span><span lang="id">Lunas</span></li>
             </ol>
+        </section>
+
+
+        <section class="pt-voices" id="voices" aria-labelledby="voices-title">
+            <p class="pt-eyebrow"><span lang="en">Early interviews</span><span lang="id">Wawancara awal</span></p>
+            <h2 class="pt-h2" id="voices-title"><span lang="en">Hear it from shop owners and customers.</span><span lang="id">Dengar langsung dari pemilik toko dan pelanggan.</span></h2>
+            <p class="pt-lead"><span lang="en">We asked people what they think of BioPay. Interviews are in Indonesian.</span><span lang="id">Kami menanyakan pendapat orang-orang tentang BioPay. Wawancara dalam bahasa Indonesia.</span></p>
+            <div class="pt-vgrid">
+                <figure class="pt-vcard"><div class="pt-vframe"><iframe src="https://www.youtube-nocookie.com/embed/vuk5ZJre4PI" title="BioPay interview 1" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    <figcaption class="pt-vcap"><b><span lang="en">Interview 1</span><span lang="id">Wawancara 1</span></b></figcaption></figure>
+                <figure class="pt-vcard"><div class="pt-vframe"><iframe src="https://www.youtube-nocookie.com/embed/4hpTcWcFKk8" title="BioPay interview 2" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                    <figcaption class="pt-vcap"><b><span lang="en">Interview 2</span><span lang="id">Wawancara 2</span></b></figcaption></figure>
+            </div>
         </section>
 
         <section class="pt-demo" id="demo" aria-label="Demo">
