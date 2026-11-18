@@ -160,9 +160,9 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         await page.click('#dev-tab-terminal');
     });
 
-    await test('partner sandbox and guided tour', async () => {
-        await page.click('#partners .pt-sb-row button'); await page.waitForTimeout(3200);
-        eq(await page.locator('#sb-log li').count(), 6, 'sandbox log lines');
+    await test('partner section and guided tour', async () => {
+        eq(await page.locator('#partners .pt-win-list li').count(), 3, 'partner win-win list');
+        assert(!/sandbox/i.test(await page.textContent('body')), 'no sandbox wording left');
         await page.click('.pt-hero .pt-btn-primary');
         for (let i = 0; i < 4; i++) await page.click('#pt-tour-next');
         const why = await page.textContent('#route-why');

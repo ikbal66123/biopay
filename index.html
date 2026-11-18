@@ -663,12 +663,12 @@
         .pt-sim-out b { font-size: 17px; color: var(--ink); }
         .pt-sim-out div:nth-child(2) { background: #E7F4EC; } .pt-sim-out div:nth-child(2) b { color: #0F7B4F; }
         .pt-fine { margin: 0; font-size: 12px; line-height: 1.5; color: #6B7585; }
-        .pt-sb-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; }
-        .pt-sb-row label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #566173; min-width: 0; }
-        .pt-sb-row select, .pt-sb-row input { min-height: 44px; padding: 0 10px; border: 1px solid #C9D0DA; border-radius: 10px; font: 500 15px var(--font-sans); background: #fff; color: var(--ink); width: 100%; }
-        .pt-sb-log { list-style: none; margin: 0; padding: 12px; border-radius: 10px; background: #0B1220; color: #D7DEE8; font: 12px/1.55 var(--font-mono); min-height: 220px; max-height: 320px; overflow: auto; display: flex; flex-direction: column; gap: 10px; }
-        .pt-sb-log li.muted { color: #8A96A8; font-family: var(--font-sans); font-size: 13px; }
-        .pt-sb-log .t { color: #E8B04A; } .pt-sb-log .ok { color: #6EE7A8; } .pt-sb-log pre { margin: 4px 0 0; white-space: pre-wrap; word-break: break-word; color: #AFC0D6; }
+        .pt-win-h { font-size: 22px; font-weight: 700; line-height: 1.25; margin: 0 0 14px; color: var(--ink); }
+        .pt-win-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+        .pt-win-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; color: #3B475A; }
+        .pt-win-list li > i { font-size: 22px; color: #A16207; flex: none; margin-top: 1px; }
+        .pt-win-list b { display: block; color: var(--ink); }
+        .pt-win-gold { margin: 16px 0 0; font-weight: 700; color: #A16207; font-size: 15px; line-height: 1.45; }
         .pt-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
         .pt-steps li { display: flex; gap: 12px; font-size: 14px; line-height: 1.5; color: #4A5568; }
         .pt-steps b { display: block; color: var(--ink); font-size: 15px; }
@@ -678,7 +678,7 @@
         .pt-partner-cta p { margin: 0; max-width: 70ch; font-size: 15px; line-height: 1.5; } .pt-partner-cta b { color: #fff; }
         .pt-partner-cta .pt-btn-primary { background: #E8B04A; color: var(--ink); }
         @media (max-width: 980px) { .pt-pgrid { grid-template-columns: 1fr 1fr; } .pt-pcols { grid-template-columns: 1fr; } }
-        @media (max-width: 560px) { .pt-pgrid { grid-template-columns: 1fr; } .pt-sim-out { grid-template-columns: 1fr; } .pt-sb-row { grid-template-columns: 1fr; } .pt-h2 { font-size: 28px; } }
+        @media (max-width: 560px) { .pt-pgrid { grid-template-columns: 1fr; } .pt-sim-out { grid-template-columns: 1fr; } .pt-h2 { font-size: 28px; } }
         html[data-pitch-lang="id"] .pt-foot [lang="en"] { display: none; }
         .pt-foot :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
         @media (max-width: 760px) {
@@ -2527,14 +2527,15 @@
                     <p class="pt-fine"><span lang="en">Illustrative assumptions: merchant fee (MDR) 0.7%, of which the wallet keeps 0.5% and BioPay 0.2%; 20% of routed customers are new to you; acquisition cost Rp 50.000 per new user.</span><span lang="id">Asumsi ilustrasi: biaya merchant (MDR) 0,7%, wallet mendapat 0,5% dan BioPay 0,2%; 20% pelanggan yang diarahkan adalah pengguna baru bagimu; biaya akuisisi Rp 50.000 per pengguna baru.</span></p>
                 </div>
 
-                <div class="pt-panel">
-                    <p class="pt-card-tag"><span lang="en">API sandbox (simulated)</span><span lang="id">Sandbox API (simulasi)</span></p>
-                    <div class="pt-sb-row">
-                        <label><span><span lang="en">Your wallet</span><span lang="id">Wallet kamu</span></span><select id="sb-wallet"><option>Kasku</option><option>Dompet Nusa</option><option>Kilat Pay</option><option>Saku Rupa</option><option>Bank / m-banking</option></select></label>
-                        <label><span><span lang="en">Amount (Rp)</span><span lang="id">Nominal (Rp)</span></span><input id="sb-amt" type="number" inputmode="numeric" value="85000" min="1000"></label>
-                        <button type="button" class="pt-btn pt-btn-primary" onclick="partnerSandbox()"><i class="ph-bold ph-play" aria-hidden="true"></i> <span lang="en">Send test charge</span><span lang="id">Kirim transaksi uji</span></button>
-                    </div>
-                    <ol id="sb-log" class="pt-sb-log" aria-live="polite"><li class="muted"><span lang="en">Press “Send test charge” to see the request, the webhook your server receives, and the result.</span><span lang="id">Tekan “Kirim transaksi uji” untuk melihat request, webhook yang diterima servermu, dan hasilnya.</span></li></ol>
+                <div class="pt-panel pt-win">
+                    <p class="pt-card-tag"><span lang="en">Why join BioPay</span><span lang="id">Kenapa bergabung dengan BioPay</span></p>
+                    <h3 class="pt-win-h"><span lang="en">Not a rival, a partner. Everyone wins.</span><span lang="id">Bukan pesaing, justru mitra. Semua menang.</span></h3>
+                    <ul class="pt-win-list">
+                        <li><i class="ph-bold ph-user" aria-hidden="true"></i><span><b><span lang="en">Buyers</span><span lang="id">Pembeli</span></b><span lang="en">No need to carry cash, a wallet, a card or a phone.</span><span lang="id">Tidak perlu repot membawa uang, dompet, kartu, atau HP.</span></span></li>
+                        <li><i class="ph-bold ph-storefront" aria-hidden="true"></i><span><b><span lang="en">Sellers</span><span lang="id">Penjual</span></b><span lang="en">No more lost customers because a shopper forgot something.</span><span lang="id">Tidak lagi kehilangan pelanggan karena pembeli lupa membawa apa pun.</span></span></li>
+                        <li><i class="ph-bold ph-buildings" aria-hidden="true"></i><span><b><span lang="en">E-money and banks</span><span lang="id">E-money dan bank</span></b><span lang="en">No costly race to build biometric pay alone. Your core business stays yours, and with BioPay you grow higher together.</span><span lang="id">Tidak perlu berlomba mahal membangun biometrik pay sendiri. Bisnis utamamu tetap milikmu, dan bersama BioPay kamu tumbuh lebih tinggi.</span></span></li>
+                    </ul>
+                    <p class="pt-win-gold"><span lang="en">Every new partner widens the network. The more who join, the more those outside fall behind.</span><span lang="id">Setiap mitra baru membuat jaringan makin luas. Semakin banyak yang bergabung, semakin tertinggal yang tidak bergabung.</span></p>
                 </div>
             </div>
 
@@ -2544,7 +2545,7 @@
                     <ol class="pt-steps">
                         <li><span class="pt-n">1</span><span><b><span lang="en">Account linking</span><span lang="id">Hubungkan akun</span></b><span lang="en">The customer approves “Link to BioPay” inside your app (OAuth). No card or wallet data is shared.</span><span lang="id">Pelanggan menyetujui “Hubungkan ke BioPay” di dalam aplikasimu (OAuth). Data kartu atau wallet tidak dibagikan.</span></span></li>
                         <li><span class="pt-n">2</span><span><b><span lang="en">One webhook</span><span lang="id">Satu webhook</span></b><span lang="en">Approve or decline <code>charge.authorize</code>, then receive <code>charge.succeeded</code>. Refunds use the same endpoint.</span><span lang="id">Setujui atau tolak <code>charge.authorize</code>, lalu terima <code>charge.succeeded</code>. Refund memakai endpoint yang sama.</span></span></li>
-                        <li><span class="pt-n">3</span><span><b><span lang="en">Sandbox, then pilot</span><span lang="id">Sandbox, lalu pilot</span></b><span lang="en">Test with simulated faces, then go live with a handful of pilot merchants before scaling.</span><span lang="id">Uji dengan wajah simulasi, lalu jalan di beberapa merchant pilot sebelum diperluas.</span></span></li>
+                        <li><span class="pt-n">3</span><span><b><span lang="en">Test, then launch</span><span lang="id">Uji, lalu luncurkan</span></b><span lang="en">Test with simulated faces, then launch with partner shops and grow the network together.</span><span lang="id">Uji dengan wajah simulasi, lalu luncurkan bersama toko-toko mitra dan bangun jaringannya bersama.</span></span></li>
                     </ol>
                 </div>
                 <div class="pt-panel pt-code-panel">
@@ -2578,7 +2579,7 @@
                     <li><span lang="en"><b>Simulated:</b> identity matching (every face resolves to the demo user), liveness depth sensing, palm-vein reading, balances, payments and settlement.</span><span lang="id"><b>Simulasi:</b> pencocokan identitas (semua wajah dianggap pengguna demo), sensor kedalaman liveness, pembacaan vena telapak, saldo, pembayaran, dan settlement.</span></li>
                     <li><span lang="en"><b>Accounts:</b> sign-up (details, consent, face and palm enrollment) and sign-in work, but accounts live only in this browser's storage, with passwords stored as salted SHA-256 hashes. A production system needs a server. Demo login: ikbal@biopay.id / biopay123.</span><span lang="id"><b>Akun:</b> daftar (data diri, persetujuan, rekam wajah dan telapak) dan masuk berfungsi, tetapi akun hanya tersimpan di browser ini dengan kata sandi berupa hash SHA-256 ber-salt. Sistem produksi butuh server. Akun demo: ikbal@biopay.id / biopay123.</span></li>
                     <li><span lang="en">All wallet, bank, app and merchant names (Kasku, Lintas, Dompet Nusa, Kilat Pay, Bank Arunika and others) are fictional. Public standards and services such as QRIS, PLN and BPJS are named only to show how bills and payments would work.</span><span lang="id">Semua nama wallet, bank, aplikasi, dan merchant (Kasku, Lintas, Dompet Nusa, Kilat Pay, Bank Arunika, dan lainnya) adalah fiktif. Standar dan layanan publik seperti QRIS, PLN, dan BPJS disebut hanya untuk menunjukkan cara kerja tagihan dan pembayaran.</span></li>
-                    <li><span lang="en"><b>Concepts:</b> the cardless ATM, wallet promos used by Smart Route, and the partner API and sandbox show the intended product; they are not connected to real banks, wallets or ATMs.</span><span lang="id"><b>Konsep:</b> ATM tanpa kartu, promo wallet yang dipakai Smart Route, serta API dan sandbox mitra menunjukkan produk yang direncanakan; belum terhubung ke bank, wallet, atau ATM sungguhan.</span></li>
+                    <li><span lang="en"><b>Concepts:</b> the cardless ATM, wallet promos used by Smart Route, and the partner API show the intended product; they are not connected to real banks, wallets or ATMs.</span><span lang="id"><b>Konsep:</b> ATM tanpa kartu, promo wallet yang dipakai Smart Route, serta API mitra menunjukkan produk yang direncanakan; belum terhubung ke bank, wallet, atau ATM sungguhan.</span></li>
                     <li><span lang="en">If the camera is blocked or the detection model cannot load, scans continue in simulation mode so the demo never gets stuck.</span><span lang="id">Bila kamera diblokir atau model deteksi gagal dimuat, scan berlanjut dalam mode simulasi agar demo tidak macet.</span></li>
                 </ul>
             </details>
@@ -5605,7 +5606,7 @@
         // PITCH: bahasa EN/ID dan tombol "Try it" yang membawa ke perangkat yang tepat
         // ==========================================
         // ==========================================
-        // HALAMAN MITRA: simulasi pendapatan & sandbox API (semua simulasi)
+        // HALAMAN MITRA: simulasi pendapatan dan alasan bergabung
         // ==========================================
         function partnerSim() {
             const u = +document.getElementById('ps-u').value, f = +document.getElementById('ps-f').value, t = +document.getElementById('ps-t').value;
@@ -5618,24 +5619,6 @@
             document.getElementById('ps-gmv').textContent = short(gmv);
             document.getElementById('ps-rev').textContent = short(gmv * 0.005);
             document.getElementById('ps-cac').textContent = short(u * 0.2 * 50000);
-        }
-        let sbRun = 0;
-        async function partnerSandbox() {
-            const run = ++sbRun, log = document.getElementById('sb-log');
-            const wallet = document.getElementById('sb-wallet').value, amt = Math.max(1000, parseInt(document.getElementById('sb-amt').value) || 0);
-            const id = 'ch_' + Math.random().toString(36).slice(2, 10), slug = wallet.toLowerCase().replace(/[^a-z]+/g, '_').replace(/^_|_$/g, '');
-            const wait = ms => new Promise(r => setTimeout(r, ms));
-            const esc = x => String(x).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
-            log.innerHTML = ''; let ms = 0;
-            const step = async (dt, title, body, cls = 't') => { await wait(450); if (run !== sbRun) throw 0; ms += dt; log.insertAdjacentHTML('beforeend', `<li><span class="${cls}">+${ms} ms · ${esc(title)}</span>${body ? `<pre>${esc(JSON.stringify(body, null, 2))}</pre>` : ''}</li>`); log.scrollTop = log.scrollHeight; };
-            try {
-                await step(0, 'Terminal → BioPay  POST /v1/charges', { amount: amt, currency: 'IDR', merchant_id: 'mrc_indomaret_0042', auth: { face: 'verified', palm: 'verified', liveness: 'pass' } });
-                await step(180, 'BioPay: BioID matched · Smart Route → ' + wallet, { customer: 'bio_12345', route: slug, reason: 'linked_primary_wallet' });
-                await step(40, 'BioPay → ' + wallet + '  webhook charge.authorize', { type: 'charge.authorize', data: { id, amount: amt, customer_ref: 'cus_' + slug + '_8841', merchant: 'Toko Sinar Jaya 0042' } });
-                await step(220, wallet + ' → BioPay  200 OK', { decision: 'approve' });
-                await step(60, 'BioPay → ' + wallet + '  webhook charge.succeeded', { type: 'charge.succeeded', data: { id, amount: amt, fee: { mdr: Math.round(amt * 0.007), wallet_share: Math.round(amt * 0.005), biopay_share: Math.round(amt * 0.002) } } });
-                await step(0, 'Paid in ' + ms + ' ms (simulated). Receipt printed at the terminal.', null, 'ok');
-            } catch (e) { /* run digantikan */ }
         }
         partnerSim();
         BioCloud.init();
