@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+<title>Episoda</title>
+<meta name="description" content="Prototipe aplikasi drama pendek vertikal internasional dengan server per wilayah.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0f; --panel:#15151d; --panel-2:#1f1f2a; --line:#2b2b38; --text:#f5f4fa; --muted:#9b99ae;
+    --accent:#ff2e63; --accent-2:#ffb800; --ok:#22c55e;
+    --font:"Plus Jakarta Sans",system-ui,sans-serif;
+  }
+  :root[lang=ur]{ --font:"Noto Nastaliq Urdu","Noto Sans Arabic",system-ui,sans-serif; }
+  :root[lang=ar]{ --font:"Noto Sans Arabic",system-ui,sans-serif; }
+  :root[lang=hi]{ --font:"Noto Sans Devanagari","Plus Jakarta Sans",system-ui,sans-serif; }
+  :root[lang=bn]{ --font:"Noto Sans Bengali","Plus Jakarta Sans",system-ui,sans-serif; }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#000;color:var(--text);font-family:var(--font)}
+  button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+  #app{position:relative;max-width:430px;height:100dvh;margin:0 auto;background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+  @media (min-width:600px){ body{display:flex;align-items:center;background:#05050a} #app{height:min(100dvh,900px);border-radius:28px;box-shadow:0 0 0 1px #24243a,0 30px 80px rgba(0,0,0,.6)} }
+  .view{position:absolute;inset:0 0 64px 0;overflow-y:auto;display:none}
+  .view.on{display:block}
+
+  /* ---------- feed ---------- */
+  #feedView{overflow:hidden}
+  .feed{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+  .feed::-webkit-scrollbar{display:none}
+  .slide{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;background:#000}
+  .slide canvas,.slide video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 18%,transparent 55%,rgba(0,0,0,.85) 100%);pointer-events:none}
+  .meta{position:absolute;inset-inline-start:16px;inset-inline-end:76px;bottom:22px}
+  .series-name{font-weight:800;font-size:18px;line-height:1.35;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+  .ep-pill{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px)}
+  .desc{font-size:13.5px;color:#e4e2ee;margin-top:8px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .watch-all{margin-top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;background:rgba(255,255,255,.12);border-radius:10px;padding:8px 12px;width:max-content;max-width:100%}
+  .rail{position:absolute;inset-inline-end:10px;bottom:90px;display:flex;flex-direction:column;gap:18px;align-items:center}
+  .rail button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.7)}
+  .rail .ic{width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.35);display:grid;place-items:center;font-size:21px;backdrop-filter:blur(4px)}
+  .rail .on .ic{background:var(--accent)}
+  .bar{position:absolute;inset-inline:0;bottom:0;height:3px;background:rgba(255,255,255,.18)}
+  .bar i{display:block;height:100%;width:0;background:var(--accent)}
+  .paused-ic{position:absolute;inset:0;display:none;place-items:center;font-size:64px;color:rgba(255,255,255,.85);pointer-events:none}
+  .slide.paused .paused-ic{display:grid}
+  .topbar{position:absolute;inset-inline:0;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 12px) 14px 8px}
+  .tabs-top{display:flex;gap:18px;font-weight:700;font-size:16px}
+  .tabs-top span{opacity:.6} .tabs-top span.on{opacity:1;border-bottom:2px solid #fff;padding-bottom:3px}
+  .server-pill{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 11px;backdrop-filter:blur(6px)}
+  .back{font-size:22px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.45)}
+
+  /* ---------- nav ---------- */
+  nav{position:absolute;inset-inline:0;bottom:0;height:64px;display:flex;background:#0d0d13;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:6}
+  nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:var(--muted);font-weight:600}
+  nav button b{font-size:20px;font-weight:400;line-height:1}
+  nav button.on{color:#fff}
+
+  /* ---------- pages ---------- */
+  .page{padding:calc(env(safe-area-inset-top) + 16px) 16px 24px}
+  .page h1{font-size:22px;margin:4px 0 14px;font-weight:800}
+  .page h2{font-size:15px;margin:22px 0 10px;font-weight:700}
+  .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .chip{white-space:nowrap;font-size:13px;font-weight:600;padding:7px 13px;border-radius:999px;background:var(--panel-2);border:1px solid var(--line)}
+  .chip.on{background:#fff;color:#000;border-color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .card{position:relative;text-align:start}
+  .card .poster{position:relative;aspect-ratio:3/4.4;border-radius:12px;overflow:hidden;background:var(--panel)}
+  .card .poster canvas{width:100%;height:100%;display:block}
+  .card .tag{position:absolute;top:6px;inset-inline-start:6px;font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;background:var(--accent)}
+  .card .views{position:absolute;bottom:6px;inset-inline-start:6px;font-size:10.5px;font-weight:700;text-shadow:0 1px 4px #000}
+  .card .t{font-size:12.5px;font-weight:700;margin-top:6px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none}
+  .row .card{flex:0 0 31%}
+  .empty{color:var(--muted);font-size:14px;padding:30px 0;text-align:center}
+  .search{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;color:#fff;font:inherit;outline:none;margin-bottom:12px}
+
+  /* series detail */
+  .hero{position:relative;height:260px;border-radius:16px;overflow:hidden}
+  .hero canvas{width:100%;height:100%;display:block}
+  .hero .over{position:absolute;inset:auto 0 0 0;padding:16px;background:linear-gradient(0deg,rgba(0,0,0,.85),transparent)}
+  .hero .over b{font-size:20px;font-weight:800;line-height:1.4}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;border-radius:12px;padding:12px 16px;background:var(--panel-2);border:1px solid var(--line)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.gold{background:var(--accent-2);border-color:var(--accent-2);color:#1a1300}
+  .eps{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  .eps button{aspect-ratio:1;border-radius:10px;background:var(--panel-2);border:1px solid var(--line);font-weight:700;font-size:13px;position:relative}
+  .eps button.done{border-color:var(--accent)}
+  .eps button .lk{position:absolute;top:2px;inset-inline-end:3px;font-size:9px}
+
+  /* profile */
+  .coin-card{border-radius:16px;padding:18px;background:linear-gradient(135deg,#3a1d00,#6b3a00 60%,#a35a00);display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .coin-card .n{font-size:30px;font-weight:800}
+  .list{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .list button{display:flex;align-items:center;gap:12px;padding:13px 14px;text-align:start;border-bottom:1px solid var(--line)}
+  .list button:last-child{border-bottom:0}
+  .list .sub{margin-inline-start:auto;color:var(--muted);font-size:13px}
+  .list .flag{font-size:22px}
+  .list button.sel{background:rgba(255,46,99,.12)}
+  .packs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .pack{border-radius:14px;padding:14px 8px;background:var(--panel-2);border:1px solid var(--line);text-align:center}
+  .pack b{display:block;font-size:20px} .pack small{color:var(--muted)}
+  .pays{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .pays span{font-size:12.5px;font-weight:600;padding:6px 10px;border-radius:8px;background:var(--panel-2);border:1px solid var(--line)}
+  .note{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.6}
+
+  /* sheets & overlays */
+  .scrim{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:20;display:none}
+  .scrim.on{display:block}
+  .sheet{position:absolute;inset-inline:0;bottom:0;z-index:21;background:var(--panel);border-radius:20px 20px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .25s ease}
+  .sheet.on{transform:none}
+  .sheet h3{margin:0 0 4px;font-size:18px}
+  .sheet .sub{color:var(--muted);font-size:13.5px;margin-bottom:16px}
+  .sheet .actions{display:flex;flex-direction:column;gap:10px}
+  .ad{position:absolute;inset:0;z-index:30;background:#111;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px}
+  .ad.on{display:flex}
+  .ad .box{width:100%;aspect-ratio:9/12;border-radius:16px;background:linear-gradient(135deg,#1d4ed8,#9333ea);display:grid;place-items:center;font-size:22px;font-weight:800}
+  .ad .count{position:absolute;top:calc(env(safe-area-inset-top) + 14px);inset-inline-end:14px;font-size:13px;font-weight:700;background:rgba(255,255,255,.15);padding:6px 12px;border-radius:999px}
+  .toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top) + 64px);transform:translateX(-50%);z-index:40;background:rgba(20,20,30,.95);border:1px solid var(--line);padding:9px 14px;border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+  .toast.on{opacity:1}
+  .proto{position:absolute;top:calc(env(safe-area-inset-top) + 52px);inset-inline-start:14px;z-index:4;font-size:10.5px;color:rgba(255,255,255,.7);background:rgba(0,0,0,.35);padding:3px 8px;border-radius:6px}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Untukmu / pemutar -->
+  <section class="view on" id="feedView">
+    <div class="topbar">
+      <div class="tabs-top" id="feedTabs"></div>
+      <button class="server-pill" id="serverPill"></button>
+    </div>
+    <div class="proto" id="protoNote"></div>
+    <div class="feed" id="feed"></div>
+  </section>
+
+  <section class="view" id="exploreView"><div class="page" id="explorePage"></div></section>
+  <section class="view" id="listView"><div class="page" id="listPage"></div></section>
+  <section class="view" id="profileView"><div class="page" id="profilePage"></div></section>
+  <section class="view" id="seriesView"><div class="page" id="seriesPage"></div></section>
+
+  <nav id="nav"></nav>
+
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet"></div>
+  <div class="ad" id="ad"><div class="count" id="adCount"></div><div class="box" id="adBox"></div><div id="adText" style="color:var(--muted);font-size:13px"></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============================================================
+   Teks antarmuka per bahasa
+   (terjemahan prototipe: minta penutur asli memeriksa sebelum rilis)
+   ============================================================ */
+const I18N = {
+  id:{forYou:'Untukmu',following:'Mengikuti',explore:'Jelajah',myList:'Daftarku',profile:'Profil',ep:'Ep',episode:'Episode',free:'Gratis',locked:'Terkunci',
+    unlockTitle:'Episode {n} terkunci',unlockSub:'Pilih cara membuka episode ini',watchAd:'Tonton iklan ({s} dtk)',useCoins:'Pakai {c} koin',buyCoins:'Beli koin',coins:'Koin',balance:'Saldo koin',
+    checkin:'Absen harian +{c}',checkedIn:'Sudah absen hari ini',server:'Server / Wilayah',language:'Bahasa',continueW:'Lanjut nonton',nEps:'{n} episode',all:'Semua',
+    g_romance:'Romantis',g_family:'Keluarga',g_revenge:'Balas Dendam',g_ceo:'CEO Kaya',g_mystery:'Misteri',g_comedy:'Komedi',watch:'Tonton',added:'Ditambahkan ke Daftarku',removed:'Dihapus dari Daftarku',
+    emptyList:'Belum ada drama di Daftarku',adLabel:'Iklan · {s}',unlocked:'Episode terbuka!',notEnough:'Koin tidak cukup',buy:'Beli',payWith:'Bayar dengan',purchased:'+{c} koin masuk',
+    nextEp:'Episode berikutnya',share:'Bagikan',like:'Suka',proto:'Prototipe · video & pembayaran simulasi',serverChanged:'Server: {r}',history:'Riwayat',original:'ORIGINAL',dubbed:'DUBBING',
+    search:'Cari judul drama…',trending:'Sedang tren di {r}',newest:'Rilis baru',watchFrom:'Tonton dari Ep {n}',playAll:'Putar dari awal',cancel:'Batal',adSponsor:'Iklan sponsor',adSkipIn:'Episode terbuka setelah iklan',shareText:'Tonton "{t}" di Episoda',copied:'Link disalin',pricesNote:'Harga koin dan metode bayar di prototipe ini hanya contoh.',views:'{v} tayangan'},
+  en:{forYou:'For You',following:'Following',explore:'Explore',myList:'My List',profile:'Profile',ep:'Ep',episode:'Episode',free:'Free',locked:'Locked',
+    unlockTitle:'Episode {n} is locked',unlockSub:'Choose how to unlock this episode',watchAd:'Watch an ad ({s}s)',useCoins:'Use {c} coins',buyCoins:'Buy coins',coins:'Coins',balance:'Coin balance',
+    checkin:'Daily check-in +{c}',checkedIn:'Checked in today',server:'Server / Region',language:'Language',continueW:'Continue watching',nEps:'{n} episodes',all:'All',
+    g_romance:'Romance',g_family:'Family',g_revenge:'Revenge',g_ceo:'Billionaire',g_mystery:'Mystery',g_comedy:'Comedy',watch:'Watch',added:'Added to My List',removed:'Removed from My List',
+    emptyList:'Nothing in My List yet',adLabel:'Ad · {s}',unlocked:'Episode unlocked!',notEnough:'Not enough coins',buy:'Buy',payWith:'Pay with',purchased:'+{c} coins added',
+    nextEp:'Next episode',share:'Share',like:'Like',proto:'Prototype · simulated videos & payments',serverChanged:'Server: {r}',history:'History',original:'ORIGINAL',dubbed:'DUBBED',
+    search:'Search dramas…',trending:'Trending in {r}',newest:'New releases',watchFrom:'Watch from Ep {n}',playAll:'Play from the start',cancel:'Cancel',adSponsor:'Sponsored ad',adSkipIn:'Episode unlocks after the ad',shareText:'Watch "{t}" on Episoda',copied:'Link copied',pricesNote:'Coin prices and payment methods in this prototype are examples only.',views:'{v} views'},
+  ur:{forYou:'آپ کے لیے',following:'فالوئنگ',explore:'دریافت',myList:'میری فہرست',profile:'پروفائل',ep:'قسط',episode:'قسط',free:'مفت',locked:'مقفل',
+    unlockTitle:'قسط {n} مقفل ہے',unlockSub:'یہ قسط کھولنے کا طریقہ منتخب کریں',watchAd:'اشتہار دیکھیں ({s} سیکنڈ)',useCoins:'{c} سکے استعمال کریں',buyCoins:'سکے خریدیں',coins:'سکے',balance:'سکوں کا بیلنس',
+    checkin:'روزانہ حاضری +{c}',checkedIn:'آج کی حاضری ہو گئی',server:'سرور / علاقہ',language:'زبان',continueW:'دیکھنا جاری رکھیں',nEps:'{n} اقساط',all:'سب',
+    g_romance:'رومانوی',g_family:'خاندانی',g_revenge:'انتقام',g_ceo:'ارب پتی',g_mystery:'پراسرار',g_comedy:'مزاحیہ',watch:'دیکھیں',added:'میری فہرست میں شامل',removed:'فہرست سے ہٹا دیا',
+    emptyList:'میری فہرست ابھی خالی ہے',adLabel:'اشتہار · {s}',unlocked:'قسط کھل گئی!',notEnough:'سکے کافی نہیں',buy:'خریدیں',payWith:'ادائیگی بذریعہ',purchased:'+{c} سکے شامل',
+    nextEp:'اگلی قسط',share:'شیئر',like:'پسند',proto:'پروٹوٹائپ · ویڈیو اور ادائیگی فرضی',serverChanged:'سرور: {r}',history:'حالیہ',original:'اوریجنل',dubbed:'ڈب شدہ',
+    search:'ڈرامہ تلاش کریں…',trending:'{r} میں مقبول',newest:'نئی ریلیز',watchFrom:'قسط {n} سے دیکھیں',playAll:'شروع سے چلائیں',cancel:'منسوخ',adSponsor:'سپانسر اشتہار',adSkipIn:'اشتہار کے بعد قسط کھل جائے گی',shareText:'Episoda پر "{t}" دیکھیں',copied:'لنک کاپی ہو گیا',pricesNote:'اس پروٹوٹائپ میں قیمتیں اور ادائیگی کے طریقے صرف مثال ہیں۔',views:'{v} ویوز'},
+  hi:{forYou:'आपके लिए',following:'फ़ॉलोइंग',explore:'खोजें',myList:'मेरी सूची',profile:'प्रोफ़ाइल',ep:'एपि.',episode:'एपिसोड',free:'मुफ़्त',locked:'लॉक',
+    unlockTitle:'एपिसोड {n} लॉक है',unlockSub:'यह एपिसोड खोलने का तरीका चुनें',watchAd:'विज्ञापन देखें ({s} सेकंड)',useCoins:'{c} कॉइन इस्तेमाल करें',buyCoins:'कॉइन खरीदें',coins:'कॉइन',balance:'कॉइन बैलेंस',
+    checkin:'रोज़ाना चेक-इन +{c}',checkedIn:'आज चेक-इन हो गया',server:'सर्वर / क्षेत्र',language:'भाषा',continueW:'देखना जारी रखें',nEps:'{n} एपिसोड',all:'सभी',
+    g_romance:'रोमांस',g_family:'परिवार',g_revenge:'बदला',g_ceo:'अरबपति',g_mystery:'रहस्य',g_comedy:'कॉमेडी',watch:'देखें',added:'मेरी सूची में जोड़ा गया',removed:'सूची से हटाया गया',
+    emptyList:'आपकी सूची अभी खाली है',adLabel:'विज्ञापन · {s}',unlocked:'एपिसोड खुल गया!',notEnough:'कॉइन कम हैं',buy:'खरीदें',payWith:'भुगतान',purchased:'+{c} कॉइन जुड़े',
+    nextEp:'अगला एपिसोड',share:'शेयर',like:'पसंद',proto:'प्रोटोटाइप · वीडियो और भुगतान नकली',serverChanged:'सर्वर: {r}',history:'इतिहास',original:'ओरिजिनल',dubbed:'डब',
+    search:'ड्रामा खोजें…',trending:'{r} में ट्रेंडिंग',newest:'नई रिलीज़',watchFrom:'एपि. {n} से देखें',playAll:'शुरू से चलाएँ',cancel:'रद्द करें',adSponsor:'प्रायोजित विज्ञापन',adSkipIn:'विज्ञापन के बाद एपिसोड खुलेगा',shareText:'Episoda पर "{t}" देखें',copied:'लिंक कॉपी हुआ',pricesNote:'इस प्रोटोटाइप में कीमतें और भुगतान के तरीके सिर्फ़ उदाहरण हैं।',views:'{v} व्यूज़'},
+  bn:{forYou:'আপনার জন্য',following:'ফলোয়িং',explore:'খুঁজুন',myList:'আমার তালিকা',profile:'প্রোফাইল',ep:'পর্ব',episode:'পর্ব',free:'ফ্রি',locked:'লক',
+    unlockTitle:'পর্ব {n} লক করা',unlockSub:'পর্বটি খোলার উপায় বেছে নিন',watchAd:'বিজ্ঞাপন দেখুন ({s} সেকেন্ড)',useCoins:'{c} কয়েন ব্যবহার করুন',buyCoins:'কয়েন কিনুন',coins:'কয়েন',balance:'কয়েন ব্যালেন্স',
+    checkin:'দৈনিক চেক-ইন +{c}',checkedIn:'আজ চেক-ইন হয়েছে',server:'সার্ভার / অঞ্চল',language:'ভাষা',continueW:'দেখা চালিয়ে যান',nEps:'{n}টি পর্ব',all:'সব',
+    g_romance:'রোমান্স',g_family:'পরিবার',g_revenge:'প্রতিশোধ',g_ceo:'ধনকুবের',g_mystery:'রহস্য',g_comedy:'কমেডি',watch:'দেখুন',added:'আমার তালিকায় যোগ হয়েছে',removed:'তালিকা থেকে সরানো হয়েছে',
+    emptyList:'তালিকা এখনও খালি',adLabel:'বিজ্ঞাপন · {s}',unlocked:'পর্ব খুলে গেছে!',notEnough:'যথেষ্ট কয়েন নেই',buy:'কিনুন',payWith:'পেমেন্ট',purchased:'+{c} কয়েন যোগ হয়েছে',
+    nextEp:'পরের পর্ব',share:'শেয়ার',like:'পছন্দ',proto:'প্রোটোটাইপ · ভিডিও ও পেমেন্ট নকল',serverChanged:'সার্ভার: {r}',history:'ইতিহাস',original:'অরিজিনাল',dubbed:'ডাবড',
+    search:'নাটক খুঁজুন…',trending:'{r}-এ জনপ্রিয়',newest:'নতুন রিলিজ',watchFrom:'পর্ব {n} থেকে দেখুন',playAll:'শুরু থেকে চালান',cancel:'বাতিল',adSponsor:'স্পনসর বিজ্ঞাপন',adSkipIn:'বিজ্ঞাপনের পরে পর্ব খুলবে',shareText:'Episoda-তে "{t}" দেখুন',copied:'লিংক কপি হয়েছে',pricesNote:'এই প্রোটোটাইপে দাম ও পেমেন্ট পদ্ধতি শুধু উদাহরণ।',views:'{v} ভিউ'},
+  tr:{forYou:'Senin İçin',following:'Takip',explore:'Keşfet',myList:'Listem',profile:'Profil',ep:'Böl.',episode:'Bölüm',free:'Ücretsiz',locked:'Kilitli',
+    unlockTitle:'{n}. bölüm kilitli',unlockSub:'Bu bölümün kilidini nasıl açacağını seç',watchAd:'Reklam izle ({s} sn)',useCoins:'{c} jeton kullan',buyCoins:'Jeton satın al',coins:'Jeton',balance:'Jeton bakiyesi',
+    checkin:'Günlük giriş +{c}',checkedIn:'Bugün giriş yapıldı',server:'Sunucu / Bölge',language:'Dil',continueW:'İzlemeye devam et',nEps:'{n} bölüm',all:'Tümü',
+    g_romance:'Romantik',g_family:'Aile',g_revenge:'İntikam',g_ceo:'Milyarder',g_mystery:'Gizem',g_comedy:'Komedi',watch:'İzle',added:'Listeme eklendi',removed:'Listemden çıkarıldı',
+    emptyList:'Listende henüz dizi yok',adLabel:'Reklam · {s}',unlocked:'Bölümün kilidi açıldı!',notEnough:'Yetersiz jeton',buy:'Satın al',payWith:'Ödeme yöntemi',purchased:'+{c} jeton eklendi',
+    nextEp:'Sonraki bölüm',share:'Paylaş',like:'Beğen',proto:'Prototip · video ve ödemeler simülasyon',serverChanged:'Sunucu: {r}',history:'Geçmiş',original:'ORİJİNAL',dubbed:'DUBLAJ',
+    search:'Dizi ara…',trending:'{r} gündeminde',newest:'Yeni çıkanlar',watchFrom:'{n}. bölümden izle',playAll:'Baştan oynat',cancel:'İptal',adSponsor:'Sponsorlu reklam',adSkipIn:'Reklamdan sonra bölüm açılır',shareText:'"{t}" dizisini Episoda\'da izle',copied:'Bağlantı kopyalandı',pricesNote:'Bu prototipteki fiyatlar ve ödeme yöntemleri yalnızca örnektir.',views:'{v} izlenme'},
+  ar:{forYou:'لك',following:'المتابَعة',explore:'استكشف',myList:'قائمتي',profile:'الملف الشخصي',ep:'ح',episode:'الحلقة',free:'مجاني',locked:'مقفلة',
+    unlockTitle:'الحلقة {n} مقفلة',unlockSub:'اختر طريقة فتح هذه الحلقة',watchAd:'شاهد إعلانًا ({s} ث)',useCoins:'استخدم {c} عملة',buyCoins:'شراء عملات',coins:'عملات',balance:'رصيد العملات',
+    checkin:'تسجيل يومي +{c}',checkedIn:'تم التسجيل اليوم',server:'الخادم / المنطقة',language:'اللغة',continueW:'متابعة المشاهدة',nEps:'{n} حلقة',all:'الكل',
+    g_romance:'رومانسي',g_family:'عائلي',g_revenge:'انتقام',g_ceo:'ملياردير',g_mystery:'غموض',g_comedy:'كوميدي',watch:'شاهد',added:'أضيف إلى قائمتي',removed:'أزيل من قائمتي',
+    emptyList:'قائمتك فارغة',adLabel:'إعلان · {s}',unlocked:'تم فتح الحلقة!',notEnough:'العملات غير كافية',buy:'شراء',payWith:'الدفع عبر',purchased:'+{c} عملة أضيفت',
+    nextEp:'الحلقة التالية',share:'مشاركة',like:'إعجاب',proto:'نموذج أولي · فيديو ودفع تجريبيان',serverChanged:'الخادم: {r}',history:'السجل',original:'أصلي',dubbed:'مدبلج',
+    search:'ابحث عن مسلسل…',trending:'الأكثر رواجًا في {r}',newest:'إصدارات جديدة',watchFrom:'شاهد من الحلقة {n}',playAll:'تشغيل من البداية',cancel:'إلغاء',adSponsor:'إعلان ممول',adSkipIn:'تُفتح الحلقة بعد الإعلان',shareText:'شاهد "{t}" على Episoda',copied:'تم نسخ الرابط',pricesNote:'الأسعار وطرق الدفع في هذا النموذج للتوضيح فقط.',views:'{v} مشاهدة'},
+};
+const LANG_NAMES = { id:'Bahasa Indonesia', en:'English', ur:'اردو', hi:'हिन्दी', bn:'বাংলা', tr:'Türkçe', ar:'العربية' };
+const RTL = new Set(['ur','ar']);
+
+/* ============================================================
+   Server / wilayah: bahasa, mata uang, cara bayar
+   (harga contoh; ganti dengan harga dan mitra pembayaran sungguhan)
+   ============================================================ */
+const REGIONS = {
+  ID:{ flag:'🇮🇩', name:{id:'Indonesia',en:'Indonesia',ur:'انڈونیشیا',hi:'इंडोनेशिया',bn:'ইন্দোনেশিয়া',tr:'Endonezya',ar:'إندونيسيا'}, lang:'id', packs:[[100,'Rp15.000'],[300,'Rp39.000'],[1000,'Rp119.000']], pay:['QRIS','GoPay','DANA','OVO'], num:'id-ID' },
+  PK:{ flag:'🇵🇰', name:{id:'Pakistan',en:'Pakistan',ur:'پاکستان',hi:'पाकिस्तान',bn:'পাকিস্তান',tr:'Pakistan',ar:'باكستان'}, lang:'ur', packs:[[100,'Rs 250'],[300,'Rs 650'],[1000,'Rs 1,900']], pay:['JazzCash','Easypaisa','Card'], num:'ur-PK' },
+  IN:{ flag:'🇮🇳', name:{id:'India',en:'India',ur:'بھارت',hi:'भारत',bn:'ভারত',tr:'Hindistan',ar:'الهند'}, lang:'hi', packs:[[100,'₹79'],[300,'₹199'],[1000,'₹599']], pay:['UPI','Paytm','Card'], num:'hi-IN' },
+  BD:{ flag:'🇧🇩', name:{id:'Bangladesh',en:'Bangladesh',ur:'بنگلہ دیش',hi:'बांग्लादेश',bn:'বাংলাদেশ',tr:'Bangladeş',ar:'بنغلاديش'}, lang:'bn', packs:[[100,'৳99'],[300,'৳249'],[1000,'৳749']], pay:['bKash','Nagad','Card'], num:'bn-BD' },
+  TR:{ flag:'🇹🇷', name:{id:'Turki',en:'Türkiye',ur:'ترکی',hi:'तुर्की',bn:'তুরস্ক',tr:'Türkiye',ar:'تركيا'}, lang:'tr', packs:[[100,'₺29'],[300,'₺79'],[1000,'₺229']], pay:['Kart','Google Play'], num:'tr-TR' },
+  ME:{ flag:'🌙', name:{id:'Timur Tengah',en:'Middle East',ur:'مشرق وسطیٰ',hi:'मध्य पूर्व',bn:'মধ্যপ্রাচ্য',tr:'Orta Doğu',ar:'الشرق الأوسط'}, lang:'ar', packs:[[100,'$0.99'],[300,'$2.49'],[1000,'$7.99']], pay:['Card','Apple Pay','Google Play'], num:'ar-AE' },
+  GL:{ flag:'🌍', name:{id:'Global',en:'Global',ur:'عالمی',hi:'ग्लोबल',bn:'গ্লোবাল',tr:'Global',ar:'عالمي'}, lang:'en', packs:[[100,'$0.99'],[300,'$2.49'],[1000,'$7.99']], pay:['Card','Apple Pay','Google Play'], num:'en-US' },
+};
+
+/* ============================================================
+   Katalog drama (judul & sinopsis contoh)
+   region: wilayah tempat drama tampil. 'ALL' = semua server (versi dubbing).
+   video: isi URL mp4/HLS untuk video sungguhan; kosong = cuplikan animasi pengganti.
+   ============================================================ */
+const SERIES = [
+  { id:'id1', region:['ID'], genre:'revenge', pal:['#4a0d1e','#e11d48'], eps:60, free:8, views:12.4e6, tag:'original',
+    title:{id:'Istri Sah yang Dibuang',en:'The Discarded Wife'}, desc:{id:'Diusir di malam pernikahan, Laras kembali tiga tahun kemudian sebagai pemilik perusahaan suaminya.',en:'Thrown out on her wedding night, Laras returns three years later as the owner of her husband\'s company.'} },
+  { id:'id2', region:['ID'], genre:'ceo', pal:['#2b1a05','#d97706'], eps:70, free:8, views:8.1e6, tag:'original',
+    title:{id:'Pewaris Rahasia Kerajaan Kretek',en:'Secret Heir of the Kretek Empire'}, desc:{id:'Kurir paket ternyata cucu tunggal raja kretek Kudus. Keluarga besar tidak terima.',en:'A delivery courier turns out to be the only grandson of a clove-cigarette tycoon. The family won\'t accept it.'} },
+  { id:'id3', region:['ID'], genre:'comedy', pal:['#0c3b2e','#10b981'], eps:50, free:10, views:5.6e6, tag:'original',
+    title:{id:'Mertua dari Neraka',en:'Mother-in-Law from Hell'}, desc:{id:'Dina punya 30 hari untuk merebut hati mertua yang galaknya minta ampun.',en:'Dina has 30 days to win over the fiercest mother-in-law in town.'} },
+  { id:'pk1', region:['PK'], genre:'revenge', pal:['#3b0a2a','#db2777'], eps:60, free:8, views:9.7e6, tag:'original',
+    title:{ur:'طلاق کے بعد',en:'After the Divorce'}, desc:{ur:'طلاق کے بعد زارا ایک کامیاب کاروباری خاتون بن کر واپس آتی ہے۔',en:'After the divorce, Zara returns as a successful businesswoman.'} },
+  { id:'pk2', region:['PK'], genre:'family', pal:['#1e1b4b','#6366f1'], eps:65, free:8, views:7.2e6, tag:'original',
+    title:{ur:'حویلی کا وارث',en:'Heir of the Haveli'}, desc:{ur:'لاہور کی پرانی حویلی کا اصل وارث کون ہے؟ ایک خط سب کچھ بدل دیتا ہے۔',en:'Who is the true heir of the old Lahore haveli? One letter changes everything.'} },
+  { id:'pk3', region:['PK'], genre:'family', pal:['#3f1d0b','#ea580c'], eps:55, free:10, views:6.3e6, tag:'original',
+    title:{ur:'ساس کی چال',en:'The Mother-in-Law\'s Game'}, desc:{ur:'نئی بہو اور چالاک ساس کے درمیان دلچسپ جنگ۔',en:'A sharp new bride against a cunning mother-in-law.'} },
+  { id:'in1', region:['IN'], genre:'revenge', pal:['#450a0a','#dc2626'], eps:70, free:8, views:15.1e6, tag:'original',
+    title:{hi:'दुल्हन का बदला',en:'The Bride\'s Revenge'}, desc:{hi:'शादी के दिन धोखा खाने के बाद मीरा बदला लेने लौटती है।',en:'Betrayed on her wedding day, Meera returns for revenge.'} },
+  { id:'in2', region:['IN'], genre:'ceo', pal:['#1c1917','#a16207'], eps:60, free:8, views:10.8e6, tag:'original',
+    title:{hi:'चायवाला करोड़पति',en:'The Tea-Seller Millionaire'}, desc:{hi:'स्टेशन पर चाय बेचने वाला लड़का असल में एक बड़ी कंपनी का मालिक है।',en:'The boy selling tea at the station secretly owns a big company.'} },
+  { id:'in3', region:['IN'], genre:'family', pal:['#3b0764','#a855f7'], eps:80, free:10, views:9.4e6, tag:'original',
+    title:{hi:'सास, बहू और साज़िश',en:'In-Laws and Intrigue'}, desc:{hi:'एक संयुक्त परिवार, एक वसीयत और बहुत सारे राज़।',en:'One joint family, one will, and many secrets.'} },
+  { id:'bd1', region:['BD'], genre:'romance', pal:['#064e3b','#22c55e'], eps:50, free:10, views:4.2e6, tag:'original',
+    title:{bn:'ঢাকার রাজকন্যা',en:'Princess of Dhaka'}, desc:{bn:'গার্মেন্টস কর্মী তানিয়ার প্রেমে পড়ে কোম্পানির মালিকের ছেলে।',en:'The factory owner\'s son falls for garment worker Tania.'} },
+  { id:'bd2', region:['BD'], genre:'mystery', pal:['#0f172a','#38bdf8'], eps:45, free:8, views:3.1e6, tag:'original',
+    title:{bn:'শ্বশুরবাড়ির রহস্য',en:'Secrets of the In-Laws\' House'}, desc:{bn:'বিয়ের পর রুমি জানতে পারে শ্বশুরবাড়ির একটি ঘর সবসময় তালাবদ্ধ থাকে।',en:'After marriage, Rumi discovers one room in her in-laws\' house is always locked.'} },
+  { id:'bd3', region:['BD'], genre:'revenge', pal:['#4c0519','#f43f5e'], eps:55, free:8, views:3.8e6, tag:'original',
+    title:{bn:'ফিরে আসা স্ত্রী',en:'The Wife Who Returned'}, desc:{bn:'সবাই ভেবেছিল সে মারা গেছে। পাঁচ বছর পর সে ফিরে এসেছে।',en:'Everyone thought she was dead. Five years later, she is back.'} },
+  { id:'tr1', region:['TR'], genre:'mystery', pal:['#082f49','#0ea5e9'], eps:60, free:8, views:6.9e6, tag:'original',
+    title:{tr:'Yalıdaki Sır',en:'The Secret of the Mansion'}, desc:{tr:'Boğaz\'daki yalıda çalışmaya başlayan Elif, ailenin yıllardır sakladığı sırrı keşfeder.',en:'Hired at a Bosphorus mansion, Elif uncovers a family secret kept for years.'} },
+  { id:'tr2', region:['TR'], genre:'romance', pal:['#3b0764','#ec4899'], eps:55, free:10, views:8.3e6, tag:'original',
+    title:{tr:'Patronumla Sahte Nişan',en:'Fake Engagement with My Boss'}, desc:{tr:'Bir haftalık sahte nişan, ikisinin de planlarını altüst eder.',en:'A one-week fake engagement turns both their plans upside down.'} },
+  { id:'tr3', region:['TR'], genre:'comedy', pal:['#422006','#facc15'], eps:45, free:10, views:4.5e6, tag:'original',
+    title:{tr:'Kayınvalide Savaşları',en:'Mother-in-Law Wars'}, desc:{tr:'İki kayınvalide, tek bir düğün ve bitmeyen bir rekabet.',en:'Two mothers-in-law, one wedding and an endless rivalry.'} },
+  { id:'me1', region:['ME'], genre:'ceo', pal:['#422006','#f59e0b'], eps:60, free:8, views:7.7e6, tag:'original',
+    title:{ar:'وريثة الصحراء',en:'Heiress of the Desert'}, desc:{ar:'موظفة بسيطة تكتشف أنها الوريثة الوحيدة لإمبراطورية عقارية.',en:'An ordinary employee learns she is the sole heir to a property empire.'} },
+  { id:'me2', region:['ME'], genre:'romance', pal:['#1e1b4b','#818cf8'], eps:50, free:10, views:6.1e6, tag:'original',
+    title:{ar:'زواج بعقد',en:'Contract Marriage'}, desc:{ar:'زواج لمدة عام بشروط صارمة… حتى يقع الحب.',en:'A one-year marriage with strict rules… until love gets in the way.'} },
+  { id:'me3', region:['ME'], genre:'family', pal:['#14532d','#4ade80'], eps:55, free:8, views:5.2e6, tag:'original',
+    title:{ar:'عودة الابن الضائع',en:'Return of the Lost Son'}, desc:{ar:'بعد عشرين عامًا، يعود الابن المفقود ليطالب بحقه.',en:'After twenty years, the lost son returns to claim what is his.'} },
+  { id:'gl1', region:'ALL', genre:'ceo', pal:['#111827','#9ca3af'], eps:80, free:8, views:31.5e6, tag:'dubbed',
+    title:{en:'The Billionaire\'s Secret Twin',id:'Kembaran Rahasia Sang Miliarder',ur:'ارب پتی کا خفیہ جڑواں',hi:'अरबपति का गुप्त जुड़वां',bn:'ধনকুবেরের গোপন যমজ',tr:'Milyarderin Gizli İkizi',ar:'التوأم السري للملياردير'},
+    desc:{en:'Two identical brothers swap lives for a week. Only one of them is a billionaire.',id:'Dua saudara kembar bertukar hidup selama seminggu. Hanya satu yang miliarder.',ur:'دو ہم شکل بھائی ایک ہفتے کے لیے زندگیاں بدل لیتے ہیں۔ ان میں سے صرف ایک ارب پتی ہے۔',hi:'दो हमशक्ल भाई एक हफ़्ते के लिए ज़िंदगी बदल लेते हैं। उनमें से सिर्फ़ एक अरबपति है।',bn:'দুই যমজ ভাই এক সপ্তাহের জন্য জীবন বদল করে। তাদের মধ্যে কেবল একজনই ধনকুবের।',tr:'İki ikiz kardeş bir haftalığına hayatlarını değiştirir. Sadece biri milyarderdir.',ar:'شقيقان توأمان يتبادلان حياتيهما لأسبوع. واحد منهما فقط ملياردير.'} },
+  { id:'gl2', region:'ALL', genre:'romance', pal:['#172554','#3b82f6'], eps:70, free:8, views:24.2e6, tag:'dubbed',
+    title:{en:'Midnight Contract',id:'Kontrak Tengah Malam',ur:'آدھی رات کا معاہدہ',hi:'आधी रात का कॉन्ट्रैक्ट',bn:'মধ্যরাতের চুক্তি',tr:'Gece Yarısı Sözleşmesi',ar:'عقد منتصف الليل'},
+    desc:{en:'She signed a contract at midnight. By morning she was married to a stranger.',id:'Ia menandatangani kontrak tengah malam. Paginya ia sudah menikah dengan orang asing.',ur:'اس نے آدھی رات کو ایک معاہدے پر دستخط کیے۔ صبح تک وہ ایک اجنبی کی بیوی بن چکی تھی۔',hi:'उसने आधी रात को एक कॉन्ट्रैक्ट साइन किया। सुबह तक वह एक अजनबी की पत्नी बन चुकी थी।',bn:'মধ্যরাতে সে একটি চুক্তিতে সই করে। সকালে সে এক অপরিচিতের স্ত্রী।',tr:'Gece yarısı bir sözleşme imzaladı. Sabah olduğunda bir yabancıyla evliydi.',ar:'وقّعت عقدًا في منتصف الليل. وفي الصباح كانت متزوجة من غريب.'} },
+  { id:'gl3', region:'ALL', genre:'revenge', pal:['#450a0a','#f97316'], eps:75, free:8, views:27.9e6, tag:'dubbed',
+    title:{en:'Queen of Revenge',id:'Ratu Balas Dendam',ur:'انتقام کی ملکہ',hi:'बदले की रानी',bn:'প্রতিশোধের রানি',tr:'İntikam Kraliçesi',ar:'ملكة الانتقام'},
+    desc:{en:'Framed and forgotten, she rebuilds her life one step at a time to take everything back.',id:'Dijebak dan dilupakan, ia membangun hidupnya lagi untuk merebut semuanya kembali.',ur:'سازش کا شکار اور بھلا دی گئی، وہ قدم بہ قدم سب کچھ واپس لینے کے لیے اپنی زندگی دوبارہ بناتی ہے۔',hi:'फँसाई गई और भुला दी गई, वह सब कुछ वापस पाने के लिए कदम-दर-कदम अपनी ज़िंदगी फिर से बनाती है।',bn:'ফাঁসানো আর ভুলে যাওয়া এক নারী ধাপে ধাপে সব ফিরিয়ে নিতে আবার জীবন গড়ে।',tr:'Tuzağa düşürülüp unutulan kadın, her şeyi geri almak için hayatını adım adım yeniden kurar.',ar:'بعد أن لُفّقت لها التهم ونُسيت، تعيد بناء حياتها خطوة بخطوة لتستعيد كل شيء.'} },
+];
+const GENRES = ['romance','family','revenge','ceo','mystery','comedy'];
+const EP_SECONDS = 30;     // durasi episode simulasi
+const COINS_PER_EP = 30;   // harga buka satu episode
+const AD_SECONDS = 5;      // durasi iklan simulasi
+const CHECKIN_COINS = 20;
+
+/* ============================================================
+   State (disimpan di browser)
+   ============================================================ */
+const store = {
+  get(k, d){ try { const v = localStorage.getItem('episoda.'+k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v){ try { localStorage.setItem('episoda.'+k, JSON.stringify(v)); } catch {} },
+};
+function detectRegion(){
+  const l = (navigator.language || 'en').toLowerCase();
+  if (l.startsWith('id') || l.startsWith('in')) return 'ID';
+  if (l.startsWith('ur')) return 'PK';
+  if (l.startsWith('hi')) return 'IN';
+  if (l.startsWith('bn')) return 'BD';
+  if (l.startsWith('tr')) return 'TR';
+  if (l.startsWith('ar')) return 'ME';
+  return 'GL';
+}
+const S = {
+  region: store.get('region', null) || detectRegion(),
+  lang: store.get('lang', null),
+  coins: store.get('coins', 100),
+  unlocked: store.get('unlocked', {}),    // { seriesId: [ep, ...] }
+  list: store.get('list', []),            // seriesId[]
+  liked: store.get('liked', []),
+  history: store.get('history', {}),      // { seriesId: lastEp }
+  checkin: store.get('checkin', ''),
+  tab: 'feed', feedMode: 'foryou', genre: 'all', query: '', seriesId: null,
+};
+if (!S.lang) S.lang = REGIONS[S.region].lang;
+const save = () => { for (const k of ['region','lang','coins','unlocked','list','liked','history','checkin']) store.set(k, S[k]); };
+
+const t = (k, vars={}) => (I18N[S.lang][k] ?? I18N.en[k] ?? k).replace(/\{(\w+)\}/g, (_, v) => vars[v] ?? '');
+const loc = obj => obj[S.lang] || obj.en || Object.values(obj)[0];
+const regionName = r => loc(REGIONS[r].name);
+const nfmt = n => new Intl.NumberFormat(REGIONS[S.region].num, { notation:'compact', maximumFractionDigits:1 }).format(n);
+const inRegion = s => s.region === 'ALL' || s.region.includes(S.region);
+const catalog = () => SERIES.filter(inRegion);
+const byId = id => SERIES.find(s => s.id === id);
+const isUnlocked = (s, ep) => ep <= s.free || (S.unlocked[s.id] || []).includes(ep);
+const $ = q => document.querySelector(q);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+
+/* ============================================================
+   Cuplikan animasi pengganti video (sampai video drama sungguhan tersedia)
+   ============================================================ */
+function hash(str){ let h = 2166136261; for (const c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; }
+function drawScene(ctx, w, h, s, ep, time){
+  const r = hash(s.id + ':' + ep), rnd = i => ((Math.sin(r*0.0001 + i*12.9898) * 43758.5453) % 1 + 1) % 1;
+  const [c1, c2] = s.pal;
+  const g = ctx.createLinearGradient(0, 0, w*.3, h); g.addColorStop(0, c2); g.addColorStop(.55, c1); g.addColorStop(1, '#050507');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  // cahaya bokeh
+  for (let i=0;i<14;i++){
+    const x = rnd(i)*w + Math.sin(time*.3 + i)*w*.03, y = rnd(i+40)*h*.6, rr = (rnd(i+80)*.08 + .03)*w;
+    const bg = ctx.createRadialGradient(x, y, 0, x, y, rr); bg.addColorStop(0, 'rgba(255,255,255,.22)'); bg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.fill();
+  }
+  // lantai
+  ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(0, h*.78, w, h*.22);
+  // dua tokoh (siluet), posisi & gerak berbeda tiap episode
+  const sway = Math.sin(time*1.2) * w*.006, zoom = 1 + Math.min(.12, time*.004);
+  const figure = (cx, scale, hue, lean) => {
+    ctx.save(); ctx.translate(cx, h*.8); ctx.scale(scale*zoom, scale*zoom); ctx.rotate(lean);
+    ctx.fillStyle = hue;
+    ctx.beginPath(); ctx.ellipse(0, -h*.4, w*.065, w*.075, 0, 0, 7); ctx.fill();                       // kepala
+    ctx.beginPath(); ctx.moveTo(-w*.12, 0); ctx.quadraticCurveTo(-w*.13, -h*.3, -w*.03, -h*.33);           // badan
+    ctx.lineTo(w*.03, -h*.33); ctx.quadraticCurveTo(w*.13, -h*.3, w*.12, 0); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  };
+  const near = rnd(5) > .5;
+  figure(w*(.32 + rnd(6)*.06) + sway, near ? 1.08 : .92, 'rgba(8,8,12,.92)', -.03 + sway*.002);
+  figure(w*(.68 - rnd(7)*.06) - sway, near ? .92 : 1.08, 'rgba(14,10,16,.88)', .03 - sway*.002);
+  // kilatan dramatis menjelang akhir episode (cliffhanger)
+  const end = time / EP_SECONDS;
+  if (end > .85){ ctx.fillStyle = `rgba(255,255,255,${(Math.sin(time*18)+1)*.05})`; ctx.fillRect(0,0,w,h); }
+  // vinyet
+  const v = ctx.createRadialGradient(w/2, h*.45, h*.2, w/2, h*.45, h*.8); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.55)');
+  ctx.fillStyle = v; ctx.fillRect(0,0,w,h);
+}
+function poster(s, w=180, h=264){
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  drawScene(c.getContext('2d'), w, h, s, 1, 2);
+  return c;
+}
+
+/* ============================================================
+   Feed vertikal (Untukmu & pemutar per serial)
+   ============================================================ */
+let slides = [], active = -1, rafId = 0, lastFrame = 0;
+function feedItems(){
+  if (S.feedMode === 'series'){
+    const s = byId(S.seriesId); const start = S.startEp || 1;
+    return Array.from({ length: s.eps - start + 1 }, (_, i) => ({ s, ep: start + i }));
+  }
+  // Untukmu: episode lanjutan dari riwayat dulu, lalu episode 1 dari semua drama di server ini
+  const cat = catalog().slice().sort((a,b) => hash(a.id + S.region) - hash(b.id + S.region));
+  const cont = cat.filter(s => S.history[s.id]).map(s => ({ s, ep: Math.min(s.eps, S.history[s.id]) }));
+  return [...cont, ...cat.filter(s => !S.history[s.id]).map(s => ({ s, ep: 1 }))];
+}
+function buildFeed(){
+  const feed = $('#feed'); feed.innerHTML = ''; slides = [];
+  for (const it of feedItems()){
+    const el = document.createElement('div'); el.className = 'slide';
+    const media = it.s.video ? Object.assign(document.createElement('video'), { src: it.s.video, playsInline:true, muted:true, loop:false }) : document.createElement('canvas');
+    el.append(media);
+    el.insertAdjacentHTML('beforeend', `<div class="shade"></div><div class="paused-ic">▶</div>
+      <div class="meta">
+        <div class="series-name">${esc(loc(it.s.title))}</div>
+        <span class="ep-pill">${t('episode')} ${it.ep}/${it.s.eps} · ${isUnlocked(it.s, it.ep) ? (it.ep <= it.s.free ? t('free') : '✓') : '🔒 ' + t('locked')}</span>
+        <div class="desc">${esc(loc(it.s.desc))}</div>
+        ${S.feedMode === 'foryou' ? `<button class="watch-all" data-act="series">▤ ${t('nEps', { n: it.s.eps })} · ${t('watch')}</button>` : ''}
+      </div>
+      <div class="rail">
+        <button data-act="like" class="${S.liked.includes(it.s.id) ? 'on' : ''}"><span class="ic">♥</span><span>${nfmt(it.s.views/12)}</span></button>
+        <button data-act="list" class="${S.list.includes(it.s.id) ? 'on' : ''}"><span class="ic">＋</span><span>${t('myList')}</span></button>
+        <button data-act="eps"><span class="ic">▤</span><span>${t('ep')} ${it.ep}</span></button>
+        <button data-act="share"><span class="ic">↗</span><span>${t('share')}</span></button>
+      </div>
+      <div class="bar"><i></i></div>`);
+    const slide = { el, media, ...it, time: 0, playing: true };
+    el.addEventListener('click', e => {
+      const b = e.target.closest('[data-act]');
+      if (!b) return togglePlay(slide);
+      e.stopPropagation(); railAction(b.dataset.act, slide, b);
+    });
+    slides.push(slide); feed.append(el);
+  }
+  sizeCanvases();
+  feed.scrollTop = 0; active = -1; observe();
+}
+function sizeCanvases(){
+  const r = $('#feed').getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+  for (const sl of slides) if (sl.media.tagName === 'CANVAS'){ sl.media.width = Math.round(r.width*dpr*.6); sl.media.height = Math.round(r.height*dpr*.6); drawScene(sl.media.getContext('2d'), sl.media.width, sl.media.height, sl.s, sl.ep, 1); }
+}
+let io;
+function observe(){
+  io?.disconnect();
+  io = new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting && e.intersectionRatio > .6) activate(slides.findIndex(s => s.el === e.target)); }, { root: $('#feed'), threshold: [.6] });
+  slides.forEach(s => io.observe(s.el));
+}
+function activate(i){
+  if (i === active || i < 0) return;
+  const prev = slides[active]; if (prev?.media.tagName === 'VIDEO') prev.media.pause();
+  active = i; const sl = slides[i];
+  if (!isUnlocked(sl.s, sl.ep)){ sl.playing = false; sl.el.classList.add('paused'); openUnlock(sl); }
+  else { sl.playing = true; sl.el.classList.remove('paused'); if (sl.media.tagName === 'VIDEO') sl.media.play().catch(()=>{}); markWatched(sl); }
+}
+function markWatched(sl){ S.history[sl.s.id] = Math.max(S.history[sl.s.id] || 0, sl.ep); save(); }
+function togglePlay(sl){
+  if (!isUnlocked(sl.s, sl.ep)) return openUnlock(sl);
+  sl.playing = !sl.playing; sl.el.classList.toggle('paused', !sl.playing);
+  if (sl.media.tagName === 'VIDEO') sl.playing ? sl.media.play().catch(()=>{}) : sl.media.pause();
+}
+function tick(now){
+  rafId = requestAnimationFrame(tick);
+  const dt = Math.min(.1, (now - lastFrame) / 1000); lastFrame = now;
+  const sl = slides[active]; if (!sl || S.tab !== 'feed' || !sl.playing || sheetOpen()) return;
+  if (sl.media.tagName === 'VIDEO'){ sl.time = sl.media.currentTime; if (sl.media.ended) return finishEpisode(sl); }
+  else { sl.time += dt; drawScene(sl.media.getContext('2d'), sl.media.width, sl.media.height, sl.s, sl.ep, sl.time); if (sl.time >= EP_SECONDS) return finishEpisode(sl); }
+  const dur = sl.media.tagName === 'VIDEO' ? (sl.media.duration || EP_SECONDS) : EP_SECONDS;
+  sl.el.querySelector('.bar i').style.width = Math.min(100, sl.time/dur*100) + '%';
+}
+function finishEpisode(sl){
+  sl.playing = false; sl.time = 0;
+  const next = slides[active+1];
+  if (next) next.el.scrollIntoView({ behavior:'smooth' });
+}
+function railAction(act, sl, btn){
+  const id = sl.s.id;
+  if (act === 'like'){ toggleIn(S.liked, id); btn.classList.toggle('on'); save(); }
+  if (act === 'list'){ const on = toggleIn(S.list, id); btn.classList.toggle('on', on); toast(on ? t('added') : t('removed')); save(); }
+  if (act === 'eps' || act === 'series') openSeries(id);
+  if (act === 'share'){
+    const text = t('shareText', { t: loc(sl.s.title) });
+    if (navigator.share) navigator.share({ title:'Episoda', text }).catch(()=>{});
+    else { navigator.clipboard?.writeText(`${text} – https://episoda.app/s/${id}/${sl.ep}`).catch(()=>{}); toast(t('copied')); }
+  }
+}
+const toggleIn = (arr, v) => { const i = arr.indexOf(v); if (i >= 0){ arr.splice(i,1); return false; } arr.push(v); return true; };
+
+/* ============================================================
+   Buka episode: iklan, koin, beli koin
+   ============================================================ */
+let sheetFor = null;
+const sheetOpen = () => $('#sheet').classList.contains('on') || $('#ad').classList.contains('on');
+function openSheet(html){ $('#sheet').innerHTML = html; $('#sheet').classList.add('on'); $('#scrim').classList.add('on'); }
+function closeSheet(){ $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); sheetFor = null; }
+$('#scrim').onclick = closeSheet;
+function openUnlock(sl){
+  sheetFor = sl;
+  openSheet(`<h3>🔒 ${t('unlockTitle', { n: sl.ep })}</h3><div class="sub">${esc(loc(sl.s.title))} · ${t('unlockSub')}</div>
+    <div class="actions">
+      <button class="btn primary" id="uAd">▶ ${t('watchAd', { s: AD_SECONDS })}</button>
+      <button class="btn gold" id="uCoin">🪙 ${t('useCoins', { c: COINS_PER_EP })} · ${t('balance')}: ${S.coins}</button>
+      <button class="btn" id="uBuy">${t('buyCoins')}</button>
+      <button class="btn" id="uCancel">${t('cancel')}</button>
+    </div>`);
+  $('#uAd').onclick = () => playAd(() => unlockEp(sl));
+  $('#uCoin').onclick = () => { if (S.coins < COINS_PER_EP) return toast(t('notEnough')); S.coins -= COINS_PER_EP; unlockEp(sl); };
+  $('#uBuy').onclick = () => openShop(sl);
+  $('#uCancel').onclick = closeSheet;
+}
+function unlockEp(sl){
+  (S.unlocked[sl.s.id] ||= []).push(sl.ep); save(); closeSheet(); toast(t('unlocked'));
+  sl.el.querySelector('.ep-pill').textContent = `${t('episode')} ${sl.ep}/${sl.s.eps} · ✓`;
+  if (slides[active] === sl){ sl.playing = true; sl.el.classList.remove('paused'); if (sl.media.tagName === 'VIDEO') sl.media.play().catch(()=>{}); markWatched(sl); }
+  if (S.tab === 'series') renderSeries();
+}
+function playAd(done){
+  closeSheet(); const ad = $('#ad'); let s = AD_SECONDS;
+  $('#adBox').textContent = t('adSponsor'); $('#adText').textContent = t('adSkipIn');
+  ad.classList.add('on'); $('#adCount').textContent = t('adLabel', { s });
+  const iv = setInterval(() => { s--; $('#adCount').textContent = t('adLabel', { s }); if (s <= 0){ clearInterval(iv); ad.classList.remove('on'); done(); } }, 1000);
+}
+function openShop(back){
+  const R = REGIONS[S.region];
+  openSheet(`<h3>🪙 ${t('buyCoins')}</h3><div class="sub">${t('balance')}: <b>${S.coins}</b> · ${R.flag} ${esc(regionName(S.region))}</div>
+    <div class="packs">${R.packs.map(([c,p],i) => `<button class="pack" data-i="${i}"><b>${c}</b><small>${t('coins')}</small><div style="margin-top:6px;font-weight:700">${esc(p)}</div></button>`).join('')}</div>
+    <div style="margin-top:14px;font-size:13px;color:var(--muted)">${t('payWith')}</div>
+    <div class="pays">${R.pay.map(p => `<span>${esc(p)}</span>`).join('')}</div>
+    <div class="note">${t('pricesNote')}</div>
+    <div class="actions" style="margin-top:12px"><button class="btn" id="shopClose">${t('cancel')}</button></div>`);
+  document.querySelectorAll('.pack').forEach(b => b.onclick = () => {
+    const [c] = R.packs[+b.dataset.i]; S.coins += c; save(); toast(t('purchased', { c }));
+    if (back) openUnlock(back); else { closeSheet(); renderProfile(); }
+  });
+  $('#shopClose').onclick = () => back ? openUnlock(back) : closeSheet();
+}
+
+/* ============================================================
+   Halaman: Jelajah, Daftarku, Profil, Detail serial
+   ============================================================ */
+function cardHTML(s){
+  return `<button class="card" data-s="${s.id}"><div class="poster" data-p="${s.id}"><span class="tag">${t(s.tag)}</span><span class="views">▶ ${nfmt(s.views)}</span></div><div class="t">${esc(loc(s.title))}</div></button>`;
+}
+function hydrateCards(root){
+  root.querySelectorAll('[data-p]').forEach(p => p.prepend(poster(byId(p.dataset.p))));
+  root.querySelectorAll('.card').forEach(c => c.onclick = () => openSeries(c.dataset.s));
+}
+function renderExplore(){
+  const cat = catalog(), q = S.query.trim().toLowerCase();
+  const shown = cat.filter(s => (S.genre === 'all' || s.genre === S.genre) && (!q || Object.values(s.title).some(x => x.toLowerCase().includes(q))));
+  const trending = cat.slice().sort((a,b) => b.views - a.views);
+  $('#explorePage').innerHTML = `<h1>${t('explore')}</h1>
+    <input class="search" id="q" placeholder="${t('search')}" value="${esc(S.query)}">
+    <div class="chips">${['all', ...GENRES].map(g => `<button class="chip ${S.genre===g?'on':''}" data-g="${g}">${g==='all' ? t('all') : t('g_'+g)}</button>`).join('')}</div>
+    ${!q && S.genre==='all' ? `<h2>🔥 ${t('trending', { r: regionName(S.region) })}</h2><div class="row">${trending.slice(0,6).map(cardHTML).join('')}</div><h2>${t('newest')}</h2>` : '<div style="height:14px"></div>'}
+    <div class="grid">${shown.map(cardHTML).join('') || `<div class="empty" style="grid-column:1/-1">—</div>`}</div>`;
+  hydrateCards($('#explorePage'));
+  document.querySelectorAll('[data-g]').forEach(c => c.onclick = () => { S.genre = c.dataset.g; renderExplore(); });
+  const qi = $('#q'); qi.oninput = () => { S.query = qi.value; const pos = qi.selectionStart; renderExplore(); const n = $('#q'); n.focus(); n.setSelectionRange(pos, pos); };
+}
+function renderList(){
+  const mine = S.list.map(byId).filter(Boolean), hist = Object.keys(S.history).map(byId).filter(s => s && inRegion(s));
+  $('#listPage').innerHTML = `<h1>${t('myList')}</h1>
+    ${hist.length ? `<h2>${t('continueW')}</h2><div class="row">${hist.map(cardHTML).join('')}</div>` : ''}
+    <h2>${t('myList')}</h2>${mine.length ? `<div class="grid">${mine.map(cardHTML).join('')}</div>` : `<div class="empty">${t('emptyList')}</div>`}`;
+  hydrateCards($('#listPage'));
+}
+function renderProfile(){
+  const today = new Date().toISOString().slice(0,10), done = S.checkin === today;
+  $('#profilePage').innerHTML = `<h1>${t('profile')}</h1>
+    <div class="coin-card"><div><div style="font-size:13px;opacity:.85">${t('balance')}</div><div class="n">🪙 ${S.coins}</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><button class="btn gold" id="topup">${t('buyCoins')}</button><button class="btn" id="checkin" ${done?'disabled style="opacity:.6"':''}>${done ? t('checkedIn') : t('checkin', { c: CHECKIN_COINS })}</button></div></div>
+    <h2>🌐 ${t('server')}</h2>
+    <div class="list">${Object.entries(REGIONS).map(([k,R]) => `<button data-r="${k}" class="${k===S.region?'sel':''}"><span class="flag">${R.flag}</span><span>${esc(regionName(k))}</span><span class="sub">${LANG_NAMES[R.lang]} ${k===S.region?'✓':''}</span></button>`).join('')}</div>
+    <h2>🔤 ${t('language')}</h2>
+    <div class="chips" style="flex-wrap:wrap">${Object.entries(LANG_NAMES).map(([k,n]) => `<button class="chip ${k===S.lang?'on':''}" data-l="${k}">${n}</button>`).join('')}</div>
+    <div class="note">${t('proto')}. ${t('pricesNote')}</div>`;
+  $('#topup').onclick = () => openShop(null);
+  $('#checkin').onclick = () => { if (done) return; S.checkin = today; S.coins += CHECKIN_COINS; save(); toast(`+${CHECKIN_COINS} 🪙`); renderProfile(); };
+  document.querySelectorAll('[data-r]').forEach(b => b.onclick = () => setRegion(b.dataset.r));
+  document.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { S.lang = b.dataset.l; save(); applyLang(); renderProfile(); });
+}
+function openSeries(id){ S.seriesId = id; showTab('series'); }
+function renderSeries(){
+  const s = byId(S.seriesId); if (!s) return;
+  const last = S.history[s.id] || 0;
+  $('#seriesPage').innerHTML = `
+    <button class="back" id="back">${document.documentElement.dir === 'rtl' ? '→' : '←'}</button>
+    <div class="hero" style="margin-top:12px"><div class="over"><b>${esc(loc(s.title))}</b><div style="font-size:12.5px;color:#ddd;margin-top:4px">${t('g_'+s.genre)} · ${t('nEps', { n: s.eps })} · ${t('views', { v: nfmt(s.views) })}</div></div></div>
+    <p style="color:#ddd;font-size:14px;line-height:1.7">${esc(loc(s.desc))}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn primary" id="playFrom">▶ ${last ? t('watchFrom', { n: Math.min(s.eps, last) }) : t('playAll')}</button>
+      <button class="btn" id="addList">${S.list.includes(s.id) ? '✓' : '＋'} ${t('myList')}</button>
+    </div>
+    <h2>${t('nEps', { n: s.eps })}</h2>
+    <div class="eps">${Array.from({ length: s.eps }, (_, i) => { const ep = i+1; return `<button data-ep="${ep}" class="${ep <= last ? 'done' : ''}">${ep}${isUnlocked(s, ep) ? '' : '<span class="lk">🔒</span>'}</button>`; }).join('')}</div>`;
+  $('.hero').prepend(poster(s, 400, 260));
+  $('#back').onclick = () => showTab(S.prevTab || 'feed');
+  $('#playFrom').onclick = () => playSeries(s.id, Math.max(1, Math.min(s.eps, last || 1)));
+  $('#addList').onclick = () => { const on = toggleIn(S.list, s.id); save(); toast(on ? t('added') : t('removed')); renderSeries(); };
+  document.querySelectorAll('[data-ep]').forEach(b => b.onclick = () => playSeries(s.id, +b.dataset.ep));
+}
+function playSeries(id, ep){ S.feedMode = 'series'; S.seriesId = id; S.startEp = ep; showTab('feed'); }
+
+/* ============================================================
+   Navigasi, server, bahasa
+   ============================================================ */
+const NAV = [['feed','⌂','forYou'],['explore','⌕','explore'],['list','♡','myList'],['profile','◉','profile']];
+function renderNav(){
+  $('#nav').innerHTML = NAV.map(([k,ic,l]) => `<button data-t="${k}" class="${S.tab===k || (k==='feed' && S.tab==='series' && false) ?'on':''}"><b>${ic}</b>${t(l)}</button>`).join('');
+  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { if (b.dataset.t === 'feed'){ S.feedMode = 'foryou'; } showTab(b.dataset.t, true); });
+}
+function showTab(tab, fromNav){
+  if (tab === 'series' && S.tab !== 'series') S.prevTab = S.tab;
+  const was = S.tab; S.tab = tab;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+  $('#' + (tab === 'feed' ? 'feedView' : tab + 'View')).classList.add('on');
+  if (tab === 'feed'){ renderTopbar(); if (fromNav || was !== 'feed' || !slides.length) buildFeed(); }
+  if (tab === 'explore') renderExplore();
+  if (tab === 'list') renderList();
+  if (tab === 'profile') renderProfile();
+  if (tab === 'series') renderSeries();
+  renderNav();
+}
+function renderTopbar(){
+  const series = S.feedMode === 'series';
+  $('#feedTabs').innerHTML = series
+    ? `<button class="back" id="feedBack">${document.documentElement.dir === 'rtl' ? '→' : '←'}</button>`
+    : `<span class="on">${t('forYou')}</span>`;
+  if (series) $('#feedBack').onclick = () => openSeries(S.seriesId);
+  $('#serverPill').innerHTML = `${REGIONS[S.region].flag} ${esc(regionName(S.region))} ▾`;
+  $('#protoNote').textContent = t('proto');
+}
+$('#serverPill').onclick = () => {
+  openSheet(`<h3>🌐 ${t('server')}</h3><div class="list" style="margin-top:12px">${Object.entries(REGIONS).map(([k,R]) => `<button data-r="${k}" class="${k===S.region?'sel':''}"><span class="flag">${R.flag}</span><span>${esc(regionName(k))}</span><span class="sub">${LANG_NAMES[R.lang]}</span></button>`).join('')}</div>`);
+  document.querySelectorAll('#sheet [data-r]').forEach(b => b.onclick = () => { closeSheet(); setRegion(b.dataset.r); });
+};
+function setRegion(r){
+  S.region = r; S.lang = REGIONS[r].lang; S.feedMode = 'foryou'; S.genre = 'all'; S.query = ''; save();
+  applyLang(); toast(t('serverChanged', { r: `${REGIONS[r].flag} ${regionName(r)}` }));
+  if (S.tab === 'feed') buildFeed(); else if (S.tab === 'profile') renderProfile();
+}
+function applyLang(){
+  document.documentElement.lang = S.lang; document.documentElement.dir = RTL.has(S.lang) ? 'rtl' : 'ltr';
+  renderNav(); renderTopbar();
+  if (S.tab === 'feed') buildFeed();
+}
+let toastT;
+function toast(msg){ const el = $('#toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 1800); }
+addEventListener('resize', sizeCanvases);
+
+applyLang(); showTab('feed'); requestAnimationFrame(tick);
+window.__episoda = { S, SERIES, REGIONS, setRegion, showTab, openSeries };
+</script>
+</body>
+</html>
