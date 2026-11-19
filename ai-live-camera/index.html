@@ -73,6 +73,22 @@
   .ai-pill.show{display:block}
   .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px}
   .status-dot.on{background:var(--ok)} .status-dot.wait{background:var(--warn)}
+  #marks{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;touch-action:none}
+  .stage.drawing #marks{pointer-events:auto;cursor:crosshair}
+  .toolbar{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;align-items:center;background:rgba(10,10,18,.78);border:1px solid var(--line);border-radius:999px;padding:5px 6px}
+  .toolbar button{border:0;background:transparent;border-radius:999px;padding:5px 10px;font-size:12.5px;font-weight:600}
+  .toolbar button.on{background:var(--text);color:var(--bg)}
+  .swatch{width:20px;height:20px;padding:0 !important;border:2px solid transparent !important}
+  .swatch.on{border-color:#fff !important}
+  .mic{width:44px;height:42px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);font-size:18px}
+  .mic.on{background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.7);animation:blink 1.2s infinite}
+  .listen{position:absolute;left:12px;top:46px;font-size:12.5px;padding:5px 10px;border-radius:999px;background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.5);display:none;max-width:70%}
+  .listen.show{display:block}
+  .variants{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .variant{background:#f4f3f7;border-radius:12px;padding:6px;border:2px solid transparent;cursor:pointer;position:relative}
+  .variant.on{border-color:var(--accent)}
+  .variant canvas{width:100%;aspect-ratio:1;display:block;border-radius:8px}
+  .variant span{position:absolute;left:10px;top:8px;font-size:10px;font-weight:700;color:#55536a}
   .mode{font-size:12px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
   .mode.ai{color:#c4b5fd;border-color:rgba(139,92,246,.5)}
 
@@ -105,6 +121,10 @@
   details p{margin:8px 0}
   a{color:#c4b5fd}
 
+  @media (min-width:981px){
+    .stage{position:sticky;top:16px}
+    aside{position:sticky;top:16px;max-height:calc(100vh - 100px);overflow-y:auto;padding-right:4px}
+  }
   @media (max-width:980px){
     .app{grid-template-columns:1fr;padding:16px;gap:16px}
     header{padding:10px 16px}
@@ -130,6 +150,16 @@
     <canvas id="out" width="1280" height="720"></canvas>
     <div class="thinking" id="thinking">✦ Memahami perintah…</div>
     <div class="ai-pill" id="aiPill"></div>
+    <div class="listen" id="listenPill">🎙️ Mendengarkan…</div>
+    <canvas id="marks"></canvas>
+    <div class="toolbar" id="toolbar">
+      <button type="button" id="drawBtn" title="Lingkari bagian video, lalu ketik perintah">✏️ Tandai</button>
+      <button type="button" class="swatch on" data-c="biru" style="background:#3b82f6" title="Biru"></button>
+      <button type="button" class="swatch" data-c="merah" style="background:#ef4444" title="Merah"></button>
+      <button type="button" class="swatch" data-c="hijau" style="background:#22c55e" title="Hijau"></button>
+      <button type="button" class="swatch" data-c="kuning" style="background:#facc15" title="Kuning"></button>
+      <button type="button" id="clearMarks" title="Hapus semua tanda">🧽</button>
+    </div>
     <div class="overlay" id="overlay">
       <div>
         <h1>Ubah tampilanmu dengan kata-kata</h1>
@@ -150,11 +180,37 @@
       <form id="cmdForm">
         <textarea id="cmd" placeholder="Contoh: Tambahkan kaos putih ke saya, pakaikan topi koboi dan kacamata hitam, lalu ganti latar jadi pantai saat senja."></textarea>
         <div class="row end">
-          <span class="hint" style="margin-right:auto">Enter untuk kirim · Shift+Enter baris baru</span>
+          <span class="hint" style="margin-right:auto">Enter untuk kirim · 🎤 untuk bicara</span>
+          <button class="mic" type="button" id="micBtn" title="Ucapkan perintah">🎤</button>
           <button class="btn primary" type="submit" id="sendBtn">Terapkan</button>
         </div>
       </form>
+      <div class="row" style="margin-top:10px;gap:16px">
+        <label class="switch" title="Mikrofon terus menyala. Hanya kalimat yang diawali kata 'kamera' yang dijalankan, jadi obrolan dengan penonton tidak ikut terbaca."><input type="checkbox" id="wakeChk"> Dengar terus (awali "kamera…")</label>
+        <label class="switch"><input type="checkbox" id="ttsChk"> Suara balasan</label>
+      </div>
       <div class="chips" id="chips" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card" id="designCard">
+      <h2>Desain baju dengan AI</h2>
+      <p class="hint" style="margin:0 0 10px">Ketik baju yang kamu mau, AI membuat gambarnya. Kurang pas? Tulis perbaikannya, lalu buat ulang.</p>
+      <div class="row">
+        <input type="text" id="designPrompt" placeholder="mis. hoodie oversize hijau army dengan logo naga" style="flex:1;min-width:0">
+        <button class="btn primary" id="designBtn">Buat</button>
+      </div>
+      <div id="designBox" hidden>
+        <div class="variants" id="variants"></div>
+        <div class="hint" id="designPromptView" style="margin-top:8px"></div>
+        <div class="row" style="margin-top:8px">
+          <input type="text" id="designEdit" placeholder="Edit lagi: mis. lengan panjang, warna merah, tambah kerah" style="flex:1;min-width:0">
+          <button class="btn" id="designEditBtn">Edit</button>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <button class="btn primary" id="designUse" style="flex:1">Pakai baju ini</button>
+          <button class="btn" id="designSave">Simpan</button>
+        </div>
+      </div>
     </div>
 
     <div class="card" id="vtonCard">
@@ -364,13 +420,13 @@ const EMOJI = [
   [/kacamata hitam|sunglasses/, '🕶️'], [/kacamata|glasses/, '👓'], [/topeng|masker|mask/, '🎭'],
   [/kalung|liontin|necklace/, '📿'], [/medali/, '🏅'], [/dasi kupu|pita|bow/, '🎀'], [/dasi|tie/, '👔'], [/syal|scarf/, '🧣'],
   [/sayap|wings/, '🪽'], [/ransel|backpack/, '🎒'], [/lencana|badge|pin/, '📛'],
-  [/petromaks|lampu|lentera|lantern/, '🏮'], [/mikrofon|\bmic/, '🎤'], [/pedang|sword/, '🗡️'], [/tongkat sihir|tongkat|wand/, '🪄'],
+  [/petromaks|lentera|lantern/, '🏮'], [/lampu|lamp|bohlam/, '💡'], [/lukisan|poster|bingkai/, '🖼️'], [/jam dinding/, '🕰️'], [/tanaman|pot/, '🪴'], [/tv|televisi/, '📺'], [/rak|buku/, '📚'], [/mikrofon|\bmic/, '🎤'], [/pedang|sword/, '🗡️'], [/tongkat sihir|tongkat|wand/, '🪄'],
   [/piala|trofi/, '🏆'], [/gitar/, '🎸'], [/bunga|mawar|rose/, '🌹'], [/es krim/, '🍦'], [/\bkue\b|cake/, '🎂'], [/kopi|coffee/, '☕'],
   [/\bapi\b|obor|fire/, '🔥'], [/buku/, '📖'], [/\bbola\b/, '⚽'], [/kucing|cat/, '🐱'], [/anjing|dog/, '🐶'], [/burung|beo|parrot/, '🦜'],
   [/robot/, '🤖'], [/permen|lolipop/, '🍭'], [/berlian|permata/, '💎'], [/bintang/, '⭐'], [/kamera/, '📷'], [/roket/, '🚀'],
   [/pizza/, '🍕'], [/burger/, '🍔'], [/uang|duit/, '💸'], [/hati|love/, '❤️'], [/balon/, '🎈'], [/payung/, '☂️'],
 ];
-const GLOW_RE = /menyala|bercahaya|nyala|bersinar|glow|berpendar|\bapi\b|neon|lightsaber|pedang cahaya/;
+const GLOW_RE = /menyala|bercahaya|nyala|bersinar|glow|berpendar|\bapi\b|neon|lightsaber|pedang cahaya|\blampu\b|lamp\b/;
 
 const VERBS = 'ubah|ganti|cat|pakaikan|pakai|pake|kenakan|pindahkan|bawa|jadikan|tambah|tambahkan|tambahin|kasih|kasi|beri|berikan|pasang|pasangkan|pasangin|pegang|pegangkan|taruh|letakkan|munculkan|kembalikan|matikan|hapus|hilangkan|lepas|lepaskan|copot|simpan|gunakan|buat|bikin|change|make|turn|put|add|remove';
 const CLOTH_RE = /baju|kaos|kaus|t-?shirt|kemeja|jaket|hoodie|pakaian|outfit|\bjas\b|blazer|seragam|sweater|atasan|kostum|busana|dress|gaun|kebaya|rompi|cardigan|kardigan|jersey|shirt|jacket|celana|\brok\b|sarung|legging|jeans|polo|singlet|tank ?top|jubah|terusan|tuksedo|piyama|daster/;
@@ -383,7 +439,27 @@ const NEG_RE = /\b(gak|ga|nggak|enggak|tidak|tak|belum|lagi gak|lagi tidak)\b.*\
 /* ============================================================
    Pemahaman perintah bawaan (tanpa internet)
    ============================================================ */
+const REGION_RE = /lingkar|coret|ditandai|\btanda\b|yang (aku|saya) tandai|area (itu|ini)|kotak (biru|merah|hijau|kuning)/;
+const MARK_COLORS = { biru:'#3b82f6', merah:'#ef4444', hijau:'#22c55e', kuning:'#facc15' };
+function parseRegion(text){
+  if (!marks.length || !REGION_RE.test(text)) return null;
+  const cm = text.match(/(?:lingkaran|coretan|tanda|kotak|area)\s*(?:warna\s*)?(biru|merah|hijau|kuning)/) || text.match(/\b(biru|merah|hijau|kuning)\b(?=[^,.]*?(?:lingkar|coret|tanda))/);
+  const mark = cm ? marks.slice().reverse().find(m => m.color === cm[1]) : marks[marks.length-1];
+  if (!mark) return null;
+  const replace = /\b(ganti|ubah|jadikan|menjadi|diganti)\b/.test(text);
+  if (/\b(hapus|hilangkan|buang)\b/.test(text) && !replace) return { type:'regionErase', color: mark.color };
+  let desc = text;
+  const m = text.match(/(?:tambah(?:kan|in)?|kasih|kasi|taruh|letakkan|pasang(?:kan|in)?|buat(?:kan|in)?|bikin(?:in)?|munculkan|jadikan|jadi|menjadi|dengan)\s+(.+)$/);
+  if (m) desc = m[1];
+  desc = desc.replace(/\b(tolong|dong|ya|deh|aja)\b/g,'').replace(/\s*(di\s*)?(sana|situ|sini)\b/g,'').replace(/(yang\s+)?di\s+(dalam\s+)?(lingkaran|coretan|tanda|kotak|area)\b.*?(?=$)/,'').replace(/\s+/g,' ').trim();
+  if (!desc) return null;
+  return { type:'item', anchor:'region', side:'center', desc, prompt:'', glow: GLOW_RE.test(desc), mode: replace ? 'replace' : 'add', box: mark.box, color: mark.color, where:'' };
+}
 function parseCommand(raw){
+  const low = raw.toLowerCase().replace(/\s+/g,' ').trim();
+  const reg = parseRegion(low);
+  if (reg) return { actions:[reg], unknown:[] };
+  if (REGION_RE.test(low) && /lingkar|coret|tanda/.test(low) && !marks.length) return { actions:[{ type:'noMark' }], unknown:[] };
   const text = raw.toLowerCase().replace(/[“”"']/g,'"').replace(/\s+/g,' ').trim();
   const clauses = text
     .split(new RegExp(`[.;!?\\n]+|,\\s*(?:(?:dan|lalu|terus|trus|kemudian|juga)\\s+)?(?=(?:${VERBS})\\b)|\\s+(?:dan|lalu|terus|trus|kemudian|sama|plus)\\s+(?=(?:${VERBS})\\b)`))
@@ -476,9 +552,10 @@ const LLM_SCHEMA = {
   properties:{
     reply:{ type:'string' },
     actions:{ type:'array', items:{ type:'object', additionalProperties:false,
-      required:['type','part','desc','prompt_en','color_hex','pattern','sleeves','legs','anchor','side','coco','glow','name'],
+      required:['type','part','desc','prompt_en','color_hex','pattern','sleeves','legs','anchor','side','coco','glow','name','mark','region_mode'],
       properties:{
-        type:{ type:'string', enum:['clothing','wall','background','replace_object','add_item','remove','reset','save_preset','load_preset'] },
+        type:{ type:'string', enum:['clothing','wall','background','replace_object','add_item','region_edit','remove','reset','save_preset','load_preset'] },
+        mark:{ type:'string', enum:['none','biru','merah','hijau','kuning','latest'] }, region_mode:{ type:'string', enum:['none','add','replace'] },
         part:{ type:'string', enum:['upper','lower','full','scene','object','item','none'] },
         desc:{ type:'string' }, prompt_en:{ type:'string' }, color_hex:{ type:'string' },
         pattern:{ type:'string', enum: PATTERNS },
@@ -499,6 +576,7 @@ What the app can do:
 - replace_object: swap a real object the camera sees. coco = the COCO class of the real object being replaced (cup, bottle, cell phone, book, ...). desc/prompt_en describe the new object. glow true if it should emit light.
 - add_item: add a virtual object or accessory. anchor: head (hats, crowns, horns, halo), eyes (glasses), face (masks), mouth (mustache, cigar), neck (necklace, scarf, bow tie), tie (necktie), chest (badge, pin), shoulder (pet or bird sitting on shoulder), hand (anything held), back (wings, backpack, aura; drawn behind the body), scene (placed in the room, not on the body). side: left/right for hand or shoulder (the person's own side; default right), else center.
 - remove: undo something. part says which (upper, lower, scene, object with coco, item with name = words identifying it).
+- region_edit: the user drew a coloured mark on the video and talks about it ("lingkaran biru", "yang aku coret", "di tanda merah"). mark = the colour they mention, or "latest". region_mode: add (put something there) or replace (turn what is there into something else). desc/prompt_en describe the object to place.
 - reset: remove all effects. save_preset / load_preset: name = preset name.
 
 Rules:
@@ -525,7 +603,7 @@ async function askClaude(text){
     model, max_tokens: 4000,
     output_config: { effort:'low', format:{ type:'json_schema', schema: LLM_SCHEMA } },
     system: LLM_SYSTEM,
-    messages: [{ role:'user', content:`Active effects: ${stateSummary()}\nObjects the camera can recognise for replace_object: ${COCO_LABELS.join(', ')}\n\nCommand: ${text}` }],
+    messages: [{ role:'user', content:`Active effects: ${stateSummary()}\nMarks drawn on the video: ${marks.length ? marks.map(m => `${m.color} (${regionIsBackground(m.box) ? 'on the wall/background' : 'on the person or an object'})`).join(', ') : 'none'}\nObjects the camera can recognise for replace_object: ${COCO_LABELS.join(', ')}\n\nCommand: ${text}` }],
   };
   const headers = { 'content-type':'application/json', 'x-api-key': settings.apiKey, 'anthropic-version':'2026-10-21', 'anthropic-dangerous-direct-browser-access':'true' };
   if (model === 'claude-opus-5-5'){ body.fallbacks = 'default'; headers['anthropic-beta'] = 'server-side-fallback-2026-07-01'; }
@@ -551,6 +629,11 @@ function fromLLM(a){
     case 'wall': return { type:'wall', desc:a.desc, prompt:a.prompt_en, color, pattern: a.pattern };
     case 'background': return { type:'background', desc:`${a.desc} ${a.prompt_en}`.trim(), label:a.desc, prompt:a.prompt_en };
     case 'replace_object': return a.coco === 'none' ? null : { type:'object', coco:a.coco, desc:a.desc, prompt:a.prompt_en, glow:a.glow, color };
+    case 'region_edit': {
+      const mk = a.mark === 'latest' || a.mark === 'none' ? marks[marks.length-1] : marks.slice().reverse().find(m => m.color === a.mark) || marks[marks.length-1];
+      if (!mk) return null;
+      return { type:'item', anchor:'region', side:'center', desc:a.desc, prompt:a.prompt_en, glow:a.glow, mode: a.region_mode === 'replace' ? 'replace' : 'add', box: mk.box, color: mk.color, where:'' };
+    }
     case 'add_item': return { type:'item', anchor:a.anchor, side:a.side, desc:a.desc, prompt:a.prompt_en, glow:a.glow, behind: a.anchor === 'back', where:'' };
     case 'remove':
       if (a.part === 'upper' || a.part === 'full') return { type:'remove', slot:'upper' };
@@ -687,10 +770,10 @@ function sceneFrame(desc){
    Gambar AI (teks-ke-gambar), dengan cache
    ============================================================ */
 const aiCache = new Map();
-function aiImage(prompt, w, h){
-  const key = `${prompt}|${w}x${h}`;
+function aiImage(prompt, w, h, seed){
+  const key = `${prompt}|${w}x${h}|${seed ?? ''}`;
   if (aiCache.has(key)) return aiCache.get(key);
-  const url = settings.aiUrl.replace('{prompt}', encodeURIComponent(prompt)).replace('{w}', w).replace('{h}', h).replace('{seed}', Math.floor(Math.random()*1e6));
+  const url = settings.aiUrl.replace('{prompt}', encodeURIComponent(prompt)).replace('{w}', w).replace('{h}', h).replace('{seed}', seed ?? Math.floor(Math.random()*1e6));
   const p = new Promise((res, rej) => {
     const img = new Image(); img.crossOrigin = 'anonymous';
     const t = setTimeout(() => { img.src=''; rej(new Error('waktu habis')); }, 60000);
@@ -753,7 +836,7 @@ function garmentStyle(r){
   if (!pat){
     if (/kulit|leather/.test(d)) pat='leather'; else if (/batik/.test(d)) pat='batik'; else if (/denim|jeans|jins/.test(d)) pat='denim';
     else if (/garis|belang|salur|stripe/.test(d)) pat='stripes'; else if (/kotak|flanel|plaid|tartan/.test(d)) pat='plaid';
-    else if (/loreng|army|tentara|camo|militer/.test(d)) pat='camo'; else if (/bunga|floral|motif/.test(d)) pat='floral';
+    else if (/loreng|tentara|camo|militer/.test(d)) pat='camo'; else if (/bunga|floral|motif/.test(d)) pat='floral';
     else if (/rajut|sweater|wol|knit/.test(d)) pat='knit'; else if (/satin|sutra|silk|metalik|mengkilap/.test(d)) pat='satin'; else pat='solid';
   }
   if (!c){
@@ -768,6 +851,7 @@ function garmentStyle(r){
   let sleeves = r.sleeves;
   if (!sleeves){
     if (/tanpa lengan|tank ?top|singlet|rompi|vest|kemben|kutang/.test(d)) sleeves='none';
+    else if (/lengan pendek/.test(d)) sleeves='short';
     else if (/lengan panjang|jaket|hoodie|kemeja|\bjas\b|blazer|sweater|cardigan|kardigan|seragam|kebaya|jubah|jacket|coat|mantel|tuksedo|piyama/.test(d)) sleeves='long';
     else sleeves='short';
   }
@@ -838,7 +922,12 @@ function buildItem(r){
     desc:r.desc, recipe:r, enabled:true, ver:1, img: emojiCanvas(em), glow: glowColor(r), size: def ? def[2] : null, smooth:null,
     pair: r.anchor === 'back' && /sayap|wings/.test(r.desc) };
   // Satu benda per titik tubuh (kecuali ruangan): topi baru menggantikan topi lama.
-  const same = effects.items.findIndex(i => r.anchor !== 'scene' && i.recipe.anchor === r.anchor && i.recipe.side === r.side);
+  if (r.anchor === 'region'){
+    fx.title = r.mode === 'replace' ? 'Ganti di area yang ditandai' : 'Tambahan di area yang ditandai';
+    fx.behindPerson = regionIsBackground(r.box);
+    removeMark(r.color);
+  }
+  const same = effects.items.findIndex(i => r.anchor !== 'scene' && r.anchor !== 'region' && i.recipe.anchor === r.anchor && i.recipe.side === r.side);
   if (same >= 0) effects.items[same] = fx; else effects.items.push(fx);
   if (r.anchor !== 'scene') needPose();
   runAI(fx, `${r.prompt || r.desc}, single object, centered, isolated on a pure white background, studio product photo, front view, no shadow, no person`, 512, 512, img => { fx.img = keyOutWhite(img); });
@@ -855,7 +944,9 @@ function applyAction(a){
     case 'wall': buildWall(a); return `Tembok: ${a.desc}`;
     case 'background': buildBackground(a); return `Latar: ${a.label || a.desc}`;
     case 'object': buildObject(a); return `${cap(COCO_ID[a.coco] || a.coco)} → ${a.desc}`;
-    case 'item': buildItem(a); return `+ ${a.desc}`;
+    case 'item': buildItem(a); return a.anchor === 'region' ? `${a.mode === 'replace' ? 'Diganti' : 'Ditambah'} di tanda ${a.color || ''}: ${a.desc}` : `+ ${a.desc}`;
+    case 'noMark': return 'Belum ada tanda. Klik ✏️ Tandai di pojok video, lingkari bagiannya, lalu ketik perintahnya lagi.';
+    case 'regionErase': return 'Menghapus benda belum bisa. Coba "ganti yang di lingkaran jadi …".';
     case 'remove':
       if (a.slot === 'upper'){ if (effects.lower === effects.upper) effects.lower = null; effects.upper = null; }
       else if (a.slot === 'lower'){ if (effects.lower === effects.upper) effects.upper = null; effects.lower = null; }
@@ -1166,6 +1257,11 @@ function drawShapes(){
 function placeItem(it){
   const r = it.recipe, img = it.img, asp = img.width / img.height;
   const side = r.side === 'left' ? 'L' : 'R';
+  if (r.anchor === 'region'){
+    const b = r.box, k = r.mode === 'replace' ? 1.15 : .95;
+    let w = b.w*W*k, h = w/asp; if (h > b.h*H*k){ h = b.h*H*k; w = h*asp; }
+    return { cx:(b.x+b.w/2)*W, cy:(b.y+b.h/2)*H, w, h, rot:0 };
+  }
   if (r.anchor === 'scene'){
     const wq = /kecil|small/.test(r.where||'') ? .12 : /besar|big|large/.test(r.where||'') ? .35 : .22;
     let cx = .82, cy = .7;
@@ -1238,7 +1334,7 @@ function loop(){
 
   // --- AI: segmentasi, pose, deteksi benda (resolusi kecil) ---
   const t0 = performance.now();
-  const needSeg = (segmenter || debug.cat) && (up || lo || sc || objs.length || items.some(i => i.recipe.anchor === 'back'));
+  const needSeg = (segmenter || debug.cat) && (up || lo || sc || objs.length || items.some(i => i.recipe.anchor === 'back' || i.recipe.anchor === 'region'));
   const needPoseNow = (poser || debug.pose) && (up || lo || items.some(i => i.recipe.anchor !== 'scene'));
   if (needSeg || needPoseNow) segCtx.drawImage(video, 0, 0, MW, MH);
   if (needSeg && frameNo % segEvery === 0){
@@ -1266,7 +1362,8 @@ function loop(){
     const pl = placeItem(it); if (!pl){ it.smooth = null; continue; }
     const a = it.recipe.anchor;
     if (a === 'back' || it.recipe.behind){ drawItem(behindCtx, it, pl, ts); behOn = 1; }
-    else if (a === 'hand' || a === 'scene'){ drawItem(objCtx, it, pl, ts); objOn = 1; }
+    else if (a === 'region' && it.behindPerson){ drawItem(behindCtx, it, pl, ts); behOn = 1; }
+    else if (a === 'hand' || a === 'scene' || a === 'region'){ drawItem(objCtx, it, pl, ts); objOn = 1; }
     else front.push([it, pl]);
   }
 
@@ -1412,7 +1509,12 @@ $('#recBtn').onclick = () => {
    UI
    ============================================================ */
 let toastT;
-function toast(msg, ms=3400){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), ms); }
+function speak(msg){
+  if (!$('#ttsChk')?.checked || !window.speechSynthesis) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(msg.replace(/[✦·→+]/g,' ')); u.lang = 'id-ID'; u.rate = 1.05;
+    const v = speechSynthesis.getVoices().find(v => /^id/i.test(v.lang)); if (v) u.voice = v; speechSynthesis.speak(u); } catch {}
+}
+function toast(msg, ms=3400){ speak(msg); const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), ms); }
 function updateModeBadge(){ const b = $('#modeBadge'); b.textContent = settings.apiKey ? 'Otak AI Claude' : 'Pemahaman bawaan'; b.classList.toggle('ai', !!settings.apiKey); }
 
 const EXAMPLES = [
@@ -1502,7 +1604,7 @@ function renderCatalog(){
   CATALOG.filter(c => catTab === 'Semua' || c.cat === catTab).forEach(c => {
     const el = document.createElement('div'); el.className = 'garment' + (aiLive.current === c ? ' on' : ''); el.draggable = true; el.title = `Seret ke video atau klik: ${c.name}`;
     const sm = document.createElement('small'); sm.textContent = c.tag; el.append(sm);
-    if (!c.thumb){ c.thumb = emojiCanvas(c.icon); loadGarmentImage(c); }
+    if (!c.thumb){ c.thumb = c.photo || emojiCanvas(c.icon); loadGarmentImage(c); }
     const th = c.photo || c.thumb; const view = th.tagName === 'CANVAS' ? cloneCanvas(th) : th.cloneNode();
     el.append(view, document.createTextNode(c.name));
     el.ondragstart = e => { e.dataTransfer.setData('text/x-garment', String(CATALOG.indexOf(c))); e.dataTransfer.effectAllowed = 'copy'; };
@@ -1512,7 +1614,7 @@ function renderCatalog(){
 }
 function cloneCanvas(c){ const n = mk(c.width, c.height); n.getContext('2d').drawImage(c,0,0); return n; }
 function loadGarmentImage(c){
-  if (!settings.ai || c.loading) return;
+  if (!settings.ai || c.loading || c.photo) return;
   c.loading = aiImage(garmentPhotoPrompt(c.prompt), 512, 512).then(img => {
     const cv = mk(512,512); cv.getContext('2d').drawImage(img,0,0,512,512); c.photo = cv; renderCatalog();
   }).catch(() => {});
@@ -1598,7 +1700,10 @@ function aiDisconnect(silent){
 }
 function drawRemote(){
   octx.save(); if (settings.mirror){ octx.translate(W,0); octx.scale(-1,1); }
-  octx.drawImage(remoteVideo, 0, 0, W, H); octx.restore();
+  octx.drawImage(remoteVideo, 0, 0, W, H);
+  const ts = performance.now();
+  for (const it of effects.items) if (it.enabled && (it.recipe.anchor === 'region' || it.recipe.anchor === 'scene')){ const pl = placeItem(it); if (pl) drawItem(octx, it, pl, ts); }
+  octx.restore();
   drawBadge();
 }
 // Hentikan sesi berbayar kalau halaman ditutup atau lama disembunyikan.
@@ -1628,8 +1733,190 @@ stageEl.addEventListener('drop', e => {
 });
 renderCatalog();
 
+/* ============================================================
+   Tandai area: coret / lingkari bagian video
+   ============================================================ */
+const marks = [];
+const markCanvas = $('#marks'), mctx = markCanvas.getContext('2d');
+let markColor = 'biru', drawing = false, stroke = null;
+function sizeMarks(){ const r = markCanvas.getBoundingClientRect(); markCanvas.width = Math.round(r.width); markCanvas.height = Math.round(r.height); renderMarks(); }
+new ResizeObserver(sizeMarks).observe(markCanvas);
+const toCam = (nx) => settings.mirror ? 1 - nx : nx;     // layar → koordinat kamera
+const toScr = (cx) => settings.mirror ? 1 - cx : cx;
+function renderMarks(){
+  const w = markCanvas.width, h = markCanvas.height; mctx.clearRect(0,0,w,h);
+  mctx.lineCap = 'round'; mctx.lineJoin = 'round';
+  for (const m of [...marks, ...(stroke ? [stroke] : [])]){
+    mctx.strokeStyle = MARK_COLORS[m.color]; mctx.lineWidth = Math.max(3, w/220); mctx.shadowColor = 'rgba(0,0,0,.5)'; mctx.shadowBlur = 4;
+    mctx.beginPath(); m.pts.forEach(([x,y],i) => { const X = toScr(x)*w, Y = y*h; i ? mctx.lineTo(X,Y) : mctx.moveTo(X,Y); }); mctx.stroke();
+    if (m.box && m !== stroke){ mctx.shadowBlur = 0; mctx.fillStyle = MARK_COLORS[m.color]; mctx.font = `700 ${Math.max(11, w/70)}px "Plus Jakarta Sans",sans-serif`;
+      const bx = toScr(settings.mirror ? m.box.x + m.box.w : m.box.x)*w; mctx.fillText(m.color, bx, m.box.y*h - 6); }
+  }
+  mctx.shadowBlur = 0;
+}
+function markBox(pts){
+  let x0=1,y0=1,x1=0,y1=0; for (const [x,y] of pts){ x0=Math.min(x0,x); x1=Math.max(x1,x); y0=Math.min(y0,y); y1=Math.max(y1,y); }
+  return { x:x0, y:y0, w:Math.max(.02,x1-x0), h:Math.max(.02,y1-y0) };
+}
+function addMark(color, pts){
+  const old = marks.findIndex(m => m.color === color); if (old >= 0) marks.splice(old, 1);
+  marks.push({ color, pts, box: markBox(pts) }); renderMarks();
+  toast(`Tanda ${color} dibuat. Sekarang ketik misalnya "di lingkaran ${color} tambahin lampu 3D".`, 5000);
+  $('#cmd').focus();
+}
+function removeMark(color){ const i = marks.findIndex(m => m.color === color); if (i >= 0){ marks.splice(i,1); renderMarks(); } }
+function regionIsBackground(b){
+  if (!bgE || !MW) return true;
+  let s = 0, n = 0;
+  for (let y = Math.floor(b.y*MH); y < Math.min(MH, Math.ceil((b.y+b.h)*MH)); y++)
+    for (let x = Math.floor(b.x*MW); x < Math.min(MW, Math.ceil((b.x+b.w)*MW)); x++){ s += bgE[y*MW+x]; n++; }
+  return n ? s/n > .55 : true;
+}
+const ptFromEvent = e => { const r = markCanvas.getBoundingClientRect(); return [toCam((e.clientX - r.left)/r.width), (e.clientY - r.top)/r.height]; };
+markCanvas.addEventListener('pointerdown', e => { if (!stageEl.classList.contains('drawing')) return; drawing = true; markCanvas.setPointerCapture(e.pointerId); stroke = { color: markColor, pts:[ptFromEvent(e)] }; renderMarks(); });
+markCanvas.addEventListener('pointermove', e => { if (!drawing) return; stroke.pts.push(ptFromEvent(e)); renderMarks(); });
+const endStroke = () => { if (!drawing) return; drawing = false; const s = stroke; stroke = null; if (s.pts.length > 3) addMark(s.color, s.pts); else renderMarks(); stageEl.classList.remove('drawing'); $('#drawBtn').classList.remove('on'); };
+markCanvas.addEventListener('pointerup', endStroke); markCanvas.addEventListener('pointercancel', endStroke);
+$('#drawBtn').onclick = () => { if (!running) return toast('Mulai kamera dulu.'); const on = stageEl.classList.toggle('drawing'); $('#drawBtn').classList.toggle('on', on); if (on) toast(`Lingkari bagian video dengan warna ${markColor}.`); };
+document.querySelectorAll('.swatch').forEach(b => b.onclick = () => { markColor = b.dataset.c; document.querySelectorAll('.swatch').forEach(x => x.classList.toggle('on', x === b)); if (running && !stageEl.classList.contains('drawing')) $('#drawBtn').click(); });
+$('#clearMarks').onclick = () => { marks.length = 0; renderMarks(); };
+$('#mirrorChk').addEventListener('change', renderMarks);
+
+/* ============================================================
+   Suara: ucapkan perintah
+   ============================================================ */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, recMode = null;
+function onVoice(text, final){
+  const pill = $('#listenPill');
+  if (recMode === 'wake'){
+    const m = text.trim().match(/^(?:hei |hai |oke |ok )?(?:kamera|camera)\b[,.]?\s*(.*)$/i);
+    if (!m){ pill.textContent = '🎙️ Dengar terus · awali dengan "kamera…"'; return; }
+    pill.textContent = `🎙️ ${m[1] || '…'}`;
+    if (final && m[1]) runCommand(m[1]);
+    return;
+  }
+  const clean = text.replace(/^(?:hei |hai |oke |ok )?(?:kamera|camera)\b[,.]?\s*/i, '');
+  $('#cmd').value = clean; pill.textContent = `🎙️ ${text}`;
+  if (final){ stopVoice(); runCommand(clean); }
+}
+function startVoice(mode){
+  if (!SR){ toast('Browser ini belum mendukung perintah suara. Pakai Chrome atau Edge.', 5000); $('#wakeChk').checked = false; return; }
+  stopVoice(); recMode = mode;
+  rec = new SR(); rec.lang = 'id-ID'; rec.interimResults = true; rec.continuous = mode === 'wake';
+  rec.onresult = e => { const r = e.results[e.results.length-1]; onVoice(r[0].transcript, r.isFinal); };
+  rec.onerror = e => { if (e.error === 'not-allowed') { toast('Izin mikrofon ditolak.'); $('#wakeChk').checked = false; recMode = null; } };
+  rec.onend = () => { if (recMode === 'wake' && $('#wakeChk').checked) { try { rec.start(); } catch {} } else stopVoice(); };
+  try { rec.start(); } catch {}
+  $('#listenPill').textContent = mode === 'wake' ? '🎙️ Dengar terus · awali dengan "kamera…"' : '🎙️ Mendengarkan…';
+  $('#listenPill').classList.add('show'); $('#micBtn').classList.toggle('on', mode === 'once');
+}
+function stopVoice(){
+  const r = rec; rec = null; const was = recMode; recMode = null;
+  try { r && r.abort(); } catch {}
+  $('#micBtn').classList.remove('on');
+  if ($('#wakeChk').checked && was === 'once') return startVoice('wake');
+  if (!$('#wakeChk').checked) $('#listenPill').classList.remove('show');
+}
+$('#micBtn').onclick = () => recMode === 'once' ? stopVoice() : startVoice('once');
+$('#wakeChk').onchange = e => e.target.checked ? startVoice('wake') : stopVoice();
+
+/* ============================================================
+   Desain baju dengan AI (teks → gambar → edit lagi → pakai)
+   ============================================================ */
+const design = { base:'', edits:[], seeds:[], variants:[], chosen:0 };
+const designText = () => [design.base, ...design.edits].join(', ');
+function designColor(){ for (const t of [...design.edits].reverse().concat(design.base)){ const c = findColor(t); if (c) return c.rgb; } return null; }
+function garmentPreview(desc){
+  const st = garmentStyle({ desc, part:'upper', color: designColor() }), c = mk(512,512), x = c.getContext('2d');
+  x.fillStyle = '#ffffff'; x.fillRect(0,0,512,512);
+  const long = st.sleeves === 'long', none = st.sleeves === 'none';
+  x.beginPath();
+  x.moveTo(196,92); x.quadraticCurveTo(256,140,316,92);                         // kerah
+  x.lineTo(392,118);
+  if (none){ x.lineTo(372,190); } else if (long){ x.lineTo(470,330); x.lineTo(430,352); x.lineTo(372,226); } else { x.lineTo(452,200); x.lineTo(404,238); x.lineTo(372,206); }
+  x.lineTo(376,436); x.lineTo(136,436); x.lineTo(140,none?190:206);
+  if (none){ x.lineTo(120,118); } else if (long){ x.lineTo(82,352); x.lineTo(42,330); x.lineTo(120,118); } else { x.lineTo(108,238); x.lineTo(60,200); x.lineTo(120,118); }
+  x.closePath();
+  x.save(); x.clip(); x.fillStyle = x.createPattern(st.tile, 'repeat'); x.fillRect(0,0,512,512);
+  const g = x.createLinearGradient(0,0,512,0); g.addColorStop(0,'rgba(0,0,0,.18)'); g.addColorStop(.5,'rgba(255,255,255,.08)'); g.addColorStop(1,'rgba(0,0,0,.18)'); x.fillStyle = g; x.fillRect(0,0,512,512);
+  x.restore();
+  x.strokeStyle = 'rgba(0,0,0,.25)'; x.lineWidth = 3; x.stroke();
+  if (/hoodie|tudung/.test(desc)){ x.strokeStyle='rgba(0,0,0,.35)'; x.beginPath(); x.ellipse(256,100,70,40,0,Math.PI,0); x.stroke(); }
+  if (/kerah|polo|kemeja|collar/.test(desc)){ x.fillStyle='rgba(255,255,255,.85)'; x.beginPath(); x.moveTo(206,96); x.lineTo(256,150); x.lineTo(226,160); x.closePath(); x.fill(); x.beginPath(); x.moveTo(306,96); x.lineTo(256,150); x.lineTo(286,160); x.closePath(); x.fill(); }
+  if (/dasi|tie/.test(desc)){ x.fillStyle='#b91c1c'; x.beginPath(); x.moveTo(248,150); x.lineTo(264,150); x.lineTo(272,300); x.lineTo(256,318); x.lineTo(240,300); x.closePath(); x.fill(); }
+  if (/logo|gambar|tulisan|print|sablon|naga/.test(desc)){ x.font='90px "Noto Color Emoji",sans-serif'; x.textAlign='center'; x.fillText(emojiFor(desc) === '✨' ? '⭐' : emojiFor(desc), 256, 300); }
+  return c;
+}
+function renderDesign(){
+  $('#designBox').hidden = !design.base;
+  $('#designPromptView').textContent = design.base ? `Prompt: ${designText()}` : '';
+  const box = $('#variants'); box.innerHTML = '';
+  design.variants.forEach((v, i) => {
+    const el = document.createElement('div'); el.className = 'variant' + (i === design.chosen ? ' on' : '');
+    const sp = document.createElement('span'); sp.textContent = v.ai ? 'AI' : (settings.ai && !v.failed ? 'menunggu AI…' : 'pratinjau');
+    el.append(cloneCanvas(v.canvas), sp); el.onclick = () => { design.chosen = i; renderDesign(); };
+    box.append(el);
+  });
+}
+function generateDesign(){
+  const text = designText(), prompt = garmentPhotoPrompt(text);
+  design.variants = design.seeds.map(seed => ({ canvas: garmentPreview(text), ai:false, seed }));
+  design.chosen = Math.min(design.chosen, design.variants.length-1);
+  renderDesign();
+  if (!settings.ai) return;
+  design.variants.forEach(v => aiImage(prompt, 512, 512, v.seed).then(img => {
+    if (designText() !== text) return;
+    const c = mk(512,512); c.getContext('2d').drawImage(img,0,0,512,512); v.canvas = c; v.ai = true; renderDesign();
+  }).catch(() => { if (designText() === text) { v.failed = true; renderDesign(); $('#designPromptView').textContent = `Prompt: ${text} · gambar AI tidak bisa dihubungi, pakai pratinjau`; } }));
+}
+function startDesign(text){
+  text = text.trim(); if (!text) return;
+  design.base = text; design.edits = []; design.chosen = 0;
+  design.seeds = [Math.floor(Math.random()*1e6), Math.floor(Math.random()*1e6)];
+  generateDesign(); toast(`Membuat desain: ${text}`);
+}
+function editDesign(text){
+  text = text.trim(); if (!text || !design.base) return;
+  design.edits.push(text); generateDesign(); toast(`Desain diedit: ${text}`);
+}
+function useDesign(){
+  const v = design.variants[design.chosen]; if (!v) return;
+  const text = designText();
+  if (aiLive.active) return tryOn({ name: text, prompt: text, icon:'👕', photo: v.canvas });
+  applyAction({ type:'clothing', part: FULL_RE.test(text) ? 'full' : LOWER_RE.test(text) ? 'lower' : 'upper', desc: text, prompt:'', color: designColor(), pattern:'', sleeves: /lengan panjang/.test(text) ? 'long' : /lengan pendek/.test(text) ? 'short' : /tanpa lengan/.test(text) ? 'none' : '', legs:'' });
+  const fx = LOWER_RE.test(text) ? effects.lower : effects.upper;
+  if (fx && v.ai){ const t = mk(200,200); t.getContext('2d').drawImage(v.canvas, 156, 186, 200, 200, 0, 0, 200, 200); fx.tile = t; fx.nominal = 200; fx.ver++; fx.token = null; setStatus(fx,'ok','Desain AI dipakai'); }
+  renderEffects(); toast(`Dipakai: ${text}`);
+}
+function saveDesign(){
+  const v = design.variants[design.chosen]; if (!v) return;
+  const small = mk(256,256); small.getContext('2d').drawImage(v.canvas,0,0,256,256);
+  const item = { cat:'Buatanku', name: design.base.slice(0,22), tag:'AI', icon:'👕', prompt: designText(), photo: v.canvas, thumb: small };
+  CATALOG.unshift(item);
+  const saved = store.get('designs', []); saved.unshift({ name:item.name, prompt:item.prompt, img: small.toDataURL('image/jpeg', .8) }); store.set('designs', saved.slice(0, 12));
+  catTab = 'Buatanku'; renderCatalog(); toast('Desain disimpan di katalog "Buatanku".');
+}
+(store.get('designs', [])).forEach(d => {
+  const img = new Image(); img.src = d.img;
+  const item = { cat:'Buatanku', name:d.name, tag:'AI', icon:'👕', prompt:d.prompt };
+  img.onload = () => { const c = mk(256,256); c.getContext('2d').drawImage(img,0,0,256,256); item.photo = c; item.thumb = c; renderCatalog(); };
+  CATALOG.unshift(item);
+});
+$('#designBtn').onclick = () => startDesign($('#designPrompt').value);
+$('#designPrompt').addEventListener('keydown', e => { if (e.key === 'Enter') startDesign(e.target.value); });
+$('#designEditBtn').onclick = () => { editDesign($('#designEdit').value); $('#designEdit').value = ''; };
+$('#designEdit').addEventListener('keydown', e => { if (e.key === 'Enter'){ editDesign(e.target.value); e.target.value = ''; } });
+$('#designUse').onclick = useDesign;
+$('#designSave').onclick = saveDesign;
+renderCatalog();
+
 resize(); renderEffects(); renderPresets(); updateModeBadge();
-window.__ailive = { aiLive, tryOn, CATALOG, parseCommand, runCommand, applyAction, effects, debug, get pose(){ return pose; }, setPose(l){ pose = l; poseTs = performance.now(); }, get size(){ return [W,H,MW,MH]; } };
+window.__ailive = { simVoice: async (text, ms=70) => {
+    recMode = 'once'; $('#listenPill').classList.add('show'); $('#micBtn').classList.add('on');
+    const w = text.split(' '); for (let i=1;i<=w.length;i++){ onVoice(w.slice(0,i).join(' '), false); await new Promise(r => setTimeout(r, ms*3)); }
+    onVoice(text, true);
+  }, marks, addMark, onVoice, startDesign, editDesign, useDesign, aiLive, tryOn, CATALOG, parseCommand, runCommand, applyAction, effects, debug, get pose(){ return pose; }, setPose(l){ pose = l; poseTs = performance.now(); }, get size(){ return [W,H,MW,MH]; } };
 </script>
 </body>
 </html>
