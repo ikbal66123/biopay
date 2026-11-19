@@ -142,6 +142,21 @@
   </section>
 
   <aside>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0">Perintah</h2>
+        <span class="mode" id="modeBadge">Pemahaman bawaan</span>
+      </div>
+      <form id="cmdForm">
+        <textarea id="cmd" placeholder="Contoh: Tambahkan kaos putih ke saya, pakaikan topi koboi dan kacamata hitam, lalu ganti latar jadi pantai saat senja."></textarea>
+        <div class="row end">
+          <span class="hint" style="margin-right:auto">Enter untuk kirim · Shift+Enter baris baru</span>
+          <button class="btn primary" type="submit" id="sendBtn">Terapkan</button>
+        </div>
+      </form>
+      <div class="chips" id="chips" style="margin-top:12px"></div>
+    </div>
+
     <div class="card" id="vtonCard">
       <div class="row" style="justify-content:space-between;margin-bottom:6px">
         <h2 style="margin:0">AI realistis · Live Try-On</h2>
@@ -168,21 +183,6 @@
       <div class="catalog" id="catalog"></div>
       <input type="file" id="garmentFile" accept="image/*" hidden>
       <p class="hint" style="margin:8px 0 0">Biar paling pas: lepas jaket tebal atau outer dulu, berdiri dengan badan terlihat, cahaya terang.</p>
-    </div>
-
-    <div class="card">
-      <div class="row" style="justify-content:space-between;margin-bottom:12px">
-        <h2 style="margin:0">Perintah</h2>
-        <span class="mode" id="modeBadge">Pemahaman bawaan</span>
-      </div>
-      <form id="cmdForm">
-        <textarea id="cmd" placeholder="Contoh: Tambahkan kaos putih ke saya, pakaikan topi koboi dan kacamata hitam, lalu ganti latar jadi pantai saat senja."></textarea>
-        <div class="row end">
-          <span class="hint" style="margin-right:auto">Enter untuk kirim · Shift+Enter baris baru</span>
-          <button class="btn primary" type="submit" id="sendBtn">Terapkan</button>
-        </div>
-      </form>
-      <div class="chips" id="chips" style="margin-top:12px"></div>
     </div>
 
     <div class="card">
@@ -1238,15 +1238,16 @@ function loop(){
 
   // --- AI: segmentasi, pose, deteksi benda (resolusi kecil) ---
   const t0 = performance.now();
-  const needSeg = segmenter && (up || lo || sc || objs.length || items.some(i => i.recipe.anchor === 'back'));
-  const needPoseNow = poser && (up || lo || items.some(i => i.recipe.anchor !== 'scene'));
+  const needSeg = (segmenter || debug.cat) && (up || lo || sc || objs.length || items.some(i => i.recipe.anchor === 'back'));
+  const needPoseNow = (poser || debug.pose) && (up || lo || items.some(i => i.recipe.anchor !== 'scene'));
   if (needSeg || needPoseNow) segCtx.drawImage(video, 0, 0, MW, MH);
   if (needSeg && frameNo % segEvery === 0){
     const px = segCtx.getImageData(0, 0, MW, MH).data;
-    try { segmenter.segmentForVideo(segCanvas, ts, res => onMask(res, px)); } catch(e){ console.warn(e); }
+    if (debug.cat) onMask({ categoryMask:{} }, px);
+    else try { segmenter.segmentForVideo(segCanvas, ts, res => onMask(res, px)); } catch(e){ console.warn(e); }
   }
-  if (needPoseNow && frameNo % 2 === 0){
-    try { const r = poser.detectForVideo(segCanvas, ts); if (!debug.pose) updatePose(r.landmarks?.[0], ts); } catch(e){ console.warn(e); }
+  if (needPoseNow && !debug.pose && frameNo % 2 === 0){
+    try { const r = poser.detectForVideo(segCanvas, ts); updatePose(r.landmarks?.[0], ts); } catch(e){ console.warn(e); }
   }
   if (detector && objs.length && frameNo % 5 === 0){
     detCtx.drawImage(video, 0, 0, detCanvas.width, detCanvas.height);
@@ -1326,7 +1327,7 @@ function count(ts){
 
 function onMask(res, px){
   const cm = res.categoryMask; if (!cm) return;
-  const a = debug.cat || cm.getAsUint8Array(), n = MW*MH; if (a.length !== n) return;
+  const a = debug.cat || cm.getAsUint8Array(), n = MW*MH; if (!a || a.length !== n) return;
   let cs=0,cn=0,ss=0,sn=0,bs=0,bn=0;
   const k = .55;
   for (let i=0, p=0; i<n; i++, p+=4){
