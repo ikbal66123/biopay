@@ -59,6 +59,20 @@
   .chips{display:flex;flex-wrap:wrap;gap:6px}
   .chip{font-size:12.5px;padding:6px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);text-align:left}
   .chip:hover{border-color:var(--accent-2)}
+  .tabs{display:flex;gap:6px;margin:10px 0}
+  .tab{font-size:12.5px;padding:5px 12px;border-radius:999px;background:transparent;border:1px solid var(--line);color:var(--muted)}
+  .tab.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+  .catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:290px;overflow:auto;padding-right:2px}
+  .garment{position:relative;background:#f4f3f7;border:2px solid transparent;border-radius:12px;padding:6px 6px 4px;cursor:grab;text-align:center;color:#1b1b24;font-size:11.5px;font-weight:600;user-select:none}
+  .garment.on{border-color:var(--accent)}
+  .garment img,.garment canvas{width:100%;aspect-ratio:1;object-fit:contain;display:block;border-radius:8px;pointer-events:none}
+  .garment small{display:block;font-size:9px;letter-spacing:.06em;color:#8a8899;text-align:left}
+  .garment.upload{display:grid;place-items:center;background:var(--surface-2);color:var(--muted);border:2px dashed var(--line);min-height:96px;cursor:pointer}
+  .stage.drop{outline:3px dashed var(--accent);outline-offset:-6px}
+  .ai-pill{position:absolute;left:12px;bottom:12px;font-size:12px;padding:5px 10px;border-radius:999px;background:rgba(10,10,18,.75);border:1px solid var(--line);display:none}
+  .ai-pill.show{display:block}
+  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px}
+  .status-dot.on{background:var(--ok)} .status-dot.wait{background:var(--warn)}
   .mode{font-size:12px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
   .mode.ai{color:#c4b5fd;border-color:rgba(139,92,246,.5)}
 
@@ -115,6 +129,7 @@
   <section class="stage" id="stage">
     <canvas id="out" width="1280" height="720"></canvas>
     <div class="thinking" id="thinking">✦ Memahami perintah…</div>
+    <div class="ai-pill" id="aiPill"></div>
     <div class="overlay" id="overlay">
       <div>
         <h1>Ubah tampilanmu dengan kata-kata</h1>
@@ -127,6 +142,34 @@
   </section>
 
   <aside>
+    <div class="card" id="vtonCard">
+      <div class="row" style="justify-content:space-between;margin-bottom:6px">
+        <h2 style="margin:0">AI realistis · Live Try-On</h2>
+        <span class="hint"><span class="status-dot" id="aiDot"></span><span id="aiState">mati</span></span>
+      </div>
+      <p class="hint" style="margin:0 0 10px">Seret baju ke badanmu. AI di server menggambar ulang videomu supaya bajunya terlihat asli dan ikut bergerak. Butuh kunci API Decart, biayanya dihitung per detik selama tersambung.</p>
+      <div class="grid2">
+        <label class="field">Kunci API Decart
+          <input type="password" id="decartKey" placeholder="kunci dari platform.decart.ai" autocomplete="off">
+        </label>
+        <label class="field">Mesin
+          <select id="aiEngine">
+            <option value="lucy-vton-latest">Coba baju (VTON)</option>
+            <option value="lucy-latest">Ubah apa saja (teks)</option>
+          </select>
+        </label>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="aiStart">Sambungkan AI</button>
+        <button class="btn" id="aiStop" disabled>Selesai</button>
+        <span class="hint" id="aiTimer" style="margin-left:auto"></span>
+      </div>
+      <div class="tabs" id="catTabs"></div>
+      <div class="catalog" id="catalog"></div>
+      <input type="file" id="garmentFile" accept="image/*" hidden>
+      <p class="hint" style="margin:8px 0 0">Biar paling pas: lepas jaket tebal atau outer dulu, berdiri dengan badan terlihat, cahaya terang.</p>
+    </div>
+
     <div class="card">
       <div class="row" style="justify-content:space-between;margin-bottom:12px">
         <h2 style="margin:0">Perintah</h2>
@@ -245,6 +288,7 @@ const store = {
 const settings = {
   quality: store.get('quality', 960), mirror: store.get('mirror', true), ai: store.get('ai', true),
   aiUrl: store.get('aiUrl', DEFAULT_AI_URL), apiKey: store.get('apiKey', ''), llmModel: store.get('llmModel', 'claude-opus-5-5'),
+  decartKey: store.get('decartKey', ''), aiEngine: store.get('aiEngine', 'lucy-vton-latest'),
 };
 
 /* ============================================================
@@ -833,6 +877,7 @@ function applyAction(a){
 let busy = false;
 async function runCommand(text){
   text = text.trim(); if (!text || busy) return;
+  if (aiLive.active){ $('#cmd').value = ''; return aiCommand(text); }
   let actions, unknown = [], reply = '';
   if (settings.apiKey){
     busy = true; $('#thinking').classList.add('show'); $('#sendBtn').disabled = true;
@@ -1177,6 +1222,7 @@ let fpsCount = 0, fpsT = performance.now(), infAvg = 0, segEvery = 1;
 function loop(){
   requestAnimationFrame(loop);
   if (video.readyState < 2) return;
+  if (aiLive.active && aiLive.hasFrame){ drawRemote(); count(performance.now()); return; }
   if (video.currentTime === lastVT) return;      // hanya proses bingkai kamera yang baru
   lastVT = video.currentTime;
   if (resize()) rebuildAll();
@@ -1419,8 +1465,170 @@ $('#startBtn').onclick = async () => {
   await models; renderEffects();
 };
 
+/* ============================================================
+   AI realistis: Live Try-On lewat model video real-time Decart
+   ============================================================ */
+const DECART_SDK = 'https://cdn.jsdelivr.net/npm/@decartai/sdk@0.2.14/+esm';
+const remoteVideo = document.createElement('video'); remoteVideo.muted = true; remoteVideo.playsInline = true;
+const aiLive = { active:false, hasFrame:false, rtc:null, startedAt:0, timer:null, current:null, busy:false };
+const CATALOG = [
+  { cat:'Atasan', name:'Polo', tag:'BASIC', icon:'👕', prompt:'royal blue polo shirt with collar and buttons' },
+  { cat:'Atasan', name:'Kaos', tag:'BASIC', icon:'👕', prompt:'plain blue crew-neck cotton t-shirt' },
+  { cat:'Atasan', name:'Kemeja Batik', tag:'LOKAL', icon:'👔', prompt:'brown Indonesian batik long-sleeve shirt with traditional pattern' },
+  { cat:'Atasan', name:'Jersey Merah', tag:'SPORT', icon:'🎽', prompt:'red football jersey with white details' },
+  { cat:'Atasan', name:'Kaos Pink', tag:'BASIC', icon:'👕', prompt:'pastel pink oversized t-shirt' },
+  { cat:'Atasan', name:'Flanel', tag:'CASUAL', icon:'👔', prompt:'red and black plaid flannel shirt' },
+  { cat:'Outer', name:'Zip Hoodie', tag:'BASIC', icon:'🧥', prompt:'black zip-up hoodie with hood' },
+  { cat:'Outer', name:'Jas Hujan', tag:'BASIC', icon:'🧥', prompt:'bright yellow hooded rain jacket' },
+  { cat:'Outer', name:'Blazer', tag:'FORMAL', icon:'🤵', prompt:'navy blue suit blazer with light blue shirt and blue tie' },
+  { cat:'Outer', name:'Jaket Kulit', tag:'STYLE', icon:'🧥', prompt:'black leather biker jacket' },
+  { cat:'Outer', name:'Jaket Denim', tag:'CASUAL', icon:'🧥', prompt:'light blue denim jacket' },
+  { cat:'Topi', name:'Topi', tag:'BASIC', icon:'🧢', prompt:'black baseball cap' },
+  { cat:'Topi', name:'Beanie', tag:'BASIC', icon:'🧶', prompt:'blue knitted beanie hat' },
+];
+let catTab = 'Semua';
+function garmentPhotoPrompt(p){ return `${p}, product photo of a single garment, front view, flat, centered, isolated on a pure white background, no person, no mannequin`; }
+
+function renderCatalog(){
+  const tabs = $('#catTabs'); tabs.innerHTML = '';
+  ['Semua', ...new Set(CATALOG.map(c => c.cat))].forEach(t => {
+    const b = document.createElement('button'); b.type='button'; b.className = 'tab' + (t===catTab ? ' on' : ''); b.textContent = t;
+    b.onclick = () => { catTab = t; renderCatalog(); }; tabs.append(b);
+  });
+  const box = $('#catalog'); box.innerHTML = '';
+  const up = document.createElement('div'); up.className = 'garment upload'; up.innerHTML = '<div>＋<br>Unggah foto baju</div>';
+  up.onclick = () => $('#garmentFile').click(); box.append(up);
+  CATALOG.filter(c => catTab === 'Semua' || c.cat === catTab).forEach(c => {
+    const el = document.createElement('div'); el.className = 'garment' + (aiLive.current === c ? ' on' : ''); el.draggable = true; el.title = `Seret ke video atau klik: ${c.name}`;
+    const sm = document.createElement('small'); sm.textContent = c.tag; el.append(sm);
+    if (!c.thumb){ c.thumb = emojiCanvas(c.icon); loadGarmentImage(c); }
+    const th = c.photo || c.thumb; const view = th.tagName === 'CANVAS' ? cloneCanvas(th) : th.cloneNode();
+    el.append(view, document.createTextNode(c.name));
+    el.ondragstart = e => { e.dataTransfer.setData('text/x-garment', String(CATALOG.indexOf(c))); e.dataTransfer.effectAllowed = 'copy'; };
+    el.onclick = () => tryOn(c);
+    box.append(el);
+  });
+}
+function cloneCanvas(c){ const n = mk(c.width, c.height); n.getContext('2d').drawImage(c,0,0); return n; }
+function loadGarmentImage(c){
+  if (!settings.ai || c.loading) return;
+  c.loading = aiImage(garmentPhotoPrompt(c.prompt), 512, 512).then(img => {
+    const cv = mk(512,512); cv.getContext('2d').drawImage(img,0,0,512,512); c.photo = cv; renderCatalog();
+  }).catch(() => {});
+}
+const canvasBlob = cv => new Promise(r => { try { cv.toBlob(b => r(b), 'image/jpeg', .92); } catch { r(null); } });
+
+async function tryOn(c, file){
+  if (!running) return toast('Mulai kamera dulu.');
+  const label = file ? 'foto bajumu' : c.name;
+  if (!aiLive.active){ aiLive.pending = { c, file }; return aiConnect(); }
+  if (aiLive.busy) return;
+  aiLive.busy = true; showAiPill('Lagi ganti baju…');
+  try {
+    let image = file || null;
+    if (!image && c){ if (c.loading) await c.loading.catch(()=>{}); if (c.photo) image = await canvasBlob(c.photo); }
+    const prompt = c ? `Wearing ${c.prompt}` : 'Wearing the garment from the reference image';
+    if (settings.aiEngine === 'lucy-vton-latest' && image) await aiLive.rtc.setImage(image, { prompt, enhance:true });
+    else await aiLive.rtc.setPrompt(prompt, { enhance:true });
+    aiLive.current = c || null; renderCatalog();
+    toast(`Dipakai: ${label}`);
+  } catch (e){ console.warn(e); toast(`Gagal ganti baju: ${e.message}`, 5000); }
+  finally { aiLive.busy = false; showAiPill('✦ AI Generated'); }
+}
+async function aiCommand(text){
+  if (/^(kembalikan|lepas|hapus|matikan|copot)\b/i.test(text)){
+    try { await aiLive.rtc.setImage(null, { prompt:'' }); aiLive.current = null; renderCatalog(); toast('Kembali ke baju asli'); } catch(e){ toast(e.message); }
+    return;
+  }
+  if (settings.aiEngine === 'lucy-vton-latest'){
+    const c = { name: text, prompt: text, icon:'👕' };
+    showAiPill('Membuat gambar baju…');
+    c.loading = aiImage(garmentPhotoPrompt(text), 512, 512).then(img => { const cv = mk(512,512); cv.getContext('2d').drawImage(img,0,0,512,512); c.photo = cv; }).catch(() => {});
+    return tryOn(c);
+  }
+  aiLive.busy = true; showAiPill('Lagi mengubah…');
+  try { await aiLive.rtc.setPrompt(text, { enhance:true }); toast(`Diubah: ${text}`); }
+  catch(e){ toast(`Gagal: ${e.message}`, 5000); }
+  finally { aiLive.busy = false; showAiPill('✦ AI Generated'); }
+}
+function showAiPill(t){ const p = $('#aiPill'); p.textContent = t; p.classList.toggle('show', !!t); }
+function setAiState(text, kind){ $('#aiState').textContent = text; $('#aiDot').className = 'status-dot ' + (kind||''); }
+
+async function aiConnect(){
+  if (aiLive.active || aiLive.connecting) return;
+  settings.decartKey = $('#decartKey').value.trim(); store.set('decartKey', settings.decartKey);
+  if (!settings.decartKey){ toast('Isi kunci API Decart dulu (kartu "AI realistis").', 5000); $('#decartKey').focus(); return; }
+  if (!running) return toast('Mulai kamera dulu.');
+  aiLive.connecting = true; $('#aiStart').disabled = true; setAiState('menyambung…', 'wait'); showAiPill('Menyambung ke AI…');
+  try {
+    const sdk = await import(DECART_SDK);
+    const client = sdk.createDecartClient({ apiKey: settings.decartKey });
+    const model = sdk.models.realtime(settings.aiEngine);
+    aiLive.hasFrame = false;
+    const rtc = await client.realtime.connect(stream, {
+      model,
+      onRemoteStream: s => { remoteVideo.srcObject = s; remoteVideo.play().catch(()=>{}); },
+      onCapacityWait: ({ retryAfterMs }) => setAiState(`server penuh, coba lagi ${Math.round(retryAfterMs/1000)} dtk`, 'wait'),
+    });
+    aiLive.rtc = rtc; aiLive.active = true; aiLive.startedAt = Date.now();
+    remoteVideo.onplaying = () => { aiLive.hasFrame = true; };
+    rtc.on('connectionChange', st => setAiState(st === 'generating' || st === 'connected' ? 'tersambung' : st, st === 'generating' || st === 'connected' ? 'on' : 'wait'));
+    rtc.on('sessionEnded', ({ reason }) => {
+      const why = { insufficient_credits:'kredit Decart habis', session_limit:'batas sesi tercapai', policy_violation:'melanggar aturan', moderation_violation:'konten diblokir moderasi' }[reason] || reason;
+      toast(`Sesi AI berakhir: ${why}`, 6000); aiDisconnect(true);
+    });
+    setAiState('tersambung', 'on'); $('#aiStop').disabled = false; showAiPill('✦ AI Generated');
+    aiLive.timer = setInterval(() => { const s = Math.floor((Date.now()-aiLive.startedAt)/1000); $('#aiTimer').textContent = `Sesi ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }, 1000);
+    const p = aiLive.pending; aiLive.pending = null;
+    if (p) tryOn(p.c, p.file);
+  } catch (e){
+    console.error(e);
+    const m = /401|unauthor|invalid api key/i.test(e.message) ? 'kunci API Decart tidak valid' : e.message;
+    toast(`AI realistis gagal tersambung: ${m}`, 7000); setAiState('gagal', ''); showAiPill('');
+    aiLive.pending = null;
+  } finally { aiLive.connecting = false; $('#aiStart').disabled = aiLive.active; }
+}
+function aiDisconnect(silent){
+  try { aiLive.rtc?.disconnect(); } catch {}
+  aiLive.rtc = null; aiLive.active = false; aiLive.hasFrame = false; aiLive.current = null;
+  clearInterval(aiLive.timer); $('#aiTimer').textContent = ''; remoteVideo.srcObject = null;
+  $('#aiStop').disabled = true; $('#aiStart').disabled = false; setAiState('mati', ''); showAiPill(''); renderCatalog();
+  if (!silent) toast('AI realistis dimatikan, biaya berhenti.');
+}
+function drawRemote(){
+  octx.save(); if (settings.mirror){ octx.translate(W,0); octx.scale(-1,1); }
+  octx.drawImage(remoteVideo, 0, 0, W, H); octx.restore();
+  drawBadge();
+}
+// Hentikan sesi berbayar kalau halaman ditutup atau lama disembunyikan.
+let hiddenT;
+document.addEventListener('visibilitychange', () => {
+  clearTimeout(hiddenT);
+  if (document.hidden && aiLive.active) hiddenT = setTimeout(() => { if (document.hidden && aiLive.active){ aiDisconnect(true); } }, 120000);
+});
+window.addEventListener('pagehide', () => { if (aiLive.active) aiDisconnect(true); });
+
+$('#decartKey').value = settings.decartKey; $('#decartKey').onchange = e => { settings.decartKey = e.target.value.trim(); store.set('decartKey', settings.decartKey); };
+$('#aiEngine').value = settings.aiEngine; $('#aiEngine').onchange = e => {
+  settings.aiEngine = e.target.value; store.set('aiEngine', settings.aiEngine);
+  if (aiLive.active){ aiDisconnect(true); aiConnect(); }
+};
+$('#aiStart').onclick = () => aiConnect();
+$('#aiStop').onclick = () => aiDisconnect();
+$('#garmentFile').onchange = e => { const f = e.target.files[0]; if (f) tryOn(null, f); e.target.value = ''; };
+const stageEl = $('#stage');
+stageEl.addEventListener('dragover', e => { e.preventDefault(); stageEl.classList.add('drop'); });
+stageEl.addEventListener('dragleave', () => stageEl.classList.remove('drop'));
+stageEl.addEventListener('drop', e => {
+  e.preventDefault(); stageEl.classList.remove('drop');
+  const f = e.dataTransfer.files?.[0];
+  if (f && f.type.startsWith('image/')) return tryOn(null, f);
+  const i = e.dataTransfer.getData('text/x-garment'); if (i !== '') tryOn(CATALOG[+i]);
+});
+renderCatalog();
+
 resize(); renderEffects(); renderPresets(); updateModeBadge();
-window.__ailive = { parseCommand, runCommand, applyAction, effects, debug, get pose(){ return pose; }, setPose(l){ pose = l; poseTs = performance.now(); }, get size(){ return [W,H,MW,MH]; } };
+window.__ailive = { aiLive, tryOn, CATALOG, parseCommand, runCommand, applyAction, effects, debug, get pose(){ return pose; }, setPose(l){ pose = l; poseTs = performance.now(); }, get size(){ return [W,H,MW,MH]; } };
 </script>
 </body>
 </html>
