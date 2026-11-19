@@ -100,7 +100,7 @@
   .fx-title{font-weight:600;font-size:14px}
   .fx-desc{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
   .fx-status{font-size:11.5px;margin-top:3px}
-  .fx-status.ok{color:var(--ok)} .fx-status.wait{color:var(--warn)} .fx-status.err{color:#fca5a5}
+  .fx-status.ok{color:var(--ok)} .fx-status.wait{color:var(--warn)} .fx-status.err{color:#fca5a5} .fx-status.muted{color:var(--muted)}
   .fx-actions{display:flex;gap:4px}
   .icon-btn{width:30px;height:30px;border-radius:8px;background:transparent;border:1px solid var(--line);display:grid;place-items:center;font-size:13px}
   .icon-btn:hover{border-color:#55557a}
@@ -289,6 +289,7 @@
       <div class="row" style="margin-top:12px;gap:16px">
         <label class="switch"><input type="checkbox" id="mirrorChk" checked> Cermin</label>
         <label class="switch"><input type="checkbox" id="aiChk" checked> Gambar AI (online)</label>
+        <label class="switch" title="Baju dibentuk sebagai model 3D yang mengikuti badan, dengan cahaya dan bayangan"><input type="checkbox" id="g3dChk" checked> Baju 3D</label>
       </div>
       <details style="margin-top:14px">
         <summary>Cara pakai di TikTok, YouTube, dan Zoom</summary>
@@ -344,6 +345,7 @@ const store = {
 const settings = {
   quality: store.get('quality', 960), mirror: store.get('mirror', true), ai: store.get('ai', true),
   aiUrl: store.get('aiUrl', DEFAULT_AI_URL), apiKey: store.get('apiKey', ''), llmModel: store.get('llmModel', 'claude-opus-5-5'),
+  garment3D: store.get('garment3D', true),
   decartKey: store.get('decartKey', ''), aiEngine: store.get('aiEngine', 'lucy-vton-latest'),
 };
 
@@ -770,6 +772,7 @@ function sceneFrame(desc){
    Gambar AI (teks-ke-gambar), dengan cache
    ============================================================ */
 const aiCache = new Map();
+let aiDownUntil = 0;   // jeda percobaan ulang setelah layanan gambar AI gagal
 function aiImage(prompt, w, h, seed){
   const key = `${prompt}|${w}x${h}|${seed ?? ''}`;
   if (aiCache.has(key)) return aiCache.get(key);
@@ -819,14 +822,19 @@ const emojiFor = d => (EMOJI.find(([re]) => re.test(d)) || [0,'✨'])[1];
    ============================================================ */
 function setStatus(fx, kind, text){ fx.status = kind; fx.statusText = text; renderEffects(); }
 function runAI(fx, prompt, w, h, onImage){
-  if (!settings.ai){ setStatus(fx,'ok','Efek cepat aktif (gambar AI mati)'); return; }
+  if (!settings.ai){ setStatus(fx,'ok','Efek bawaan aktif (gambar AI mati)'); return; }
+  if (Date.now() < aiDownUntil){ setStatus(fx,'muted','Efek bawaan aktif · gambar AI sedang tidak tersedia'); return; }
   const token = fx.token = Math.random();
   setStatus(fx,'wait','Efek cepat aktif · membuat gambar AI…');
   aiImage(prompt, w, h).then(img => {
     if (fx.token !== token) return;
     try { onImage(img); fx.ver++; setStatus(fx,'ok','Gambar AI aktif'); }
     catch(e){ setStatus(fx,'err','Gambar AI tidak bisa dibaca, pakai efek cepat'); }
-  }).catch(e => { if (fx.token === token) setStatus(fx,'err',`Gambar AI ${e.message}, pakai efek cepat`); });
+  }).catch(e => {
+    if (Date.now() >= aiDownUntil) toast('Layanan gambar AI sedang tidak bisa dihubungi. Aplikasi tetap jalan dengan efek bawaan.', 5000);
+    aiDownUntil = Date.now() + 180000;
+    if (fx.token === token) setStatus(fx,'muted','Efek bawaan aktif · gambar AI sedang tidak tersedia');
+  });
 }
 const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
@@ -1077,16 +1085,19 @@ function needPose(){
 /* ============================================================
    WebGL: semua efek digabung di kartu grafis
    ============================================================ */
-let gl, prog, U = {}, T = [];
+let gl, prog, U = {}, T = [], has3D = false;
 const TX = { video:0, mask:1, shape:2, up:3, lo:4, scene:5, obj:6, behind:7 };
 const VS = `attribute vec2 aPos; varying vec2 vUv; void main(){ vUv = aPos*.5+.5; gl_Position = vec4(aPos,0.,1.); }`;
 const FS = `precision mediump float;
 varying vec2 vUv;
 uniform sampler2D uVideo,uMask,uShape,uUp,uLo,uScene,uObj,uBehind;
+#ifdef HAS3D
+uniform sampler2D uG3D; uniform float uG3DOn;
+#endif
 uniform vec2 uRes;
 uniform float uHasShape,uUpOn,uLoOn,uSceneMode,uObjOn,uBehOn,uPTk;
 uniform vec3 uTint,uPT;
-uniform float uSpecU,uSpecL,uClMean,uSkMean,uBgMean;
+uniform float uSpecU,uSpecL,uClMean,uSkMean,uBgMean,uSkinCov;
 uniform vec2 uOrgU,uOrgL,uScU,uScL;
 vec3 garment(sampler2D t, vec2 org, vec2 sc, float spec, float lum, float skinFrac){
   vec2 px = vec2(vUv.x*uRes.x, (1.0-vUv.y)*uRes.y);
@@ -1115,7 +1126,7 @@ void main(){
   vec4 shp = uHasShape > .5 ? texture2D(uShape, vUv) : vec4(uUpOn, 0.0, 1.0-uUpOn, 1.0);
   float cover = 0.0;
   if (uUpOn > .5){
-    float skin = sk*shp.g;
+    float skin = sk*shp.g*uSkinCov;
     float a = max(cl*shp.r, skin);
     cover = skin;
     if (a > .02) c = mix(c, garment(uUp, uOrgU, uScU, uSpecU, lum, skin/(a+.001)), smoothstep(.12,.6,a));
@@ -1125,6 +1136,9 @@ void main(){
     float a = max(cl*shp.b, skin);
     if (a > .02) c = mix(c, garment(uLo, uOrgL, uScL, uSpecL, lum, skin/(a+.001)), smoothstep(.12,.6,a));
   }
+#ifdef HAS3D
+  if (uG3DOn > .5){ vec4 g = texture2D(uG3D, vUv); c = c*(1.0-g.a) + g.rgb; }
+#endif
   if (uObjOn > .5){
     vec4 o = texture2D(uObj, vUv);
     float occ = smoothstep(.45,.75,sk)*(1.0-smoothstep(.2,.5,cover));
@@ -1136,7 +1150,8 @@ function initGL(){
   gl = glCanvas.getContext('webgl', { alpha:false, antialias:false, premultipliedAlpha:false, preserveDrawingBuffer:false });
   if (!gl) throw new Error('WebGL tidak tersedia');
   const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
-  prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
+  has3D = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS) >= 9;
+  prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, (has3D ? '#define HAS3D\n' : '') + FS)); gl.linkProgram(prog);
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
   gl.useProgram(prog);
   const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
@@ -1145,8 +1160,8 @@ function initGL(){
   const n = gl.getProgramParameter(prog, gl.ACTIVE_UNIFORMS);
   for (let i=0;i<n;i++){ const info = gl.getActiveUniform(prog, i); U[info.name] = gl.getUniformLocation(prog, info.name); }
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-  const names = ['uVideo','uMask','uShape','uUp','uLo','uScene','uObj','uBehind'];
-  for (let i=0;i<8;i++){
+  const names = ['uVideo','uMask','uShape','uUp','uLo','uScene','uObj','uBehind','uG3D'];
+  for (let i=0;i<(has3D ? 9 : 8);i++){
     T[i] = gl.createTexture(); gl.activeTexture(gl.TEXTURE0+i); gl.bindTexture(gl.TEXTURE_2D, T[i]);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -1197,7 +1212,9 @@ function rebuildAll(){ const r = currentRecipes(); applyAction({ type:'reset' })
 /* ============================================================
    Pose: titik tubuh (dinormalisasi 0..1), dihaluskan
    ============================================================ */
-function updatePose(lms, ts){
+let poseW = null;
+function updatePose(lms, ts, world){
+  if (world){ if (!poseW) poseW = world.map(l => ({ x:l.x, y:l.y, z:l.z })); else world.forEach((l,i) => { const p = poseW[i]; p.x += (l.x-p.x)*.5; p.y += (l.y-p.y)*.5; p.z += (l.z-p.z)*.5; }); }
   if (!lms){ if (pose && ts - poseTs > 900){ pose = null; renderEffects(); } return; }
   const had = !!pose;
   if (!pose) pose = lms.map(l => ({ x:l.x, y:l.y, v:l.visibility ?? 1 }));
@@ -1343,7 +1360,7 @@ function loop(){
     else try { segmenter.segmentForVideo(segCanvas, ts, res => onMask(res, px)); } catch(e){ console.warn(e); }
   }
   if (needPoseNow && !debug.pose && frameNo % 2 === 0){
-    try { const r = poser.detectForVideo(segCanvas, ts); updatePose(r.landmarks?.[0], ts); } catch(e){ console.warn(e); }
+    try { const r = poser.detectForVideo(segCanvas, ts); updatePose(r.landmarks?.[0], ts, r.worldLandmarks?.[0]); } catch(e){ console.warn(e); }
   }
   if (detector && objs.length && frameNo % 5 === 0){
     detCtx.drawImage(video, 0, 0, detCanvas.width, detCanvas.height);
@@ -1380,6 +1397,11 @@ function loop(){
   gl.uniform1f(U.uClMean, clMean); gl.uniform1f(U.uSkMean, skMean); gl.uniform1f(U.uBgMean, bgMean);
   setGarment(up, 'U', TX.up, 11, 12);
   setGarment(lo, 'L', TX.lo, 23, 24);
+  let g3 = 0;
+  if (has3D && up && settings.garment3D && hasShape){ if (g3d.ready) g3 = render3D(up, ts) ? 1 : 0; else load3D(); }
+  if (has3D) gl.uniform1f(U.uG3DOn, g3);
+  gl.uniform1f(U.uSkinCov, g3 ? 0 : 1);   // model 3D sudah menutup kulit; lapisan 2D hanya mewarnai baju lama di sekitarnya
+  if (g3) upload(8, g3d.canvas);
   if (sc){
     gl.uniform1f(U.uSceneMode, sc.mode === 'tint' ? 1 : sc.mode === 'texture' ? 2 : 3);
     gl.uniform3fv(U.uTint, sc.color || [1,1,1]);
@@ -1476,6 +1498,170 @@ function drawBadge(){
 }
 
 /* ============================================================
+   Baju 3D: model 3D yang dibentuk ulang tiap bingkai dari titik tubuh
+   ============================================================ */
+const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+const g3d = { ready:false, loading:null, canvas: document.createElement('canvas'), key:'', hem:null };
+function load3D(){
+  if (g3d.loading) return;
+  g3d.loading = import(THREE_URL).then(T => {
+    g3d.T = T;
+    g3d.renderer = new T.WebGLRenderer({ canvas: g3d.canvas, alpha:true, antialias:true, premultipliedAlpha:false, preserveDrawingBuffer:true });
+    g3d.renderer.setClearColor(0x000000, 0);
+    g3d.renderer.outputColorSpace = T.SRGBColorSpace;
+    g3d.scene = new T.Scene();
+    g3d.hemi = new T.HemisphereLight(0xffffff, 0x404048, 1.6); g3d.scene.add(g3d.hemi);
+    g3d.sun = new T.DirectionalLight(0xffffff, 2.2); g3d.scene.add(g3d.sun); g3d.scene.add(g3d.sun.target);
+    g3d.occMat = new T.MeshBasicMaterial({ colorWrite:false });
+    g3d.ready = true;
+  }).catch(e => { console.warn(e); toast('Mesin 3D gagal dimuat, baju memakai mode 2D.'); settings.garment3D = false; });
+}
+// Tabung: R cincin × (S+1) titik, uv u keliling (0.5 = depan), v sepanjang tabung.
+function tubeGeometry(R, S){
+  const T = g3d.T, g = new T.BufferGeometry(), pos = new Float32Array(R*(S+1)*3), uv = new Float32Array(R*(S+1)*2), idx = [];
+  for (let r=0;r<R;r++) for (let s=0;s<=S;s++){ const i = r*(S+1)+s; uv[i*2] = s/S; uv[i*2+1] = 1 - r/(R-1); }
+  for (let r=0;r<R-1;r++) for (let s=0;s<S;s++){ const a = r*(S+1)+s, b = a+S+1; idx.push(a,b,a+1, b,b+1,a+1); }
+  g.setAttribute('position', new T.BufferAttribute(pos,3)); g.setAttribute('uv', new T.BufferAttribute(uv,2)); g.setIndex(idx);
+  g.userData = { R, S }; return g;
+}
+const v3 = { sub:(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]], add:(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]], mul:(a,k)=>[a[0]*k,a[1]*k,a[2]*k],
+  dot:(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2], cross:(a,b)=>[a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]],
+  norm:a=>{ const l=Math.hypot(a[0],a[1],a[2])||1; return [a[0]/l,a[1]/l,a[2]/l]; }, lerp:(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t] };
+// titik tubuh dalam piksel (y ke bawah, z ke arah kamera)
+function J(i, ppm){ const z = poseW ? -poseW[i].z*ppm : 0; return [pose[i].x*W, pose[i].y*H, z]; }
+function writeRing(g, r, c, X, Z, rx, rz){
+  const { S } = g.userData, a = g.attributes.position.array;
+  for (let s=0;s<=S;s++){ const th = (s/S - .5)*Math.PI*2 + Math.PI/2, cx = Math.cos(th)*rx, sz = Math.sin(th)*rz, i = (r*(S+1)+s)*3;
+    a[i] = c[0]+X[0]*cx+Z[0]*sz; a[i+1] = -(c[1]+X[1]*cx+Z[1]*sz); a[i+2] = c[2]+X[2]*cx+Z[2]*sz; }
+}
+function writeLimb(g, path, radii){
+  // path: titik-titik (≥2); cincin dibagi rata sepanjang path
+  const { R } = g.userData, L = [0]; for (let i=1;i<path.length;i++) L.push(L[i-1] + Math.hypot(...v3.sub(path[i], path[i-1])));
+  const total = L[L.length-1] || 1;
+  for (let r=0;r<R;r++){
+    const d = r/(R-1)*total; let k = 1; while (k < path.length-1 && L[k] < d) k++;
+    const t = Math.min(1, (d - L[k-1]) / ((L[k]-L[k-1]) || 1)), c = v3.lerp(path[k-1], path[k], t);
+    const Tg = v3.norm(v3.sub(path[k], path[k-1])); let N = v3.cross(Tg, [0,0,1]); if (Math.hypot(...N) < .1) N = v3.cross(Tg, [1,0,0]); N = v3.norm(N);
+    let B = v3.norm(v3.cross(Tg, N)); if (B[2] < 0) B = v3.mul(B, -1);
+    const rad = radii[0] + (radii[1]-radii[0]) * (d/total);
+    writeRing(g, r, c, N, B, rad, rad);
+  }
+}
+function garmentTexture(fx, details){
+  const c = mk(1024, 512), x = c.getContext('2d');
+  x.fillStyle = x.createPattern(fx.tile, 'repeat'); x.save(); x.scale(1.6, 1.6); x.fillRect(0,0,1024,512); x.restore();
+  if (!details) return c;
+  const d = fx.desc, dark = 'rgba(0,0,0,.35)', light = 'rgba(255,255,255,.55)';
+  x.fillStyle = 'rgba(0,0,0,.18)'; x.fillRect(0, 490, 1024, 22);                                    // keliman bawah
+  if (/jaket|hoodie|zip|jacket|parka|jas hujan|bomber|windbreaker/.test(d)){                          // ritsleting
+    x.fillStyle = dark; x.fillRect(508, 30, 8, 482); x.fillStyle = 'rgba(200,200,205,.9)'; for (let y=34;y<512;y+=10) x.fillRect(506, y, 12, 3);
+  } else if (/kemeja|polo|blazer|\bjas\b|seragam|shirt|cardigan|kardigan/.test(d)){                   // kancing
+    x.fillStyle = 'rgba(0,0,0,.12)'; x.fillRect(500, 20, 24, 492);
+    x.fillStyle = light; for (let y=70;y<480;y+=70){ x.beginPath(); x.arc(512, y, 7, 0, 7); x.fill(); }
+  }
+  if (/blazer|\bjas\b|tuksedo|suit/.test(d)){ x.fillStyle = 'rgba(0,0,0,.28)'; x.beginPath(); x.moveTo(430,0); x.lineTo(512,190); x.lineTo(594,0); x.closePath(); x.fill();
+    x.fillStyle = '#eef2f7'; x.beginPath(); x.moveTo(470,0); x.lineTo(512,150); x.lineTo(554,0); x.closePath(); x.fill(); }
+  if (/dasi|tie/.test(d)){ x.fillStyle = '#1d4ed8'; x.beginPath(); x.moveTo(504,20); x.lineTo(520,20); x.lineTo(530,250); x.lineTo(512,275); x.lineTo(494,250); x.closePath(); x.fill(); }
+  if (/logo|gambar|tulisan|print|sablon|naga|motif /.test(d)){ x.font = '110px "Noto Color Emoji","Segoe UI Emoji","Apple Color Emoji",sans-serif'; x.textAlign = 'center'; x.fillText(emojiFor(d) === '✨' ? '⭐' : emojiFor(d), 512, 230); }
+  return c;
+}
+function build3D(fx){
+  const T = g3d.T, sc = g3d.scene;
+  if (g3d.group){ sc.remove(g3d.group); g3d.group.traverse(o => { o.geometry?.dispose(); o.material?.map?.dispose?.(); }); }
+  const grp = new T.Group(); g3d.group = grp; sc.add(grp);
+  const collar = /jaket|kemeja|polo|blazer|\bjas\b|seragam|jacket|coat|mantel|kebaya/.test(fx.desc);
+  const rough = fx.spec > .8 ? .32 : fx.spec > .5 ? .5 : .85;
+  const mkMat = (canvas) => { const t = new T.CanvasTexture(canvas); t.colorSpace = T.SRGBColorSpace; t.wrapS = T.RepeatWrapping; t.anisotropy = 4;
+    return new T.MeshStandardMaterial({ map:t, roughness:rough, metalness:0, side:T.DoubleSide }); };
+  const body = mkMat(garmentTexture(fx, true)), sleeveMat = mkMat(garmentTexture(fx, false));
+  g3d.collar = collar; g3d.torsoRings = collar ? 12 : 11;
+  g3d.torso = new T.Mesh(tubeGeometry(g3d.torsoRings, 40), body); grp.add(g3d.torso);
+  g3d.sleeves = fx.sleeves === 'none' ? [] : [0,1].map(() => { const m = new T.Mesh(tubeGeometry(fx.sleeves === 'long' ? 14 : 7, 20), sleeveMat); grp.add(m); return m; });
+  g3d.hood = null;
+  if (/hoodie|tudung|hood/.test(fx.desc)){ g3d.hood = new T.Mesh(new T.SphereGeometry(1, 28, 18, 0, Math.PI*2, 0, Math.PI*.62), sleeveMat); grp.add(g3d.hood); }
+  // penghalang tak terlihat: kepala, tangan, lengan bawah (kalau lengan baju pendek)
+  const occ = (geo) => { const m = new T.Mesh(geo, g3d.occMat); m.renderOrder = -1; grp.add(m); return m; };
+  g3d.headOcc = occ(new T.SphereGeometry(1, 20, 14));
+  g3d.handOcc = [0,1].map(() => occ(new T.SphereGeometry(1, 14, 10)));
+  g3d.armOcc = fx.sleeves === 'long' ? [] : [0,1].map(() => occ(tubeGeometry(6, 12)));
+  g3d.hem = null;
+}
+function render3D(fx, ts){
+  const T = g3d.T;
+  if (!pose || !vis(11) || !vis(12)) return false;
+  if (g3d.canvas.width !== W || g3d.canvas.height !== H){
+    g3d.renderer.setSize(W, H, false);
+    g3d.camera = new T.OrthographicCamera(0, W, 0, -H, -20000, 20000); g3d.camera.position.z = 8000;
+  }
+  const key = `${fx.id}:${fx.ver}`; if (g3d.key !== key){ build3D(fx); g3d.key = key; }
+  // skala piksel per meter dari lebar bahu
+  const swPx = Math.hypot(pose[11].x*W - pose[12].x*W, pose[11].y*H - pose[12].y*H);
+  const ppm = poseW ? swPx / (Math.hypot(poseW[11].x-poseW[12].x, poseW[11].y-poseW[12].y) || .35) : 0;
+  const ls = J(11,ppm), rs = J(12,ppm), sw = Math.hypot(...v3.sub(ls, rs));
+  const X = v3.norm(v3.sub(ls, rs)), shMid = v3.lerp(ls, rs, .5);
+  const hipsVis = vis(23) && vis(24);
+  let hipMid, hipW;
+  if (hipsVis){ const lh = J(23,ppm), rh = J(24,ppm); hipMid = v3.lerp(lh, rh, .5); hipW = Math.hypot(...v3.sub(lh, rh)); }
+  else { hipMid = v3.add(shMid, v3.mul([-X[1], X[0], 0], sw*1.35)); hipW = sw*.75; }
+  let Yd = v3.norm(v3.sub(hipMid, shMid)); Yd = v3.norm(v3.sub(Yd, v3.mul(X, v3.dot(Yd, X))));
+  let Z = v3.norm(v3.cross(X, Yd)); if (Z[2] < 0) Z = v3.mul(Z, -1);
+  const len = Math.hypot(...v3.sub(hipMid, shMid));
+  // ujung bawah baju sedikit tertinggal saat bergerak (kesan kain)
+  const hemTarget = v3.add(hipMid, v3.mul(Yd, len*.06));
+  g3d.hem = g3d.hem ? v3.lerp(g3d.hem, hemTarget, .35) : hemTarget;
+  const tg = g3d.torso.geometry; let r = 0;
+  const ring = (c, rx, rz) => writeRing(tg, r++, c, X, Z, rx, rz);
+  const neckC = v3.add(v3.add(shMid, v3.mul(Yd, -sw*.09)), v3.mul(Z, -sw*.04));
+  if (g3d.collar) ring(v3.add(neckC, v3.mul(Yd, -sw*.07)), sw*.25, sw*.2);
+  ring(neckC, sw*.21, sw*.17);
+  ring(v3.add(shMid, v3.mul(Yd, -sw*.02)), sw*.5, sw*.22);
+  const prof = [[.06,.58,.25],[.18,.58,.27],[.32,.56,.27],[.46,.53,.26],[.6,.51,.25],[.74,.5,.24],[.87,.5,.24]];
+  for (const [t, kx, kz] of prof){ const c = v3.lerp(shMid, hipMid, t), wq = Math.max(sw*kx, (hipW*.62)*(t)); ring(c, wq, sw*kz); }
+  ring(v3.lerp(hipMid, g3d.hem, .5), Math.max(sw*.5, hipW*.62), sw*.24);
+  ring(g3d.hem, Math.max(sw*.51, hipW*.64), sw*.245);
+  tg.attributes.position.needsUpdate = true; tg.computeVertexNormals(); tg.computeBoundingSphere();
+  // lengan
+  const sleevePath = (s, e, w) => {
+    const S0 = v3.add(s, v3.mul(v3.norm(v3.sub(s, shMid)), -sw*.06)), E = vis(e) ? J(e,ppm) : null, Wr = vis(w) ? J(w,ppm) : null;
+    if (!E) return null;
+    if (fx.sleeves === 'short') return [S0, v3.lerp(s, E, .55)];
+    return Wr ? [S0, E, v3.lerp(E, Wr, .9)] : [S0, E];
+  };
+  [[ls,13,15],[rs,14,16]].forEach(([s,e,w], i) => {
+    const m = g3d.sleeves[i]; if (!m) return;
+    const path = sleevePath(s, e, w); m.visible = !!path; if (!path) return;
+    writeLimb(m.geometry, path, fx.sleeves === 'short' ? [sw*.2, sw*.17] : [sw*.19, sw*.13]);
+    m.geometry.attributes.position.needsUpdate = true; m.geometry.computeVertexNormals(); m.geometry.computeBoundingSphere();
+  });
+  // tudung hoodie di belakang leher
+  if (g3d.hood){
+    const c = v3.add(v3.add(neckC, v3.mul(Z, -sw*.2)), v3.mul(Yd, -sw*.16));
+    g3d.hood.position.set(c[0], -c[1], c[2]); g3d.hood.scale.set(sw*.36, sw*.3, sw*.24);
+    g3d.hood.rotation.set(Math.PI*.55, 0, -Math.atan2(X[1], X[0]));
+  }
+  // penghalang
+  const nose = J(0,ppm), headW = (vis(7)&&vis(8)) ? Math.hypot(pose[7].x*W-pose[8].x*W, pose[7].y*H-pose[8].y*H) : sw*.45;
+  g3d.headOcc.position.set(nose[0], -(nose[1]+headW*.05), nose[2] - headW*.25); g3d.headOcc.scale.setScalar(headW*.62);
+  [[15,19],[16,20]].forEach(([w, ix], i) => {
+    const o = g3d.handOcc[i]; o.visible = vis(w); if (!o.visible) return;
+    const a = J(w,ppm), b = vis(ix) ? J(ix,ppm) : a, c = v3.lerp(a, b, .5);
+    o.position.set(c[0], -c[1], c[2] + sw*.08); o.scale.setScalar(sw*.15);
+  });
+  [[13,15],[14,16]].forEach(([e, w], i) => {
+    const o = g3d.armOcc[i]; if (!o) return; o.visible = vis(e) && vis(w); if (!o.visible) return;
+    const A = J(e,ppm), B = J(w,ppm);
+    writeLimb(o.geometry, [v3.add(A,[0,0,sw*.05]), v3.add(B,[0,0,sw*.05])], [sw*.11, sw*.09]);
+    o.geometry.attributes.position.needsUpdate = true; o.geometry.computeBoundingSphere();
+  });
+  // cahaya mengikuti terang ruangan
+  const k = Math.max(.55, Math.min(1.35, (bgMean*.6 + skMean*.4) / .5));
+  g3d.hemi.intensity = 1.5*k; g3d.sun.intensity = 2.1*k;
+  g3d.sun.position.set(W*.35, H*.2 + 400, 3000); g3d.sun.target.position.set(W*.5, -H*.5, 0);
+  g3d.renderer.render(g3d.scene, g3d.camera);
+  return true;
+}
+
+/* ============================================================
    Siaran: jendela keluaran & rekam
    ============================================================ */
 let outStream = null, popup = null, recorder = null, chunks = [];
@@ -1538,6 +1724,7 @@ $('#cmd').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKe
 $('#resetBtn').onclick = () => { applyAction({ type:'reset' }); renderEffects(); toast('Semua efek dimatikan'); };
 $('#savePreset').onclick = () => { const n = $('#presetName').value.trim(); if (!n) return toast('Isi nama preset dulu.'); if (!currentRecipes().length) return toast('Belum ada efek untuk disimpan.'); savePreset(n); $('#presetName').value=''; toast(`Preset "${n}" disimpan`); };
 $('#mirrorChk').checked = settings.mirror; $('#mirrorChk').onchange = e => { settings.mirror = e.target.checked; store.set('mirror', settings.mirror); };
+$('#g3dChk').checked = settings.garment3D; $('#g3dChk').onchange = e => { settings.garment3D = e.target.checked; store.set('garment3D', settings.garment3D); if (settings.garment3D) load3D(); };
 $('#aiChk').checked = settings.ai; $('#aiChk').onchange = e => { settings.ai = e.target.checked; store.set('ai', settings.ai); };
 $('#qSel').value = String(settings.quality); $('#qSel').onchange = e => { settings.quality = +e.target.value; store.set('quality', settings.quality); };
 $('#aiUrl').value = settings.aiUrl; $('#aiUrl').onchange = e => { settings.aiUrl = e.target.value.trim() || DEFAULT_AI_URL; e.target.value = settings.aiUrl; store.set('aiUrl', settings.aiUrl); };
