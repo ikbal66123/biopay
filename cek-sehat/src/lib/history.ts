@@ -108,6 +108,38 @@ export function clearEntries() {
   save([]);
 }
 
+const LEVELS = ['normal', 'perhatian', 'bahaya'];
+const fin = (v: unknown, lo: number, hi: number) => typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi;
+
+/** Is this a well-formed entry (e.g. read from a backup file)? */
+export function isEntry(x: unknown): x is Entry {
+  const e = x as Record<string, unknown>;
+  if (!e || typeof e !== 'object' || typeof e.id !== 'string' || !e.id || !fin(e.time, 0, 8.64e15)) return false;
+  if (typeof e.label !== 'string' || !LEVELS.includes(e.level as string)) return false;
+  switch (e.type) {
+    case 'detak':
+      return fin(e.bpm, 20, 300) && ['kamera', 'manual'].includes(e.source as string);
+    case 'tekanan':
+      return fin(e.sys, 40, 320) && fin(e.dia, 20, 220);
+    case 'gula':
+      return fin(e.mgdl, 10, 1000) && ['puasa', 'sewaktu', '2jam'].includes(e.timing as string);
+    case 'berat':
+      return fin(e.weightKg, 1, 400) && fin(e.heightCm, 30, 260) && fin(e.bmi, 1, 200);
+    case 'suhu':
+      return fin(e.celsius, 25, 46);
+    default:
+      return false;
+  }
+}
+
+/** Add entries from a backup. Entries already present (same id) are skipped. Returns how many were added. */
+export function mergeEntries(incoming: unknown[]): number {
+  const have = new Set(loadEntries().map((e) => e.id));
+  const fresh = incoming.filter(isEntry).filter((e) => !have.has(e.id));
+  if (fresh.length) save([...loadEntries(), ...fresh]);
+  return fresh.length;
+}
+
 export function subscribe(fn: () => void): () => void {
   listeners.add(fn);
   return () => listeners.delete(fn);

@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { Notice } from '../components/Bits';
+import { makeBackup, parseBackup, restoreBackup, type ParsedBackup } from '../lib/backup';
 import Disclaimer from '../components/Disclaimer';
 import { IconDownload, IconTrash } from '../components/Icons';
 import PageHeader from '../components/PageHeader';
@@ -37,6 +39,103 @@ const CHART_INFO: Record<ChartType, { names: string[]; unit: string; note: strin
   berat: { names: ['Berat badan'], unit: 'kg', note: '' },
 };
 
+const today = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+function downloadFile(name: string, content: string, type: string) {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/** Save all data to a file, or restore it on a new phone / new app address. */
+function BackupCard() {
+  const [pending, setPending] = useState<Extract<ParsedBackup, { ok: true }> | null>(null);
+  const [msg, setMsg] = useState<{ tone: 'ok' | 'warn'; text: string } | null>(null);
+
+  return (
+    <section className="card space-y-3">
+      <div>
+        <h2 className="text-lg font-bold">Cadangkan data</h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          Simpan semua riwayat dan catatan makan ke satu file. Pakai saat ganti HP atau ganti alamat aplikasi. API key tidak ikut
+          tersimpan.
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          className="btn-primary"
+          onClick={() => {
+            downloadFile(`cadangan-cek-sehat-${today()}.json`, JSON.stringify(makeBackup()), 'application/json');
+            setMsg({ tone: 'ok', text: 'File cadangan tersimpan di folder Download. Simpan di tempat aman (misalnya Google Drive).' });
+          }}
+        >
+          <IconDownload width={18} height={18} /> Simpan cadangan
+        </button>
+        <label className="btn-secondary cursor-pointer">
+          Pulihkan
+          <input
+            type="file"
+            accept="application/json,.json"
+            className="sr-only"
+            onChange={async (e) => {
+              const f = e.target.files?.[0];
+              e.target.value = '';
+              if (!f) return;
+              setMsg(null);
+              const p = parseBackup(await f.text().catch(() => ''));
+              if (!p.ok) {
+                setPending(null);
+                setMsg({ tone: 'warn', text: p.error });
+                return;
+              }
+              setPending(p);
+            }}
+          />
+        </label>
+      </div>
+      {pending && (
+        <div className="rounded-2xl border border-teal-300 bg-teal-50 p-3 text-[15px] dark:border-teal-800 dark:bg-teal-950/40">
+          <p>
+            File berisi <b>{pending.history.length}</b> hasil pengukuran dan <b>{pending.meals.length}</b> catatan makan
+            {pending.exportedAt && <> (dibuat {new Date(pending.exportedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })})</>}.
+            Data yang sudah ada di HP ini tidak akan terhapus.
+          </p>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <button className="btn-secondary" onClick={() => setPending(null)}>
+              Batal
+            </button>
+            <button
+              className="btn-primary"
+              onClick={() => {
+                const r = restoreBackup(pending);
+                setPending(null);
+                setMsg({
+                  tone: 'ok',
+                  text:
+                    r.history + r.meals === 0
+                      ? 'Semua data di file ini sudah ada di HP ini.'
+                      : `Berhasil: ${r.history} hasil pengukuran dan ${r.meals} catatan makan dipulihkan.`,
+                });
+              }}
+            >
+              Pulihkan
+            </button>
+          </div>
+        </div>
+      )}
+      {msg && <Notice tone={msg.tone}>{msg.text}</Notice>}
+    </section>
+  );
+}
+
 export default function HistoryPage() {
   const entries = useHistory();
   const [type, setType] = useState<ChartType>('detak');
@@ -66,19 +165,7 @@ export default function HistoryPage() {
       ? `Area hijau: ${fmtDec(band.from)}–${fmtDec(band.to)} kg, berat normal (IMT 18,5–25) untuk tinggi badan terakhir.`
       : info.note;
 
-  const exportCsv = () => {
-    const blob = new Blob([toCsv(entries)], { type: 'text/csv;charset=utf-8' });
-    const d = new Date();
-    const name = `riwayat-cek-sehat-${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}.csv`;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  };
+  const exportCsv = () => downloadFile(`riwayat-cek-sehat-${today()}.csv`, toCsv(entries), 'text/csv;charset=utf-8');
 
   return (
     <div className="space-y-4">
@@ -184,6 +271,8 @@ export default function HistoryPage() {
           </>
         )}
       </section>
+
+      <BackupCard />
 
       <Disclaimer>Riwayat ini membantu dokter melihat pola, bukan untuk mendiagnosis sendiri.</Disclaimer>
 

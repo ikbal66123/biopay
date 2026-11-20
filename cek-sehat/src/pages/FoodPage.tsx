@@ -1,11 +1,12 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useSyncExternalStore } from 'react';
 import { AiConsent, Notice, Spinner } from '../components/Bits';
 import Disclaimer from '../components/Disclaimer';
 import PageHeader from '../components/PageHeader';
-import { IconCamera } from '../components/Icons';
+import { IconCamera, IconCheck, IconTrash } from '../components/Icons';
+import { addMeal, deleteMeal, loadMeals, mealsOn, subscribeMeals, totals } from '../lib/foodLog';
 import { AiError, analyzeFoodPhoto, getApiKey, hasAiConsent, looksLikeApiKey, resizeImage, setAiConsent, setApiKey } from '../lib/ai/client';
 import type { MakananResult } from '../lib/ai/schemas';
-import { limitUse, scale, shareWords } from '../lib/nutrition';
+import { limitUse, scale, shareWords, type PerPorsi } from '../lib/nutrition';
 import { readPref, writePref } from '../lib/prefs';
 
 const CONDITIONS = ['Darah tinggi', 'Diabetes', 'Penyakit jantung', 'Kolesterol tinggi', 'Hamil', 'Sedang demam'];
@@ -38,6 +39,7 @@ export default function FoodPage() {
   const [showSettings, setShowSettings] = useState(false);
   const [r, setR] = useState<MakananResult | null>(null);
   const [portion, setPortion] = useState(1);
+  const [saved, setSaved] = useState(false);
   const resultRef = useRef<HTMLElement>(null);
 
   const analyze = async (dataUrl: string) => {
@@ -60,6 +62,20 @@ export default function FoodPage() {
     }
   };
 
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    e.target.value = '';
+    if (!f) return;
+    const d = await resizeImage(f).catch(() => null);
+    if (!d) {
+      setError('Foto tidak bisa dibuka. Coba foto lain.');
+      return;
+    }
+    setPhoto(d);
+    setSaved(false);
+    void analyze(d);
+  };
+
   const n = r ? scale(r.per_porsi, portion) : null;
 
   return (
@@ -76,27 +92,16 @@ export default function FoodPage() {
       ) : (
         <section className="card space-y-3">
           {photo && <img src={photo} alt="Foto makanan" className="max-h-60 w-full rounded-xl object-cover" />}
-          <label className={`btn-primary w-full cursor-pointer ${busy ? 'pointer-events-none opacity-50' : ''}`}>
-            <IconCamera width={20} height={20} /> {photo ? 'Foto ulang' : 'Foto makanan'}
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              className="sr-only"
-              onChange={async (e) => {
-                const f = e.target.files?.[0];
-                e.target.value = '';
-                if (!f) return;
-                const d = await resizeImage(f).catch(() => null);
-                if (!d) {
-                  setError('Foto tidak bisa dibuka. Coba foto lain.');
-                  return;
-                }
-                setPhoto(d);
-                void analyze(d);
-              }}
-            />
-          </label>
+          <div className="grid grid-cols-2 gap-2">
+            <label className={`btn-primary cursor-pointer ${busy ? 'pointer-events-none opacity-50' : ''}`}>
+              <IconCamera width={20} height={20} /> {photo ? 'Foto ulang' : 'Kamera'}
+              <input type="file" accept="image/*" capture="environment" className="sr-only" onChange={onFile} />
+            </label>
+            <label className={`btn-secondary cursor-pointer ${busy ? 'pointer-events-none opacity-50' : ''}`}>
+              Dari galeri
+              <input type="file" accept="image/*" className="sr-only" onChange={onFile} />
+            </label>
+          </div>
           <fieldset>
             <legend className="label">Kondisi Anda (opsional, agar saran menyesuaikan)</legend>
             <div className="flex flex-wrap gap-2">
@@ -155,7 +160,15 @@ export default function FoodPage() {
             <legend className="label">Porsi yang Anda makan</legend>
             <div className="flex flex-wrap gap-2">
               {PORTIONS.map((p) => (
-                <button key={p.v} className={`chip ${portion === p.v ? 'chip-on' : ''}`} aria-pressed={portion === p.v} onClick={() => setPortion(p.v)}>
+                <button
+                  key={p.v}
+                  className={`chip ${portion === p.v ? 'chip-on' : ''}`}
+                  aria-pressed={portion === p.v}
+                  onClick={() => {
+                    setPortion(p.v);
+                    setSaved(false);
+                  }}
+                >
                   {p.label}
                 </button>
               ))}
@@ -259,9 +272,29 @@ export default function FoodPage() {
           <p className="text-xs text-slate-500 dark:text-slate-400">
             Perkiraan (keyakinan {r.keyakinan}). Angka sebenarnya tergantung resep dan ukuran porsi.
           </p>
+          {r.makanan.length > 0 && (
+            <button
+              className="btn-secondary w-full"
+              disabled={saved}
+              onClick={() => {
+                addMeal(r.makanan.map((m) => m.nama).join(', '), portion, n);
+                setSaved(true);
+              }}
+            >
+              {saved ? (
+                <>
+                  <IconCheck width={18} height={18} /> Tercatat di makan hari ini
+                </>
+              ) : (
+                'Catat sebagai makan hari ini'
+              )}
+            </button>
+          )}
           <Disclaimer>Hasil ini perkiraan, bukan pengganti saran dokter atau ahli gizi.</Disclaimer>
         </section>
       )}
+
+      <TodayMeals />
     </div>
   );
 }
@@ -339,6 +372,79 @@ function AiSettings(props: { open: boolean; highlight: boolean; onToggle: () => 
           </p>
         </div>
       )}
+    </section>
+  );
+}
+
+function TodayMeals() {
+  const meals = useSyncExternalStore(subscribeMeals, loadMeals, loadMeals);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const today = mealsOn(meals, Date.now());
+  if (!today.length) return null;
+  const t: PerPorsi = totals(today);
+  const time = (ms: number) => {
+    const d = new Date(ms);
+    return `${String(d.getHours()).padStart(2, '0')}.${String(d.getMinutes()).padStart(2, '0')}`;
+  };
+
+  return (
+    <section className="card space-y-3" aria-label="Makan hari ini">
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-lg font-bold">Makan hari ini</h2>
+        <span className="text-sm text-slate-600 dark:text-slate-400 tabular-nums">{Math.round(t.kalori)} kkal</span>
+      </div>
+      <div className="space-y-2">
+        {limitUse(t).map((l) => (
+          <div key={l.key}>
+            <p className="text-sm">
+              {l.label}: <b className="tabular-nums">{Math.round(l.amount)} {l.unit}</b> dari {l.limit} {l.unit} sehari
+            </p>
+            <div className="mt-1 h-2 rounded-full bg-slate-200 dark:bg-slate-800">
+              <div
+                className={`h-2 rounded-full ${l.share >= 1 ? 'bg-red-500' : l.share > 0.75 ? 'bg-amber-400' : 'bg-emerald-500'}`}
+                style={{ width: `${Math.min(100, l.share * 100)}%` }}
+              />
+            </div>
+          </div>
+        ))}
+        {limitUse(t).some((l) => l.share >= 1) && (
+          <Notice tone="warn">Hari ini sudah melewati batas sehari. Untuk makan berikutnya, pilih yang direbus atau dikukus, tanpa minuman manis.</Notice>
+        )}
+      </div>
+      <ul className="divide-y divide-slate-100 dark:divide-slate-800">
+        {today.map((m) => (
+          <li key={m.id} className="flex items-center gap-2 py-2 text-[15px]">
+            <span className="w-12 shrink-0 font-mono text-sm tabular-nums text-slate-500">{time(m.time)}</span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate">{m.names}</span>
+              <span className="block text-xs text-slate-500">
+                {Math.round(m.gizi.kalori)} kkal · gula {Math.round(m.gizi.gula_g)} g · natrium {Math.round(m.gizi.natrium_mg)} mg
+              </span>
+            </span>
+            {confirmId === m.id ? (
+              <>
+                <button className="btn-secondary !px-2 !py-1 text-sm" onClick={() => setConfirmId(null)}>
+                  Batal
+                </button>
+                <button
+                  className="btn-danger !px-2 !py-1 text-sm"
+                  onClick={() => {
+                    deleteMeal(m.id);
+                    setConfirmId(null);
+                  }}
+                >
+                  Hapus
+                </button>
+              </>
+            ) : (
+              <button className="rounded p-2 text-slate-500 hover:text-red-600" aria-label={`Hapus ${m.names}`} onClick={() => setConfirmId(m.id)}>
+                <IconTrash width={18} height={18} />
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+      <p className="text-xs text-slate-500 dark:text-slate-400">Batas sehari Kemenkes: gula 50 g, natrium 2000 mg (± 1 sendok teh garam), lemak 67 g.</p>
     </section>
   );
 }

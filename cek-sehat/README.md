@@ -7,9 +7,11 @@ Aplikasi web (PWA) untuk membantu memahami kondisi kesehatan dari rumah dan tahu
 - **Cek Angka**: IMT (Kemenkes RI), tekanan darah (AHA), gula darah, suhu tubuh, nadi manual
 - **Foto Makanan** (AI): mengenali makanan di foto dan memperkirakan kalori, karbohidrat, gula, serat, protein,
   lemak, lemak jenuh, natrium, kolesterol, serta vitamin dan mineral; dibandingkan dengan batas gula/garam/lemak
-  harian Kemenkes, dengan koreksi porsi dan saran sesuai kondisi
+  harian Kemenkes, dengan koreksi porsi dan saran sesuai kondisi. Foto dari kamera atau galeri; hasil bisa dicatat ke
+  **Makan hari ini**, yang menjumlahkan gula, garam, dan lemak seharian
 - **Cek Gejala**: triase tanda bahaya → IGD, keluhan sedang → dokter dalam 24 jam, keluhan ringan → rawat di rumah
-- **Riwayat**: grafik tren 7/30 hari, hapus per entri atau semua, ekspor CSV untuk dokter
+- **Riwayat**: grafik tren 7/30 hari, hapus per entri atau semua, ekspor CSV untuk dokter, serta **cadangkan & pulihkan**
+  semua data (riwayat dan catatan makan) lewat satu file JSON untuk pindah HP atau alamat aplikasi. API key tidak ikut
 - **Mode Riset** (dari Riwayat, atau `#riset`): uji akurasi detak jantung kamera terhadap oksimeter, dengan
   analisis Bland-Altman dan ekspor sinyal mentah. Rencana risetnya ada di [`riset/PROPOSAL.md`](riset/PROPOSAL.md)
 
