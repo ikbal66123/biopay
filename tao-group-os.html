@@ -440,7 +440,7 @@
         .tab-content.block { animation: tao-fade .22s ease-out both !important; }
         .tab-content.block > *, #outletCardsGrid > *, #eventGrid > *, .lux-stagger > * { animation: none !important; }
         @keyframes tao-fade { from { opacity: 0; } to { opacity: 1; } }
-        .lux-gold-text, header.glass-panel::after, #conciergeFab .orb::after, .lux-kenburns { animation: none !important; }
+        .lux-gold-text:not(.mono), header.glass-panel::after, #conciergeFab .orb::after, .lux-kenburns { animation: none !important; }
         #conciergeFab .orb::after { display: none; }
         .lux-tilt::after { display: none; }
         .lux-face.front::after { animation: none; transform: translateX(-35%); transition: transform 1.4s cubic-bezier(.22, 1, .36, 1); }
@@ -4164,7 +4164,14 @@
         // Ukuran peta hanya disesuaikan saat tab peta terlihat: wadah tersembunyi (lebar 0) membuat MapLibre error
         function globeVisible() { const el = document.getElementById('globeMap'); return !!el && el.clientWidth > 0; }
         window.addEventListener('resize', () => { if (globe && globeVisible()) { globe.resize(); groupCityMarkers(); } });
-        function globeHomeCenter() { return window.innerWidth >= 900 ? [-35, 30] : [-75, 28]; }
+        // Titik awal globe = titik tengah semua venue (berlaku untuk daftar venue mana pun)
+        function globeHomeCenter() {
+            const n = GLOBE_VENUES.length, rad = Math.PI / 180;
+            let x = 0, y = 0, z = 0;
+            GLOBE_VENUES.forEach(v => { x += Math.cos(v.lat * rad) * Math.cos(v.lng * rad); y += Math.cos(v.lat * rad) * Math.sin(v.lng * rad); z += Math.sin(v.lat * rad); });
+            const lng = Math.atan2(y, x) / rad, lat = Math.atan2(z / n, Math.hypot(x / n, y / n)) / rad;
+            return [lng - (window.innerWidth >= 900 ? 0 : 15), Math.max(-35, Math.min(40, lat))];
+        }
         function globeHomeZoom() { const el = document.getElementById('globeMap'); const w = el ? el.clientWidth : 800, h = el ? el.clientHeight : 600; return Math.max(0.2, Math.min(1.75, Math.log2(Math.min(w, h - 120) * Math.PI / 512 * 0.92))); }
         function globeApplyProjection() { try { globe.setProjection({ type: globeProj === 'globe' ? 'globe' : 'mercator' }); } catch (e) {} try { globe.setSky({ 'sky-color': '#050C0A', 'horizon-color': '#0F5E49', 'fog-color': '#050C0A', 'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 5, 1, 7, 0] }); } catch (e) {} }
         function globeTheme() {
@@ -4338,11 +4345,12 @@
             list.dataset.ready = '1';
             const byCountry = {};
             GLOBE_CITIES.forEach(c => (byCountry[c.country] = byCountry[c.country] || []).push(c));
+            const topCityKey = GLOBE_CITIES.slice().sort((a, b) => b.venues.length - a.venues.length)[0].key;
             const order = Object.keys(byCountry).sort((a, b) => byCountry[b].reduce((s, c) => s + c.venues.length, 0) - byCountry[a].reduce((s, c) => s + c.venues.length, 0));
             list.innerHTML = order.map(country => `
                 <div class="pt-4"><p class="text-xs text-gray-400 px-2">${esc(country)}</p>
                 ${byCountry[country].sort((a, b) => b.venues.length - a.venues.length).map(c => `
-                    <details class="globe-city" ${c.city.startsWith('Las Vegas') ? 'open' : ''}>
+                    <details class="globe-city" ${c.key === topCityKey ? 'open' : ''}>
                         <summary class="flex items-center justify-between gap-2 px-2 py-2 rounded-lg hover:bg-white/5"><span class="text-[15px] text-white">${esc(c.city)}</span><span class="text-xs text-gray-400 tabular-nums">${c.venues.length}</span></summary>
                         <ul>${c.venues.map(v => `<li><button onclick="globeSelect('${v.key}')" class="w-full flex items-center justify-between gap-3 pl-4 pr-2 py-2 rounded-lg text-left hover:bg-white/5"><span class="min-w-0"><span class="block text-sm text-gray-200 truncate">${esc(v.name)}</span><span class="block text-xs text-gray-500 truncate">${esc(v.area)}</span></span><span data-gstatus="${v.key}" class="flex items-center gap-1.5 text-xs text-gray-400 whitespace-nowrap tabular-nums"></span></button></li>`).join('')}</ul>
                     </details>`).join('')}

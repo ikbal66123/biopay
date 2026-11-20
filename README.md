@@ -26,6 +26,22 @@ Jika izin kamera ditolak, alur tetap berjalan (scan disimulasikan).
 
 `tao-group-os.html` adalah aplikasi **TAO Group Global Hospitality OS – Edisi Mewah**: portofolio cabang global, Live Hub, VIP Ops, Leaderboard, T-Community, Event, Escrow, DJ Request, Menu F&B, dan Mini Games. Buka langsung di browser (butuh internet untuk Tailwind, ikon, font, dan foto).
 
+### Untuk presentasi ke TAO
+
+- `docs/proposal-tao.md`: proposal satu halaman (pilot 8 minggu di satu venue, ukuran keberhasilan, status prototipe).
+- `docs/naskah-video-demo.md`: naskah video demo 2 menit, adegan per adegan, narasi Inggris dengan terjemahan.
+- **Privasi tamu**: nilai belanja tamu tidak pernah ditampilkan ke tamu lain; layar perayaan bersifat anonim kecuali tamu memilih tampil di Preferensi. Fitur *Ladies Tonight / VIP Companion* dari file asli sudah dihapus.
+
+### Versi white-label (Maison OS)
+
+`maison-os.html` adalah versi tanpa merek TAO untuk ditawarkan ke klub dan lounge lain. Isinya 16 venue demo fiktif di Jakarta, Bali, Surabaya, Singapura, Bangkok, Kuala Lumpur, Dubai, dan Tokyo, dengan mata uang M-Gold. File ini **dibuat otomatis**, jangan diedit langsung:
+
+```bash
+python3 tools/make_whitelabel.py
+```
+
+Ubah `BRAND` dan `VENUES` di skrip itu untuk klien lain, lalu jalankan ulang setiap kali `tao-group-os.html` berubah. Skrip menolak menulis file bila masih ada nama TAO atau venue TAO yang terlihat oleh pengguna.
+
 ### Peta Global
 
 Tab **Peta Global** menampilkan semua cabang TAO Group di globe 3D (MapLibre GL 5.24 dengan peta dasar CARTO Dark Matter: nama negara, kota, sampai jalan).
