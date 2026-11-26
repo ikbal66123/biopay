@@ -787,7 +787,7 @@ const stage = document.getElementById('stage'), wrap = document.getElementById('
 function fit() { stage.style.transform = `scale(${wrap.clientWidth / 1280})`; }
 addEventListener('resize', fit); fit();
 let playing = !document.body.classList.contains('capture') && !new URLSearchParams(location.search).has('capture');
-if (new URLSearchParams(location.search).has('capture')) document.body.classList.add('capture');
+if (new URLSearchParams(location.search).has('capture')) { document.body.classList.add('capture'); fit(); }
 let t0 = performance.now(), offset = 0;
 const seek = document.getElementById('seek'), playBtn = document.getElementById('play'), clock = document.getElementById('clock');
 const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
