@@ -3599,7 +3599,7 @@
                 if (on) {
                     if (!tourSaved) tourSaved = { b: { ...walletBalances }, s: smartRoute, m: manualPick };
                     smartRoute = false; manualPick = null; walletBalances[walletOrder[0]] = 0;
-                    generateRandomPayment();
+                    for (let k = 0; k < 30; k++) { generateRandomPayment(); const lim = effectiveLimit(); if (!lim || currentPaymentIDR <= lim) break; }
                     const b1 = walletOrder[1];
                     if (b1 && walletBalances[b1] < currentPaymentIDR) walletBalances[b1] = currentPaymentIDR + 500000;
                     showScreen('screen-options'); renderRoute(true); renderWalletList(); updateBalanceDisplay();

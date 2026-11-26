@@ -9,6 +9,7 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      - run: sudo apt-get update
       - run: npx playwright install --with-deps chromium
       - run: npm test
   database:
