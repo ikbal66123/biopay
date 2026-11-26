@@ -172,39 +172,52 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         await page.evaluate(() => { demoSplit(false); showScreen('screen-start'); });
     });
 
-    await test('offline: Saldo Offline, Kuota Titipan, then the shop pays offline', async () => {
+    await test('offline: Rp 500 ticket, Jembra Pass over USSD, VIP, and pending payments with a guarantee', async () => {
         const waitBio = () => page.waitForSelector('#modal-bioconfirm', { state: 'hidden', timeout: 30000 });
-        await page.evaluate(() => { selectDevice('terminal'); enterDashboard(); switchTab('offline'); showOfflineFill(); });
-        await page.fill('#offline-fill-amount', '200000');
-        await page.evaluate(() => processOfflineFill()); await waitBio();
-        eq((await page.textContent('#off-balance')).trim(), 'Rp 200.000', 'offline balance');
-        await page.evaluate(() => offlineAddQuota()); await waitBio();
-        eq((await page.textContent('#off-quota')).trim(), '10 MB', 'shared data');
+        await page.evaluate(() => { selectDevice('terminal'); enterDashboard(); switchTab('offline'); offlineBuyTicket(); });
+        await waitBio();
+        eq((await page.textContent('#off-tickets')).trim(), '1', 'offline ticket bought');
+        eq((await page.textContent('#off-plan')).trim(), 'Reguler', 'regular plan');
         // the seller (Kasku) charges with Pay Offline
         const kasku = () => page.evaluate(() => ewalletBalance);
-        const pay = async (net, amt) => {
-            await page.evaluate(n => { selectDevice('kasku'); showBioPayOptions(); openOfflinePay(); kitSetNet(n); }, net);
+        const pay = async (net, amt, pass = '', vip = false) => {
+            await page.evaluate(([n, v]) => { selectDevice('kasku'); showBioPayOptions(); openOfflinePay(); kitSetVipStore(v); kitSetNet(n); }, [net, vip]);
             await page.fill('#input-offline-amount', String(amt));
+            if (pass) await page.fill('#input-offline-pass', pass);
             await page.evaluate(() => startOfflineFaceScan());
             await page.waitForSelector('#tagih-confirm-box', { state: 'visible', timeout: 30000 });
             await page.evaluate(() => startTagihHandScan());
             await page.waitForSelector('#modal-offline-result', { state: 'visible', timeout: 30000 });
-            const t = await page.textContent('#kit-off-title'); await page.evaluate(() => closeOfflineResult()); return t;
+            const t = await page.textContent('#kit-off-title'), note = await page.textContent('#kit-off-note');
+            await page.evaluate(() => { closeOfflineResult(); kitSetVipStore(false); }); return t + ' | ' + note;
         };
         const k0 = await kasku();
-        assert(/Berhasil · Bayar Offline/.test(await pay('quota', 25000)), 'shared-data payment not instant');
-        eq(await kasku(), k0 + 25000, 'shop received the shared-data payment right away');
+        assert(/ditolak/.test(await pay('quota', 25000, '0899999999')), 'unknown phone number should be declined');
+        const r1 = await pay('quota', 25000, '081234567890');
+        assert(/Berhasil · Bayar Offline/.test(r1) && /USSD/.test(r1) && /tiket Rp 500/.test(r1), 'Jembra Pass payment not instant: ' + r1);
+        eq(await kasku(), k0 + 25000, 'shop received the Jembra Pass payment right away');
+        await page.evaluate(() => selectDevice('terminal'));
+        eq((await page.textContent('#off-tickets')).trim(), '1', 'ticket rebought automatically after use');
+        // VIP: unlimited offline payments
+        await page.evaluate(() => offlineToggleVip()); await waitBio();
+        eq((await page.textContent('#off-plan')).trim(), 'VIP', 'VIP active');
+        assert(/Jembra Pass · VIP/.test(await pay('quota', 15000, '+62 812-3456-7890')), 'VIP payment not used');
+        // Shop VIP: no customer number needed
+        assert(/VIP Toko/.test(await pay('quota', 10000, '', true)), 'shop VIP payment not used');
+        eq(await kasku(), k0 + 25000 + 15000 + 10000, 'shop received all instant payments');
+        // no signal: pending, guaranteed
         assert(/ditolak/.test(await pay('none', 60000)), 'no-signal payment above Rp 50.000 should be declined');
-        assert(/Menunggu/.test(await pay('none', 40000)), 'no-signal payment should be pending');
+        const r2 = await pay('none', 40000);
+        assert(/Menunggu/.test(r2) && /dana jaminan/.test(r2), 'no-signal payment should be pending and guaranteed: ' + r2);
         assert(/ditolak/.test(await pay('none', 10000)), 'second offline payment while pending should be declined');
-        eq(await kasku(), k0 + 25000, 'pending money not credited before going online');
+        eq(await kasku(), k0 + 50000, 'pending money not credited before signal returns');
         assert(await page.evaluate(() => !document.getElementById('kit-sync-btn').classList.contains('hidden')), 'sync button not shown');
-        // the customer goes online first: the shop is paid even while it is still offline
         await page.evaluate(() => { selectDevice('terminal'); offlineGoOnline(); });
-        eq(await kasku(), k0 + 25000 + 40000, 'shop credited when the customer went online');
+        eq(await kasku(), k0 + 50000 + 40000, 'shop credited once the payment settled');
         assert(await page.evaluate(() => document.getElementById('off-pending-banner').classList.contains('hidden')), 'pending banner still shown');
-        eq((await page.textContent('#off-balance')).trim(), 'Rp 135.000', 'offline balance after both payments');
         assert(await page.evaluate(() => document.getElementById('kit-sync-btn').classList.contains('hidden')), 'shop sync button still shown');
+        await page.evaluate(() => offlineToggleVip());
+        eq((await page.textContent('#off-plan')).trim(), 'Reguler', 'VIP cancelled');
     });
 
     await test('Telapak Darurat: looks paid, but nothing is sent, JembraID locks, family alerted; "Saya aman" unlocks', async () => {
