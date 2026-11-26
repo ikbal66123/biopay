@@ -172,7 +172,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         await page.evaluate(() => { demoSplit(false); showScreen('screen-start'); });
     });
 
-    await test('offline: Saldo Offline, Kuota Titipan, Tiket Bayar, then the shop pays offline', async () => {
+    await test('offline: Saldo Offline, Kuota Titipan, then the shop pays offline', async () => {
         const waitBio = () => page.waitForSelector('#modal-bioconfirm', { state: 'hidden', timeout: 30000 });
         await page.evaluate(() => { selectDevice('terminal'); enterDashboard(); switchTab('offline'); showOfflineFill(); });
         await page.fill('#offline-fill-amount', '200000');
@@ -180,11 +180,6 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         eq((await page.textContent('#off-balance')).trim(), 'Rp 200.000', 'offline balance');
         await page.evaluate(() => offlineAddQuota()); await waitBio();
         eq((await page.textContent('#off-quota')).trim(), '10 MB', 'shared data');
-        await page.evaluate(() => showOfflineTicket());
-        await page.selectOption('#offline-ticket-store', 'Warung Bu Sri'); await page.fill('#offline-ticket-amount', '50000');
-        await page.evaluate(() => processOfflineTicket()); await waitBio(); await page.waitForTimeout(1700);
-        assert(/Warung Bu Sri/.test(await page.textContent('#off-tickets')) && /Tersimpan di HP toko/.test(await page.textContent('#off-tickets')), 'ticket not stored at the shop');
-        eq((await page.textContent('#off-balance')).trim(), 'Rp 150.000', 'ticket locked from offline balance');
         // the seller (Kasku) charges with Pay Offline
         const kasku = () => page.evaluate(() => ewalletBalance);
         const pay = async (net, amt) => {
@@ -199,15 +194,16 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         const k0 = await kasku();
         assert(/Berhasil · Bayar Offline/.test(await pay('quota', 25000)), 'shared-data payment not instant');
         eq(await kasku(), k0 + 25000, 'shop received the shared-data payment right away');
-        assert(/Tiket Bayar/.test(await pay('none', 30000)), 'ticket payment not used');
+        assert(/ditolak/.test(await pay('none', 60000)), 'no-signal payment above Rp 50.000 should be declined');
         assert(/Menunggu/.test(await pay('none', 40000)), 'no-signal payment should be pending');
         assert(/ditolak/.test(await pay('none', 10000)), 'second offline payment while pending should be declined');
-        eq(await kasku(), k0 + 25000, 'ticket/pending money not credited before going online');
+        eq(await kasku(), k0 + 25000, 'pending money not credited before going online');
         assert(await page.evaluate(() => !document.getElementById('kit-sync-btn').classList.contains('hidden')), 'sync button not shown');
         // the customer goes online first: the shop is paid even while it is still offline
         await page.evaluate(() => { selectDevice('terminal'); offlineGoOnline(); });
-        eq(await kasku(), k0 + 25000 + 30000 + 40000, 'shop credited when the customer went online');
+        eq(await kasku(), k0 + 25000 + 40000, 'shop credited when the customer went online');
         assert(await page.evaluate(() => document.getElementById('off-pending-banner').classList.contains('hidden')), 'pending banner still shown');
+        eq((await page.textContent('#off-balance')).trim(), 'Rp 135.000', 'offline balance after both payments');
         assert(await page.evaluate(() => document.getElementById('kit-sync-btn').classList.contains('hidden')), 'shop sync button still shown');
     });
 
