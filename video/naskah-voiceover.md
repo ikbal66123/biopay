@@ -1,4 +1,4 @@
-# Naskah voiceover · Video demo BioPay (5:02)
+# Naskah voiceover · Video demo BioPay (5:28)
 
 Video `biopay-demo.mp4` sudah berisi narasi suara Bahasa Indonesia (suara sintetis neural) dan musik latar; musik otomatis mengecil saat narator bicara. Narasi di video adalah versi ringkas dari naskah di bawah agar pas dengan durasi tiap adegan. Kalau mau memakai suara sendiri, rekam naskah ini mengikuti timecode lalu ganti audionya di aplikasi edit video (CapCut, InShot, Premiere, dan lain-lain).
 
@@ -28,9 +28,10 @@ Video `biopay-demo.mp4` sudah berisi narasi suara Bahasa Indonesia (suara sintet
 | 3:30–3:48 | Daftar & keamanan | "Daftarnya cukup sekali, sekitar tiga menit: isi data dan pilih negara, foto dokumen identitas, rekam wajah dan telapak tangan, lalu hubungkan e-wallet dan rekening bank. Keamanannya berlapis: pemeriksaan liveness anti foto dan anti topeng, data disimpan sebagai template terenkripsi bukan foto, limit dan notifikasi real-time, dan BioID bisa dibekukan atau dihapus kapan saja." |
 | 3:48–4:03 | Jembatan | "Yang paling penting: BioPay bukan dompet baru. BioPay adalah jembatan. Satu wajah dan satu telapak tangan terhubung ke e-wallet, mobile banking, kartu, QRIS, PayLater, ATM, merchant, aplikasi, sampai tagihan bulanan." |
 | 4:03–4:22 | Keunggulan | "Kenapa BioPay paling unggul? Pemain lain berjalan sendiri. BioPay terhubung ke semua dompet, disambut bukan dilawan, dan jaringannya makin kuat setiap ada mitra baru. Daftar sekali, saldo tidak pernah jadi masalah, keamanan dua lapis, dan BioPay tidak pernah memegang uang." |
-| 4:22–4:38 | Kata mereka (wawancara) | "Kami sudah bertanya langsung ke pemilik usaha. Penjual bakso bilang, pembeli sering lupa bawa uang lalu tidak jadi beli, dan menurutnya BioPay sangat membantu. Pemilik laundry menyebut BioPay seperti QRIS, tapi lebih modern, karena tidak perlu membawa HP." |
-| 4:38–4:55 | Semua menang | "Dengan BioPay, semua menang. Pembeli tidak perlu membawa apa pun. Penjual tidak kehilangan pelanggan. E-money dan bank tidak perlu berlomba membangun biometrik sendiri, cukup bermitra. Semakin banyak yang bergabung, semakin luas jaringannya." |
-| 4:55–5:02 | Penutup | "BioPay. Satu wajah, semua dompet. Coba demonya di ikbal66123 titik github titik io garis miring biopay." |
+| 4:22–4:48 | Fitur pembeda | "BioPay juga tetap bisa membayar, apa pun kondisinya. Kalau satu dompet tidak cukup, Saldo Gabungan membayar dari beberapa dompet sekaligus dalam satu scan. Kalau kuota toko habis atau tidak ada sinyal, Bayar Offline tetap jalan, dan pembeli tetap tanpa HP. Dan kalau dipaksa membayar, Telapak Darurat membuat layar terlihat berhasil, padahal uang tidak terkirim, dan keluarga langsung diberi tahu." |
+| 4:48–5:04 | Kata mereka (wawancara) | "Kami sudah bertanya langsung ke pemilik usaha. Penjual bakso bilang, pembeli sering lupa bawa uang lalu tidak jadi beli, dan menurutnya BioPay sangat membantu. Pemilik laundry menyebut BioPay seperti QRIS, tapi lebih modern, karena tidak perlu membawa HP." |
+| 5:04–5:21 | Semua menang | "Dengan BioPay, semua menang. Pembeli tidak perlu membawa apa pun. Penjual tidak kehilangan pelanggan. E-money dan bank tidak perlu berlomba membangun biometrik sendiri, cukup bermitra. Semakin banyak yang bergabung, semakin luas jaringannya." |
+| 5:21–5:28 | Penutup | "BioPay. Satu wajah, semua dompet. Coba demonya di ikbal66123 titik github titik io garis miring biopay." |
 
 ## Catatan
 

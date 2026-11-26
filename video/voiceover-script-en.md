@@ -1,4 +1,4 @@
-# Voice-over script · BioPay demo video (English, 5:02)
+# Voice-over script · BioPay demo video (English, 5:28)
 
 `biopay-demo-en.mp4` already contains this narration (synthetic neural voice) with background music that ducks under the voice. To use your own voice, record the lines below against the timecodes and replace the audio in any video editor.
 
@@ -28,9 +28,10 @@
 | 3:30–3:48 | Sign-up & security | "Sign up once: your details and country, a photo of your ID, your face and palm, then link your e-wallets and bank accounts. Security is layered: photo- and mask-proof checks, encrypted data, real-time alerts, and a BioID you can delete anytime." |
 | 3:48–4:03 | The bridge | "Most important: BioPay is not another wallet. BioPay is a bridge. One face and one palm connect to e-wallets, mobile banking, cards, QRIS, PayLater, ATMs and merchants." |
 | 4:03–4:22 | Advantages | "Why does BioPay win? Others go it alone. BioPay connects to every wallet, is welcomed rather than fought, and its network grows with every new partner. Sign up once, balance is never a problem, two layers of security, and BioPay never holds the money." |
-| 4:22–4:38 | In their words (interviews) | "We asked business owners directly. A street food seller said customers often forget their money and don't buy, and that BioPay would be very helpful. A laundry owner called BioPay like QRIS, but more modern, because you don't need your phone." |
-| 4:38–4:55 | Everyone wins | "With BioPay, everyone wins. Buyers carry nothing. Sellers don't lose customers. E-money players and banks don't need to race to build biometrics alone, they simply partner. The more who join, the wider the network." |
-| 4:55–5:02 | Closing | "BioPay. One face, every wallet. Try the demo at the link on screen." |
+| 4:22–4:48 | What sets us apart | "BioPay also keeps working, whatever happens. If one wallet isn't enough, Combined Balance pays from several wallets in one scan. If the shop runs out of data or loses signal, Pay Offline still works, and the customer still needs no phone. And if someone is forced to pay, Emergency Palm makes the screen look paid, while no money is sent and the family is alerted right away." |
+| 4:48–5:04 | In their words (interviews) | "We asked business owners directly. A street food seller said customers often forget their money and don't buy, and that BioPay would be very helpful. A laundry owner called BioPay like QRIS, but more modern, because you don't need your phone." |
+| 5:04–5:21 | Everyone wins | "With BioPay, everyone wins. Buyers carry nothing. Sellers don't lose customers. E-money players and banks don't need to race to build biometrics alone, they simply partner. The more who join, the wider the network." |
+| 5:21–5:28 | Closing | "BioPay. One face, every wallet. Try the demo at the link on screen." |
 
 ## Notes
 
