@@ -487,6 +487,21 @@
         .bp-code { flex: none; width: 40px; height: 32px; border-radius: 6px; border: 1px solid var(--line-2); display: flex; align-items: center; justify-content: center; font: 600 12px var(--font-mono); color: var(--ink); }
         .bp-wallet[aria-pressed="true"] { box-shadow: inset 3px 0 0 var(--brass); background: #FFFDF8; }
 
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .bg-amber-50 { background-color: #FFFBEB; } .hover\:bg-amber-100:hover { background-color: #FEF3C7; } .text-amber-800 { color: #92400E; } .border-amber-200 { border-color: #FDE68A; }
+        .bg-amber-500 { background-color: #F59E0B; } .text-amber-500 { color: #F59E0B; } .bg-rose-600 { background-color: #E11D48; } .text-rose-600 { color: #E11D48; }
+        .text-white\/90 { color: rgba(255,255,255,.9); } .max-w-\[300px\] { max-width: 300px; } .bg-slate-900\/80 { background-color: rgba(15,23,42,.8); } .hover\:bg-slate-900:hover { background-color: #0F172A; }
+        .border-red-200 { border-color: #FECACA; } .mb-1\.5 { margin-bottom: .375rem; }
+        .kit-net { background: #fff; border-color: #E2E8F0; color: #334155; }
+        .kit-net[aria-checked="true"] { background: #EFF6FF; border-color: #118EEA; color: #0B5FA5; }
+        .bp-off-banner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: var(--r-card); background: #FFF6E5; border: 1px solid #F2D49B; color: #7A5200; }
+        .bp-off-banner > i { font-size: 22px; flex: none; }
+        .bp-off-banner .bp-row-main { flex: 1 1 200px; min-width: 0; }
+        .bp-off-banner-bad { background: #FDECEA; border-color: #F3B8B1; color: var(--danger); }
+        .bp-off-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }
+        .bp-duress-sim { font-size: 13px; }
+        .bp-route-head > .bp-inline { flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+        .bp-route-amt { margin-left: auto; font: 700 13px var(--font-sans); color: var(--ink); white-space: nowrap; }
         .bp-stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
         .bp-stat { display: flex; flex-direction: column; gap: 4px; padding: 16px; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); cursor: pointer; color: var(--ink); }
         .bp-stat:hover { border-color: var(--line-2); }
@@ -1089,7 +1104,7 @@
             <h1 class="pt-h1"><span lang="en">Pay with your face and palm.</span><span lang="id">Bayar dengan wajah dan telapak tangan.</span></h1>
             <p class="pt-lead"><span lang="en">No card, no phone. BioPay is a two-factor biometric checkout that pays from the wallet people already use.</span><span lang="id">Tanpa kartu, tanpa ponsel. BioPay adalah checkout biometrik dua faktor yang membayar dari wallet yang sudah dipakai orang.</span></p>
             <div class="pt-ctas">
-                <button type="button" class="pt-btn pt-btn-primary" onclick="startTour()"><i class="ph-bold ph-play" aria-hidden="true"></i> <span lang="en">Take the 60-second tour</span><span lang="id">Tur 60 detik</span></button>
+                <button type="button" class="pt-btn pt-btn-primary" onclick="startTour()"><i class="ph-bold ph-play" aria-hidden="true"></i> <span lang="en">Take the 90-second tour</span><span lang="id">Tur 90 detik</span></button>
                 <a class="pt-btn pt-btn-ghost" href="#demo"><span lang="en">Explore the demo</span><span lang="id">Jelajahi demo</span> <i class="ph-bold ph-arrow-down" aria-hidden="true"></i></a>
                 <button type="button" class="pt-btn pt-btn-ghost" onclick="pitchTry('terminal')"><i class="ph-bold ph-scan" aria-hidden="true"></i> <span lang="en">Scan my face now</span><span lang="id">Scan wajah saya</span></button>
                 <a class="pt-btn pt-btn-ghost" lang="en" href="video/biopay-demo-en.mp4" target="_blank" rel="noopener"><i class="ph-bold ph-play-circle" aria-hidden="true"></i> Watch the demo video</a><a class="pt-btn pt-btn-ghost" lang="id" href="video/biopay-demo.mp4" target="_blank" rel="noopener"><i class="ph-bold ph-play-circle" aria-hidden="true"></i> Tonton video demo</a>
@@ -1398,6 +1413,7 @@
                             <span class="bp-vf-tag"><i class="ph-bold ph-shield-check" aria-hidden="true"></i> Garis telapak</span>
                             <p class="bp-vf-status">Membaca garis telapak tangan…</p>
                         </div>
+                        <button type="button" class="bp-btn bp-btn-secondary bp-duress-sim" onclick="simulateDuressHand()"><i class="ph-bold ph-siren" aria-hidden="true"></i> <span>Simulasi: tunjukkan tangan darurat</span></button>
                     </div>
                 </div>
 
@@ -1442,7 +1458,7 @@
                         <div class="bp-route">
                             <div class="bp-route-head">
                                 <p class="bp-section-title">Bayar pakai</p>
-                                <button type="button" id="route-auto" class="bp-route-auto" role="switch" aria-checked="true" onclick="toggleSmartRoute()"><i class="ph-bold ph-sparkle" aria-hidden="true"></i> Smart Route</button>
+                                <span class="bp-inline"><button type="button" id="route-auto" class="bp-route-auto" role="switch" aria-checked="true" onclick="toggleSmartRoute()"><i class="ph-bold ph-sparkle" aria-hidden="true"></i> Smart Route</button><button type="button" id="route-split" class="bp-route-auto" role="switch" aria-checked="true" onclick="toggleSplitPay()"><i class="ph-bold ph-stack" aria-hidden="true"></i> Saldo Gabungan</button></span>
                             </div>
                             <div id="route-list" class="bp-route-list" role="radiogroup" aria-label="Sumber dana"></div>
                             <p id="route-why" class="bp-route-why"></p>
@@ -1533,6 +1549,7 @@
                             <button type="button" role="tab" aria-selected="false" id="nav-riwayat" onclick="switchTab('riwayat')" class="bp-tab"><i class="ph ph-clock-counter-clockwise" aria-hidden="true"></i><span data-i18n="nav-history">Riwayat</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-biopass" onclick="switchTab('biopass')" class="bp-tab"><i class="ph ph-identification-card" aria-hidden="true"></i><span data-i18n="nav-biopass">Bio-Pass</span></button>
                             <button type="button" role="tab" aria-selected="false" id="nav-sharing" onclick="switchTab('sharing')" class="bp-tab"><i class="ph ph-users-three" aria-hidden="true"></i><span data-i18n="nav-sharing">Sharing</span></button>
+                            <button type="button" role="tab" aria-selected="false" id="nav-offline" onclick="switchTab('offline')" class="bp-tab"><i class="ph ph-wifi-slash" aria-hidden="true"></i><span>Offline</span></button>
                         </nav>
                         <p class="bp-side-foot">Terminal 0042-JKT<br>Firmware 3.2.7</p>
                     </aside>
@@ -1794,6 +1811,45 @@
                             </div>
                         </section>
 
+                        <!-- Tab: Offline (Saldo Offline, Kuota Titipan, Tiket Bayar) -->
+                        <section id="tab-offline" class="bp-panel hidden">
+                            <div class="bp-card bp-card-pad">
+                                <span class="bp-row-main"><b>Bayar saat toko tidak ada internet</b><small>Siapkan dari rumah. Di toko, kamu tetap cukup wajah + telapak tangan, tanpa HP.</small></span>
+                            </div>
+                            <div id="off-pending-banner" class="bp-off-banner hidden" role="status">
+                                <i class="ph-bold ph-hourglass-medium" aria-hidden="true"></i>
+                                <span class="bp-row-main"><b>Ada transaksi offline yang menunggu</b><small id="off-pending-text">Sambungkan internet untuk menyelesaikannya. Selama masih menunggu, Bayar Offline di toko itu dikunci.</small></span>
+                                <button type="button" class="bp-btn bp-btn-primary bp-btn-auto" onclick="offlineGoOnline()"><i class="ph-bold ph-wifi-high" aria-hidden="true"></i> Sambungkan internet</button>
+                            </div>
+                            <div class="bp-stat-grid">
+                                <div class="bp-stat"><span>Saldo Offline</span><b id="off-balance" class="bp-num">Rp 0</b><small>Dikunci khusus untuk bayar offline</small></div>
+                                <div class="bp-stat"><span>Kuota Titipan</span><b id="off-quota" class="bp-num">0 MB</b><small>Dipakai HP penjual saat kuotanya habis</small></div>
+                            </div>
+                            <div class="bp-off-actions">
+                                <button type="button" class="bp-btn bp-btn-primary" onclick="showOfflineFill()"><i class="ph-bold ph-plus" aria-hidden="true"></i> Isi Saldo Offline</button>
+                                <button type="button" class="bp-btn bp-btn-secondary" onclick="offlineAddQuota()"><i class="ph-bold ph-cell-signal-full" aria-hidden="true"></i> Titip kuota 10 MB</button>
+                                <button type="button" class="bp-btn bp-btn-secondary" onclick="offlineWithdraw()"><i class="ph-bold ph-arrow-u-up-left" aria-hidden="true"></i> Tarik ke dompet utama</button>
+                            </div>
+                            <div class="bp-section">
+                                <div class="bp-section-head">
+                                    <p class="bp-section-title">Tiket Bayar · toko langganan</p>
+                                    <button type="button" onclick="showOfflineTicket()" class="bp-link"><i class="ph-bold ph-ticket" aria-hidden="true"></i> Siapkan Tiket Bayar</button>
+                                </div>
+                                <ul id="off-tickets" class="bp-list"></ul>
+                                <p class="bp-fine">Tiket dikirim ke HP toko saat toko masih online. Nanti saat toko tanpa sinyal, wajah + telapak tanganmu tetap bisa dicocokkan dan saldo langsung terpotong. Satu tiket hanya untuk satu toko, jadi tidak bisa terpakai dua kali.</p>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Transaksi offline</p>
+                                <ul id="off-log" class="bp-list"></ul>
+                            </div>
+                            <div class="bp-demo-note">
+                                <p><i class="ph-bold ph-cell-signal-full" aria-hidden="true"></i> <span><b>Kuota habis, sinyal ada:</b> HP penjual memakai Kuota Titipan-mu lewat jalur khusus BioPay, jadi pembayaran langsung berhasil.</span></p>
+                                <p><i class="ph-bold ph-ticket" aria-hidden="true"></i> <span><b>Tanpa sinyal, toko langganan:</b> pakai Tiket Bayar, langsung berhasil.</span></p>
+                                <p><i class="ph-bold ph-hourglass-medium" aria-hidden="true"></i> <span><b>Tanpa sinyal, toko lain:</b> status Menunggu (maks. Rp 50.000), selesai otomatis saat kamu atau toko online lagi. Kalau Saldo Offline kurang, dipakai dompet cadangan.</span></p>
+                                <p><i class="ph-bold ph-bank" aria-hidden="true"></i> <span><b>Uangnya di mana?</b> Saldo Offline tetap di dompet mitra, dikunci atas perintah BioPay. BioPay sendiri tidak menyimpan uang.</span></p>
+                            </div>
+                        </section>
+
                         <!-- Tab: Pengaturan -->
                         <section id="tab-pengaturan" class="bp-panel hidden">
                             <div class="bp-card bp-card-pad bp-profile">
@@ -1813,6 +1869,31 @@
                                     </button>
                                     <button type="button" id="sec-night" class="bp-setting" role="switch" aria-checked="true" onclick="toggleNightGuard()">
                                         <span class="bp-row-main"><b>Mode malam</b><small>Pukul 23.00–05.00 limit otomatis turun ke Rp 500.000</small></span><span class="bp-switch" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="bp-section">
+                                <p class="bp-section-title">Telapak Darurat · anti begal</p>
+                                <div id="sec-duress-alert" class="bp-off-banner bp-off-banner-bad hidden" role="status">
+                                    <i class="ph-bold ph-siren" aria-hidden="true"></i>
+                                    <span class="bp-row-main"><b>Peringatan darurat aktif</b><small id="sec-duress-text">BioID dikunci dan keluarga sudah diberi tahu.</small></span>
+                                    <button type="button" class="bp-btn bp-btn-ok bp-btn-auto" onclick="duressSafe()"><i class="ph-bold ph-hand-heart" aria-hidden="true"></i> Saya aman</button>
+                                </div>
+                                <div class="bp-list">
+                                    <button type="button" id="sec-duress" class="bp-setting" role="switch" aria-checked="true" onclick="toggleDuress()">
+                                        <span class="bp-row-main"><b>Telapak Darurat</b><small>Kalau dipaksa bayar, tunjukkan tangan darurat. Layar terlihat berhasil, tapi uang tidak terkirim, BioID terkunci, dan keluarga diberi tahu diam-diam.</small></span><span class="bp-switch" aria-hidden="true"></span>
+                                    </button>
+                                    <button type="button" class="bp-list-row" onclick="cycleDuressHand()">
+                                        <span class="bp-row-main"><b>Tangan darurat</b><small>Pilih sendiri, supaya pelaku tidak bisa menebak</small></span>
+                                        <span class="bp-inline bp-muted"><span id="sec-duress-hand">Kiri</span><i class="ph-bold ph-caret-right" aria-hidden="true"></i></span>
+                                    </button>
+                                    <button type="button" class="bp-list-row" onclick="cycleDuressContacts()">
+                                        <span class="bp-row-main"><b>Kontak darurat</b><small>Menerima pesan diam-diam beserta lokasi kamera</small></span>
+                                        <span class="bp-inline bp-muted"><span id="sec-duress-contacts">Ibu, Kakak</span><i class="ph-bold ph-caret-right" aria-hidden="true"></i></span>
+                                    </button>
+                                    <button type="button" class="bp-list-row" onclick="duressPractice()">
+                                        <span class="bp-row-main"><b>Mode latihan</b><small>Coba tangan darurat tanpa mengirim peringatan</small></span>
+                                        <i class="ph-bold ph-caret-right bp-muted" aria-hidden="true"></i>
                                     </button>
                                 </div>
                             </div>
@@ -1841,6 +1922,48 @@
                 </div>
 
                 <!-- ============ MODALS BIOPAY ============ -->
+
+                <!-- Offline: isi Saldo Offline -->
+                <div id="modal-offline-fill" class="bp-modal hidden" role="dialog" aria-modal="true" aria-labelledby="h-offline-fill">
+                    <div class="bp-dialog">
+                        <div class="bp-dialog-head"><h3 id="h-offline-fill">Isi Saldo Offline</h3><button type="button" class="bp-icon-btn" aria-label="Tutup" onclick="closeModal('modal-offline-fill')"><i class="ph-bold ph-x" aria-hidden="true"></i></button></div>
+                        <div class="bp-field"><label for="offline-fill-amount">Nominal (Rp)</label><input type="number" inputmode="numeric" id="offline-fill-amount" min="1" placeholder="Contoh: 100000" class="bp-input"></div>
+                        <div class="bp-presets">
+                            <button type="button" class="bp-preset" onclick="document.getElementById('offline-fill-amount').value = 50000">50.000</button>
+                            <button type="button" class="bp-preset" onclick="document.getElementById('offline-fill-amount').value = 100000">100.000</button>
+                            <button type="button" class="bp-preset" onclick="document.getElementById('offline-fill-amount').value = 200000">200.000</button>
+                        </div>
+                        <div class="bp-field"><label for="offline-fill-source">Ambil dari</label><select id="offline-fill-source" class="bp-input"></select></div>
+                        <p class="bp-fine">Maksimal Saldo Offline Rp 500.000. Wajib scan wajah + telapak tangan dulu, supaya fitur offline terhubung dengan biometrikmu.</p>
+                        <button type="button" onclick="processOfflineFill()" class="bp-btn bp-btn-primary"><i class="ph-bold ph-scan" aria-hidden="true"></i> Scan wajah + telapak, lalu isi</button>
+                    </div>
+                </div>
+
+                <!-- Offline: siapkan Tiket Bayar -->
+                <div id="modal-offline-ticket" class="bp-modal hidden" role="dialog" aria-modal="true" aria-labelledby="h-offline-ticket">
+                    <div class="bp-dialog">
+                        <div class="bp-dialog-head"><h3 id="h-offline-ticket">Siapkan Tiket Bayar</h3><button type="button" class="bp-icon-btn" aria-label="Tutup" onclick="closeModal('modal-offline-ticket')"><i class="ph-bold ph-x" aria-hidden="true"></i></button></div>
+                        <div class="bp-field"><label for="offline-ticket-store">Toko langganan</label><select id="offline-ticket-store" class="bp-input"><option value="Warung Bu Sri">Warung Bu Sri</option><option value="Kantin PT Maju Jaya">Kantin PT Maju Jaya</option><option value="Toko Sinar Jaya">Toko Sinar Jaya</option></select></div>
+                        <div class="bp-field"><label for="offline-ticket-amount">Nominal maksimal (Rp)</label><input type="number" inputmode="numeric" id="offline-ticket-amount" min="1" value="50000" class="bp-input"></div>
+                        <div class="bp-field"><label for="offline-ticket-days">Masa berlaku</label><select id="offline-ticket-days" class="bp-input"><option value="1">24 jam</option><option value="7">7 hari</option></select></div>
+                        <p class="bp-fine">Uangnya diambil dari Saldo Offline dan dikunci untuk toko ini. Kalau tidak terpakai sampai masa berlaku habis, uang kembali ke Saldo Offline dan data wajahmu dihapus dari HP toko.</p>
+                        <button type="button" onclick="processOfflineTicket()" class="bp-btn bp-btn-primary"><i class="ph-bold ph-scan" aria-hidden="true"></i> Scan wajah + telapak, lalu kirim tiket</button>
+                    </div>
+                </div>
+
+                <!-- Konfirmasi biometrik (wajah lalu telapak) -->
+                <div id="modal-bioconfirm" class="bp-modal bp-modal-dark hidden" style="z-index:60" role="dialog" aria-modal="true" aria-labelledby="h-bioconfirm">
+                    <h3 id="h-bioconfirm" class="bp-dark-title">Konfirmasi wajah + telapak</h3>
+                    <p id="bioconfirm-sub" class="bp-dark-sub">Lihat ke kamera.</p>
+                    <div class="bp-vf bp-vf-sq">
+                        <span class="bp-vf-ghost" aria-hidden="true"><i class="ph ph-user-focus"></i></span>
+                        <video id="video-bioconfirm" autoplay muted playsinline></video>
+                        <span class="bp-corners" aria-hidden="true"></span>
+                        <div class="scanner-line"></div>
+                        <p id="bioconfirm-status" class="bp-vf-status" aria-live="polite">Memindai wajah…</p>
+                    </div>
+                    <button type="button" onclick="cancelBioConfirm()" class="bp-btn bp-btn-paper bp-btn-auto">Batal</button>
+                </div>
 
                 <!-- Language -->
                 <div id="modal-language" class="bp-modal hidden" role="dialog" aria-modal="true" aria-labelledby="h-language">
@@ -2318,6 +2441,12 @@
                                 <button onclick="openTagihInput()" class="w-full bg-gradient-to-r from-[#118EEA] to-blue-500 hover:from-blue-600 hover:to-blue-500 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition-transform active:scale-95 text-sm">
                                     <i class="ph-bold ph-scan"></i> Tagih Pelanggan (BioPay)
                                 </button>
+                                <button onclick="openOfflinePay()" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-800 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-amber-200 transition-colors text-sm">
+                                    <i class="ph-bold ph-wifi-slash"></i> Bayar Offline (kuota habis / tanpa sinyal)
+                                </button>
+                                <button id="kit-sync-btn" onclick="kitSyncOffline()" class="hidden w-full bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 text-sm">
+                                    <i class="ph-bold ph-wifi-high"></i> <span id="kit-sync-label">Sinyal kembali · kirim transaksi offline</span>
+                                </button>
                                 <button onclick="closeEwalletModal('modal-biopay-options'); showEwalletMinta();" class="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 transition-colors text-sm">
                                     <i class="ph-bold ph-qr-code"></i> QR · Scan, QR Saya, QR Bayar
                                 </button>
@@ -2381,6 +2510,36 @@
                         </div>
                     </div>
 
+                    <!-- Bayar Offline: kondisi HP toko + nominal -->
+                    <div id="modal-offline-pay" class="hidden absolute inset-0 bg-black/80 z-[60] flex items-center justify-center p-4">
+                        <div class="bg-white w-full max-w-[300px] rounded-2xl p-5 flex flex-col text-center animation-slide-up shadow-2xl">
+                            <h3 class="text-slate-800 font-bold text-sm mb-1">Bayar Offline</h3>
+                            <p class="text-slate-500 text-xs mb-4">Pelanggan cukup wajah + telapak tangan, tanpa HP.</p>
+                            <p class="text-left text-[11px] font-bold text-slate-600 mb-1.5">Kondisi HP toko (simulasi)</p>
+                            <div class="grid grid-cols-2 gap-2 mb-4" role="radiogroup" aria-label="Kondisi HP toko">
+                                <button type="button" id="kit-net-quota" role="radio" aria-checked="true" onclick="kitSetNet('quota')" class="kit-net rounded-xl border px-2 py-2.5 text-[11px] font-bold leading-tight"><i class="ph-bold ph-cell-signal-low text-base block mx-auto mb-1"></i>Kuota habis, sinyal ada</button>
+                                <button type="button" id="kit-net-none" role="radio" aria-checked="false" onclick="kitSetNet('none')" class="kit-net rounded-xl border px-2 py-2.5 text-[11px] font-bold leading-tight"><i class="ph-bold ph-cell-signal-x text-base block mx-auto mb-1"></i>Tanpa sinyal</button>
+                            </div>
+                            <input type="number" id="input-offline-amount" placeholder="Rp 0" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 font-black text-center text-lg mb-2 outline-none focus:border-[#118EEA] shadow-inner">
+                            <p id="kit-net-hint" class="text-slate-500 text-[11px] mb-4">Transaksi dikirim memakai Kuota Titipan pelanggan, langsung berhasil.</p>
+                            <button onclick="startOfflineFaceScan()" class="w-full bg-[#118EEA] hover:bg-blue-600 text-white py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-500/20 transition-transform active:scale-95">Lanjut Scan Wajah</button>
+                            <button onclick="closeEwalletModal('modal-offline-pay')" class="mt-4 text-slate-400 hover:text-slate-600 text-xs font-semibold">Batal</button>
+                        </div>
+                    </div>
+
+                    <!-- Bayar Offline: hasil -->
+                    <div id="modal-offline-result" class="hidden absolute inset-0 z-[80] flex flex-col items-center justify-center p-6 text-center">
+                        <div id="kit-off-icon" class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-lg"><i class="ph-bold ph-check"></i></div>
+                        <h2 id="kit-off-title" class="text-white font-bold text-2xl mb-2">Pembayaran Berhasil!</h2>
+                        <p id="kit-off-note" class="text-white/90 text-xs mb-6">-</p>
+                        <div class="bg-white/20 rounded-2xl p-5 w-full mb-6 border border-white/30 backdrop-blur-sm shadow-inner">
+                            <p id="kit-off-cap" class="text-white/90 text-[11px] mb-1 font-medium">Total</p>
+                            <p id="kit-off-amount" class="text-white font-black text-3xl">Rp 0</p>
+                        </div>
+                        <button id="kit-off-sync" onclick="kitSyncOffline()" class="hidden w-full bg-slate-900/80 hover:bg-slate-900 text-white py-3 rounded-xl font-bold text-sm mb-3"><i class="ph-bold ph-wifi-high"></i> Simulasi: sinyal kembali</button>
+                        <button onclick="closeOfflineResult()" class="w-full bg-white hover:bg-slate-50 text-slate-700 py-3.5 rounded-xl font-bold text-sm shadow-xl transition-transform active:scale-95">Selesai</button>
+                    </div>
+
                     <!-- Modal 1: Tagih Input Nominal -->
                     <div id="modal-tagih-input" class="hidden absolute inset-0 bg-black/80 z-[60] flex items-center justify-center p-4">
                         <div class="bg-white w-full max-w-[280px] rounded-2xl p-5 flex flex-col text-center animation-slide-up shadow-2xl">
@@ -2427,6 +2586,7 @@
                         </div>
                         
                         <p class="text-emerald-700 font-bold text-xs bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200"><i class="ph-bold ph-hand-palm inline-block" aria-hidden="true"></i> <span id="tagih-hand-status" aria-live="polite">Memindai telapak tangan...</span></p>
+                        <button onclick="kitSimDuress()" class="mt-4 text-red-600 bg-red-50 border border-red-200 px-4 py-2 rounded-full text-[11px] font-bold"><i class="ph-bold ph-siren"></i> Simulasi: pelanggan tunjukkan tangan darurat</button>
                     </div>
 
                     <!-- Modal 4: Tagih Success -->
@@ -2879,6 +3039,9 @@
 
         Object.assign(I18N, {"Bayar pakai": {"EN": "Pay with", "JP": "支払い方法"}, "Smart Route aktif": {"EN": "Smart Route on", "JP": "スマートルート オン"}, "Smart Route mati: pilih sumber dana sendiri": {"EN": "Smart Route off: pick a source yourself", "JP": "スマートルート オフ：支払元を選んでください"}, "Cashback 1% (maks Rp 10.000)": {"EN": "1% cashback (max Rp 10,000)", "JP": "1%キャッシュバック（上限 Rp 10,000）"}, "BioPoin 2x": {"EN": "2x BioPoints", "JP": "BioPoint 2倍"}, "Bebas biaya kurs 1,5%": {"EN": "No 1.5% FX fee", "JP": "為替手数料1.5%無料"}, "Dipilih otomatis: saldo cukup dan {0}.": {"EN": "Picked automatically: enough balance and {0}.", "JP": "自動選択：残高十分、{0}。"}, "Dipilih otomatis: saldo paling cukup.": {"EN": "Picked automatically: highest balance.", "JP": "自動選択：残高が最も多い支払元。"}, "Dipilih manual. Nyalakan Smart Route agar BioPay memilih yang paling untung.": {"EN": "Picked manually. Turn on Smart Route to let BioPay pick the best deal.", "JP": "手動で選択中。スマートルートで最もお得な支払元を自動選択できます。"}, "BioID sedang dikunci. Buka kunci di Pengaturan > Pusat keamanan.": {"EN": "BioID is locked. Unlock it in Settings > Security center.", "JP": "BioIDはロック中です。設定 > セキュリティセンターで解除してください。"}, "Melebihi limit per transaksi ({0}).": {"EN": "Over the per-payment limit ({0}).", "JP": "1回あたりの上限（{0}）を超えています。"}, "BioID dikunci": {"EN": "BioID locked", "JP": "BioIDロック中"}, "Melebihi limit": {"EN": "Over limit", "JP": "上限超過"}, "+{0} BioPoin": {"EN": "+{0} BioPoints", "JP": "+{0} BioPoint"}, "cashback {0}": {"EN": "cashback {0}", "JP": "キャッシュバック {0}"}, "hemat biaya kurs {0}": {"EN": "saved {0} in FX fees", "JP": "為替手数料 {0} 節約"}, "bonus beruntun +200": {"EN": "streak bonus +200", "JP": "連続ボーナス +200"}, "Misi selesai: {0} (+{1} poin)": {"EN": "Mission complete: {0} (+{1} points)", "JP": "ミッション達成：{0}（+{1}ポイント）"}, "{0} misi menunggu · beruntun {1} hari": {"EN": "{0} missions open · {1}-day streak", "JP": "ミッション残り{0} · {1}日連続"}, "Keamanan biometrik aktif": {"EN": "Biometric security on", "JP": "生体認証セキュリティ有効"}, "Wajah + telapak wajib untuk setiap transaksi": {"EN": "Face + palm required for every payment", "JP": "すべての支払いに顔＋手のひらが必要"}, "Semua pembayaran biometrik diblokir": {"EN": "All biometric payments are blocked", "JP": "生体認証での支払いはすべてブロック中"}, "Aman": {"EN": "Safe", "JP": "安全"}, "Terkunci": {"EN": "Locked", "JP": "ロック中"}, "Hadiah": {"EN": "Rewards", "JP": "特典"}, "Insight": {"EN": "Insights", "JP": "分析"}, "Beruntun mingguan": {"EN": "Weekly streak", "JP": "週間連続記録"}, "Bayar pakai BioPay setiap hari untuk menjaga beruntun. Hari ke-7: bonus 200 poin.": {"EN": "Pay with BioPay every day to keep the streak. Day 7: 200 bonus points.", "JP": "毎日BioPayで支払って連続記録を維持。7日目：200ボーナスポイント。"}, "Misi minggu ini": {"EN": "This week's missions", "JP": "今週のミッション"}, "Tukar poin": {"EN": "Redeem points", "JP": "ポイント交換"}, "Ajak teman": {"EN": "Invite friends", "JP": "友達を招待"}, "Kamu dan temanmu masing-masing dapat 500 poin setelah transaksi pertamanya": {"EN": "You and your friend each get 500 points after their first payment", "JP": "友達の初回支払い後、あなたと友達にそれぞれ500ポイント"}, "{0} poin lagi ke {1}": {"EN": "{0} points to {1}", "JP": "{1}まであと{0}ポイント"}, "Level tertinggi. Terima kasih!": {"EN": "Top tier. Thank you!", "JP": "最上位ランクです。ありがとうございます！"}, "{0} hari": {"EN": "{0} days", "JP": "{0}日"}, "Sen": {"EN": "Mon", "JP": "月"}, "Sel": {"EN": "Tue", "JP": "火"}, "Rab": {"EN": "Wed", "JP": "水"}, "Kam": {"EN": "Thu", "JP": "木"}, "Jum": {"EN": "Fri", "JP": "金"}, "Sab": {"EN": "Sat", "JP": "土"}, "Min": {"EN": "Sun", "JP": "日"}, "Selesai": {"EN": "Done", "JP": "完了"}, "poin": {"EN": "points", "JP": "ポイント"}, "Bayar 3 kali pakai BioPay": {"EN": "Pay 3 times with BioPay", "JP": "BioPayで3回支払う"}, "Hemat lewat Smart Route": {"EN": "Save with Smart Route", "JP": "スマートルートで節約"}, "Bayar 1 tagihan bulanan": {"EN": "Pay 1 monthly bill", "JP": "月額請求を1件支払う"}, "Bayar di merchant luar negeri": {"EN": "Pay at a foreign merchant", "JP": "海外の店舗で支払う"}, "Tambah 1 anggota keluarga": {"EN": "Add 1 family member", "JP": "家族を1人追加"}, "Diskon Rp 10.000 di kedai kopi": {"EN": "Rp 10,000 off at coffee shops", "JP": "カフェで Rp 10,000 割引"}, "Gratis 3x biaya transfer antarbank": {"EN": "3 free interbank transfers", "JP": "銀行間送金手数料3回無料"}, "Cashback 5% tiket kereta Lintas": {"EN": "5% cashback on Lintas train tickets", "JP": "Lintas 列車チケット5%キャッシュバック"}, "Donasi Rp 10.000 ke panti asuhan": {"EN": "Donate Rp 10,000 to an orphanage", "JP": "孤児院へ Rp 10,000 寄付"}, "Voucher aktif: {0} · kode {1}": {"EN": "Voucher active: {0} · code {1}", "JP": "クーポン有効：{0} · コード {1}"}, "Kode ajak teman {0} disalin": {"EN": "Invite code {0} copied", "JP": "招待コード {0} をコピーしました"}, "Pengeluaran bulan ini": {"EN": "Spent this month", "JP": "今月の支出"}, "Hemat dari promo": {"EN": "Saved from promos", "JP": "プロモで節約"}, "Cashback & bebas biaya lewat Smart Route": {"EN": "Cashback & fee waivers via Smart Route", "JP": "スマートルートでのキャッシュバックと手数料無料"}, "Anggaran bulanan": {"EN": "Monthly budget", "JP": "月間予算"}, "Ubah": {"EN": "Edit", "JP": "変更"}, "Per kategori": {"EN": "By category", "JP": "カテゴリー別"}, "Per sumber dana": {"EN": "By funding source", "JP": "支払元別"}, "BioPay tidak menyimpan uangmu. Semua dana tetap di e-wallet dan bank milikmu; BioPay hanya menjembatani.": {"EN": "BioPay never holds your money. Funds stay in your own e-wallets and banks; BioPay only bridges them.", "JP": "BioPayはお金を預かりません。資金はあなたの電子ウォレットと銀行にあり、BioPayは橋渡しをするだけです。"}, "{0}% di atas bulan lalu": {"EN": "{0}% above last month", "JP": "先月より{0}%増"}, "{0}% lebih hemat dari bulan lalu": {"EN": "{0}% less than last month", "JP": "先月より{0}%減"}, "{0} dari anggaran {1} terpakai ({2}%). Sisa {3}.": {"EN": "{0} of {1} budget used ({2}%). {3} left.", "JP": "予算{1}のうち{0}使用（{2}%）。残り{3}。"}, "Anggaran bulanan: {0}": {"EN": "Monthly budget: {0}", "JP": "月間予算：{0}"}, "Belanja & minimarket": {"EN": "Shopping & minimarts", "JP": "買い物・コンビニ"}, "Makan & kopi": {"EN": "Food & coffee", "JP": "食事・コーヒー"}, "Travel": {"EN": "Travel", "JP": "旅行"}, "Tagihan": {"EN": "Bills", "JP": "請求書"}, "Transportasi": {"EN": "Transport", "JP": "交通"}, "Pusat keamanan": {"EN": "Security center", "JP": "セキュリティセンター"}, "Kunci BioID sementara": {"EN": "Temporarily lock BioID", "JP": "BioIDを一時ロック"}, "Blokir semua pembayaran biometrik dalam satu ketukan, misalnya saat curiga": {"EN": "Block all biometric payments in one tap, e.g. if something looks wrong", "JP": "不審な時など、ワンタップで生体認証の支払いをすべてブロック"}, "Limit per transaksi": {"EN": "Per-payment limit", "JP": "1回あたりの上限"}, "Transaksi di atas limit ditolak walau biometrik cocok": {"EN": "Payments above the limit are declined even if biometrics match", "JP": "上限を超える支払いは生体認証が一致しても拒否されます"}, "Mode malam": {"EN": "Night mode", "JP": "夜間モード"}, "Pukul 23.00–05.00 limit otomatis turun ke Rp 500.000": {"EN": "From 23:00 to 05:00 the limit drops to Rp 500,000", "JP": "23:00〜5:00は上限が Rp 500,000 に下がります"}, "Mode malam aktif": {"EN": "Night mode on", "JP": "夜間モード オン"}, "Mode malam mati": {"EN": "Night mode off", "JP": "夜間モード オフ"}, "Aktivitas terakhir": {"EN": "Recent activity", "JP": "最近のアクティビティ"}, "Tanpa limit": {"EN": "No limit", "JP": "上限なし"}, "Limit per transaksi: {0}": {"EN": "Per-payment limit: {0}", "JP": "1回あたりの上限：{0}"}, "BioID dikunci. Pembayaran biometrik diblokir.": {"EN": "BioID locked. Biometric payments blocked.", "JP": "BioIDをロックしました。生体認証の支払いはブロックされます。"}, "BioID dibuka kembali.": {"EN": "BioID unlocked.", "JP": "BioIDのロックを解除しました。"}, "BioID dibuka": {"EN": "BioID unlocked", "JP": "BioIDロック解除"}, "Dari aplikasi BioPay": {"EN": "From the BioPay app", "JP": "BioPayアプリから"}, "Baru saja": {"EN": "Just now", "JP": "たった今"}, "Pembayaran di terminal": {"EN": "Payment at terminal", "JP": "端末での支払い"}, "Masuk dengan wajah": {"EN": "Signed in with face", "JP": "顔でサインイン"}, "Wallet terhubung": {"EN": "Wallet linked", "JP": "ウォレット連携"}, "Limit diubah": {"EN": "Limit changed", "JP": "上限を変更"}, "BioID sedang dikunci. Buka kunci di Pengaturan.": {"EN": "BioID is locked. Unlock it in Settings.", "JP": "BioIDはロック中です。設定で解除してください。"}, "Sumber dana": {"EN": "Funding source", "JP": "支払元"}});
         Object.entries({"Minta": "Request", "Kirim": "Send", "Pesan": "Inbox", "Cashback 10% bayar pakai wajah": "10% cashback when you pay with your face", "Di merchant BioPay, maks. Rp 25.000 · s/d 30 Nov": "At BioPay merchants, up to Rp 25.000 · until 30 Nov", "Pulsa &": "Airtime &", "Pulsa & Data": "Airtime & Data", "Listrik": "Electricity", "Investasi": "Investing", "Lihat": "See", "Semua": "All", "masuk untuk lihat update terbaru!": "is in, see the latest updates!", "Jaminan 100% Uang Kembali": "100% Money-Back Guarantee", "AMAN": "SAFE", "Riwayat Terakhir": "Recent Activity", "SEMUA": "ALL", "Belum ada transaksi": "No transactions yet", "Kasku adalah e-wallet fiktif untuk demo BioPay.": "Kasku is a fictional e-wallet for the BioPay demo.", "Semua transaksi hanya simulasi.": "All transactions are simulated.", "Beranda": "Home", "Aktivitas": "Activity", "Dompet": "Wallet", "Saya": "Me", "Beli Pulsa": "Buy Airtime", "Total Pembayaran": "Total Payment", "Metode Pembayaran": "Payment Method", "BAYAR SEKARANG": "PAY NOW", "Isi Saldo": "Top Up", "ISI SALDO": "TOP UP", "Kirim Uang": "Send Money", "KIRIM SEKARANG": "SEND NOW", "Pilih Layanan BioPay": "Choose a BioPay service", "Tagih Pelanggan (BioPay)": "Charge a Customer (BioPay)", "QR · Scan, QR Saya, QR Bayar": "QR · Scan, My QR, Pay QR", "Masuk ke BioPay": "Open BioPay", "QR Saya": "My QR", "QR Bayar": "Pay QR", "Scan QR orang atau toko untuk membayar mereka.": "Scan a person’s or shop’s QR to pay them.", "Menyiapkan kamera…": "Starting camera…", "Nominal (Rp)": "Amount (Rp)", "Lihat ke kamera…": "Look at the camera…", "Bayar · konfirmasi wajah": "Pay · confirm with face", "Tunjukkan ke pengirim untuk menerima uang": "Show this to the sender to receive money", "Salin Nomor": "Copy Number", "Simulasikan ada yang bayar Rp 50.000": "Simulate an incoming Rp 50.000", "Tunjukkan ke kasir / HP orang lain": "Show to the cashier / another phone", "Sudah dipakai": "Already used", "Berlaku untuk 1 kali pembayaran": "Valid for one payment", "Buat QR Bayar baru": "Create a new Pay QR", "Simulasi: HP kasir / orang lain": "Simulation: cashier / other phone", "Setelah QR di atas di-scan, mereka mengetik nominal lalu menarik pembayaran.": "After scanning the QR above, they type the amount and take the payment.", "Scan & tarik": "Scan & charge", "Nominal Tagihan": "Amount to Charge", "Masukkan total belanja pelanggan Anda": "Enter your customer’s total", "Lanjut Scan Wajah": "Continue to Face Scan", "Batal": "Cancel", "Identifikasi Wajah": "Face Identification", "Arahkan kamera ke wajah pelanggan": "Point the camera at the customer’s face", "Mencari Identitas BioPay...": "Looking up BioPay identity...", "Total Tagihan:": "Total due:", "Konfirmasi & Scan Tangan": "Confirm & Scan Palm", "Otorisasi Tangan": "Palm Authorization", "Arahkan kamera ke telapak tangan pelanggan": "Point the camera at the customer’s palm", "Memindai telapak tangan...": "Scanning palm...", "Pembayaran Berhasil!": "Payment Successful!", "Dana dari pelanggan telah masuk ke saldo Anda.": "The customer’s payment is now in your balance.", "Total Diterima": "Total Received", "Selesai": "Done", "Akun demo: ikbal@biopay.id · biopay123": "Demo account: ikbal@biopay.id · biopay123", "Total purchase": "Total purchase", "Scan & Bayar": "Scan & Pay", "Kode": "Code", "Sisa bulan ini": "Left this month", "Ketik atau panggil “BioPay” dengan suara": "Type, or call “BioPay” with your voice", "Tulis pesan untuk asisten": "Message the assistant", "Kantong baru": "New pocket", "Tagihan mendatang": "Upcoming bills", "Arahkan kamera ke QR toko (QRIS) atau QR BioPay teman untuk membayar.": "Point the camera at a shop QR (QRIS) or a friend’s BioPay QR to pay.", "· terima ke": "· receive to", "Tunjukkan ke pengirim. Mereka scan dari aplikasi BioPay, lalu uang masuk ke dompet utamamu.": "Show this to the sender. They scan it in BioPay and the money lands in your main wallet.", "Simulasikan ada yang bayar": "Simulate an incoming payment", "Tunjukkan ke kasir": "Show to the cashier", "detik": "seconds", "Kode ini hanya berlaku 60 detik dan sekali pakai, jadi aman kalau difoto orang.": "This code works for 60 seconds and only once, so it’s safe even if someone photographs it.", "Simulasikan kasir scan": "Simulate the cashier scanning", "Listrik PLN": "Electricity (PLN)", "Notifikasi dan tagihan": "Notifications and bills", "No. HP / Nama penerima": "Phone no. / recipient name", "Tutup": "Close", "QR untuk menerima uang": "QR to receive money", "QR bayar sekali pakai": "Single-use pay QR", "Nominal, mis. 35000": "Amount, e.g. 35000", "Notifikasi & tagihan": "Notifications & bills", "Tutup BioPay, kembali ke e-wallet": "Close BioPay, back to the e-wallet", "QR BioPay untuk menerima uang": "BioPay QR to receive money", "Nominal (opsional)": "Amount (optional)", "QR pembayaran untuk discan kasir": "Payment QR for the cashier to scan", "Kode QRIS milik Ikbal Habibi": "Ikbal Habibi’s QRIS code", "Notifikasi": "Notifications", "Tagihan menunggu": "Bills due", "Listrik PLN pascabayar": "Electricity (PLN) postpaid", "Bayar": "Pay", "Info lainnya": "Other updates", "Cashback 10% pakai BioPay": "10% cashback with BioPay", "Berlaku di merchant BioPay sampai 30 Nov.": "Valid at BioPay merchants until 30 Nov.", "Login dari perangkat baru": "Sign-in from a new device", "Chrome di Windows · Jakarta. Bukan kamu? Ganti PIN.": "Chrome on Windows · Jakarta. Not you? Change your PIN.", "Simulasikan tagihan baru masuk": "Simulate a new bill", "Bayar tagihan": "Pay bill", "No. pelanggan": "Customer no.", "Jatuh tempo": "Due", "Pilih metode pembayaran": "Choose a payment method", "Scan pakai aplikasi bank atau e-wallet mana pun · tanpa biaya admin": "Scan with any bank or e-wallet app · no admin fee", "Wajah + telapak tangan, tanpa kartu · tanpa biaya admin": "Face + palm, no card · no admin fee", "Virtual account, dicek otomatis · biaya admin Rp 2.500": "Virtual account, checked automatically · Rp 2.500 admin fee", "Tagihan": "Bill", "Biaya admin": "Admin fee", "Gratis": "Free", "Total bayar": "Total to pay", "Kembali": "Back", "Metode pembayaran": "Payment method", "Pilih bank": "Choose a bank", "Bayar ke kasir (QR Bayar)": "Paid to cashier (Pay QR)", "Kode ini sudah dipakai. Buat QR Bayar baru.": "This code has been used. Create a new Pay QR.", "Catat pengeluaran cukup dengan mengetik, misalnya “makan siang 35rb”": "Record spending just by typing, e.g. “lunch 35k”", "Semua transaksi BioPay (bayar, transfer, tarik tunai, tagihan, top up) masuk otomatis lengkap dengan jamnya. Transaksi tunai bisa dicatat lewat asisten, diketik atau diucapkan.": "Every BioPay transaction (payments, transfers, cash withdrawals, bills, top-ups) is recorded automatically with its time. Cash spending can be logged with the assistant, typed or spoken.", "Pesawat": "Flights", "Kereta": "Trains", "Atraksi": "Attractions", "Perjalanan berikutnya": "Next trip", "Semua pesanan": "All bookings", "Promo untukmu": "Deals for you", "Lihat semua": "See all", "Diskon 10% semua produk": "10% off everything", "Khusus bayar pakai BioPay, tanpa minimum": "When you pay with BioPay, no minimum", "Destinasi populer": "Popular destinations", "Pesanan": "Bookings", "Akun": "Account", "Dana dari pelanggan telah masuk ke saldo Lintas Pay Anda.": "The customer’s payment is now in your Lintas Pay balance.", "Akun Lintas": "Lintas account", "Cari": "Search", "Hasil pencarian": "Search results", "Isi data": "Details", "Pembayaran": "Payment", "E-tiket": "E-ticket", "Tutup BioPay, kembali ke Lintas": "Close BioPay, back to Lintas", "Pesanan saya": "My bookings", "Salin kode, lalu pakai saat isi data": "Copy the code and use it at checkout", "Salin": "Copy", "Saldo Lintas Pay": "Lintas Pay balance", "QRIS saya": "My QRIS", "Riwayat Lintas Pay": "Lintas Pay history", "Bayar pesawat": "Flight payment", "Pengaturan": "Settings", "Notifikasi harga turun": "Price-drop alerts", "Tagihan & notifikasi": "Bills & notifications", "Cari pesawat": "Search flights", "Dari": "From", "Ke": "To", "Tanggal berangkat": "Departure date", "Penumpang": "Passengers", "Dewasa, 12 tahun ke atas": "Adults, 12 years and over", "Ekonomi": "Economy", "Bisnis": "Business", "Harga sudah termasuk pajak. Tidak ada biaya layanan tambahan.": "Prices include tax. No extra service fees.", "Tukar asal dan tujuan": "Swap origin and destination", "Kurangi Penumpang": "Fewer passengers", "Tambah Penumpang": "More passengers", "1. Pilih": "1. Choose", "2. Isi data": "2. Details", "3. Bayar": "3. Pay", "Termurah": "Cheapest", "Tercepat": "Fastest", "Langsung": "Direct", "Bisa refund": "Refundable", "Urutkan": "Sort", "Cari hotel": "Search hotels", "Kota atau area": "City or area", "Durasi": "Duration", "Kamar": "Rooms", "2 tamu per kamar": "2 guests per room", "Kurangi Durasi": "Shorter stay", "Tambah Durasi": "Longer stay", "Kurangi Kamar": "Fewer rooms", "Tambah Kamar": "More rooms", "/malam": "/night", "Bebas batal": "Free cancellation", "Cari kereta": "Search trains", "Cari atraksi": "Search attractions", "Kota": "City", "Tanggal kunjungan": "Visit date", "Tiket": "Tickets", "Dewasa & anak": "Adults & children", "Kurangi Tiket": "Fewer tickets", "Tambah Tiket": "More tickets", "Snorkeling Setengah Hari Bali": "Half-day Snorkeling in Bali", "/tiket": "/ticket", "Tur Kuliner Malam Bali": "Bali Night Food Tour", "Nominal (min. Rp 10.000)": "Amount (min. Rp 10.000)", "Tagihan Lintas PayLater": "Lintas PayLater bill", "ATM ini terhubung ke BioPay. Tidak perlu kartu atau PIN.": "This ATM is connected to BioPay. No card or PIN needed.", "Uang diambil dari rekening atau e-wallet yang sudah kamu hubungkan.": "Money comes from the bank account or e-wallet you’ve already linked.", "Mulai: lihat ke kamera": "Start: look at the camera", "Belum punya BioID? Daftar di terminal BioPay (perangkat pertama) atau di aplikasi.": "No BioID yet? Sign up on the BioPay terminal (first device) or in the app.", "Slot kartu · tidak dipakai": "Card slot · not used", "Kamera ATM": "ATM camera", "Uang keluar": "Cash out", "· BioID terverifikasi": "· BioID verified", "Kamu di halaman BioPay": "You’re on your BioPay page", "Sumber dana": "Funding source", "Rekening bank": "Bank account", "utama": "main", "terhubung": "linked", "Pilih transaksi": "Choose a transaction", "Tarik tunai": "Withdraw cash", "Setor tunai": "Deposit cash", "Cek saldo": "Check balance", "Keluar": "Exit", "Rekening bank •••• 4821": "Bank account •••• 4821", "Tarik": "Withdraw", "Saldo kamu": "Your balances", "E-wallet Kasku utama": "Kasku e-wallet main", "Dompet Nusa terhubung": "Dompet Nusa linked", "Total semua sumber": "Total across sources", "BioPay menampilkan saldo langsung dari bank dan e-wallet mitra. BioPay sendiri tidak menyimpan uang.": "BioPay shows balances straight from partner banks and e-wallets. BioPay itself never holds money.", "Masukkan uang ke slot. Dana masuk ke": "Insert cash into the slot. It goes to", "Simulasikan setor Rp 500.000": "Simulate a Rp 500.000 deposit", "Silakan ambil uang Anda": "Please take your cash", "Uang sudah diambil": "I’ve taken the cash", "Transaksi selesai": "Transaction complete", "Sisa saldo": "Remaining balance", "Biaya": "Fee", "Notifikasi & struk digital terkirim ke ponsel.": "Notification & digital receipt sent to your phone.", "1 · Wajah": "1 · Face", "2 · Telapak tangan": "2 · Palm", "3 · Masuk BioPay": "3 · Open BioPay", "Lihat ke kamera ATM": "Look at the ATM camera", "Pemeriksaan kedalaman 3D memastikan ini orang sungguhan, bukan foto.": "A 3D depth check makes sure it’s a real person, not a photo.", "Tunjukkan telapak tangan": "Show your palm", "Faktor kedua. Tanpa telapak tangan, ATM tidak akan terbuka. Di ATM sungguhan, telapak cukup diarahkan ke kamera ATM.": "Second factor. Without the palm, the ATM won’t open. On a real ATM you simply show your palm to the ATM camera.", "Selamat datang": "Welcome", "Transfer": "Transfer", "Top up e-wallet": "Top up e-wallet", "Lainnya": "Other", "Dana darurat": "Emergency fund", "Liburan Bali": "Bali holiday", "Gaji bulan ini": "This month’s salary", "Internet rumah": "Home internet", "Cicilan PayLater": "PayLater instalment", "Tunai & lainnya": "Cash & other", "Pemasukan": "Income", "Transfer & tunai": "Transfers & cash", "Pindah dana": "Moving money", "otomatis": "automatic", "suara": "voice", "asisten": "assistant", "Hari ini": "Today", "Kemarin": "Yesterday", "3 hari lalu": "3 days ago", "Pembaca QR tidak tersedia · pakai simulasi": "QR reader unavailable · use simulation", "Ganti ke kamera depan": "Switch to front camera", "Ganti ke kamera belakang": "Switch to back camera", "Izin mikrofon ditolak atau mikrofon tidak ada": "Microphone permission denied, or no microphone", "Kamera depan": "Front camera", "Kamera belakang": "Back camera", "Perangkat ini hanya punya satu kamera": "This device has only one camera", "Balik": "Flip", "Deteksi AI tidak tersedia · simulasi": "AI detection unavailable · simulation", "Mencari kode QR…": "Looking for a QR code…", "Kamera tidak tersedia · pakai simulasi": "Camera unavailable · use simulation", "Simulasi suara": "Simulated voice", "Berhenti mendengarkan": "Stop listening", "Dengarkan “BioPay”": "Listen for “BioPay”", "Mendengarkan… ucapkan “BioPay, …”": "Listening… say “BioPay, …”", "Mikrofon mati": "Microphone off", "Nyalakan, lalu ucapkan: “BioPay, kopi dua ribu”": "Turn it on, then say: “BioPay, coffee two thousand”", "BioPay mendengar: {0}": "BioPay heard: {0}", "Pengeluaran": "Spending", "Asisten Keuangan": "Money Assistant", "Anggaran per kategori": "Budget by category", "Kantong tabungan": "Savings pockets", "Catatan terakhir": "Latest entries", "Keuangan": "Money", "Contoh: kopi 28rb, bonus 1,2jt, nabung liburan 200rb": "Example: coffee 28k, bonus 1.2m, save for bali 200k", "Rp 100.000": "Rp 100.000", "Jatuh tempo tgl {0} · pengingat 3 hari sebelumnya": "Due on the {0}th · reminder 3 days before", "dicatat asisten": "recorded by assistant", "Pindai": "Scan", "Scan": "Scan", "Scan ulang": "Scan again", "Bayar pakai": "Pay with", "Minta {0}": "Request {0}", "QR diatur untuk {0}": "QR set for {0}", "Nominal dikosongkan": "Amount cleared", "QR terbaca: {0}": "QR read: {0}", "{0} terbayar ke {1}": "{0} paid to {1}", "{0} masuk dari {1}": "{0} received from {1}", "Kasir menarik {0} dari {1}": "Cashier took {0} from {1}", "Simulasikan scan QR toko": "Simulate scanning a shop QR", "Berganti dalam": "Changes in", "QR Scan & Bayar": "QR Scan & Pay", "Atur": "Set", "Arahkan kamera ke kode QR": "Point the camera at the QR code", "Menu QR": "QR menu", "Isi data pemesanan": "Booking details", "Nama lengkap (sesuai KTP/paspor)": "Full name (as on ID/passport)", "E-tiket dikirim ke email dan nomor HP ini.": "The e-ticket is sent to this email and phone number.", "Data penumpang": "Passenger details", "Asuransi perjalanan": "Travel insurance", "Kode promo": "Promo code", "Pakai": "Apply", "Rincian harga": "Price details", "Lanjut bayar": "Continue to payment", "Nama sesuai identitas": "Name as on ID", "Isi nama lengkap pemesan": "Enter the booker’s full name", "Selesaikan pembayaran dalam": "Complete payment within", "BioPay · wajah + telapak": "BioPay · face + palm", "Tanpa kartu, verifikasi 2 langkah": "No card, 2-step verification", "Rincian": "Details", "Pembayaran berhasil": "Payment successful", "Berangkat": "Departs", "Tiba": "Arrives", "Tanggal": "Date", "Penerbangan": "Flight", "Kode booking": "Booking code", "Tunjukkan kode ini saat boarding.": "Show this code at boarding.", "Dibayar dengan": "Paid with", "Batalkan pesanan": "Cancel booking", "Lihat pesanan saya": "See my bookings", "Kembali ke beranda": "Back to home", "Ada aktivitas login dari perangkat baru!": "New sign-in activity from another device!", "Anggota dihapus": "Member removed", "Arahkan wajah ke kasir untuk bayar tiket travel otomatis.": "Look at the cashier camera to pay for travel tickets automatically.", "Asal dan tujuan tidak boleh sama": "Origin and destination can’t be the same", "BioID sedang dikunci. Buka kunci di Pengaturan.": "BioID is locked. Unlock it in Settings.", "Browser ini belum mendukung suara. Pakai Chrome atau Edge, atau coba tombol simulasi.": "This browser doesn’t support voice yet. Use Chrome or Edge, or try the simulation buttons.", "Format email belum benar": "The email format isn’t right", "Gagal menyalin": "Couldn’t copy", "Identitas penerima ditemukan!": "Recipient identified!", "Inapku terhubung ke akun Anda": "Inapku is linked to your account", "Kasir belum mengisi nominal": "The cashier hasn’t entered an amount", "Latensi Settlement: 1.15 Detik via Jaringan Solana": "Settlement latency: 1.15 s via the Solana network", "Limit diperbarui!": "Limit updated!", "Lintas sudah menjadi platform utama": "Lintas is already your main platform", "Masuk ke BioPay. Pilih sumber dana dan transaksi.": "You’re in BioPay. Choose a funding source and a transaction.", "Masukkan nominal tagihan yang valid!": "Enter a valid amount to charge!", "Masukkan nominal yang valid!": "Enter a valid amount!", "Masukkan tujuan transfer!": "Enter a transfer recipient!", "Membuka BioPay...": "Opening BioPay...", "Mendengarkan. Layar dijaga tetap menyala. Ucapkan “BioPay, kopi dua ribu”.": "Listening. The screen stays on. Say “BioPay, coffee two thousand”.", "Nama dan Peran wajib diisi!": "Name and role are required!", "Nominal minimal Rp 10.000": "Minimum amount Rp 10.000", "Nominal tidak valid (Min. Rp 10.000)": "Invalid amount (min. Rp 10.000)", "Nominal tidak valid!": "Invalid amount!", "Nomor HP belum benar (contoh 0812…)": "Phone number isn’t right (e.g. 0812…)", "Pilih tanggal mulai hari ini": "Choose a date from today onward", "Pilih wallet terlebih dahulu": "Choose a wallet first", "Profil terverifikasi tingkat 3": "Profile verified, level 3", "QR Bayar baru dibuat · kode lama tidak berlaku": "New Pay QR created · the old code no longer works", "QR ini sudah dipakai. Buat QR Bayar baru.": "This QR has been used. Create a new Pay QR.", "Registrasi dibatalkan": "Sign-up cancelled", "Rp 50.000 masuk lewat QR Saya": "Rp 50.000 received via My QR", "Saldo E-Wallet tidak cukup!": "Not enough e-wallet balance!", "Saldo Lintas Pay tidak cukup": "Not enough Lintas Pay balance", "Saldo sumber dana tidak cukup": "Not enough balance in this source", "Saldo tidak cukup!": "Not enough balance!", "Saldo tidak cukup": "Not enough balance", "Cukup kamera: wajah + telapak tangan, tanpa alat tambahan": "Camera only: face + palm, no extra device", "Sesi ditutup. Sampai jumpa!": "Session closed. See you!", "Sesi habis. Silakan scan ulang.": "Session expired. Please scan again.", "Struk dikirim ke email kamu": "Receipt sent to your email", "Tujuan belum diisi!": "Recipient is empty!", "Wajah dikenali. Sekarang telapak tangan.": "Face recognised. Now your palm.", "Wallet sudah terhubung": "Wallet already linked", "Cek email untuk verifikasi akun BioPay.": "Check your email to verify your BioPay account.", "Akun tersimpan aman di server.": "Account saved securely on the server.", "Email belum diverifikasi. Cek kotak masuk email kamu.": "Email not verified yet. Check your inbox.", "Akun dan data biometrik dihapus.": "Account and biometric data deleted.", "Akun demo tidak bisa dihapus. Daftarkan akun baru untuk mencoba fitur ini.": "The demo account can’t be deleted. Register a new account to try this.", "Pesanan dibatalkan": "Booking cancelled", "Kode promo disalin": "Promo code copied", "Nomor QRIS": "QRIS number", "No. ID paspor": "Passport ID no.", "Nomor VA": "VA number", "Hotel": "Hotel", "Kursi": "Seat", "Kelas": "Class", "Check-in": "Check-in", "Check-out": "Check-out", "Tamu": "Guests", "Lokasi": "Location", "Kunjungan": "Visit", "Peserta": "Participants", "Virtual account": "Virtual account", "Bayar dengan BioPay": "Pay with BioPay", "Bayar sekarang": "Pay now", "Saya sudah bayar": "I’ve paid", "Cek status pembayaran": "Check payment status", "Menunggu pembayaran": "Awaiting payment", "Lunas": "Paid", "Dibatalkan": "Cancelled", "Aktif": "Active", "Refund diproses": "Refund in progress", "Belum ada pesanan": "No bookings yet", "Pesanan aktif": "Active bookings", "Riwayat pesanan": "Booking history", "Pilih": "Choose", "Pilih kursi": "Choose seat", "Masukkan nomor": "Enter number", "Pastikan nama tagihan": "Make sure the bill name", "Saya sudah transfer": "I’ve transferred", "Mengecek pembayaran…": "Checking payment…", "Tagihan lunas": "Bill paid", "Metode": "Method", "Total dibayar": "Total paid", "Sudah dibayar": "Paid", "Pilih bank dulu.": "Choose a bank first.", "Tambah sarapan": "Add breakfast", "Proteksi bebas batal": "Free-cancellation protection", "Transfer ke virtual account": "Transfer to virtual account", "Nomor virtual account": "Virtual account number", "Salin nomor": "Copy number", "Transfer persis sesuai jumlah di atas dari m-banking atau ATM mana pun. Status diperbarui otomatis.": "Transfer exactly the amount above from any m-banking app or ATM. The status updates automatically.", "Asuransi aktivitas": "Activity insurance", "Batalkan pesanan?": "Cancel this booking?", "Biaya pembatalan": "Cancellation fee", "Tidak bisa refund": "Non-refundable", "Refund ke Lintas Pay": "Refund to Lintas Pay", "Tidak jadi": "Keep booking", "Konfirmasi pembatalan": "Confirm cancellation", "Ya, batalkan": "Yes, cancel", "Refund masuk ke Lintas Pay": "Refund goes to Lintas Pay", "berikan 💭,❤️,🎁 biar seru!": "drop a 💭, ❤️ or 🎁 to make it fun!", "Bayar sebelum": "Pay before", "Data pemesan": "Booker details", "Tambahan": "Extras", "Dicek otomatis setelah transfer": "Checked automatically after transfer", "Sarapan": "Breakfast", "Hotel 15% lebih hemat": "Hotels 15% off", "Khusus hotel, maks. potongan Rp 300.000": "Hotels only, up to Rp 300.000 off", "Hotel 15% lebih hemat, maks. Rp 300.000.": "Hotels 15% off, up to Rp 300.000.", "Min. transaksi Rp 500.000, maks. potongan Rp 150.000": "Min. spend Rp 500.000, up to Rp 150.000 off", "Transaksi lain": "Another transaction", "No. HP": "Phone no.", "Email": "Email", "Utama": "Main", "Cadangan": "Backup", "Cadangan {0}": "Backup {0}", "Kosongkan": "Empty", "Naikkan {0}": "Move {0} up", "Turunkan {0}": "Move {0} down", "{0} sekarang {1}": "{0} is now {1}", "Simulasi: saldo {0} dikosongkan": "Simulation: {0} balance emptied", "Simulasi: {0} ditambah {1}": "Simulation: {1} added to {0}", "Saldo tidak cukup di semua sumber dana untuk {0}. Isi saldo atau ubah urutan di Beranda BioPay → Wallets.": "Not enough balance in any source for {0}. Top up or change the order in BioPay Home → Wallets.", "Saldo {0} tidak cukup. Dipotong dari {1} ({2}).": "{0} didn’t have enough. Charged to {1} ({2}).", "Dipakai untuk pembayaran ini": "Used for this payment", "Dilewati · saldo kurang": "Skipped · not enough balance", "Saldo tidak cukup di semua sumber dana. Isi saldo atau ubah urutan di Beranda BioPay → Wallets.": "Not enough balance in any source. Top up or change the order in BioPay Home → Wallets.", "Saldo {0} tidak cukup, jadi dipotong dari {1} ({2}).": "{0} didn’t have enough, so {1} ({2}) is charged.", "Dipilih manual: {0}.": "Picked manually: {0}.", "Sesuai urutan prioritas: {0} ({1}).": "By priority order: {0} ({1}).", "Saldo disembunyikan": "Balance hidden", "Saldo: {0}": "Balance: {0}", "Otomatis (urutan prioritas)": "Automatic (priority order)", "Smart Route mati: dibayar sesuai urutan prioritas": "Smart Route off: paying by priority order", "Saldo tidak ditampilkan di layar ini demi privasi. Ganti urutan atau lihat saldo di Beranda BioPay → Wallets.": "Balances aren’t shown on this screen for privacy. Change the order or see balances in BioPay Home → Wallets.", "Urutan menentukan dari mana pembayaran dipotong: Utama dulu, lalu Cadangan 1, 2, 3 bila saldo sebelumnya tidak cukup. Saldo hanya tampil di sini, tidak di layar pembayaran.": "The order decides which source pays: Main first, then Backup 1, 2, 3 when the one before doesn’t have enough. Balances are shown only here, never on the payment screen.", "Tombol Kosongkan dan +Rp 500.000 hanya simulasi, untuk mencoba saldo yang tidak cukup.": "The Empty and +Rp 500.000 buttons are a simulation for trying out low balances.", "Saldo tidak ditampilkan di layar ATM. Pilih": "Balances aren’t shown on the ATM screen. Choose", "untuk melihatnya. Kalau sumber dana terpilih tidak cukup, otomatis dipakai cadangan berikutnya.": "to see them. If the chosen source doesn’t have enough, the next backup is used automatically.", "Saldo tidak cukup di semua sumber dana": "Not enough balance in any source", "{0} diatur sebagai utama.": "{0} set as main.", "Foto diambil dari scan wajah terakhir. Hanya tersimpan di browser ini dan hilang saat keluar.": "Photo taken from your latest face scan. Kept only in this browser and cleared when you sign out.", "Mode demo:": "Demo mode:", "foto ini diambil langsung dari scan wajahmu barusan, supaya BioPay bisa dicoba tanpa mendaftar.": "this photo was taken live from the face scan you just did, so you can try BioPay without signing up.", "Di BioPay sungguhan:": "In the real BioPay:", "foto Bio-Pass adalah foto saat pertama kali mendaftar, yang dicocokkan dengan dokumen identitas. Setiap scan hanya mencocokkan wajahmu dengan data itu, tidak mengganti fotonya.": "the Bio-Pass photo is the one taken when you first sign up, checked against your ID document. Every scan only matches your face against it and never replaces the photo.", "Keamanan tetap terjaga:": "Security stays intact:", "foto demo hanya ada di browser ini, tidak dikirim ke server, dan terhapus saat kamu keluar. Pencocokan memakai template biometrik terenkripsi, bukan foto.": "the demo photo stays in this browser, is never sent to a server, and is deleted when you sign out. Matching uses encrypted biometric templates, not photos."}).forEach(([k, v]) => { if (!I18N[k]) I18N[k] = { EN: v, JP: v }; else if (!I18N[k].EN) I18N[k].EN = v; });
+        // Fitur offline, Telapak Darurat, Saldo Gabungan
+        Object.entries({"Bayar saat toko tidak ada internet": "Pay when the shop has no internet", "Siapkan dari rumah. Di toko, kamu tetap cukup wajah + telapak tangan, tanpa HP.": "Set it up at home. At the shop you still only need your face + palm, no phone.", "Ada transaksi offline yang menunggu": "An offline payment is pending", "Sambungkan internet untuk menyelesaikannya. Selama masih menunggu, Bayar Offline di toko itu dikunci.": "Go online to settle it. Until then, Pay Offline at that shop is locked.", "Sambungkan internet": "Go online", "Saldo Offline": "Offline Balance", "Dikunci khusus untuk bayar offline": "Locked for offline payments only", "Kuota Titipan": "Shared Data", "Dipakai HP penjual saat kuotanya habis": "Used by the seller’s phone when its data runs out", "Isi Saldo Offline": "Add Offline Balance", "Titip kuota 10 MB": "Share 10 MB of data", "Tarik ke dompet utama": "Move back to main wallet", "Tiket Bayar · toko langganan": "Pay Tickets · regular shops", "Siapkan Tiket Bayar": "Prepare a Pay Ticket", "Tiket dikirim ke HP toko saat toko masih online. Nanti saat toko tanpa sinyal, wajah + telapak tanganmu tetap bisa dicocokkan dan saldo langsung terpotong. Satu tiket hanya untuk satu toko, jadi tidak bisa terpakai dua kali.": "The ticket is sent to the shop’s phone while the shop is online. Later, with no signal, your face + palm can still be matched and the balance is charged right away. One ticket works at one shop only, so it can’t be spent twice.", "Transaksi offline": "Offline payments", "Kuota habis, sinyal ada:": "Out of data, signal available:", "HP penjual memakai Kuota Titipan-mu lewat jalur khusus BioPay, jadi pembayaran langsung berhasil.": "the seller’s phone uses your Shared Data through a BioPay-only lane, so the payment goes through instantly.", "Tanpa sinyal, toko langganan:": "No signal, regular shop:", "pakai Tiket Bayar, langsung berhasil.": "use a Pay Ticket, goes through instantly.", "Tanpa sinyal, toko lain:": "No signal, other shops:", "status Menunggu (maks. Rp 50.000), selesai otomatis saat kamu atau toko online lagi. Kalau Saldo Offline kurang, dipakai dompet cadangan.": "status Pending (max. Rp 50.000), settled automatically when you or the shop go online again. If the Offline Balance is short, a backup wallet is used.", "Uangnya di mana?": "Where is the money?", "Saldo Offline tetap di dompet mitra, dikunci atas perintah BioPay. BioPay sendiri tidak menyimpan uang.": "The Offline Balance stays in the partner wallet, locked on BioPay’s instruction. BioPay itself never holds money.", "Telapak Darurat · anti begal": "Emergency Palm · anti-robbery", "Peringatan darurat aktif": "Emergency alert active", "BioID dikunci dan keluarga sudah diberi tahu.": "BioID is locked and your family has been alerted.", "Saya aman": "I’m safe", "Telapak Darurat": "Emergency Palm", "Kalau dipaksa bayar, tunjukkan tangan darurat. Layar terlihat berhasil, tapi uang tidak terkirim, BioID terkunci, dan keluarga diberi tahu diam-diam.": "If you’re forced to pay, show your emergency hand. The screen looks successful, but no money is sent, your BioID locks, and your family gets a silent alert.", "Tangan darurat": "Emergency hand", "Pilih sendiri, supaya pelaku tidak bisa menebak": "Your choice, so an attacker can’t guess", "Kiri": "Left", "Kanan": "Right", "Kontak darurat": "Emergency contacts", "Menerima pesan diam-diam beserta lokasi kamera": "Get a silent message with the camera’s location", "Ibu, Kakak": "Mum, Sibling", "Ibu, Kakak, Tim keamanan BioPay": "Mum, Sibling, BioPay security team", "Istri/Suami, Ibu": "Spouse, Mum", "Mode latihan": "Practice mode", "Coba tangan darurat tanpa mengirim peringatan": "Try the emergency hand without sending an alert", "Simulasi: tunjukkan tangan darurat": "Simulation: show the emergency hand", "Simulasi: tunjukkan tangan darurat ({0})": "Simulation: show the emergency hand ({0})", "Saldo Gabungan": "Combined Balance", "Ambil dari": "Take from", "Maksimal Saldo Offline Rp 500.000. Wajib scan wajah + telapak tangan dulu, supaya fitur offline terhubung dengan biometrikmu.": "Offline Balance is capped at Rp 500.000. A face + palm scan comes first, so the offline feature is linked to your biometrics.", "Scan wajah + telapak, lalu isi": "Scan face + palm, then add", "Toko langganan": "Regular shop", "Nominal maksimal (Rp)": "Maximum amount (Rp)", "Masa berlaku": "Valid for", "Uangnya diambil dari Saldo Offline dan dikunci untuk toko ini. Kalau tidak terpakai sampai masa berlaku habis, uang kembali ke Saldo Offline dan data wajahmu dihapus dari HP toko.": "The money comes from your Offline Balance and is locked for this shop. If it isn’t used before it expires, it returns to your Offline Balance and your face data is deleted from the shop’s phone.", "Scan wajah + telapak, lalu kirim tiket": "Scan face + palm, then send the ticket", "Konfirmasi wajah + telapak": "Confirm face + palm", "Lihat ke kamera.": "Look at the camera.", "Memindai wajah…": "Scanning face…", "Sekarang tunjukkan telapak tangan.": "Now show your palm.", "Kedaluwarsa": "Expired", "Tersimpan di HP toko · berlaku {0} jam lagi": "Stored on the shop’s phone · valid for {0} more hours", "Menunggu toko online untuk dikirim…": "Waiting for the shop to come online…", "dari {0}": "of {0}", "Belum ada Tiket Bayar. Siapkan dari rumah untuk toko langgananmu.": "No Pay Tickets yet. Prepare one at home for your regular shop.", "Berhasil": "Paid", "Berhasil · Tiket Bayar": "Paid · Pay Ticket", "Menunggu": "Pending", "Gagal · saldo kurang": "Failed · not enough balance", "SMS (tanpa kuota)": "SMS (no data)", "Tiket Bayar": "Pay Ticket", "Menunggu sinyal": "Waiting for signal", "Semua dompet kosong": "All wallets empty", "Saldo Offline kurang · {0}": "Offline Balance short · {0}", "Belum ada transaksi offline.": "No offline payments yet.", "{0} transaksi di {1} masih menunggu. Sambungkan internet untuk menyelesaikannya. Selama masih menunggu, Bayar Offline di toko itu dikunci.": "{0} payment(s) at {1} still pending. Go online to settle them. Until then, Pay Offline at that shop is locked.", "Saldo Offline maksimal {0}.": "Offline Balance is capped at {0}.", "Dikunci di {0}": "Locked in {0}", "Saldo Offline diisi": "Offline Balance added", "{0} masuk ke Saldo Offline": "{0} added to your Offline Balance", "Kuota dititipkan": "Data shared", "10 MB dari paket internetmu": "10 MB from your data plan", "10 MB kuota dititipkan ke fitur offline": "10 MB of data shared to the offline feature", "Selesaikan dulu transaksi offline yang menunggu.": "Settle the pending offline payment first.", "Saldo Offline kosong": "Offline Balance is empty", "{0} kembali ke {1}": "{0} moved back to {1}", "Saldo Offline kurang. Isi dulu minimal {0}.": "Not enough Offline Balance. Add at least {0} first.", "Sudah ada Tiket Bayar aktif untuk {0}.": "There’s already an active Pay Ticket for {0}.", "Kirim Tiket Bayar": "Send Pay Ticket", "Tiket Bayar dibuat": "Pay Ticket created", "Tiket Bayar untuk {0} dibuat. Dikirim ke HP toko saat toko online.": "Pay Ticket for {0} created. It’s sent to the shop’s phone when the shop is online.", "Tiket Bayar untuk {0} sudah siap": "Pay Ticket for {0} is ready", "Gangguan jaringan, coba lagi nanti.": "Network problem, please try again later.", "BioID pelanggan sedang dikunci.": "The customer’s BioID is locked.", "Saldo pelanggan tidak cukup.": "The customer doesn’t have enough balance.", "Bayar Offline · {0}": "Pay Offline · {0}", "Pelanggan masih punya transaksi offline yang menunggu di toko ini. Minta pelanggan menyambungkan internet dulu.": "This customer still has a pending offline payment at this shop. Ask them to go online first.", "Bayar Offline · Tiket Bayar": "Pay Offline · Pay Ticket", "Tanpa sinyal dan tanpa Tiket Bayar, batas Bayar Offline {0}.": "With no signal and no Pay Ticket, Pay Offline is capped at {0}.", "BioID dibekukan": "BioID frozen", "Bayar Offline {0} di {1} belum lunas": "Pay Offline {0} at {1} is unpaid", "Bayar Offline · selesai saat online": "Pay Offline · settled when online", "Semua transaksi offline sudah selesai": "All offline payments are settled", "{0} transaksi gagal karena semua dompet kosong. BioID dibekukan sampai lunas.": "{0} payment(s) failed because every wallet is empty. BioID is frozen until it’s paid.", "Internet tersambung: {0} transaksi offline selesai dan uang sudah masuk ke toko.": "Online again: {0} offline payment(s) settled and the money reached the shop.", "{0} · {1}. BioID dikunci, uang tidak terkirim, dan {2} sudah diberi tahu beserta lokasinya.": "{0} · {1}. BioID locked, no money sent, and {2} have been alerted with the location.", "Telapak Darurat aktif": "Emergency Palm on", "Telapak Darurat mati": "Emergency Palm off", "Tangan darurat: {0}. Tangan lainnya untuk bayar biasa.": "Emergency hand: {0}. Use the other hand to pay normally.", "Kontak darurat: {0}": "Emergency contacts: {0}", "Latihan: tangan darurat ({0}) dikenali. Tidak ada peringatan yang dikirim.": "Practice: emergency hand ({0}) recognised. No alert was sent.", "Peringatan darurat dikirim": "Emergency alert sent", "Telapak Darurat sedang mati. Aktifkan di Pengaturan > Telapak Darurat.": "Emergency Palm is off. Turn it on in Settings > Emergency Palm.", "Konfirmasi: saya aman": "Confirm: I’m safe", "Alarm darurat dibatalkan": "Emergency alert cancelled", "{0} diberi tahu kamu aman": "{0} told you’re safe", "BioID dibuka. {0} diberi tahu bahwa kamu aman.": "BioID unlocked. {0} have been told you’re safe.", "Saldo Gabungan aktif": "Combined Balance on", "Saldo Gabungan mati": "Combined Balance off", "Dipakai sebagian": "Partly used", "Saldo kosong": "Empty", "Tidak ada satu dompet yang cukup, jadi BioPay menggabungkan {0} dompet dalam satu scan.": "No single wallet has enough, so BioPay combines {0} wallets in one scan.", "Saldo Gabungan: {0}": "Combined Balance: {0}", "Coba lagi nanti": "Try again later", "Offline": "Offline"}).forEach(([k, v]) => { if (!I18N[k]) I18N[k] = { EN: v, JP: v }; else if (!I18N[k].EN) I18N[k].EN = v; });
+
         // ==========================================
         // NEGARA, DOKUMEN IDENTITAS & NOMOR HP
         // ==========================================
@@ -3203,6 +3366,7 @@
                 cameraStream = stopSpecificCamera(cameraStream); qrCamera = stopSpecificCamera(qrCamera);
                 tfCamera = stopSpecificCamera(tfCamera); sharingCamera = stopSpecificCamera(sharingCamera);
                 tfScanToken++; sharingScanToken++;
+                try { bcToken++; bcCam = stopSpecificCamera(bcCam); } catch (e) {}
             }
 
             // ==========================================
@@ -3415,7 +3579,25 @@
                 let skipped = [];
                 if (smartRoute) payWallet = bestRoute(amt, tourist) || walletOrder[0];
                 else { const r = resolvePayer(amt, manualPick); payWallet = r.W || manualPick || walletOrder[0]; skipped = r.skipped; }
+                const single = Object.keys(walletBalances).some(w => walletBalances[w] >= amt);
+                splitPlan = !single && splitPay ? planSplit(amt) : null;
                 $('route-auto').setAttribute('aria-checked', String(smartRoute));
+                $('route-split').setAttribute('aria-checked', String(splitPay));
+                if (splitPlan) {
+                    const used = new Map(splitPlan);
+                    $('route-list').innerHTML = walletOrder.map(w => `<div class="bp-route-opt" role="radio" aria-checked="${used.has(w)}"><span class="bp-route-dot" aria-hidden="true"></span><span class="bp-row-main"><b>${escapeHTML(w)} <span class="bp-rank-tag">${rankLabel(w)}</span></b><small>${used.has(w) ? tr('Dipakai sebagian') : tr('Saldo kosong')}</small></span>${used.has(w) ? `<span class="bp-route-amt">${formatRp(used.get(w))}</span>` : ''}</div>`).join('');
+                    const lim = effectiveLimit(); let bad = '';
+                    if (frozen) bad = tr(duressAlert ? 'Gangguan jaringan, coba lagi nanti.' : 'BioID sedang dikunci. Buka kunci di Pengaturan > Pusat keamanan.');
+                    else if (lim && amt > lim) bad = tr('Melebihi limit per transaksi ({0}).', formatRp(lim));
+                    if (duressNext) bad = '';
+                    const whyEl = $('route-why'); whyEl.textContent = bad || tr('Tidak ada satu dompet yang cukup, jadi BioPay menggabungkan {0} dompet dalam satu scan.', splitPlan.length); whyEl.classList.toggle('is-bad', !!bad);
+                    $('payment-txt-walletname').innerText = tr('Saldo Gabungan');
+                    $('payment-txt-balstart').innerHTML = `<i class="ph-bold ph-eye-slash" aria-hidden="true"></i> ${tr('Saldo disembunyikan')}`;
+                    $('payment-txt-balend').textContent = splitPlan.map(([w]) => w).join(' + '); $('payment-txt-balend').className = 'bp-balend';
+                    const btn = $('btn-confirm-payment'); btn.disabled = !!bad;
+                    btn.innerHTML = !bad ? `<i class="ph-bold ph-check" aria-hidden="true"></i> ${tr('Konfirmasi Bayar')}` : `<i class="ph-bold ph-warning" aria-hidden="true"></i> ${frozen ? tr(duressAlert ? 'Coba lagi nanti' : 'BioID dikunci') : tr('Melebihi limit')}`;
+                    return;
+                }
                 // Tanpa angka saldo: hanya urutan, promo, dan mana yang dipakai
                 $('route-list').innerHTML = walletOrder.map(w => {
                     const pk = perkOf(w, amt, tourist), on = w === payWallet, skip = !smartRoute && skipped.includes(w);
@@ -3427,9 +3609,10 @@
                 }).join('');
                 const pk = perkOf(payWallet, amt, tourist), lim = effectiveLimit(), none = walletBalances[payWallet] < amt;
                 let why = '', bad = '';
-                if (frozen) bad = tr('BioID sedang dikunci. Buka kunci di Pengaturan > Pusat keamanan.');
+                if (frozen) bad = tr(duressAlert ? 'Gangguan jaringan, coba lagi nanti.' : 'BioID sedang dikunci. Buka kunci di Pengaturan > Pusat keamanan.');
                 else if (lim && amt > lim) bad = tr('Melebihi limit per transaksi ({0}).', formatRp(lim));
                 else if (none) bad = tr('Saldo tidak cukup di semua sumber dana. Isi saldo atau ubah urutan di Beranda BioPay → Wallets.');
+                if (duressNext) bad = ''; // tangan darurat: layar harus tetap terlihat normal agar pelaku tidak curiga
                 else if (smartRoute) why = pk.val > 0 ? tr('Dipilih otomatis: saldo cukup dan {0}.', pk.txt.charAt(0).toLowerCase() + pk.txt.slice(1)) : tr('Dipilih otomatis: saldo paling cukup.');
                 else if (skipped.length) why = tr('Saldo {0} tidak cukup, jadi dipotong dari {1} ({2}).', skipped.join(', '), payWallet, rankLabel(payWallet));
                 else why = manualPick ? tr('Dipilih manual: {0}.', payWallet) : tr('Sesuai urutan prioritas: {0} ({1}).', payWallet, rankLabel(payWallet));
@@ -3440,7 +3623,7 @@
                 txtEnd.textContent = none ? tr('Saldo tidak cukup') : rankLabel(payWallet);
                 txtEnd.className = 'bp-balend' + (none ? ' is-bad' : '');
                 btn.disabled = !!bad;
-                btn.innerHTML = !bad ? `<i class="ph-bold ph-check" aria-hidden="true"></i> ${tr('Konfirmasi Bayar')}` : `<i class="ph-bold ph-warning" aria-hidden="true"></i> ${frozen ? tr('BioID dikunci') : (lim && amt > lim ? tr('Melebihi limit') : tr('Saldo tidak cukup'))}`;
+                btn.innerHTML = !bad ? `<i class="ph-bold ph-check" aria-hidden="true"></i> ${tr('Konfirmasi Bayar')}` : `<i class="ph-bold ph-warning" aria-hidden="true"></i> ${frozen ? tr(duressAlert ? 'Coba lagi nanti' : 'BioID dikunci') : (lim && amt > lim ? tr('Melebihi limit') : tr('Saldo tidak cukup'))}`;
             }
             function toggleSmartRoute() { smartRoute = !smartRoute; renderRoute(); toast(smartRoute ? 'Smart Route aktif' : 'Smart Route mati: dibayar sesuai urutan prioritas', 'ph-sparkle', 'text-amber-400'); }
             function pickRoute(name) { if (walletBalances[name] === undefined) return; smartRoute = false; manualPick = name; renderRoute(); }
@@ -3458,6 +3641,222 @@
                     Object.assign(walletBalances, tourSaved.b); smartRoute = tourSaved.s; manualPick = tourSaved.m; tourSaved = null;
                     renderWalletList(); updateBalanceDisplay(); renderRoute(true);
                 }
+            }
+
+            // ==========================================
+            // SALDO GABUNGAN: satu scan, dibayar dari beberapa dompet sekaligus
+            // ==========================================
+            let splitPay = true, splitPlan = null;
+            function planSplit(amt) {
+                const total = walletOrder.reduce((a, w) => a + Math.max(0, walletBalances[w]), 0);
+                if (total < amt) return null;
+                let left = amt; const parts = [];
+                for (const w of walletOrder) { if (left <= 0) break; const take = Math.min(left, Math.max(0, walletBalances[w])); if (take > 0) { parts.push([w, take]); left -= take; } }
+                return parts;
+            }
+            // Demo/tur: buat saldo tiap dompet kurang, tapi totalnya cukup, untuk menunjukkan Saldo Gabungan
+            let splitSaved = null;
+            function demoSplit(on) {
+                if (on) {
+                    if (!splitSaved) splitSaved = { b: { ...walletBalances }, s: smartRoute, m: manualPick, p: splitPay };
+                    smartRoute = false; manualPick = null; splitPay = true;
+                    for (let k = 0; k < 30; k++) { generateRandomPayment(); const lim = effectiveLimit(); if (!lim || currentPaymentIDR <= lim) break; }
+                    const a = currentPaymentIDR, share = [0.4, 0.35, 0.4];
+                    walletOrder.forEach((w, i) => { walletBalances[w] = i < 3 ? Math.ceil(a * share[i]) : 0; });
+                    showScreen('screen-options'); renderRoute(true); renderWalletList(); updateBalanceDisplay();
+                } else if (splitSaved) {
+                    Object.assign(walletBalances, splitSaved.b); smartRoute = splitSaved.s; manualPick = splitSaved.m; splitPay = splitSaved.p; splitSaved = null;
+                    renderWalletList(); updateBalanceDisplay(); renderRoute(true);
+                }
+            }
+            function toggleSplitPay() { splitPay = !splitPay; renderRoute(); toast(splitPay ? 'Saldo Gabungan aktif' : 'Saldo Gabungan mati', 'ph-stack', 'text-amber-400'); }
+
+            // ==========================================
+            // KONFIRMASI BIOMETRIK (wajah lalu telapak) untuk fitur offline & "Saya aman"
+            // ==========================================
+            let bcCam = null, bcToken = 0;
+            async function bioConfirm(title, onDone) {
+                const token = ++bcToken;
+                $('h-bioconfirm').textContent = tr(title);
+                $('bioconfirm-sub').textContent = tr('Lihat ke kamera.');
+                $('bioconfirm-status').textContent = tr('Memindai wajah…');
+                $('modal-bioconfirm').classList.remove('hidden');
+                const alive = () => token === bcToken && !$('modal-bioconfirm').classList.contains('hidden');
+                bcCam = stopSpecificCamera(bcCam);
+                const cam = await requestCameraAccess(sid('video-bioconfirm'));
+                if (!alive()) { stopSpecificCamera(cam); return; }
+                bcCam = cam;
+                const r1 = await scanBiometric({ t: tr, videoId: sid('video-bioconfirm'), kind: 'face', statusEl: $('bioconfirm-status'), cancelled: () => !alive() });
+                if (r1 === 'cancelled' || !alive()) return;
+                $('bioconfirm-sub').textContent = tr('Sekarang tunjukkan telapak tangan.');
+                const r2 = await scanBiometric({ t: tr, videoId: sid('video-bioconfirm'), kind: 'hand', statusEl: $('bioconfirm-status'), cancelled: () => !alive() });
+                if (r2 === 'cancelled' || !alive()) return;
+                bcToken++; bcCam = stopSpecificCamera(bcCam); $('modal-bioconfirm').classList.add('hidden');
+                onDone();
+            }
+            function cancelBioConfirm() { bcToken++; bcCam = stopSpecificCamera(bcCam); $('modal-bioconfirm').classList.add('hidden'); }
+
+            // ==========================================
+            // FITUR OFFLINE: Saldo Offline, Kuota Titipan, Tiket Bayar, Bayar Offline menunggu
+            // ==========================================
+            const OFF_MAX = 500000, OFF_PENDING_MAX = 50000, MB_PER_TX = 0.05;
+            const offline = { balance: 0, quotaMB: 0, tickets: [], log: [] };
+            let offSeq = 0;
+            const fmtMB = mb => (mb >= 1 ? mb.toFixed(mb % 1 ? 2 : 0).replace('.', ',') + ' MB' : Math.round(mb * 1024) + ' KB');
+            const OFF_STATUS = { ok: ['Berhasil', 'bp-chip-ok'], ticket: ['Berhasil · Tiket Bayar', 'bp-chip-ok'], pending: ['Menunggu', 'bp-chip-brass'], failed: ['Gagal · saldo kurang', 'bp-chip-bad'] };
+            function renderOffline() {
+                if (!$('off-balance')) return;
+                $('off-balance').textContent = isBalanceHidden ? 'Rp ••••••' : formatRp(offline.balance);
+                $('off-quota').textContent = fmtMB(offline.quotaMB);
+                const now = Date.now();
+                $('off-tickets').innerHTML = offline.tickets.length ? offline.tickets.map(t => {
+                    const left = Math.max(0, t.exp - now), h = Math.ceil(left / 3600000);
+                    const st = left <= 0 ? tr('Kedaluwarsa') : t.sent ? tr('Tersimpan di HP toko · berlaku {0} jam lagi', h) : tr('Menunggu toko online untuk dikirim…');
+                    return `<li class="bp-tx"><span class="bp-tx-icon" aria-hidden="true"><i class="ph-bold ph-ticket"></i></span><span class="bp-row-main"><b>${escapeHTML(t.store)}</b><small>${escapeHTML(st)}</small></span><span class="bp-tx-amt"><b class="bp-num">${formatRp(t.left)}</b><small>${escapeHTML(tr('dari {0}', formatRp(t.amount)))}</small></span></li>`;
+                }).join('') : `<li class="bp-empty">${escapeHTML(tr('Belum ada Tiket Bayar. Siapkan dari rumah untuk toko langgananmu.'))}</li>`;
+                $('off-log').innerHTML = offline.log.length ? offline.log.map(x => {
+                    const [lbl, cls] = OFF_STATUS[x.status] || ['-', ''];
+                    return `<li class="bp-tx"><span class="bp-tx-icon" aria-hidden="true"><i class="ph-bold ${x.status === 'pending' ? 'ph-hourglass-medium' : x.status === 'failed' ? 'ph-x' : 'ph-check'}"></i></span><span class="bp-row-main"><b>${escapeHTML(x.store)}</b><small>${escapeHTML(tr(x.via))} · ${escapeHTML(fmtWhen(x.at))}</small></span><span class="bp-tx-amt"><b class="bp-num">-${formatRp(x.amount)}</b><span class="bp-chip ${cls}">${escapeHTML(tr(lbl))}</span></span></li>`;
+                }).join('') : `<li class="bp-empty">${escapeHTML(tr('Belum ada transaksi offline.'))}</li>`;
+                const pend = offline.log.filter(x => x.status === 'pending');
+                $('off-pending-banner').classList.toggle('hidden', !pend.length);
+                if (pend.length) $('off-pending-text').textContent = tr('{0} transaksi di {1} masih menunggu. Sambungkan internet untuk menyelesaikannya. Selama masih menunggu, Bayar Offline di toko itu dikunci.', pend.length, [...new Set(pend.map(x => x.store))].join(', '));
+            }
+            function showOfflineFill() {
+                $('offline-fill-amount').value = '';
+                $('offline-fill-source').innerHTML = walletOrder.map(w => `<option value="${escapeHTML(w)}">${escapeHTML(w)} · ${rankLabel(w)}</option>`).join('');
+                $('modal-offline-fill').classList.remove('hidden');
+            }
+            function processOfflineFill() {
+                const amt = parseInt($('offline-fill-amount').value, 10), src = $('offline-fill-source').value;
+                if (!amt || amt <= 0) { toast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
+                if (offline.balance + amt > OFF_MAX) { toast(tr('Saldo Offline maksimal {0}.', formatRp(OFF_MAX)), 'ph-warning', 'text-red-500'); return; }
+                if (walletBalances[src] < amt) { toast('Saldo sumber dana tidak cukup', 'ph-warning', 'text-red-500'); return; }
+                closeModal('modal-offline-fill');
+                bioConfirm('Isi Saldo Offline', () => {
+                    walletBalances[src] -= amt; offline.balance += amt;
+                    renderWalletList(); updateBalanceDisplay(); renderOffline();
+                    addBiopayHistory(tr('Isi Saldo Offline'), tr('Dikunci di {0}', src), formatRp(amt), true, src, { idr: amt, cat: 'Pindah dana', flow: 'move' });
+                    logActivity('Saldo Offline diisi', `${formatRp(amt)} · ${src}`);
+                    toast(tr('{0} masuk ke Saldo Offline', formatRp(amt)), 'ph-wifi-slash', 'text-emerald-400');
+                });
+            }
+            function offlineAddQuota() {
+                bioConfirm('Titip kuota 10 MB', () => {
+                    offline.quotaMB += 10; renderOffline();
+                    logActivity('Kuota dititipkan', tr('10 MB dari paket internetmu'));
+                    toast('10 MB kuota dititipkan ke fitur offline', 'ph-cell-signal-full', 'text-emerald-400');
+                });
+            }
+            function offlineWithdraw() {
+                if (offline.log.some(x => x.status === 'pending')) { toast('Selesaikan dulu transaksi offline yang menunggu.', 'ph-hourglass-medium', 'text-amber-400'); return; }
+                if (offline.balance <= 0) { toast('Saldo Offline kosong', 'ph-info', 'text-sky-400'); return; }
+                const amt = offline.balance, W = walletOrder[0];
+                offline.balance = 0; walletBalances[W] += amt;
+                renderWalletList(); updateBalanceDisplay(); renderOffline();
+                toast(tr('{0} kembali ke {1}', formatRp(amt), W), 'ph-arrow-u-up-left', 'text-emerald-400');
+            }
+            function showOfflineTicket() { $('offline-ticket-amount').value = 50000; $('modal-offline-ticket').classList.remove('hidden'); }
+            function processOfflineTicket() {
+                const store = $('offline-ticket-store').value, amt = parseInt($('offline-ticket-amount').value, 10), days = parseInt($('offline-ticket-days').value, 10) || 1;
+                if (!amt || amt <= 0) { toast('Masukkan nominal yang valid!', 'ph-warning', 'text-red-500'); return; }
+                if (offline.balance < amt) { toast(tr('Saldo Offline kurang. Isi dulu minimal {0}.', formatRp(amt)), 'ph-warning', 'text-red-500'); return; }
+                if (offline.tickets.some(t => t.store === store && t.left > 0 && t.exp > Date.now())) { toast(tr('Sudah ada Tiket Bayar aktif untuk {0}.', store), 'ph-info', 'text-sky-400'); return; }
+                closeModal('modal-offline-ticket');
+                bioConfirm('Kirim Tiket Bayar', () => {
+                    offline.balance -= amt;
+                    const t = { id: 'T' + (++offSeq), store, amount: amt, left: amt, exp: Date.now() + days * 86400000, sent: false };
+                    offline.tickets.unshift(t); renderOffline();
+                    logActivity('Tiket Bayar dibuat', `${store} · ${formatRp(amt)}`);
+                    toast(tr('Tiket Bayar untuk {0} dibuat. Dikirim ke HP toko saat toko online.', store), 'ph-ticket', 'text-emerald-400');
+                    setTimeout(() => { t.sent = true; renderOffline(); toast(tr('Tiket Bayar untuk {0} sudah siap', store), 'ph-check-circle', 'text-emerald-400'); }, 1500);
+                });
+            }
+            // Dipanggil HP penjual (kit merchant) saat penjual memilih "Bayar Offline" lalu scan wajah + telapak pelanggan.
+            // net: 'quota' = sinyal ada tapi kuota penjual habis; 'none' = tanpa sinyal sama sekali.
+            function offlineCharge({ store, amount, net, credit }) {
+                if (frozen) return { status: 'reject', msg: tr(duressAlert ? 'Gangguan jaringan, coba lagi nanti.' : 'BioID pelanggan sedang dikunci.') };
+                const rec = { id: 'O' + (++offSeq), store, amount, at: new Date(), status: 'ok', via: '', credit, credited: false };
+                if (net === 'quota') {
+                    if (offline.quotaMB >= MB_PER_TX) { offline.quotaMB = Math.max(0, offline.quotaMB - MB_PER_TX); rec.via = 'Kuota Titipan'; }
+                    else rec.via = 'SMS (tanpa kuota)';
+                    if (offline.balance >= amount) offline.balance -= amount;
+                    else { const W = chargeFallback(amount); if (!W) return { status: 'reject', msg: tr('Saldo pelanggan tidak cukup.') }; rec.via += ' · ' + W; }
+                    rec.credited = true; offline.log.unshift(rec); renderOffline();
+                    addBiopayHistory(store, tr('Bayar Offline · {0}', tr(rec.via)), formatRp(amount), true, 'Saldo Offline', { idr: amount, cat: payCategory, channel: 'offline' });
+                    return { status: 'ok', via: rec.via };
+                }
+                if (offline.log.some(x => x.status === 'pending' && x.store === store)) return { status: 'reject', msg: tr('Pelanggan masih punya transaksi offline yang menunggu di toko ini. Minta pelanggan menyambungkan internet dulu.') };
+                const t = offline.tickets.find(x => x.store === store && x.sent && x.exp > Date.now() && x.left >= amount);
+                if (t) {
+                    t.left -= amount; rec.status = 'ticket'; rec.via = 'Tiket Bayar';
+                    offline.log.unshift(rec); renderOffline();
+                    addBiopayHistory(store, tr('Bayar Offline · Tiket Bayar'), formatRp(amount), true, 'Saldo Offline', { idr: amount, cat: payCategory, channel: 'offline' });
+                    return { status: 'ticket', id: rec.id };
+                }
+                if (amount > OFF_PENDING_MAX) return { status: 'reject', msg: tr('Tanpa sinyal dan tanpa Tiket Bayar, batas Bayar Offline {0}.', formatRp(OFF_PENDING_MAX)) };
+                rec.status = 'pending'; rec.via = 'Menunggu sinyal';
+                offline.log.unshift(rec); renderOffline();
+                return { status: 'pending', id: rec.id };
+            }
+            // Siapa pun yang online duluan (pembeli atau toko) menyelesaikan transaksi; uang ke toko hanya sekali.
+            function offlineSettle(id) {
+                const rec = offline.log.find(x => x.id === id); if (!rec) return null;
+                if (rec.status === 'pending') {
+                    if (offline.balance >= rec.amount) { offline.balance -= rec.amount; rec.via = 'Saldo Offline'; }
+                    else { const W = chargeFallback(rec.amount); if (W) rec.via = tr('Saldo Offline kurang · {0}', W); else { rec.status = 'failed'; rec.via = 'Semua dompet kosong'; frozen = true; logActivity('BioID dibekukan', tr('Bayar Offline {0} di {1} belum lunas', formatRp(rec.amount), rec.store)); renderSecurity(); updateHomeExtras(); renderOffline(); return rec; } }
+                    rec.status = 'ok';
+                    addBiopayHistory(rec.store, tr('Bayar Offline · selesai saat online'), formatRp(rec.amount), true, 'Saldo Offline', { idr: rec.amount, cat: payCategory, channel: 'offline' });
+                }
+                if (!rec.credited && rec.status !== 'failed') { rec.credited = true; if (typeof rec.credit === 'function') rec.credit(rec.amount, rec.store); }
+                renderOffline(); return rec;
+            }
+            function offlineGoOnline() {
+                const todo = offline.log.filter(x => (x.status === 'pending' || x.status === 'ticket') && !x.credited);
+                if (!todo.length) { toast('Semua transaksi offline sudah selesai', 'ph-check-circle', 'text-emerald-400'); renderOffline(); return; }
+                todo.forEach(x => offlineSettle(x.id));
+                const fail = todo.filter(x => x.status === 'failed').length;
+                toast(fail ? tr('{0} transaksi gagal karena semua dompet kosong. BioID dibekukan sampai lunas.', fail) : tr('Internet tersambung: {0} transaksi offline selesai dan uang sudah masuk ke toko.', todo.length), fail ? 'ph-warning' : 'ph-wifi-high', fail ? 'text-red-500' : 'text-emerald-400');
+            }
+
+            // ==========================================
+            // TELAPAK DARURAT (anti begal)
+            // ==========================================
+            let duressOn = true, duressHand = 'Kiri', duressNext = false, duressAlert = null;
+            const DURESS_CONTACTS = ['Ibu, Kakak', 'Ibu, Kakak, Tim keamanan BioPay', 'Istri/Suami, Ibu'];
+            let duressContacts = DURESS_CONTACTS[0];
+            function renderDuress() {
+                if (!$('sec-duress')) return;
+                $('sec-duress').setAttribute('aria-checked', String(duressOn));
+                $('sec-duress-hand').textContent = tr(duressHand);
+                $('sec-duress-contacts').textContent = tr(duressContacts);
+                $('sec-duress-alert').classList.toggle('hidden', !duressAlert);
+                if (duressAlert) $('sec-duress-text').textContent = tr('{0} · {1}. BioID dikunci, uang tidak terkirim, dan {2} sudah diberi tahu beserta lokasinya.', duressAlert.where, formatRp(duressAlert.amount), tr(duressContacts));
+                root.querySelectorAll('.bp-duress-sim span').forEach(el => { el.textContent = tr('Simulasi: tunjukkan tangan darurat ({0})', tr(duressHand).toLowerCase()); });
+            }
+            function toggleDuress() { duressOn = !duressOn; renderDuress(); toast(duressOn ? 'Telapak Darurat aktif' : 'Telapak Darurat mati', 'ph-siren', 'text-amber-400'); }
+            function cycleDuressHand() { duressHand = duressHand === 'Kiri' ? 'Kanan' : 'Kiri'; renderDuress(); toast(tr('Tangan darurat: {0}. Tangan lainnya untuk bayar biasa.', tr(duressHand).toLowerCase()), 'ph-hand-palm', 'text-sky-400'); }
+            function cycleDuressContacts() { duressContacts = DURESS_CONTACTS[(DURESS_CONTACTS.indexOf(duressContacts) + 1) % DURESS_CONTACTS.length]; renderDuress(); toast(tr('Kontak darurat: {0}', tr(duressContacts)), 'ph-address-book', 'text-sky-400'); }
+            function duressPractice() { toast(tr('Latihan: tangan darurat ({0}) dikenali. Tidak ada peringatan yang dikirim.', tr(duressHand).toLowerCase()), 'ph-graduation-cap', 'text-sky-400'); }
+            // Dipanggil saat tangan darurat terdeteksi (terminal, HP penjual, atau ATM)
+            function triggerDuress(where, amount) {
+                if (!duressOn) return false;
+                frozen = true; duressAlert = { where, amount, at: new Date() };
+                logActivity('Peringatan darurat dikirim', `${tr(duressContacts)} · ${where}`);
+                renderSecurity(); updateHomeExtras();
+                return true;
+            }
+            function simulateDuressHand() {
+                if (!duressOn) { toast('Telapak Darurat sedang mati. Aktifkan di Pengaturan > Telapak Darurat.', 'ph-info', 'text-sky-400'); return; }
+                duressNext = true; generateRandomPayment(); goToScreen('screen-options');
+            }
+            function duressSafe() {
+                bioConfirm('Konfirmasi: saya aman', () => {
+                    frozen = false; duressAlert = null;
+                    logActivity('Alarm darurat dibatalkan', tr('{0} diberi tahu kamu aman', tr(duressContacts)));
+                    renderSecurity(); updateHomeExtras();
+                    toast(tr('BioID dibuka. {0} diberi tahu bahwa kamu aman.', tr(duressContacts)), 'ph-hand-heart', 'text-emerald-400');
+                });
             }
 
             // ==========================================
@@ -3775,6 +4174,7 @@
                 $('sec-freeze').setAttribute('aria-checked', String(frozen));
                 $('sec-night').setAttribute('aria-checked', String(nightGuard));
                 $('sec-limit').textContent = txLimit ? formatRp(txLimit) : tr('Tanpa limit');
+                renderDuress();
                 $('sec-activity').innerHTML = activity.map(([t, sub, when]) => `<li class="bp-tx"><span class="bp-row-main"><b>${escapeHTML(tr(t))}</b><small>${escapeHTML(sub)}</small></span><small class="bp-muted">${escapeHTML(when)}</small></li>`).join('');
             }
             function toggleFreeze() {
@@ -3844,7 +4244,7 @@
                 root.querySelectorAll('.bp-lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === code)));
                 renderRegisterOptions(); renderUser();
                 // Tampilan yang dibuat dari kode ikut dibuat ulang dalam bahasa baru
-                try { updateHomeExtras(); renderVoice(); renderSecurity(); renderRewards(); renderInsight(); renderFinance(); if (isScreenActive('screen-options')) renderRoute(); } catch (e) {}
+                try { updateHomeExtras(); renderVoice(); renderSecurity(); renderRewards(); renderInsight(); renderFinance(); renderOffline(); renderDuress(); if (isScreenActive('screen-options')) renderRoute(); } catch (e) {}
                 closeModal('modal-language');
                 if (!silent) toast(tr('Bahasa diubah ke {0}', name), 'ph-translate', 'text-emerald-400');
             }
@@ -3852,9 +4252,24 @@
             function processPayment() {
                 if (!isScreenActive('screen-options')) return; // cegah double-click membayar 2x
                 const lim = effectiveLimit();
-                if (frozen) { toast('BioID sedang dikunci. Buka kunci di Pengaturan.', 'ph-lock', 'text-red-500'); return; }
+                if (duressNext) {
+                    // Telapak Darurat: layar terlihat berhasil, tapi uang tidak dikirim, BioID dikunci, keluarga diberi tahu diam-diam
+                    duressNext = false;
+                    triggerDuress($('payment-merchant-name').innerText, currentPaymentIDR);
+                    const rw = $('success-reward'); rw.textContent = tr('+{0} BioPoin', Math.max(1, Math.floor(currentPaymentIDR / 1000)).toLocaleString('id-ID')); rw.classList.remove('hidden');
+                    showScreen('screen-success');
+                    setTimeout(() => { if (isScreenActive('screen-success')) goToScreen('screen-start'); }, 2000);
+                    return;
+                }
+                if (frozen) { toast(duressAlert ? 'Gangguan jaringan, coba lagi nanti.' : 'BioID sedang dikunci. Buka kunci di Pengaturan.', duressAlert ? 'ph-wifi-slash' : 'ph-lock', 'text-red-500'); return; }
                 if (lim && currentPaymentIDR > lim) { toast(tr('Melebihi limit per transaksi ({0}).', formatRp(lim)), 'ph-gauge', 'text-red-500'); return; }
-                const W = smartRoute && walletBalances[payWallet] >= currentPaymentIDR ? (walletBalances[payWallet] -= currentPaymentIDR, payWallet) : chargeFallback(currentPaymentIDR, manualPick);
+                let W;
+                if (splitPlan) {
+                    splitPlan.forEach(([w, a]) => { walletBalances[w] -= a; });
+                    W = splitPlan.map(([w]) => w).join(' + ');
+                    toast(tr('Saldo Gabungan: {0}', splitPlan.map(([w, a]) => `${w} ${formatRp(a)}`).join(' + ')), 'ph-stack', 'text-amber-400');
+                    renderWalletList(); updateBalanceDisplay();
+                } else W = smartRoute && walletBalances[payWallet] >= currentPaymentIDR ? (walletBalances[payWallet] -= currentPaymentIDR, payWallet) : chargeFallback(currentPaymentIDR, manualPick);
                 if (W) {
                     const merchantName = $('payment-merchant-name').innerText;
                     const formattedCur = isTouristTransaction ? currentForeignTotal : `Rp ${currentPaymentIDR.toLocaleString('id-ID')}`;
@@ -3875,7 +4290,7 @@
                     updateHomeExtras();
 
                     updateBalanceDisplay();
-                    syncWalletUI(W); 
+                    syncWalletUI(W); splitPlan = null;
                     showScreen('screen-success');
                 
                     setTimeout(() => {
@@ -3898,7 +4313,8 @@
             }
 
             function switchTab(tabName) {
-                const tabs = ['home', 'hadiah', 'insight', 'keuangan', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'sharing', 'pengaturan'];
+                const tabs = ['home', 'hadiah', 'insight', 'keuangan', 'operasional', 'travel', 'wallets', 'riwayat', 'biopass', 'sharing', 'offline', 'pengaturan'];
+                if (tabName === 'offline') renderOffline();
                 if (tabName === 'hadiah') renderRewards(); if (tabName === 'insight') renderInsight(); if (tabName === 'keuangan') renderFinance(); if (tabName === 'pengaturan') renderSecurity();
                 tabs.forEach(tab => {
                     const nav = $(`nav-${tab}`), content = $(`tab-${tab}`);
@@ -4470,8 +4886,8 @@
             new MutationObserver(muts => { if (lang === 'ID') return; muts.forEach(m => m.addedNodes.forEach(translateTree)); }).observe(root, { childList: true, subtree: true });
             renderRegisterOptions();
             renderUser();
-            updateHomeExtras(); renderWalletList();
-            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, openQR, qrTab, qrSimScan, qrPay, qrMineAmount, qrSimIncoming, qrPayRefresh, qrSimCashier, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, moveWallet, simDrain, simFill, renderWalletList, toggleSmartRoute, pickRoute, renderRoute, tourFallbackDemo, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, toggleVoice, simulateVoice, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit };
+            updateHomeExtras(); renderWalletList(); renderOffline(); renderDuress();
+            return { toast, stopCameras, closeAllModals, onCountryChange, onDocTypeChange, captureDoc, uploadDoc, retakeDoc, confirmDoc, openRegister, submitRegister, finishRegister, openLogin, submitLogin, togglePassword, enterDashboard, logout, copyPassport, confirmDeleteAccount, deleteAccount, renderUser, addBiopayHistory, syncWalletUI, updateBalanceDisplay, toggleBalance, generateRandomPayment, goToScreen, changeLanguage, processPayment, showScreen, switchTab, closeModal, showTopUpModal, showWithdrawModal, showReceiveModal, showBillsModal, showLanguageModal, showExchangeModal, showScanQRModal, closeScanQRModal, openQR, qrTab, qrSimScan, qrPay, qrMineAmount, qrSimIncoming, qrPayRefresh, qrSimCashier, processTopUp, showTransferModal, toggleTransferMethod, startTransferBiometricScan, closeTfScanModal, processTransfer, processWithdraw, payBill, updateExchangeRate, calculateExchange, processExchange, toggleSetting, showAddWalletModal, selectWalletOption, confirmAddWallet, setMainWallet, moveWallet, simDrain, simFill, renderWalletList, toggleSmartRoute, pickRoute, renderRoute, tourFallbackDemo, renderRewards, redeem, shareReferral, renderInsight, cycleBudget, toggleFreeze, cycleTxLimit, toggleNightGuard, renderSecurity, renderFinance, askAssistant, aiQuick, addToGoal, toggleVoice, simulateVoice, updateHomeExtras, showAddSharingModal, startSharingScan, cancelSharingScan, removeSharingMember, addSharingMemberToList, showSharingLimitModal, processSetSharingLimit, toggleSplitPay, demoSplit, cancelBioConfirm, showOfflineFill, processOfflineFill, offlineAddQuota, offlineWithdraw, showOfflineTicket, processOfflineTicket, offlineCharge, offlineSettle, offlineGoOnline, renderOffline, toggleDuress, cycleDuressHand, cycleDuressContacts, duressPractice, triggerDuress, simulateDuressHand, duressSafe, isDuressOn: () => duressOn };
         }
 
         // FIX: navigator.clipboard tidak tersedia di http (non-HTTPS) / beberapa browser -> dulu error
@@ -4644,18 +5060,20 @@
         // KOMPONEN BIOPAY MERCHANT (Tagih pelanggan, QRIS saya, Masuk ke BioPay)
         // Dipakai POV 2 (e-wallet) dan POV 3 (travel) dengan perilaku yang sama persis.
         // ==========================================
-        function createMerchantKit({ suffix, pov, appWrapperId, bioWrapperId, bp, onReceive, receiveNote, onPay = () => false, getBalance = () => 0, appLabel = 'e-wallet' }) {
+        function createMerchantKit({ suffix, pov, appWrapperId, bioWrapperId, bp, onReceive, receiveNote, onPay = () => false, getBalance = () => 0, appLabel = 'e-wallet', storeName = 'Warung Bu Sri' }) {
             const $ = id => document.getElementById(id + suffix);
             const toast = (m, i, c) => showToast(m, i, c, pov);
             const statusInitial = $('tagih-scan-status').className;
             const statusOk = 'text-emerald-600 text-xs font-bold mb-4 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200';
-            let tagihToken = 0, tagihCamera = null, tagihAmount = 0;
+            let tagihToken = 0, tagihCamera = null, tagihAmount = 0, tagihMode = 'bio', kitNet = 'quota', kitDuress = false;
+            const kitUnsynced = [];
             if (receiveNote) $('kit-success-note').textContent = receiveNote;
 
             function closeEwalletModal(id) { $(id).classList.add('hidden'); }
             function showBioPayOptions() { $('modal-biopay-options').classList.remove('hidden'); }
             function openTagihInput() {
                 closeEwalletModal('modal-biopay-options');
+                tagihMode = 'bio';
                 $('input-tagih-amount').value = '';
                 $('modal-tagih-input').classList.remove('hidden');
             }
@@ -4667,10 +5085,10 @@
                 tagihCamera = cam;
             }
             async function startTagihFaceScan() {
-                const amount = parseInt($('input-tagih-amount').value);
+                const amount = parseInt($(tagihMode === 'offline' ? 'input-offline-amount' : 'input-tagih-amount').value);
                 if (!amount || amount <= 0) { toast('Masukkan nominal tagihan yang valid!', 'ph-warning', 'text-red-500'); return; }
-                tagihAmount = amount;
-                closeEwalletModal('modal-tagih-input');
+                tagihAmount = amount; kitDuress = false;
+                closeEwalletModal('modal-tagih-input'); closeEwalletModal('modal-offline-pay');
                 $('tagih-confirm-box').classList.add('hidden'); $('tagih-confirm-box').classList.remove('flex');
                 const statusTxt = $('tagih-scan-status');
                 statusTxt.textContent = 'Mencari Identitas BioPay...';
@@ -4695,12 +5113,74 @@
                 scanBiometric({ videoId: 'video-tagih-hand' + suffix, kind: 'hand', statusEl: $('tagih-hand-status'), cancelled: () => token !== tagihToken || $('modal-tagih-hand').classList.contains('hidden') }).then(r => {
                     if (r === 'cancelled' || token !== tagihToken || $('modal-tagih-hand').classList.contains('hidden')) return;
                     tagihToken++;
-                    onReceive(tagihAmount);
                     tagihCamera = stopSpecificCamera(tagihCamera);
                     $('modal-tagih-hand').classList.add('hidden');
+                    if (kitDuress) return kitFinishDuress();
+                    if (tagihMode === 'offline') return kitFinishOffline();
+                    onReceive(tagihAmount);
                     $('tagih-success-amount').textContent = formatRp(tagihAmount);
                     $('modal-tagih-success').classList.remove('hidden');
                 });
+            }
+            // ---------- Bayar Offline (HP toko kuota habis / tanpa sinyal) ----------
+            const NET_HINT = { quota: 'Transaksi dikirim memakai Kuota Titipan pelanggan, langsung berhasil.', none: 'Pakai Tiket Bayar pelanggan kalau ada. Kalau tidak ada, status Menunggu (maks. Rp 50.000).' };
+            function kitSetNet(n) {
+                kitNet = n;
+                ['quota', 'none'].forEach(x => $('kit-net-' + x).setAttribute('aria-checked', String(x === n)));
+                $('kit-net-hint').textContent = tr0(NET_HINT[n]);
+            }
+            const tr0 = t => (typeof AppI18N !== 'undefined' && AppI18N.lang === 'en' && AppI18N.en(t)) || t;
+            function openOfflinePay() {
+                closeEwalletModal('modal-biopay-options');
+                tagihMode = 'offline'; $('input-offline-amount').value = ''; kitSetNet(kitNet);
+                $('modal-offline-pay').classList.remove('hidden');
+            }
+            function startOfflineFaceScan() { tagihMode = 'offline'; startTagihFaceScan(); }
+            function kitShowResult(kind, title, note, amount, cap) {
+                const box = $('modal-offline-result');
+                box.className = 'absolute inset-0 z-[80] flex flex-col items-center justify-center p-6 text-center ' + (kind === 'ok' ? 'bg-emerald-500' : kind === 'wait' ? 'bg-amber-500' : 'bg-rose-600');
+                $('kit-off-icon').className = 'w-20 h-20 bg-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-lg ' + (kind === 'ok' ? 'text-emerald-500' : kind === 'wait' ? 'text-amber-500' : 'text-rose-600');
+                $('kit-off-icon').innerHTML = `<i class="ph-bold ${kind === 'ok' ? 'ph-check' : kind === 'wait' ? 'ph-hourglass-medium' : 'ph-x'}"></i>`;
+                $('kit-off-title').textContent = title; $('kit-off-note').textContent = note;
+                $('kit-off-cap').textContent = cap; $('kit-off-amount').textContent = formatRp(amount);
+                $('kit-off-sync').classList.toggle('hidden', !kitUnsynced.length);
+            }
+            function kitRefreshSync() {
+                const n = kitUnsynced.length;
+                $('kit-sync-btn').classList.toggle('hidden', !n);
+                $('kit-sync-label').textContent = `Sinyal kembali · kirim ${n} transaksi offline`;
+                $('kit-off-sync').classList.toggle('hidden', !n);
+            }
+            function kitFinishOffline() {
+                const credit = amt => { onReceive(amt); const i = kitUnsynced.indexOf(r && r.id); if (i >= 0) kitUnsynced.splice(i, 1); kitRefreshSync(); toast(`${formatRp(amt)} masuk ke saldo (Bayar Offline)`, 'ph-wifi-high', 'text-emerald-400'); };
+                const r = BP1.offlineCharge({ store: storeName, amount: tagihAmount, net: kitNet, credit });
+                if (r.status === 'ok') { onReceive(tagihAmount); kitShowResult('ok', 'Berhasil · Bayar Offline', `Lewat ${r.via}. Uang langsung masuk ke saldo Anda.`, tagihAmount, 'Total Diterima'); }
+                else if (r.status === 'ticket') { kitUnsynced.push(r.id); kitRefreshSync(); kitShowResult('ok', 'Berhasil · Tiket Bayar', 'Tiket pelanggan cocok, saldonya sudah dipotong. Uang masuk ke saldo Anda saat HP toko atau HP pelanggan online lagi.', tagihAmount, 'Dijamin masuk'); }
+                else if (r.status === 'pending') { kitUnsynced.push(r.id); kitRefreshSync(); kitShowResult('wait', 'Menunggu · Bayar Offline', 'Tercatat aman di HP ini. Selesai otomatis saat HP toko atau HP pelanggan online lagi. Bayar Offline berikutnya dari pelanggan ini di toko ini dikunci sampai selesai.', tagihAmount, 'Menunggu'); }
+                else kitShowResult('bad', 'Bayar Offline ditolak', r.msg, tagihAmount, 'Tidak diproses');
+            }
+            function kitSyncOffline() {
+                const ids = kitUnsynced.slice(); let ok = 0, fail = 0;
+                ids.forEach(id => { const rec = BP1.offlineSettle(id); if (!rec || rec.status === 'failed') { fail++; const i = kitUnsynced.indexOf(id); if (i >= 0) kitUnsynced.splice(i, 1); } else ok++; });
+                kitUnsynced.length = 0; kitRefreshSync();
+                if (!$('modal-offline-result').classList.contains('hidden')) $('modal-offline-result').classList.add('hidden');
+                toast(fail ? `${ok} transaksi masuk, ${fail} gagal (saldo pelanggan kosong, BioID-nya dibekukan)` : (ok ? `Sinyal kembali: ${ok} transaksi offline terkirim` : 'Tidak ada transaksi offline yang menunggu'), fail ? 'ph-warning' : 'ph-wifi-high', fail ? 'text-amber-400' : 'text-emerald-400');
+            }
+            function closeOfflineResult() { $('modal-offline-result').classList.add('hidden'); }
+            // ---------- Telapak Darurat dari sisi penjual: layar tetap terlihat berhasil ----------
+            function kitSimDuress() {
+                if (!BP1.isDuressOn()) { toast('Telapak Darurat pelanggan sedang mati', 'ph-info', 'text-sky-400'); return; }
+                kitDuress = true; tagihToken++; tagihCamera = stopSpecificCamera(tagihCamera);
+                $('modal-tagih-hand').classList.add('hidden');
+                kitFinishDuress();
+            }
+            function kitFinishDuress() {
+                kitDuress = false;
+                BP1.triggerDuress(storeName, tagihAmount);
+                $('tagih-success-amount').textContent = formatRp(tagihAmount);
+                $('modal-tagih-success').classList.remove('hidden');
+                const amt = tagihAmount;
+                setTimeout(() => toast(`Transaksi ${formatRp(amt)} dibatalkan karena alasan keamanan. Tim BioPay akan menghubungi Anda.`, 'ph-shield-warning', 'text-amber-400'), 6000);
             }
             function closeTagihFlow() {
                 tagihToken++;
@@ -4795,7 +5275,7 @@
                 document.getElementById(bioWrapperId).classList.remove('flex');
                 document.getElementById(appWrapperId).classList.remove('hidden');
             }
-            return { toast, closeEwalletModal, showBioPayOptions, openTagihInput, startTagihFaceScan, startTagihHandScan, closeTagihFlow, finishTagihFlow, showEwalletMinta, copyQrisNumber, kitQRTab, kitQRSimScan, kitQRPay, kitQRSimIncoming, kitQRNewPay, kitQRCashier, closeKitQR, openBioPayInPOV2, closeBioPayInPOV2 };
+            return { toast, closeEwalletModal, showBioPayOptions, openTagihInput, startTagihFaceScan, startTagihHandScan, closeTagihFlow, finishTagihFlow, openOfflinePay, kitSetNet, startOfflineFaceScan, kitSyncOffline, closeOfflineResult, kitSimDuress, showEwalletMinta, copyQrisNumber, kitQRTab, kitQRSimScan, kitQRPay, kitQRSimIncoming, kitQRNewPay, kitQRCashier, closeKitQR, openBioPayInPOV2, closeBioPayInPOV2 };
         }
 
         // Template komponen merchant diambil sebelum ada interaksi (untuk disalin ke POV 3)
@@ -5394,7 +5874,7 @@
             suffix: '-p3', pov: 3, appWrapperId: 'travel-wrapper', bioWrapperId: 'biopay-wrapper-p3', bp: BP3,
             onReceive: amt => TV.receive(amt), receiveNote: 'Dana dari pelanggan telah masuk ke saldo Lintas Pay Anda.',
             onPay: (amt, title) => { if (TV.state.balance < amt) return false; TV.state.balance -= amt; TV.addHistory(title, amt, false, false); return true; },
-            getBalance: () => TV.state.balance, appLabel: 'Lintas Pay'
+            getBalance: () => TV.state.balance, appLabel: 'Lintas Pay', storeName: 'Toko Sinar Jaya'
         });
         document.querySelectorAll('#travel-device canvas.bp-qr').forEach((c, i) => drawFakeQR(c, 40 + i));
 
@@ -5670,10 +6150,22 @@
               x: ['We just emptied the main wallet. A single-wallet system would fail here and the customer walks away. BioPay skips it and pays from Backup 1 automatically. Nothing to carry, nothing to check.',
                   'Saldo dompet utama barusan kami kosongkan. Sistem satu dompet akan gagal di sini, dan pembeli pergi. BioPay melewatinya dan otomatis membayar dari Cadangan 1. Tidak perlu membawa apa pun, tidak perlu mengecek apa pun.'],
               go: () => { selectDevice('terminal'); BP1.stopCameras(); BP1.tourFallbackDemo(true); return { el: document.querySelector('#screen-options .bp-route') || document.getElementById('biopay-device') }; } },
+            { t: ['No single wallet has enough? Combine them.', 'Satu dompet tidak cukup? Digabung.'],
+              x: ['Money is scattered across many wallets. Here no single wallet can cover the bill, so BioPay splits it across several in one scan. Only a neutral bridge can do this, because no wallet can spend a rival’s balance.',
+                  'Uang orang tersebar di banyak dompet. Di sini tidak ada satu dompet pun yang cukup, jadi BioPay memecah pembayaran ke beberapa dompet dalam satu scan. Hanya jembatan netral yang bisa, karena tidak ada dompet yang bisa memakai saldo dompet pesaingnya.'],
+              go: () => { selectDevice('terminal'); BP1.stopCameras(); BP1.demoSplit(true); return { el: document.querySelector('#screen-options .bp-route') || document.getElementById('biopay-device') }; } },
             { t: ['Shops only need a phone', 'Toko cukup pakai HP'],
               x: ['Inside a partner wallet app, a shop can charge a customer by face and palm, show a QR, or let the cashier scan a one-time pay code. No new machine needed to start.',
                   'Di dalam aplikasi wallet mitra, toko bisa menagih pelanggan lewat wajah dan telapak tangan, menampilkan QR, atau membiarkan kasir memindai kode bayar sekali pakai. Tidak perlu mesin baru untuk mulai.'],
               go: () => { BP1.stopCameras(); BP1.showScreen('screen-start'); selectDevice('kasku'); MK2.showBioPayOptions(); return { el: document.getElementById('ewallet-device') }; } },
+            { t: ['No data, no signal? Still paid.', 'Kuota habis, tanpa sinyal? Tetap terbayar.'],
+              x: ['If the shop’s phone runs out of data, it uses the customer’s Shared Data and the payment goes through instantly. With no signal at all, a Pay Ticket prepared at home still works at the customer’s regular shop. Otherwise a small payment waits and settles once either side is online. The customer still needs no phone.',
+                  'Kalau kuota HP toko habis, transaksi memakai Kuota Titipan pelanggan dan langsung berhasil. Tanpa sinyal sama sekali, Tiket Bayar yang disiapkan dari rumah tetap jalan di toko langganan. Selain itu, pembayaran kecil menunggu lalu selesai begitu salah satu pihak online. Pelanggan tetap tidak perlu HP.'],
+              go: () => { BP1.stopCameras(); selectDevice('kasku'); MK2.openOfflinePay(); return { el: document.getElementById('ewallet-device') }; } },
+            { t: ['Forced to pay? Show the other hand.', 'Dipaksa bayar? Tunjukkan tangan darurat.'],
+              x: ['Emergency Palm: the screen looks paid, so the attacker isn’t suspicious. Behind it no money moves, the BioID locks, and family get a silent alert with the location. The user picks which hand is the emergency one.',
+                  'Telapak Darurat: layar terlihat berhasil, jadi pelaku tidak curiga. Di baliknya uang tidak terkirim, BioID terkunci, dan keluarga mendapat peringatan diam-diam beserta lokasinya. Pengguna memilih sendiri tangan mana yang jadi tangan darurat.'],
+              go: () => { document.getElementById('modal-offline-pay').classList.add('hidden'); document.getElementById('modal-biopay-options').classList.add('hidden'); selectDevice('terminal'); BP1.stopCameras(); BP1.closeAllModals(); BP1.enterDashboard(); BP1.switchTab('pengaturan'); const el = document.getElementById('sec-duress'); if (el) el.scrollIntoView({ block: 'center' }); return { el: el ? el.closest('.bp-section') : document.getElementById('biopay-device') }; } },
             { t: ['Cash without a card', 'Tarik tunai tanpa kartu'],
               x: ['Concept: an ATM connected to BioPay. Face and palm open your BioPay page on the ATM screen. Choose a source, withdraw, and there is no card to lose or skim.',
                   'Konsep: ATM yang terhubung ke BioPay. Wajah dan telapak tangan membuka halaman BioPay di layar ATM. Pilih sumber dana, tarik tunai, tanpa kartu yang bisa hilang atau digandakan.'],
@@ -5689,7 +6181,7 @@
             document.querySelectorAll('.tour-spot').forEach(e => e.classList.remove('tour-spot'));
             tourIdx = Math.max(0, Math.min(TOUR.length - 1, i));
             const st = TOUR[tourIdx], L = tourLang();
-            try { BP1.tourFallbackDemo(false); } catch (e) {}
+            try { BP1.tourFallbackDemo(false); BP1.demoSplit(false); } catch (e) {}
             let r = {}; try { r = st.go() || {}; } catch (e) {}
             if (r.el) { r.el.classList.add('tour-spot'); r.el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: r.block || 'center' }); }
             tourText();
@@ -5709,7 +6201,7 @@
         function endTour() {
             document.getElementById('pt-tour').hidden = true; tourIdx = -1;
             document.querySelectorAll('.tour-spot').forEach(e => e.classList.remove('tour-spot'));
-            try { BP1.tourFallbackDemo(false); BP1.stopCameras(); BP1.closeAllModals(); BP1.showScreen('screen-start'); document.getElementById('modal-biopay-options').classList.add('hidden'); } catch (e) {}
+            try { BP1.tourFallbackDemo(false); BP1.demoSplit(false); BP1.stopCameras(); BP1.closeAllModals(); BP1.showScreen('screen-start'); document.getElementById('modal-biopay-options').classList.add('hidden'); document.getElementById('modal-offline-pay').classList.add('hidden'); } catch (e) {}
         }
         addEventListener('keydown', e => { if (tourIdx < 0) return; if (e.key === 'Escape') endTour(); });
         // ==========================================
@@ -5718,6 +6210,7 @@
         // ==========================================
         const APP_EN = {"Minta": "Request", "Kirim": "Send", "Pesan": "Inbox", "Cashback 10% bayar pakai wajah": "10% cashback when you pay with your face", "Di merchant BioPay, maks. Rp 25.000 · s/d 30 Nov": "At BioPay merchants, up to Rp 25.000 · until 30 Nov", "Pulsa &": "Airtime &", "Pulsa & Data": "Airtime & Data", "Listrik": "Electricity", "Investasi": "Investing", "Lihat": "See", "Semua": "All", "masuk untuk lihat update terbaru!": "is in, see the latest updates!", "Jaminan 100% Uang Kembali": "100% Money-Back Guarantee", "AMAN": "SAFE", "Riwayat Terakhir": "Recent Activity", "SEMUA": "ALL", "Belum ada transaksi": "No transactions yet", "Kasku adalah e-wallet fiktif untuk demo BioPay.": "Kasku is a fictional e-wallet for the BioPay demo.", "Semua transaksi hanya simulasi.": "All transactions are simulated.", "Beranda": "Home", "Aktivitas": "Activity", "Dompet": "Wallet", "Saya": "Me", "Beli Pulsa": "Buy Airtime", "Total Pembayaran": "Total Payment", "Metode Pembayaran": "Payment Method", "BAYAR SEKARANG": "PAY NOW", "Isi Saldo": "Top Up", "ISI SALDO": "TOP UP", "Kirim Uang": "Send Money", "KIRIM SEKARANG": "SEND NOW", "Pilih Layanan BioPay": "Choose a BioPay service", "Tagih Pelanggan (BioPay)": "Charge a Customer (BioPay)", "QR · Scan, QR Saya, QR Bayar": "QR · Scan, My QR, Pay QR", "Masuk ke BioPay": "Open BioPay", "QR Saya": "My QR", "QR Bayar": "Pay QR", "Scan QR orang atau toko untuk membayar mereka.": "Scan a person’s or shop’s QR to pay them.", "Menyiapkan kamera…": "Starting camera…", "Nominal (Rp)": "Amount (Rp)", "Lihat ke kamera…": "Look at the camera…", "Bayar · konfirmasi wajah": "Pay · confirm with face", "Tunjukkan ke pengirim untuk menerima uang": "Show this to the sender to receive money", "Salin Nomor": "Copy Number", "Simulasikan ada yang bayar Rp 50.000": "Simulate an incoming Rp 50.000", "Tunjukkan ke kasir / HP orang lain": "Show to the cashier / another phone", "Sudah dipakai": "Already used", "Berlaku untuk 1 kali pembayaran": "Valid for one payment", "Buat QR Bayar baru": "Create a new Pay QR", "Simulasi: HP kasir / orang lain": "Simulation: cashier / other phone", "Setelah QR di atas di-scan, mereka mengetik nominal lalu menarik pembayaran.": "After scanning the QR above, they type the amount and take the payment.", "Scan & tarik": "Scan & charge", "Nominal Tagihan": "Amount to Charge", "Masukkan total belanja pelanggan Anda": "Enter your customer’s total", "Lanjut Scan Wajah": "Continue to Face Scan", "Batal": "Cancel", "Identifikasi Wajah": "Face Identification", "Arahkan kamera ke wajah pelanggan": "Point the camera at the customer’s face", "Mencari Identitas BioPay...": "Looking up BioPay identity...", "Total Tagihan:": "Total due:", "Konfirmasi & Scan Tangan": "Confirm & Scan Palm", "Otorisasi Tangan": "Palm Authorization", "Arahkan kamera ke telapak tangan pelanggan": "Point the camera at the customer’s palm", "Memindai telapak tangan...": "Scanning palm...", "Pembayaran Berhasil!": "Payment Successful!", "Dana dari pelanggan telah masuk ke saldo Anda.": "The customer’s payment is now in your balance.", "Total Diterima": "Total Received", "Selesai": "Done", "Akun demo: ikbal@biopay.id · biopay123": "Demo account: ikbal@biopay.id · biopay123", "Total purchase": "Total purchase", "Scan & Bayar": "Scan & Pay", "Kode": "Code", "Sisa bulan ini": "Left this month", "Ketik atau panggil “BioPay” dengan suara": "Type, or call “BioPay” with your voice", "Tulis pesan untuk asisten": "Message the assistant", "Kantong baru": "New pocket", "Tagihan mendatang": "Upcoming bills", "Arahkan kamera ke QR toko (QRIS) atau QR BioPay teman untuk membayar.": "Point the camera at a shop QR (QRIS) or a friend’s BioPay QR to pay.", "· terima ke": "· receive to", "Tunjukkan ke pengirim. Mereka scan dari aplikasi BioPay, lalu uang masuk ke dompet utamamu.": "Show this to the sender. They scan it in BioPay and the money lands in your main wallet.", "Simulasikan ada yang bayar": "Simulate an incoming payment", "Tunjukkan ke kasir": "Show to the cashier", "detik": "seconds", "Kode ini hanya berlaku 60 detik dan sekali pakai, jadi aman kalau difoto orang.": "This code works for 60 seconds and only once, so it’s safe even if someone photographs it.", "Simulasikan kasir scan": "Simulate the cashier scanning", "Listrik PLN": "Electricity (PLN)", "Notifikasi dan tagihan": "Notifications and bills", "No. HP / Nama penerima": "Phone no. / recipient name", "Tutup": "Close", "QR untuk menerima uang": "QR to receive money", "QR bayar sekali pakai": "Single-use pay QR", "Nominal, mis. 35000": "Amount, e.g. 35000", "Notifikasi & tagihan": "Notifications & bills", "Tutup BioPay, kembali ke e-wallet": "Close BioPay, back to the e-wallet", "QR BioPay untuk menerima uang": "BioPay QR to receive money", "Nominal (opsional)": "Amount (optional)", "QR pembayaran untuk discan kasir": "Payment QR for the cashier to scan", "Kode QRIS milik Ikbal Habibi": "Ikbal Habibi’s QRIS code", "Notifikasi": "Notifications", "Tagihan menunggu": "Bills due", "Listrik PLN pascabayar": "Electricity (PLN) postpaid", "Bayar": "Pay", "Info lainnya": "Other updates", "Cashback 10% pakai BioPay": "10% cashback with BioPay", "Berlaku di merchant BioPay sampai 30 Nov.": "Valid at BioPay merchants until 30 Nov.", "Login dari perangkat baru": "Sign-in from a new device", "Chrome di Windows · Jakarta. Bukan kamu? Ganti PIN.": "Chrome on Windows · Jakarta. Not you? Change your PIN.", "Simulasikan tagihan baru masuk": "Simulate a new bill", "Bayar tagihan": "Pay bill", "No. pelanggan": "Customer no.", "Jatuh tempo": "Due", "Pilih metode pembayaran": "Choose a payment method", "Scan pakai aplikasi bank atau e-wallet mana pun · tanpa biaya admin": "Scan with any bank or e-wallet app · no admin fee", "Wajah + telapak tangan, tanpa kartu · tanpa biaya admin": "Face + palm, no card · no admin fee", "Virtual account, dicek otomatis · biaya admin Rp 2.500": "Virtual account, checked automatically · Rp 2.500 admin fee", "Tagihan": "Bill", "Biaya admin": "Admin fee", "Gratis": "Free", "Total bayar": "Total to pay", "Kembali": "Back", "Metode pembayaran": "Payment method", "Pilih bank": "Choose a bank", "Bayar ke kasir (QR Bayar)": "Paid to cashier (Pay QR)", "Kode ini sudah dipakai. Buat QR Bayar baru.": "This code has been used. Create a new Pay QR.", "Catat pengeluaran cukup dengan mengetik, misalnya “makan siang 35rb”": "Record spending just by typing, e.g. “lunch 35k”", "Semua transaksi BioPay (bayar, transfer, tarik tunai, tagihan, top up) masuk otomatis lengkap dengan jamnya. Transaksi tunai bisa dicatat lewat asisten, diketik atau diucapkan.": "Every BioPay transaction (payments, transfers, cash withdrawals, bills, top-ups) is recorded automatically with its time. Cash spending can be logged with the assistant, typed or spoken.", "Pesawat": "Flights", "Kereta": "Trains", "Atraksi": "Attractions", "Perjalanan berikutnya": "Next trip", "Semua pesanan": "All bookings", "Promo untukmu": "Deals for you", "Lihat semua": "See all", "Diskon 10% semua produk": "10% off everything", "Khusus bayar pakai BioPay, tanpa minimum": "When you pay with BioPay, no minimum", "Destinasi populer": "Popular destinations", "Pesanan": "Bookings", "Akun": "Account", "Dana dari pelanggan telah masuk ke saldo Lintas Pay Anda.": "The customer’s payment is now in your Lintas Pay balance.", "Akun Lintas": "Lintas account", "Cari": "Search", "Hasil pencarian": "Search results", "Isi data": "Details", "Pembayaran": "Payment", "E-tiket": "E-ticket", "Tutup BioPay, kembali ke Lintas": "Close BioPay, back to Lintas", "Pesanan saya": "My bookings", "Salin kode, lalu pakai saat isi data": "Copy the code and use it at checkout", "Salin": "Copy", "Saldo Lintas Pay": "Lintas Pay balance", "QRIS saya": "My QRIS", "Riwayat Lintas Pay": "Lintas Pay history", "Bayar pesawat": "Flight payment", "Pengaturan": "Settings", "Notifikasi harga turun": "Price-drop alerts", "Tagihan & notifikasi": "Bills & notifications", "Cari pesawat": "Search flights", "Dari": "From", "Ke": "To", "Tanggal berangkat": "Departure date", "Penumpang": "Passengers", "Dewasa, 12 tahun ke atas": "Adults, 12 years and over", "Ekonomi": "Economy", "Bisnis": "Business", "Harga sudah termasuk pajak. Tidak ada biaya layanan tambahan.": "Prices include tax. No extra service fees.", "Tukar asal dan tujuan": "Swap origin and destination", "Kurangi Penumpang": "Fewer passengers", "Tambah Penumpang": "More passengers", "1. Pilih": "1. Choose", "2. Isi data": "2. Details", "3. Bayar": "3. Pay", "Termurah": "Cheapest", "Tercepat": "Fastest", "Langsung": "Direct", "Bisa refund": "Refundable", "Urutkan": "Sort", "Cari hotel": "Search hotels", "Kota atau area": "City or area", "Durasi": "Duration", "Kamar": "Rooms", "2 tamu per kamar": "2 guests per room", "Kurangi Durasi": "Shorter stay", "Tambah Durasi": "Longer stay", "Kurangi Kamar": "Fewer rooms", "Tambah Kamar": "More rooms", "/malam": "/night", "Bebas batal": "Free cancellation", "Cari kereta": "Search trains", "Cari atraksi": "Search attractions", "Kota": "City", "Tanggal kunjungan": "Visit date", "Tiket": "Tickets", "Dewasa & anak": "Adults & children", "Kurangi Tiket": "Fewer tickets", "Tambah Tiket": "More tickets", "Snorkeling Setengah Hari Bali": "Half-day Snorkeling in Bali", "/tiket": "/ticket", "Tur Kuliner Malam Bali": "Bali Night Food Tour", "Nominal (min. Rp 10.000)": "Amount (min. Rp 10.000)", "Tagihan Lintas PayLater": "Lintas PayLater bill", "ATM ini terhubung ke BioPay. Tidak perlu kartu atau PIN.": "This ATM is connected to BioPay. No card or PIN needed.", "Uang diambil dari rekening atau e-wallet yang sudah kamu hubungkan.": "Money comes from the bank account or e-wallet you’ve already linked.", "Mulai: lihat ke kamera": "Start: look at the camera", "Belum punya BioID? Daftar di terminal BioPay (perangkat pertama) atau di aplikasi.": "No BioID yet? Sign up on the BioPay terminal (first device) or in the app.", "Slot kartu · tidak dipakai": "Card slot · not used", "Kamera ATM": "ATM camera", "Uang keluar": "Cash out", "· BioID terverifikasi": "· BioID verified", "Kamu di halaman BioPay": "You’re on your BioPay page", "Sumber dana": "Funding source", "Rekening bank": "Bank account", "utama": "main", "terhubung": "linked", "Pilih transaksi": "Choose a transaction", "Tarik tunai": "Withdraw cash", "Setor tunai": "Deposit cash", "Cek saldo": "Check balance", "Keluar": "Exit", "Rekening bank •••• 4821": "Bank account •••• 4821", "Tarik": "Withdraw", "Saldo kamu": "Your balances", "E-wallet Kasku utama": "Kasku e-wallet main", "Dompet Nusa terhubung": "Dompet Nusa linked", "Total semua sumber": "Total across sources", "BioPay menampilkan saldo langsung dari bank dan e-wallet mitra. BioPay sendiri tidak menyimpan uang.": "BioPay shows balances straight from partner banks and e-wallets. BioPay itself never holds money.", "Masukkan uang ke slot. Dana masuk ke": "Insert cash into the slot. It goes to", "Simulasikan setor Rp 500.000": "Simulate a Rp 500.000 deposit", "Silakan ambil uang Anda": "Please take your cash", "Uang sudah diambil": "I’ve taken the cash", "Transaksi selesai": "Transaction complete", "Sisa saldo": "Remaining balance", "Biaya": "Fee", "Notifikasi & struk digital terkirim ke ponsel.": "Notification & digital receipt sent to your phone.", "1 · Wajah": "1 · Face", "2 · Telapak tangan": "2 · Palm", "3 · Masuk BioPay": "3 · Open BioPay", "Lihat ke kamera ATM": "Look at the ATM camera", "Pemeriksaan kedalaman 3D memastikan ini orang sungguhan, bukan foto.": "A 3D depth check makes sure it’s a real person, not a photo.", "Tunjukkan telapak tangan": "Show your palm", "Faktor kedua. Tanpa telapak tangan, ATM tidak akan terbuka. Di ATM sungguhan, telapak cukup diarahkan ke kamera ATM.": "Second factor. Without the palm, the ATM won’t open. On a real ATM you simply show your palm to the ATM camera.", "Selamat datang": "Welcome", "Transfer": "Transfer", "Top up e-wallet": "Top up e-wallet", "Lainnya": "Other", "Dana darurat": "Emergency fund", "Liburan Bali": "Bali holiday", "Gaji bulan ini": "This month’s salary", "Internet rumah": "Home internet", "Cicilan PayLater": "PayLater instalment", "Tunai & lainnya": "Cash & other", "Pemasukan": "Income", "Transfer & tunai": "Transfers & cash", "Pindah dana": "Moving money", "otomatis": "automatic", "suara": "voice", "asisten": "assistant", "Hari ini": "Today", "Kemarin": "Yesterday", "3 hari lalu": "3 days ago", "Pembaca QR tidak tersedia · pakai simulasi": "QR reader unavailable · use simulation", "Ganti ke kamera depan": "Switch to front camera", "Ganti ke kamera belakang": "Switch to back camera", "Izin mikrofon ditolak atau mikrofon tidak ada": "Microphone permission denied, or no microphone", "Kamera depan": "Front camera", "Kamera belakang": "Back camera", "Perangkat ini hanya punya satu kamera": "This device has only one camera", "Balik": "Flip", "Deteksi AI tidak tersedia · simulasi": "AI detection unavailable · simulation", "Mencari kode QR…": "Looking for a QR code…", "Kamera tidak tersedia · pakai simulasi": "Camera unavailable · use simulation", "Simulasi suara": "Simulated voice", "Berhenti mendengarkan": "Stop listening", "Dengarkan “BioPay”": "Listen for “BioPay”", "Mendengarkan… ucapkan “BioPay, …”": "Listening… say “BioPay, …”", "Mikrofon mati": "Microphone off", "Nyalakan, lalu ucapkan: “BioPay, kopi dua ribu”": "Turn it on, then say: “BioPay, coffee two thousand”", "BioPay mendengar: {0}": "BioPay heard: {0}", "Pengeluaran": "Spending", "Asisten Keuangan": "Money Assistant", "Anggaran per kategori": "Budget by category", "Kantong tabungan": "Savings pockets", "Catatan terakhir": "Latest entries", "Keuangan": "Money", "Contoh: kopi 28rb, bonus 1,2jt, nabung liburan 200rb": "Example: coffee 28k, bonus 1.2m, save for bali 200k", "Rp 100.000": "Rp 100.000", "Jatuh tempo tgl {0} · pengingat 3 hari sebelumnya": "Due on the {0}th · reminder 3 days before", "dicatat asisten": "recorded by assistant", "Pindai": "Scan", "Scan": "Scan", "Scan ulang": "Scan again", "Bayar pakai": "Pay with", "Minta {0}": "Request {0}", "QR diatur untuk {0}": "QR set for {0}", "Nominal dikosongkan": "Amount cleared", "QR terbaca: {0}": "QR read: {0}", "{0} terbayar ke {1}": "{0} paid to {1}", "{0} masuk dari {1}": "{0} received from {1}", "Kasir menarik {0} dari {1}": "Cashier took {0} from {1}", "Simulasikan scan QR toko": "Simulate scanning a shop QR", "Berganti dalam": "Changes in", "QR Scan & Bayar": "QR Scan & Pay", "Atur": "Set", "Arahkan kamera ke kode QR": "Point the camera at the QR code", "Menu QR": "QR menu", "Isi data pemesanan": "Booking details", "Nama lengkap (sesuai KTP/paspor)": "Full name (as on ID/passport)", "E-tiket dikirim ke email dan nomor HP ini.": "The e-ticket is sent to this email and phone number.", "Data penumpang": "Passenger details", "Asuransi perjalanan": "Travel insurance", "Kode promo": "Promo code", "Pakai": "Apply", "Rincian harga": "Price details", "Lanjut bayar": "Continue to payment", "Nama sesuai identitas": "Name as on ID", "Isi nama lengkap pemesan": "Enter the booker’s full name", "Selesaikan pembayaran dalam": "Complete payment within", "BioPay · wajah + telapak": "BioPay · face + palm", "Tanpa kartu, verifikasi 2 langkah": "No card, 2-step verification", "Rincian": "Details", "Pembayaran berhasil": "Payment successful", "Berangkat": "Departs", "Tiba": "Arrives", "Tanggal": "Date", "Penerbangan": "Flight", "Kode booking": "Booking code", "Tunjukkan kode ini saat boarding.": "Show this code at boarding.", "Dibayar dengan": "Paid with", "Batalkan pesanan": "Cancel booking", "Lihat pesanan saya": "See my bookings", "Kembali ke beranda": "Back to home", "Ada aktivitas login dari perangkat baru!": "New sign-in activity from another device!", "Anggota dihapus": "Member removed", "Arahkan wajah ke kasir untuk bayar tiket travel otomatis.": "Look at the cashier camera to pay for travel tickets automatically.", "Asal dan tujuan tidak boleh sama": "Origin and destination can’t be the same", "BioID sedang dikunci. Buka kunci di Pengaturan.": "BioID is locked. Unlock it in Settings.", "Browser ini belum mendukung suara. Pakai Chrome atau Edge, atau coba tombol simulasi.": "This browser doesn’t support voice yet. Use Chrome or Edge, or try the simulation buttons.", "Format email belum benar": "The email format isn’t right", "Gagal menyalin": "Couldn’t copy", "Identitas penerima ditemukan!": "Recipient identified!", "Inapku terhubung ke akun Anda": "Inapku is linked to your account", "Kasir belum mengisi nominal": "The cashier hasn’t entered an amount", "Latensi Settlement: 1.15 Detik via Jaringan Solana": "Settlement latency: 1.15 s via the Solana network", "Limit diperbarui!": "Limit updated!", "Lintas sudah menjadi platform utama": "Lintas is already your main platform", "Masuk ke BioPay. Pilih sumber dana dan transaksi.": "You’re in BioPay. Choose a funding source and a transaction.", "Masukkan nominal tagihan yang valid!": "Enter a valid amount to charge!", "Masukkan nominal yang valid!": "Enter a valid amount!", "Masukkan tujuan transfer!": "Enter a transfer recipient!", "Membuka BioPay...": "Opening BioPay...", "Mendengarkan. Layar dijaga tetap menyala. Ucapkan “BioPay, kopi dua ribu”.": "Listening. The screen stays on. Say “BioPay, coffee two thousand”.", "Nama dan Peran wajib diisi!": "Name and role are required!", "Nominal minimal Rp 10.000": "Minimum amount Rp 10.000", "Nominal tidak valid (Min. Rp 10.000)": "Invalid amount (min. Rp 10.000)", "Nominal tidak valid!": "Invalid amount!", "Nomor HP belum benar (contoh 0812…)": "Phone number isn’t right (e.g. 0812…)", "Pilih tanggal mulai hari ini": "Choose a date from today onward", "Pilih wallet terlebih dahulu": "Choose a wallet first", "Profil terverifikasi tingkat 3": "Profile verified, level 3", "QR Bayar baru dibuat · kode lama tidak berlaku": "New Pay QR created · the old code no longer works", "QR ini sudah dipakai. Buat QR Bayar baru.": "This QR has been used. Create a new Pay QR.", "Registrasi dibatalkan": "Sign-up cancelled", "Rp 50.000 masuk lewat QR Saya": "Rp 50.000 received via My QR", "Saldo E-Wallet tidak cukup!": "Not enough e-wallet balance!", "Saldo Lintas Pay tidak cukup": "Not enough Lintas Pay balance", "Saldo sumber dana tidak cukup": "Not enough balance in this source", "Saldo tidak cukup!": "Not enough balance!", "Saldo tidak cukup": "Not enough balance", "Cukup kamera: wajah + telapak tangan, tanpa alat tambahan": "Camera only: face + palm, no extra device", "Sesi ditutup. Sampai jumpa!": "Session closed. See you!", "Sesi habis. Silakan scan ulang.": "Session expired. Please scan again.", "Struk dikirim ke email kamu": "Receipt sent to your email", "Tujuan belum diisi!": "Recipient is empty!", "Wajah dikenali. Sekarang telapak tangan.": "Face recognised. Now your palm.", "Wallet sudah terhubung": "Wallet already linked", "Cek email untuk verifikasi akun BioPay.": "Check your email to verify your BioPay account.", "Akun tersimpan aman di server.": "Account saved securely on the server.", "Email belum diverifikasi. Cek kotak masuk email kamu.": "Email not verified yet. Check your inbox.", "Akun dan data biometrik dihapus.": "Account and biometric data deleted.", "Akun demo tidak bisa dihapus. Daftarkan akun baru untuk mencoba fitur ini.": "The demo account can’t be deleted. Register a new account to try this.", "Pesanan dibatalkan": "Booking cancelled", "Kode promo disalin": "Promo code copied", "Nomor QRIS": "QRIS number", "No. ID paspor": "Passport ID no.", "Nomor VA": "VA number", "Hotel": "Hotel", "Kursi": "Seat", "Kelas": "Class", "Check-in": "Check-in", "Check-out": "Check-out", "Tamu": "Guests", "Lokasi": "Location", "Kunjungan": "Visit", "Peserta": "Participants", "Virtual account": "Virtual account", "Bayar dengan BioPay": "Pay with BioPay", "Bayar sekarang": "Pay now", "Saya sudah bayar": "I’ve paid", "Cek status pembayaran": "Check payment status", "Menunggu pembayaran": "Awaiting payment", "Lunas": "Paid", "Dibatalkan": "Cancelled", "Aktif": "Active", "Refund diproses": "Refund in progress", "Belum ada pesanan": "No bookings yet", "Pesanan aktif": "Active bookings", "Riwayat pesanan": "Booking history", "Pilih": "Choose", "Pilih kursi": "Choose seat", "Masukkan nomor": "Enter number", "Pastikan nama tagihan": "Make sure the bill name", "Saya sudah transfer": "I’ve transferred", "Mengecek pembayaran…": "Checking payment…", "Tagihan lunas": "Bill paid", "Metode": "Method", "Total dibayar": "Total paid", "Sudah dibayar": "Paid", "Pilih bank dulu.": "Choose a bank first.", "Tambah sarapan": "Add breakfast", "Proteksi bebas batal": "Free-cancellation protection", "Transfer ke virtual account": "Transfer to virtual account", "Nomor virtual account": "Virtual account number", "Salin nomor": "Copy number", "Transfer persis sesuai jumlah di atas dari m-banking atau ATM mana pun. Status diperbarui otomatis.": "Transfer exactly the amount above from any m-banking app or ATM. The status updates automatically.", "Asuransi aktivitas": "Activity insurance", "Batalkan pesanan?": "Cancel this booking?", "Biaya pembatalan": "Cancellation fee", "Tidak bisa refund": "Non-refundable", "Refund ke Lintas Pay": "Refund to Lintas Pay", "Tidak jadi": "Keep booking", "Konfirmasi pembatalan": "Confirm cancellation", "Ya, batalkan": "Yes, cancel", "Refund masuk ke Lintas Pay": "Refund goes to Lintas Pay", "berikan 💭,❤️,🎁 biar seru!": "drop a 💭, ❤️ or 🎁 to make it fun!", "Bayar sebelum": "Pay before", "Data pemesan": "Booker details", "Tambahan": "Extras", "Dicek otomatis setelah transfer": "Checked automatically after transfer", "Sarapan": "Breakfast", "Hotel 15% lebih hemat": "Hotels 15% off", "Khusus hotel, maks. potongan Rp 300.000": "Hotels only, up to Rp 300.000 off", "Hotel 15% lebih hemat, maks. Rp 300.000.": "Hotels 15% off, up to Rp 300.000.", "Min. transaksi Rp 500.000, maks. potongan Rp 150.000": "Min. spend Rp 500.000, up to Rp 150.000 off", "Transaksi lain": "Another transaction", "No. HP": "Phone no.", "Email": "Email", "Utama": "Main", "Cadangan": "Backup", "Cadangan {0}": "Backup {0}", "Kosongkan": "Empty", "Naikkan {0}": "Move {0} up", "Turunkan {0}": "Move {0} down", "{0} sekarang {1}": "{0} is now {1}", "Simulasi: saldo {0} dikosongkan": "Simulation: {0} balance emptied", "Simulasi: {0} ditambah {1}": "Simulation: {1} added to {0}", "Saldo tidak cukup di semua sumber dana untuk {0}. Isi saldo atau ubah urutan di Beranda BioPay → Wallets.": "Not enough balance in any source for {0}. Top up or change the order in BioPay Home → Wallets.", "Saldo {0} tidak cukup. Dipotong dari {1} ({2}).": "{0} didn’t have enough. Charged to {1} ({2}).", "Dipakai untuk pembayaran ini": "Used for this payment", "Dilewati · saldo kurang": "Skipped · not enough balance", "Saldo tidak cukup di semua sumber dana. Isi saldo atau ubah urutan di Beranda BioPay → Wallets.": "Not enough balance in any source. Top up or change the order in BioPay Home → Wallets.", "Saldo {0} tidak cukup, jadi dipotong dari {1} ({2}).": "{0} didn’t have enough, so {1} ({2}) is charged.", "Dipilih manual: {0}.": "Picked manually: {0}.", "Sesuai urutan prioritas: {0} ({1}).": "By priority order: {0} ({1}).", "Saldo disembunyikan": "Balance hidden", "Saldo: {0}": "Balance: {0}", "Otomatis (urutan prioritas)": "Automatic (priority order)", "Smart Route mati: dibayar sesuai urutan prioritas": "Smart Route off: paying by priority order", "Saldo tidak ditampilkan di layar ini demi privasi. Ganti urutan atau lihat saldo di Beranda BioPay → Wallets.": "Balances aren’t shown on this screen for privacy. Change the order or see balances in BioPay Home → Wallets.", "Urutan menentukan dari mana pembayaran dipotong: Utama dulu, lalu Cadangan 1, 2, 3 bila saldo sebelumnya tidak cukup. Saldo hanya tampil di sini, tidak di layar pembayaran.": "The order decides which source pays: Main first, then Backup 1, 2, 3 when the one before doesn’t have enough. Balances are shown only here, never on the payment screen.", "Tombol Kosongkan dan +Rp 500.000 hanya simulasi, untuk mencoba saldo yang tidak cukup.": "The Empty and +Rp 500.000 buttons are a simulation for trying out low balances.", "Saldo tidak ditampilkan di layar ATM. Pilih": "Balances aren’t shown on the ATM screen. Choose", "untuk melihatnya. Kalau sumber dana terpilih tidak cukup, otomatis dipakai cadangan berikutnya.": "to see them. If the chosen source doesn’t have enough, the next backup is used automatically.", "Saldo tidak cukup di semua sumber dana": "Not enough balance in any source", "{0} diatur sebagai utama.": "{0} set as main.", "Foto diambil dari scan wajah terakhir. Hanya tersimpan di browser ini dan hilang saat keluar.": "Photo taken from your latest face scan. Kept only in this browser and cleared when you sign out.", "Mode demo:": "Demo mode:", "foto ini diambil langsung dari scan wajahmu barusan, supaya BioPay bisa dicoba tanpa mendaftar.": "this photo was taken live from the face scan you just did, so you can try BioPay without signing up.", "Di BioPay sungguhan:": "In the real BioPay:", "foto Bio-Pass adalah foto saat pertama kali mendaftar, yang dicocokkan dengan dokumen identitas. Setiap scan hanya mencocokkan wajahmu dengan data itu, tidak mengganti fotonya.": "the Bio-Pass photo is the one taken when you first sign up, checked against your ID document. Every scan only matches your face against it and never replaces the photo.", "Keamanan tetap terjaga:": "Security stays intact:", "foto demo hanya ada di browser ini, tidak dikirim ke server, dan terhapus saat kamu keluar. Pencocokan memakai template biometrik terenkripsi, bukan foto.": "the demo photo stays in this browser, is never sent to a server, and is deleted when you sign out. Matching uses encrypted biometric templates, not photos."};
         const APP_RULES = [];
+        Object.assign(APP_EN, {"Bayar Offline (kuota habis / tanpa sinyal)": "Pay Offline (no data / no signal)", "Sinyal kembali · kirim transaksi offline": "Signal back · send offline payments", "Bayar Offline": "Pay Offline", "Pelanggan cukup wajah + telapak tangan, tanpa HP.": "The customer only needs face + palm, no phone.", "Kondisi HP toko (simulasi)": "Shop phone status (simulation)", "Kuota habis, sinyal ada": "Out of data, signal available", "Tanpa sinyal": "No signal", "Transaksi dikirim memakai Kuota Titipan pelanggan, langsung berhasil.": "The payment is sent using the customer’s Shared Data and goes through instantly.", "Pakai Tiket Bayar pelanggan kalau ada. Kalau tidak ada, status Menunggu (maks. Rp 50.000).": "Uses the customer’s Pay Ticket if there is one. Otherwise it’s Pending (max. Rp 50.000).", "Simulasi: sinyal kembali": "Simulation: signal is back", "Simulasi: pelanggan tunjukkan tangan darurat": "Simulation: customer shows the emergency hand", "Berhasil · Bayar Offline": "Paid · Pay Offline", "Berhasil · Tiket Bayar": "Paid · Pay Ticket", "Menunggu · Bayar Offline": "Pending · Pay Offline", "Bayar Offline ditolak": "Pay Offline declined", "Tiket pelanggan cocok, saldonya sudah dipotong. Uang masuk ke saldo Anda saat HP toko atau HP pelanggan online lagi.": "The customer’s ticket matched and their balance is already charged. The money reaches you when the shop’s or the customer’s phone is online again.", "Tercatat aman di HP ini. Selesai otomatis saat HP toko atau HP pelanggan online lagi. Bayar Offline berikutnya dari pelanggan ini di toko ini dikunci sampai selesai.": "Saved safely on this phone. It settles automatically when the shop’s or the customer’s phone is online again. This customer’s next Pay Offline at this shop is locked until then.", "Dijamin masuk": "Guaranteed", "Menunggu": "Pending", "Tidak diproses": "Not processed", "Gangguan jaringan, coba lagi nanti.": "Network problem, please try again later.", "BioID pelanggan sedang dikunci.": "The customer’s BioID is locked.", "Saldo pelanggan tidak cukup.": "The customer doesn’t have enough balance.", "Pelanggan masih punya transaksi offline yang menunggu di toko ini. Minta pelanggan menyambungkan internet dulu.": "This customer still has a pending offline payment at this shop. Ask them to go online first.", "Telapak Darurat pelanggan sedang mati": "The customer’s Emergency Palm is off", "Tidak ada transaksi offline yang menunggu": "No pending offline payments", "Pilih Layanan BioPay": "Choose a BioPay service"});
         const MON_EN = { Jan: 'Jan', Feb: 'Feb', Mar: 'Mar', Apr: 'Apr', Mei: 'May', Jun: 'Jun', Jul: 'Jul', Agu: 'Aug', Sep: 'Sep', Okt: 'Oct', Nov: 'Nov', Des: 'Dec' };
         const DAY_EN = { Sen: 'Mon', Sel: 'Tue', Rab: 'Wed', Kam: 'Thu', Jum: 'Fri', Sab: 'Sat', Min: 'Sun' };
         const mon = m => MON_EN[m] || m, enx = x => (APP_EN[x] || (typeof AppI18N !== 'undefined' && AppI18N.en(x)) || x);
@@ -5766,6 +6259,16 @@
             [/^Potongan (Rp [\d.]+)$/, '$1 off'], [/^(Utama|Cadangan (\d+)) · Rp ••••••$/, (_, a, n) => `${n ? 'Backup ' + n : 'Main'} · Rp ••••••`], [/^Saldo (.+) tidak cukup\. Dipotong dari (.+)\.$/, '$1 didn’t have enough. Charged to $2.'], [/^([\d.]+) poin$/, '$1 points'], [/^\+([\d.]+) poin$/, '+$1 points'],
             [/^Beli (.+)$/, (_, x) => 'Buy ' + enx(x)], [/^Bayar (.+)$/, (_, x) => 'Pay ' + enx(x)], [/^(\d+) dewasa$/, '$1 adult(s)'], [/^(\d+) tamu$/, '$1 guest(s)'],
             [/^(?=.*\b(?:jt|rb)\b)(?:[\/\s.,\d]|Rp|jt|rb)+$/, t => t.replace(/(\d+(?:,\d+)?) jt\b/g, (_, n) => n.replace(',', '.') + 'M').replace(/(\d+(?:,\d+)?) rb\b/g, (_, n) => n.replace(',', '.') + 'k')]
+        );
+
+        APP_RULES.push(
+            [/^Lewat (.+)\. Uang langsung masuk ke saldo Anda\.$/, (_, v) => `Via ${enx(v)}. The money is in your balance right away.`],
+            [/^Sinyal kembali · kirim (\d+) transaksi offline$/, 'Signal back · send $1 offline payment(s)'],
+            [/^Tanpa sinyal dan tanpa Tiket Bayar, batas Bayar Offline (.+)\.$/, 'With no signal and no Pay Ticket, Pay Offline is capped at $1.'],
+            [/^(.+) masuk ke saldo \(Bayar Offline\)$/, '$1 received (Pay Offline)'],
+            [/^Sinyal kembali: (\d+) transaksi offline terkirim$/, 'Signal back: $1 offline payment(s) sent'],
+            [/^(\d+) transaksi masuk, (\d+) gagal \(saldo pelanggan kosong, BioID-nya dibekukan\)$/, '$1 received, $2 failed (customer balance empty, their BioID is frozen)'],
+            [/^Transaksi (.+) dibatalkan karena alasan keamanan\. Tim BioPay akan menghubungi Anda\.$/, 'The $1 payment was cancelled for security reasons. The BioPay team will contact you.']
         );
         const AppI18N = (() => {
             let lang = 'en';

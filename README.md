@@ -27,6 +27,17 @@ This repository is an interactive prototype that runs entirely in the browser, a
 
 **Wallet priority & privacy:** the payment screen never shows balances (a store terminal is a public screen). Funding sources have an order the user sets in *BioPay Home → Wallets*: Main, Backup 1, 2, 3. A payment is charged to Main; if Main can’t cover it, the next backup that can is charged and the user is told; if none can, the payment is blocked with a clear notice. The same rule applies to QR payments, the cashier Pay QR, bills, transfers, withdrawals and the ATM. *Empty* / *+Rp 500.000* buttons simulate low balances. Smart Route (optional) instead picks the source with the best promo.
 
+**Combined Balance (Saldo Gabungan):** when no single wallet can cover a payment but the linked wallets together can, BioPay splits it across them in one scan (Main first, then the backups), shows how much each one pays, and tells the user. It can be switched off on the payment screen. Only a neutral bridge can do this, because no wallet can spend a rival's balance.
+
+**Pay Offline (BioPay dashboard → *Offline*, and Kasku/Lintas → BioPay → *Bayar Offline*):** the shopper sets things up at home and still pays at the shop with face + palm only, no phone.
+- *Saldo Offline*: money set aside for offline payments (max. Rp 500.000), unlocked with a face + palm scan. In production it stays in the partner wallet, locked on BioPay's instruction; BioPay never holds funds.
+- *Kuota Titipan* (shared data): the shopper sets aside some mobile data (10 MB in the demo). If the shop's phone still has signal but no data, the payment travels on the shopper's data through a BioPay-only lane and goes through instantly. Production needs a mobile-operator partnership (zero-rated / sponsored data); without data it falls back to SMS.
+- *Tiket Bayar* (pay ticket): prepared at home for one regular shop, with a maximum amount and validity. It is sent to the shop's phone while it is online, so with no signal at all the face + palm can still be matched on the shop's phone and the balance is charged on the spot. One ticket, one shop, so it can't be spent twice; unused tickets expire and the money returns.
+- *Menunggu* (pending): no signal and no ticket. Small payments only (max. Rp 50.000) are stored on the shop's phone and settled as soon as either the shopper or the shop goes online, whoever is first; the shop is paid once. While one is pending, the same shopper can't pay offline again at that shop. If the offline balance is short, backup wallets are tried; if every wallet is empty, the BioID is frozen until paid.
+- The merchant side has a *shop phone status* switch (out of data / no signal) for the demo, and a *signal is back* button.
+
+**Emergency Palm (Telapak Darurat, *Pengaturan → Telapak Darurat*):** if someone forces the user to pay, they show their emergency hand (left by default, user's choice so an attacker can't know). The terminal and the merchant's phone show a normal "payment successful" screen so the attacker isn't alerted, but no money moves, the BioID locks (further attempts show "network problem"), and the chosen emergency contacts get a silent alert with the camera's location. The merchant is told later that the payment was cancelled for security reasons. *Practice mode* and an *I'm safe* button (face + palm) are included. In the demo the emergency hand is triggered with a labelled simulation button; telling left from right uses MediaPipe's handedness in production. Similar duress ideas exist in patents (e.g. US 10,832,546) and access-control products; a patent check is needed before launch.
+
 **Rewards, insights and security (BioPay dashboard):** *Hadiah* has BioPoints with tiers, a weekly streak, missions (e.g. pay 3 times, pay a bill, add a family member), vouchers to redeem and an invite code. *Insight* shows monthly spending by category and by funding source against an editable budget. *Pengaturan → Pusat keamanan* can lock the BioID in one tap, set a per-payment limit and a night-time limit, and lists recent activity; the payment screen enforces all three.
 
 **Money management with an assistant (BioPay dashboard → *Keuangan*):** monthly income, spending and what is left; budgets per category (green, orange near the limit, red when over); savings pockets with progress; upcoming bills; and a chat assistant. Type plain Indonesian such as `makan siang 35rb`, `bonus freelance 1,2jt`, `nabung liburan 200rb`, `buat kantong laptop 8jt`, `sisa anggaran?`, `tagihan bulan ini?`, `tips hemat` or `hapus catatan terakhir`: it records the entry, picks the category, updates the budgets and answers from your data. Every BioPay transaction (payments, transfers, cash withdrawals, bills, top-ups) lands in *Keuangan* automatically with its date and time, already categorised. **Voice:** tap *Dengarkan “BioPay”* and say “BioPay, kopi dua ribu”: the wake word is detected, the amount is understood even in words (“dua puluh lima ribu”), the entry is recorded with the time and the assistant answers aloud; speech without the wake word is ignored. Voice uses the browser's Web Speech API (Chrome/Edge; Chrome processes the audio on Google's servers) and only listens while the page is open. While listening, the page keeps the screen awake (Screen Wake Lock), because browsers cut the microphone when the screen sleeps. In the native app the wake word keeps working while the phone sleeps: on Android through a foreground service with an on-device wake-word engine (e.g. Porcupine or openWakeWord, with the required “listening” notification); on iPhone, where only Siri may listen in the background, through Siri App Intents (“Hey Siri, BioPay catat kopi 2000”). The assistant in this prototype is rule-based and runs entirely in the browser (no data leaves the device); a production version could use a language model for free-form questions.
@@ -45,7 +56,7 @@ The landing section at the top of the page has **Try it** buttons that jump stra
 |---|---|
 | Live camera feed on every scan screen | Identity matching: every face resolves to the demo user |
 | On-device detection that a face or a hand is actually in front of the camera ([MediaPipe Tasks Vision](https://ai.google.dev/edge/mediapipe/solutions/vision/face_detector)); the scan only passes once it is seen steadily for about 1.5 s | camera-based liveness checks and palm-print matching |
-| All UI flows, validation, state, and calculations (FX, VAT, promos, refunds, Smart Route choice, points, budgets, assistant parsing) | Balances, payments, settlement, bookings, wallet promos, the partner API and the ATM |
+| All UI flows, validation, state, and calculations (FX, VAT, promos, refunds, Smart Route choice, points, budgets, assistant parsing) | Balances, payments, settlement, bookings, wallet promos, the partner API, the ATM, offline settlement, shared mobile data and emergency alerts |
 | Sign-up and sign-in with validation; passwords stored as salted SHA-256 hashes | Account storage: `localStorage` in this browser instead of a server |
 
 No image or biometric data leaves the device. If the camera is blocked, or the detection model cannot load, scans fall back to a clearly labelled simulation mode so the demo never gets stuck.
@@ -72,7 +83,7 @@ Without configuration the app runs in **demo mode**: everything stays in the bro
 
 ## Tests
 
-End-to-end tests drive the real page in Chromium (checkout and Smart Route, sign-in, Keuangan and the assistant, voice wake word, QR scan / QR Saya / QR Bayar in BioPay, Kasku and Lintas, the cardless ATM, the partner section, the guided tour, and phone width). They run on every push via GitHub Actions.
+End-to-end tests drive the real page in Chromium (checkout and Smart Route, wallet fallback, Combined Balance, Pay Offline with shared data, pay tickets and pending payments, Emergency Palm on the terminal and the merchant's phone, sign-in, Keuangan and the assistant, voice wake word, QR scan / QR Saya / QR Bayar in BioPay, Kasku and Lintas, the cardless ATM, the partner section, the guided tour, and phone width). They run on every push via GitHub Actions.
 
 ```bash
 npm install
@@ -97,9 +108,13 @@ A single HTML file with plain JavaScript, prebuilt Tailwind CSS (inline), Phosph
 2. Palm-print matching from the ordinary phone, tablet or terminal camera, with no extra hardware.
 3. Wallet and bank integrations through the providers' merchant APIs, and QRIS interoperability.
 4. Consent, enrollment and data-protection flows that comply with Indonesia's personal data protection law (UU PDP).
+5. Pay Offline in production: an operator partnership for shared data, Bank Indonesia/OJK rules for offline balances, and signed offline receipts.
+6. Emergency Palm in production: left/right palm matching, a patent check, and a formal process with security partners and the police.
 
 ---
 
 ### Ringkasan (Bahasa Indonesia)
 
 BioPay adalah prototipe pembayaran biometrik dua faktor (wajah + telapak tangan). Buka `index.html` di Chrome/Edge atau lewat GitHub Pages, izinkan kamera, lalu coba tiga alur: terminal toko (POV 1), e-wallet merchant Kasku (POV 2), dan aplikasi travel Lintas (POV 3). Kamera dan deteksi wajah/tangan berjalan sungguhan di perangkat; identitas, saldo, dan pembayaran masih simulasi.
+
+Fitur baru: **Saldo Gabungan** (satu scan, dibayar dari beberapa dompet), **Bayar Offline** (Saldo Offline, Kuota Titipan, Tiket Bayar, dan status Menunggu, pembeli tetap tanpa HP), dan **Telapak Darurat** (tangan darurat saat dipaksa bayar: layar terlihat berhasil, tapi uang tidak terkirim, BioID terkunci, keluarga diberi tahu diam-diam).

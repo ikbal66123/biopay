@@ -161,6 +161,88 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         await page.click('#dev-tab-terminal');
     });
 
+    await test('Saldo Gabungan: one scan pays from several wallets when none has enough alone', async () => {
+        await page.evaluate(() => { selectDevice('terminal'); enterDashboard(); demoSplit(true); });
+        assert(/menggabungkan/.test(await page.textContent('#route-why')), 'no combined explanation');
+        assert(await page.locator('#route-list .bp-route-amt').count() >= 2, 'split amounts not shown');
+        assert(!(await page.isDisabled('#btn-confirm-payment')), 'pay button disabled');
+        await page.click('#btn-confirm-payment'); await page.waitForTimeout(150);
+        assert(await page.isVisible('#screen-success'), 'no success screen');
+        assert(await page.locator('.toast', { hasText: 'Saldo Gabungan' }).count() >= 1, 'no split notification');
+        await page.evaluate(() => { demoSplit(false); showScreen('screen-start'); });
+    });
+
+    await test('offline: Saldo Offline, Kuota Titipan, Tiket Bayar, then the shop pays offline', async () => {
+        const waitBio = () => page.waitForSelector('#modal-bioconfirm', { state: 'hidden', timeout: 30000 });
+        await page.evaluate(() => { selectDevice('terminal'); enterDashboard(); switchTab('offline'); showOfflineFill(); });
+        await page.fill('#offline-fill-amount', '200000');
+        await page.evaluate(() => processOfflineFill()); await waitBio();
+        eq((await page.textContent('#off-balance')).trim(), 'Rp 200.000', 'offline balance');
+        await page.evaluate(() => offlineAddQuota()); await waitBio();
+        eq((await page.textContent('#off-quota')).trim(), '10 MB', 'shared data');
+        await page.evaluate(() => showOfflineTicket());
+        await page.selectOption('#offline-ticket-store', 'Warung Bu Sri'); await page.fill('#offline-ticket-amount', '50000');
+        await page.evaluate(() => processOfflineTicket()); await waitBio(); await page.waitForTimeout(1700);
+        assert(/Warung Bu Sri/.test(await page.textContent('#off-tickets')) && /Tersimpan di HP toko/.test(await page.textContent('#off-tickets')), 'ticket not stored at the shop');
+        eq((await page.textContent('#off-balance')).trim(), 'Rp 150.000', 'ticket locked from offline balance');
+        // the seller (Kasku) charges with Pay Offline
+        const kasku = () => page.evaluate(() => ewalletBalance);
+        const pay = async (net, amt) => {
+            await page.evaluate(n => { selectDevice('kasku'); showBioPayOptions(); openOfflinePay(); kitSetNet(n); }, net);
+            await page.fill('#input-offline-amount', String(amt));
+            await page.evaluate(() => startOfflineFaceScan());
+            await page.waitForSelector('#tagih-confirm-box', { state: 'visible', timeout: 30000 });
+            await page.evaluate(() => startTagihHandScan());
+            await page.waitForSelector('#modal-offline-result', { state: 'visible', timeout: 30000 });
+            const t = await page.textContent('#kit-off-title'); await page.evaluate(() => closeOfflineResult()); return t;
+        };
+        const k0 = await kasku();
+        assert(/Berhasil · Bayar Offline/.test(await pay('quota', 25000)), 'shared-data payment not instant');
+        eq(await kasku(), k0 + 25000, 'shop received the shared-data payment right away');
+        assert(/Tiket Bayar/.test(await pay('none', 30000)), 'ticket payment not used');
+        assert(/Menunggu/.test(await pay('none', 40000)), 'no-signal payment should be pending');
+        assert(/ditolak/.test(await pay('none', 10000)), 'second offline payment while pending should be declined');
+        eq(await kasku(), k0 + 25000, 'ticket/pending money not credited before going online');
+        assert(await page.evaluate(() => !document.getElementById('kit-sync-btn').classList.contains('hidden')), 'sync button not shown');
+        // the customer goes online first: the shop is paid even while it is still offline
+        await page.evaluate(() => { selectDevice('terminal'); offlineGoOnline(); });
+        eq(await kasku(), k0 + 25000 + 30000 + 40000, 'shop credited when the customer went online');
+        assert(await page.evaluate(() => document.getElementById('off-pending-banner').classList.contains('hidden')), 'pending banner still shown');
+        assert(await page.evaluate(() => document.getElementById('kit-sync-btn').classList.contains('hidden')), 'shop sync button still shown');
+    });
+
+    await test('Telapak Darurat: looks paid, but nothing is sent, BioID locks, family alerted; "Saya aman" unlocks', async () => {
+        const waitBio = () => page.waitForSelector('#modal-bioconfirm', { state: 'hidden', timeout: 30000 });
+        await page.evaluate(() => { selectDevice('terminal'); goToScreen('screen-hand-scan'); });
+        const bal = await page.evaluate(() => { enterDashboard(); switchTab('wallets'); return document.getElementById('wallet-list-container').innerText; });
+        const walletsNow = () => page.evaluate(() => document.getElementById('wallet-list-container').innerText);
+        await page.evaluate(() => goToScreen('screen-hand-scan'));
+        await page.click('#screen-hand-scan .bp-duress-sim');
+        await page.click('#btn-confirm-payment'); await page.waitForTimeout(100);
+        assert(await page.isVisible('#screen-success'), 'duress should still look successful');
+        await page.evaluate(() => { enterDashboard(); switchTab('wallets'); });
+        eq(await walletsNow(), bal, 'no money should move under duress');
+        await page.evaluate(() => switchTab('pengaturan'));
+        assert(await page.isVisible('#sec-duress-alert'), 'emergency alert not shown in settings');
+        assert(/Peringatan darurat dikirim/.test(await page.textContent('#sec-activity')), 'alert not logged');
+        await page.evaluate(() => { generateRandomPayment(); showScreen('screen-options'); });
+        assert(/Gangguan jaringan/.test(await page.textContent('#route-why')), 'locked account should look like a network problem');
+        await page.evaluate(() => { enterDashboard(); switchTab('pengaturan'); duressSafe(); }); await waitBio();
+        assert(!(await page.isVisible('#sec-duress-alert')), 'alert not cleared after "Saya aman"');
+        // seller side: the customer shows the emergency hand during "Tagih"
+        const k0 = await page.evaluate(() => ewalletBalance);
+        await page.evaluate(() => { selectDevice('kasku'); showBioPayOptions(); openTagihInput(); });
+        await page.fill('#input-tagih-amount', '20000');
+        await page.evaluate(() => startTagihFaceScan());
+        await page.waitForSelector('#tagih-confirm-box', { state: 'visible', timeout: 30000 });
+        await page.evaluate(() => startTagihHandScan());
+        await page.evaluate(() => kitSimDuress());
+        assert(await page.isVisible('#modal-tagih-success'), 'seller should see the normal success screen');
+        eq(await page.evaluate(() => ewalletBalance), k0, 'seller must not receive money under duress');
+        await page.evaluate(() => { finishTagihFlow(); selectDevice('terminal'); enterDashboard(); switchTab('pengaturan'); duressSafe(); }); await waitBio();
+        await page.evaluate(() => showScreen('screen-start'));
+    });
+
     await test('partner section and guided tour', async () => {
         eq(await page.locator('#partners .pt-win-list li').count(), 3, 'partner win-win list');
         assert(!/sandbox/i.test(await page.textContent('body')), 'no sandbox wording left');
@@ -168,7 +250,9 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         for (let i = 0; i < 4; i++) await page.click('#pt-tour-next');
         const why = await page.textContent('#route-why');
         assert(/Cadangan 1|Backup 1/.test(why), 'tour step 5 shows automatic fallback: ' + why);
-        for (let i = 0; i < 4; i++) await page.click('#pt-tour-next');
+        await page.click('#pt-tour-next');
+        assert(/menggabungkan|combines/.test(await page.textContent('#route-why')), 'tour step 6 shows Saldo Gabungan');
+        for (let i = 0; i < 6; i++) await page.click('#pt-tour-next');
         assert(await page.evaluate(() => document.getElementById('pt-tour').hidden), 'tour did not close');
     });
 
