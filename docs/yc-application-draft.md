@@ -64,7 +64,7 @@ None of these is built around Southeast Asia's reality, where the default paymen
 2. **Two factors by default:** face plus palm, which addresses the main fear about face payment (being charged without consent).
 3. **No-hardware option:** merchants can start with a phone, then upgrade to a terminal.
 4. **Combined Balance:** when no single wallet has enough, one scan pays from several wallets. Only a neutral bridge can do this.
-5. **Pay Offline without a phone:** shared mobile data when the shop's phone is out of data, and small pending payments that settle when either side is online when there is no signal at all. Offline systems such as India's UPI Lite X or China's e-CNY still need the payer's phone or card.
+5. **Pay Offline without a phone:** when the shop's phone is out of data, the seller types the customer's phone number, it goes out over a JembraPay USSD code with no data or credit needed, and a small data top-up lets the payment clear instantly. Rp 500 per offline payment or a Rp 70.000/month VIP plan covers the cost. With no signal, small payments wait and the shop is guaranteed payment from a guarantee fund. Offline systems such as India's UPI Lite X or China's e-CNY still need the payer's phone or card.
 6. **Emergency Palm:** a duress hand that looks like a successful payment but sends nothing, locks the JembraID and silently alerts family. The idea appears in patents; we have not seen a major biometric payment app ship it.
 **[TODO]** Add local competitors you know of in Indonesia and Southeast Asia.
 
