@@ -59,7 +59,7 @@ const assert = (c, m) => { if (!c) throw new Error(m); };
         assert(seen.receipt.length === 1 && seen.receipt[0].auth === 'Bearer tok-sari', 'receipt not requested with token');
     });
     await t('a voice note is stored with channel "voice"', async () => {
-        await page.evaluate(() => { enterDashboard(); switchTab('keuangan'); simulateVoice('BioPay, kopi dua ribu'); });
+        await page.evaluate(() => { enterDashboard(); switchTab('keuangan'); simulateVoice('JembraPay, kopi dua ribu'); });
         await page.waitForTimeout(500);
         assert(seen.tx.some(x => x.row.channel === 'voice' && x.row.amount_idr === 2000), 'voice tx missing');
     });

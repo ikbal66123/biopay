@@ -29,19 +29,19 @@ module.exports = async (req, res) => {
     const sign = direction === 'in' ? '+' : direction === 'out' ? '-' : '';
     const whenTxt = when.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'medium', timeStyle: 'short' }) + ' WIB';
     const html = `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;color:#0F1B2D">
-        <h2 style="margin:0 0 4px">Struk BioPay</h2><p style="margin:0 0 16px;color:#566173">${escapeHtml(whenTxt)}</p>
+        <h2 style="margin:0 0 4px">Struk JembraPay</h2><p style="margin:0 0 16px;color:#566173">${escapeHtml(whenTxt)}</p>
         <table style="width:100%;border-collapse:collapse;font-size:15px">
           <tr><td style="padding:6px 0;color:#566173">Transaksi</td><td style="text-align:right"><b>${escapeHtml(title)}</b></td></tr>
           <tr><td style="padding:6px 0;color:#566173">Nominal</td><td style="text-align:right"><b>${escapeHtml(sign + rupiah(amount))}</b></td></tr>
           ${body.wallet_label ? `<tr><td style="padding:6px 0;color:#566173">Sumber dana</td><td style="text-align:right">${escapeHtml(String(body.wallet_label).slice(0, 60))}</td></tr>` : ''}
           <tr><td style="padding:6px 0;color:#566173">Referensi</td><td style="text-align:right">${escapeHtml(ref)}</td></tr>
         </table>
-        <p style="margin-top:20px;font-size:12px;color:#6B7585">Bukan kamu? Kunci BioID di aplikasi BioPay: Pengaturan &gt; Pusat keamanan.</p></div>`;
+        <p style="margin-top:20px;font-size:12px;color:#6B7585">Bukan kamu? Kunci JembraID di aplikasi JembraPay: Pengaturan &gt; Pusat keamanan.</p></div>`;
 
     const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${env('RESEND_API_KEY')}`, 'Content-Type': 'application/json', 'Idempotency-Key': `${user.id}-${ref}` },
-        body: JSON.stringify({ from: env('RECEIPT_FROM'), to: [user.email], subject: `Struk BioPay: ${title} ${sign}${rupiah(amount)}`, html })
+        body: JSON.stringify({ from: env('RECEIPT_FROM'), to: [user.email], subject: `Struk JembraPay: ${title} ${sign}${rupiah(amount)}`, html })
     }).catch(() => null);
     if (!r || !r.ok) return send(res, 502, { error: 'email_failed' });
     send(res, 202, { sent: true, reference: ref });

@@ -1,4 +1,4 @@
-// BioPay end-to-end tests (Playwright, Chromium). Run: npm install && npx playwright install chromium && npm test
+// JembraPay end-to-end tests (Playwright, Chromium). Run: npm install && npx playwright install chromium && npm test
 // The page is served locally; CDNs are blocked except the two QR libraries, which come from node_modules.
 // MediaPipe models are blocked on purpose, so face/palm scans run in their labelled simulation mode.
 const http = require('http'), fs = require('fs'), path = require('path');
@@ -44,7 +44,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(base); await page.waitForTimeout(400);
     await page.addScriptTag({ path: NM('jsqr/dist/jsQR.js') });
-    console.log('BioPay e2e');
+    console.log('JembraPay e2e');
 
     await test('landing loads with inline CSS (no Tailwind CDN) and the customer quote', async () => {
         assert(!requested.some(u => u.includes('cdn.tailwindcss.com')), 'Tailwind CDN was requested');
@@ -58,7 +58,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         eq(await page.locator('#route-list .bp-route-opt').count(), 3, 'route options');
         assert((await page.textContent('#route-why')).length > 10, 'route reason missing');
         await page.click('#btn-confirm-payment');
-        assert(/BioPoin/.test(await page.textContent('#success-reward')), 'no reward line');
+        assert(/JembraPoin/.test(await page.textContent('#success-reward')), 'no reward line');
     });
 
     await test('payment screen hides balances; priority order with fallback and "not enough" notice', async () => {
@@ -90,7 +90,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
 
     await test('sign in with the demo account', async () => {
         await page.evaluate(() => { showScreen('screen-start'); openLogin(); });
-        await page.fill('#login-id', 'ikbal@biopay.id'); await page.fill('#login-pass', 'biopay123');
+        await page.fill('#login-id', 'ikbal@jembrapay.id'); await page.fill('#login-pass', 'biopay123');
         await page.evaluate(() => submitLogin());
         await page.waitForTimeout(300);
         assert(!(await page.textContent('#login-pass-err')), 'login error shown');
@@ -105,10 +105,10 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         assert(/Liburan Bali/.test(await page.locator('#ai-log .bp-ai-msg:not(.me)').last().innerText()), 'savings not handled');
     });
 
-    await test('voice: wake word "BioPay" with amounts in words; other speech ignored', async () => {
+    await test('voice: wake word "JembraPay" with amounts in words; other speech ignored', async () => {
         await page.click('#voice-btn');
         const last = () => page.locator('#ai-log .bp-ai-msg:not(.me)').last().innerText();
-        await page.evaluate(() => window.__rec.emit('biopay parkir lima ribu'));
+        await page.evaluate(() => window.__rec.emit('jembrapay parkir lima ribu'));
         assert(/Rp 5\.000 \(Transportasi\)/.test(await last()), 'voice command not recorded');
         const before = await page.locator('#ai-log .bp-ai-msg').count();
         await page.evaluate(() => window.__rec.emit('tadi makan siang'));
@@ -116,12 +116,12 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         await page.click('#voice-btn');
     });
 
-    await test('BioPay QR: scan reads QRIS, QR Saya is a real QR, QR Bayar refreshes', async () => {
+    await test('JembraPay QR: scan reads QRIS, QR Saya is a real QR, QR Bayar refreshes', async () => {
         await page.evaluate(() => openQR('scan'));
         await page.evaluate(() => qrSimScan());
         eq(await page.textContent('#qr-to-name'), 'Warung Bu Sri', 'QRIS merchant name');
         await page.click('#qr-tab-mine');
-        assert(/^BIOPAY:PAY\?/.test(await decodeCanvas('#qr-mine-canvas')), 'QR Saya not decodable');
+        assert(/^JEMBRAPAY:PAY\?/.test(await decodeCanvas('#qr-mine-canvas')), 'QR Saya not decodable');
         await page.click('#qr-tab-pay');
         const c1 = await page.textContent('#qr-pay-code');
         await page.locator('#qr-view-pay button', { hasText: 'Simulasikan kasir scan' }).click();
@@ -137,7 +137,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
             const c1 = await page.textContent(`#kitqr-pay-code${sfx}`);
             await page.locator(`#kitqr-view-pay${sfx} button`, { hasText: 'Buat QR Bayar baru' }).click();
             assert(c1 !== await page.textContent(`#kitqr-pay-code${sfx}`), 'new code not generated');
-            assert(/^BIOPAY:CPM\?token=/.test(await decodeCanvas(`#kitqr-pay-canvas${sfx}`)), 'pay QR not decodable');
+            assert(/^JEMBRAPAY:CPM\?token=/.test(await decodeCanvas(`#kitqr-pay-canvas${sfx}`)), 'pay QR not decodable');
             const b0 = await page.evaluate(balExpr);
             await page.fill(`#kitqr-cashier-amount${sfx}`, '35000');
             await page.locator(`#kitqr-view-pay${sfx} button`, { hasText: 'Scan & tarik' }).click();
@@ -207,7 +207,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         assert(await page.evaluate(() => document.getElementById('kit-sync-btn').classList.contains('hidden')), 'shop sync button still shown');
     });
 
-    await test('Telapak Darurat: looks paid, but nothing is sent, BioID locks, family alerted; "Saya aman" unlocks', async () => {
+    await test('Telapak Darurat: looks paid, but nothing is sent, JembraID locks, family alerted; "Saya aman" unlocks', async () => {
         const waitBio = () => page.waitForSelector('#modal-bioconfirm', { state: 'hidden', timeout: 30000 });
         await page.evaluate(() => { selectDevice('terminal'); goToScreen('screen-hand-scan'); });
         const bal = await page.evaluate(() => { enterDashboard(); switchTab('wallets'); return document.getElementById('wallet-list-container').innerText; });
@@ -266,7 +266,7 @@ const decodeCanvas = sel => page.evaluate(s => { const c = document.querySelecto
         assert(await page.evaluate(() => !document.getElementById('video-qr').srcObject), 'stream not released after close');
     });
 
-    await test('English mode: apps, ATM and BioPay switch language with the page', async () => {
+    await test('English mode: apps, ATM and JembraPay switch language with the page', async () => {
         await page.click('.pt-lang [data-lang="en"]'); await page.waitForTimeout(300);
         await page.evaluate(() => selectDevice('kasku'));
         assert(await page.locator('#ewallet-device', { hasText: 'Recent Activity' }).count() === 1, 'Kasku not in English');

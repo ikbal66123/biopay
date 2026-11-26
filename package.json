@@ -1,7 +1,7 @@
 {
   "name": "biopay-prototype",
   "private": true,
-  "description": "BioPay browser prototype: build helpers and end-to-end tests",
+  "description": "JembraPay browser prototype: build helpers and end-to-end tests",
   "scripts": {
     "test": "node tests/api.test.js && node tests/run.js && node tests/cloud.test.js",
     "test:db": "bash supabase/tests/run.sh",

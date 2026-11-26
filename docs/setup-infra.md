@@ -1,4 +1,4 @@
-# Panduan memasang infrastruktur BioPay
+# Panduan memasang infrastruktur JembraPay
 
 Kode di repo ini sudah siap untuk backend sungguhan. Selama kunci belum diisi, aplikasi berjalan dalam **mode demo** (semua data di browser). Begitu kunci diisi di Vercel, aplikasi otomatis **terhubung ke server**; di halaman depan tertulis "Terhubung" atau "Mode demo".
 
@@ -54,7 +54,7 @@ Harga dan kuota bisa berubah; cek halaman harga tiap layanan.
 
 1. Daftar di resend.com, **Domains → Add Domain**. Pakai subdomain, misalnya `mail.biopay.com`.
 2. Resend menampilkan record DNS (SPF, DKIM, dan disarankan DMARC). Buat semuanya di **Cloudflare DNS**, lalu klik **Verify** di Resend.
-3. **API Keys → Create** dengan izin *Sending access*. Isi ke Vercel sebagai `RESEND_API_KEY`, dan isi `RECEIPT_FROM` misalnya `BioPay <struk@mail.biopay.com>`.
+3. **API Keys → Create** dengan izin *Sending access*. Isi ke Vercel sebagai `RESEND_API_KEY`, dan isi `RECEIPT_FROM` misalnya `JembraPay <struk@mail.jembrapay.com>`.
 4. Supaya email verifikasi Supabase juga lewat domainmu: di Supabase **Authentication → SMTP Settings**, isi host `smtp.resend.com`, port `465`, username `resend`, password = API key Resend, dan pengirim = alamat di domainmu.
 5. Redeploy di Vercel. Setelah pengguna yang login membayar, struk otomatis terkirim ke email mereka sendiri (hanya ke email pemilik akun).
 
@@ -81,7 +81,7 @@ Harga dan kuota bisa berubah; cek halaman harga tiap layanan.
 
 Bagian ini dikerjakan di komputermu sendiri, karena sesi Claude Code di cloud tidak bisa menjangkau komputermu:
 1. Pasang aplikasi **Claude Desktop**, atau Claude Code di terminal.
-2. Di folder proyek BioPay, jalankan `claude remote-control`. Sesinya akan muncul di aplikasi Claude Code, sehingga kamu bisa mengerjakan BioPay di komputer itu dari HP.
+2. Di folder proyek JembraPay, jalankan `claude remote-control`. Sesinya akan muncul di aplikasi Claude Code, sehingga kamu bisa mengerjakan JembraPay di komputer itu dari HP.
 3. Jangan membuka port komputer ke internet. Kalau server rumah perlu diakses dari luar, gunakan **Cloudflare Tunnel**.
 
 ## Urutan & perkiraan waktu

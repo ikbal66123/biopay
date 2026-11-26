@@ -30,12 +30,12 @@ let passed = 0; const t = async (name, f) => { reset(); try { await f(); passed+
     await t('receipt rejects GET, missing email config, and bad tokens', async () => {
         assert.strictEqual((await call(load('receipt.js'))).status, 405);
         assert.strictEqual((await call(load('receipt.js'), { method: 'POST' })).status, 501);
-        Object.assign(process.env, { SUPABASE_URL: 'https://x.supabase.co', SUPABASE_ANON_KEY: 'anon', RESEND_API_KEY: 're_x', RECEIPT_FROM: 'BioPay <struk@biopay.id>' });
+        Object.assign(process.env, { SUPABASE_URL: 'https://x.supabase.co', SUPABASE_ANON_KEY: 'anon', RESEND_API_KEY: 're_x', RECEIPT_FROM: 'JembraPay <struk@jembrapay.id>' });
         global.fetch = async () => ({ ok: false, status: 401 });
         assert.strictEqual((await call(load('receipt.js'), { method: 'POST', headers: { authorization: 'Bearer bad' }, body: {} })).status, 401);
     });
     await t('receipt emails only the signed-in user, escapes HTML, validates amount', async () => {
-        Object.assign(process.env, { SUPABASE_URL: 'https://x.supabase.co', SUPABASE_ANON_KEY: 'anon', RESEND_API_KEY: 're_x', RECEIPT_FROM: 'BioPay <struk@biopay.id>' });
+        Object.assign(process.env, { SUPABASE_URL: 'https://x.supabase.co', SUPABASE_ANON_KEY: 'anon', RESEND_API_KEY: 're_x', RECEIPT_FROM: 'JembraPay <struk@jembrapay.id>' });
         const sent = [];
         global.fetch = async (url, opt) => {
             if (url.endsWith('/auth/v1/user')) return { ok: true, json: async () => ({ id: 'u1', email: 'ayu@test.id' }) };
